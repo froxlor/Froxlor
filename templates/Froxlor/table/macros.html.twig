@@ -12,17 +12,17 @@
 
 {% macro boolean(data) %}
 	{% if (data) %}
-		<i class="fa fa-check-circle text-success"></i>
+		<i class="fa-solid fa-check-circle text-success"></i>
 	{% else %}
-		<i class="fa fa-times-circle text-danger"></i>
+		<i class="fa-solid fa-times-circle text-danger"></i>
 	{% endif %}
 {% endmacro %}
 
 {% macro booleanWithInfo(data) %}
 	{% if (data.checked) %}
-		<i class="fa fa-check-circle text-success"></i>
+		<i class="fa-solid fa-check-circle text-success"></i>
 	{% else %}
-		<i class="fa fa-times-circle text-danger"></i>
+		<i class="fa-solid fa-times-circle text-danger"></i>
 	{% endif %}
 	{% if data.info is not empty %}
 		{{ data.info }}

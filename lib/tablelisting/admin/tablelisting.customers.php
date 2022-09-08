@@ -154,13 +154,13 @@ return [
 		]),
 		'actions' => [
 			'show' => [
-				'icon' => 'fa fa-eye',
+				'icon' => 'fa-solid fa-eye',
 				'title' => lng('usersettings.custom_notes.title'),
 				'modal' => [Text::class, 'customerNoteDetailModal'],
 				'visible' => [Customer::class, 'hasNote']
 			],
 			'unlock' => [
-				'icon' => 'fa fa-unlock',
+				'icon' => 'fa-solid fa-unlock',
 				'title' => lng('panel.unlock'),
 				'class' => 'btn-outline-secondary',
 				'href' => [
@@ -172,7 +172,7 @@ return [
 				'visible' => [Customer::class, 'isLocked']
 			],
 			'edit' => [
-				'icon' => 'fa fa-edit',
+				'icon' => 'fa-solid fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'customers',
@@ -182,7 +182,7 @@ return [
 				],
 			],
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [

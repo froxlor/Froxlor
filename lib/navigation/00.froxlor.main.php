@@ -31,7 +31,7 @@ return [
 			'url' => 'customer_email.php',
 			'label' => lng('menue.email.email'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'email')),
-			'icon' => 'fa fa-envelope',
+			'icon' => 'fa-solid fa-envelope',
 			'elements' => [
 				[
 					'url' => 'customer_email.php?page=emails',
@@ -56,7 +56,7 @@ return [
 			'url' => 'customer_mysql.php',
 			'label' => lng('menue.mysql.mysql'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'mysql')),
-			'icon' => 'fa fa-database',
+			'icon' => 'fa-solid fa-database',
 			'elements' => [
 				[
 					'url' => 'customer_mysql.php?page=mysqls',
@@ -76,7 +76,7 @@ return [
 			'url' => 'customer_domains.php',
 			'label' => lng('menue.domains.domains'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'domains')),
-			'icon' => 'fa fa-globe',
+			'icon' => 'fa-solid fa-globe',
 			'elements' => [
 				[
 					'url' => 'customer_domains.php?page=domains',
@@ -92,7 +92,7 @@ return [
 			'url' => 'customer_ftp.php',
 			'label' => lng('menue.ftp.ftp'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'ftp')),
-			'icon' => 'fa fa-users',
+			'icon' => 'fa-solid fa-users',
 			'elements' => [
 				[
 					'url' => 'customer_ftp.php?page=accounts',
@@ -110,7 +110,7 @@ return [
 			'url' => 'customer_extras.php',
 			'label' => lng('menue.extras.extras'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras')),
-			'icon' => 'fa fa-wrench',
+			'icon' => 'fa-solid fa-wrench',
 			'elements' => [
 				[
 					'url' => 'customer_extras.php?page=htpasswds',
@@ -138,7 +138,7 @@ return [
 			'url' => 'customer_traffic.php',
 			'label' => lng('menue.traffic.traffic'),
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'traffic')),
-			'icon' => 'fa fa-area-chart',
+			'icon' => 'fa-solid fa-area-chart',
 			'elements' => [
 				[
 					'url' => 'customer_traffic.php?page=current',
@@ -155,7 +155,7 @@ return [
 		'resources' => [
 			'label' => lng('admin.resources'),
 			'required_resources' => 'customers',
-			'icon' => 'fa fa-box',
+			'icon' => 'fa-solid fa-box',
 			'elements' => [
 				[
 					'url' => 'admin_customers.php?page=customers',
@@ -201,7 +201,7 @@ return [
 		'traffic' => [
 			'label' => lng('admin.traffic'),
 			'required_resources' => 'customers',
-			'icon' => 'fa fa-area-chart',
+			'icon' => 'fa-solid fa-area-chart',
 			'elements' => [
 				[
 					'url' => 'admin_traffic.php?page=customers',
@@ -213,7 +213,7 @@ return [
 		'server' => [
 			'label' => lng('admin.server'),
 			'required_resources' => 'change_serversettings',
-			'icon' => 'fa fa-server',
+			'icon' => 'fa-solid fa-server',
 			'elements' => [
 				[
 					'url' => 'admin_configfiles.php?page=configfiles',
@@ -290,7 +290,7 @@ return [
 		],
 		'misc' => [
 			'label' => lng('admin.misc'),
-			'icon' => 'fa fa-wrench',
+			'icon' => 'fa-solid fa-wrench',
 			'elements' => [
 				[
 					'url' => 'admin_settings.php?page=integritycheck',

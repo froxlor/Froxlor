@@ -316,13 +316,13 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 					'class' => 'btn-outline-primary',
 					'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview']),
 					'label' => lng('admin.configfiles.overview'),
-					'icon' => 'fa fa-grip'
+					'icon' => 'fa-solid fa-grip'
 				],
 				[
 					'class' => 'btn-outline-secondary',
 					'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'export']),
 					'label' => 'Download/export ' . lng('admin.serversettings'),
-					'icon' => 'fa fa-file-import'
+					'icon' => 'fa-solid fa-file-import'
 				]
 			]
 		]);

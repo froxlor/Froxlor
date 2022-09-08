@@ -68,12 +68,12 @@ return [
 		]),
 		'actions' => [
 			'show' => [
-				'icon' => 'fa fa-eye',
+				'icon' => 'fa-solid fa-eye',
 				'title' => lng('apikeys.clicktoview'),
 				'modal' => [Text::class, 'apikeyDetailModal'],
 			],
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [

@@ -46,7 +46,7 @@ return [
 		]),
 		'actions' => [
 			'edit' => [
-				'icon' => 'fa fa-edit',
+				'icon' => 'fa-solid fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'templates',
@@ -57,7 +57,7 @@ return [
 				],
 			],
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [

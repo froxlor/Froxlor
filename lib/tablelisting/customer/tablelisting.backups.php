@@ -62,7 +62,7 @@ return [
 		]),
 		'actions' => [
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.abort'),
 				'class' => 'btn-warning',
 				'href' => [

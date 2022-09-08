@@ -101,12 +101,12 @@ if (function_exists('exec')) {
 					'id' => $domain_id
 				]),
 				'label' => lng('admin.domain_edit'),
-				'icon' => 'fa fa-pen'
+				'icon' => 'fa-solid fa-pen'
 			],
 			[
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains']),
 				'label' => lng('panel.backtooverview'),
-				'icon' => 'fa fa-reply'
+				'icon' => 'fa-solid fa-reply'
 			]
 		]
 	]);

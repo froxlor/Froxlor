@@ -100,7 +100,7 @@ if ($action == '' || $action == 'view') {
 				'class' => 'btn-outline-primary',
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'overview']),
 				'label' => lng('admin.domains'),
-				'icon' => 'fa fa-globe'
+				'icon' => 'fa-solid fa-globe'
 			]
 		]
 	]);

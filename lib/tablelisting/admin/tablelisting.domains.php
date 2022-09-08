@@ -148,7 +148,7 @@ return [
 		]),
 		'actions' => [
 			'edit' => [
-				'icon' => 'fa fa-edit',
+				'icon' => 'fa-solid fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'domains',
@@ -158,7 +158,7 @@ return [
 				],
 			],
 			'logfiles' => [
-				'icon' => 'fa fa-file',
+				'icon' => 'fa-solid fa-file',
 				'title' => lng('panel.viewlogs'),
 				'href' => [
 					'section' => 'domains',
@@ -168,7 +168,7 @@ return [
 				'visible' => [Domain::class, 'canViewLogs']
 			],
 			'domaindnseditor' => [
-				'icon' => 'fa fa-globe',
+				'icon' => 'fa-solid fa-globe',
 				'title' => lng('dnseditor.edit'),
 				'href' => [
 					'section' => 'domains',
@@ -181,12 +181,12 @@ return [
 				'callback' => [Domain::class, 'editSSLButtons'],
 			],
 			'letsencrypt' => [
-				'icon' => 'fa fa-shield',
+				'icon' => 'fa-solid fa-shield',
 				'title' => lng('panel.letsencrypt'),
 				'visible' => [Domain::class, 'hasLetsEncryptActivated']
 			],
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [

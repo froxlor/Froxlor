@@ -69,7 +69,7 @@
 						<p class="lead">{{ lng('install.dependency_check.description') }}</p>
 
 						<p class="lead {{ preflight.criticals ? 'text-danger' : preflight.suggestions ? 'text-warning' : 'text-success'}}">
-							<i class="{{ preflight.criticals ? 'fa fa-triangle-exclamation' : preflight.suggestions ? 'fa fa-circle-info' : 'far fa-circle-check' }}"></i>
+							<i class="{{ preflight.criticals ? 'fa-solid fa-triangle-exclamation' : preflight.suggestions ? 'fa-solid fa-circle-info' : 'far fa-circle-check' }}"></i>
 							{{ preflight.text }}
 						</p>
 
@@ -113,7 +113,7 @@
 
 						<div class="d-flex justify-content-end mt-4">
 							{% if preflight.criticals %}
-								<a href="" class="btn btn-secondary"><i class="fa fa-arrow-rotate-left"></i> {{ lng('install.check_again') }}</a>
+								<a href="" class="btn btn-secondary"><i class="fa-solid fa-arrow-rotate-left"></i> {{ lng('install.check_again') }}</a>
 							{% else %}
 								<a href="?step=1" class="btn btn-primary">{{ lng('install.start_installation') }}</a>
 							{% endif %}

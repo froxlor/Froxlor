@@ -59,7 +59,7 @@ return [
 		]),
 		'actions' => [
 			'edit' => [
-				'icon' => 'fa fa-edit',
+				'icon' => 'fa-solid fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'cronjobs',

@@ -133,13 +133,13 @@ UI::view('user/dns-editor.html.twig', [
 				'id' => $domain_id
 			]),
 			'label' => lng('panel.edit'),
-			'icon' => 'fa fa-pen'
+			'icon' => 'fa-solid fa-pen'
 		],
 		[
 			'class' => 'btn-secondary',
 			'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains']),
 			'label' => lng('menue.domains.domains'),
-			'icon' => 'fa fa-globe'
+			'icon' => 'fa-solid fa-globe'
 		]
 	],
 	'formaction' => $linker->getLink(['section' => 'domains', 'action' => 'add_record', 'domain_id' => $domain_id]),

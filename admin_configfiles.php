@@ -165,7 +165,7 @@ if ($userinfo['change_serversettings'] == '1') {
 						]),
 						'label' => lng('panel.ihave_configured'),
 						'class' => 'btn-outline-warning',
-						'icon' => 'fa fa-circle-check'
+						'icon' => 'fa-solid fa-circle-check'
 					]
 				] : [],
 				// alert

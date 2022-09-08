@@ -168,7 +168,7 @@ class Domain
 	public static function editSSLButtons(array $attributes): array
 	{
 		$result = [
-			'icon' => 'fa fa-shield',
+			'icon' => 'fa-solid fa-shield',
 			'title' => lng('panel.ssleditor'),
 			'href' => [
 				'section' => 'domains',

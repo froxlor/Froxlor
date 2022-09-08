@@ -114,13 +114,13 @@ return [
 		]),
 		'actions' => [
 			'show' => [
-				'icon' => 'fa fa-eye',
+				'icon' => 'fa-solid fa-eye',
 				'title' => lng('usersettings.custom_notes.title'),
 				'modal' => [Text::class, 'customerNoteDetailModal'],
 				'visible' => [Customer::class, 'hasNote']
 			],
 			'edit' => [
-				'icon' => 'fa fa-edit',
+				'icon' => 'fa-solid fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'admins',
@@ -130,7 +130,7 @@ return [
 				],
 			],
 			'delete' => [
-				'icon' => 'fa fa-trash',
+				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [
