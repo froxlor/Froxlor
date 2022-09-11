@@ -2200,4 +2200,9 @@ Vielen Dank, Ihr Administrator',
 			'notyetconfigured' => 'Es scheint als wären die Dienste (noch) nicht erfolgreich konfiguriert worden. Bitte den angezeigten Befehl ausführen oder überspringen (direkt zum Login)'
 		]
 	],
+	'welcome' => [
+		'title' => 'Willkommen bei froxlor!',
+		'config_note' => 'Damit froxlor mit dem Backend vernünftig kommunizieren kann, musst du dieses noch konfigurieren.',
+		'config_now' => 'Jetzt konfigurieren'
+	],
 ];

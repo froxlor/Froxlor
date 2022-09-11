@@ -2327,4 +2327,9 @@ Yours sincerely, your administrator',
 			'notyetconfigured' => 'It seems that the services were not yet configured (successfully). Please either run the command shown below or check the box to do it later.'
 		]
 	],
+	'welcome' => [
+		'title' => 'Welcome to froxlor!',
+		'config_note' => 'In order for froxlor to be able to communicate properly with the backend, you have to configure it.',
+		'config_now' => 'Configure now'
+	],
 ];
