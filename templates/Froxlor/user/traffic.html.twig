@@ -4,7 +4,7 @@
 
 	<div>
 		<h5 class="mb-1">
-			<i class="fa fa-chart-area me-1"></i>
+			<i class="fa-solid fa-chart-area me-1"></i>
 			{{ lng('admin.traffic') }}
 		</h5>
 		<span class="text-muted">{{ lng('admin.traffic_sub') }}</span>
@@ -194,14 +194,23 @@
 
 			const cChart = new Chart(document.getElementById('customersummary'), configC);
 
-		{% else %}
+		{% elseif not (range starts with 'hours') %}
 
 			const labelsC = [];
 			const dataValues = [];
-			{% for yr,year in years %}
-				labelsC.push('{{ yr }}');
-				//dataValues.push({value: {{ year.total.total }}, formatted: '{{ year.total.total|formatBytes }}', year: '{{ yr }}'});
-			{% endfor %}
+			{% if range starts with 'days' or range == 'currentmonth' %}
+				{% for d,dd in days %}
+					labelsC.push('{{ d }}');
+				{% endfor %}
+			{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
+				{% for m,md in months %}
+					labelsC.push('{{ m }}');
+				{% endfor %}
+			{% else %}
+				{% for yr,year in years %}
+					labelsC.push('{{ yr }}');
+				{% endfor %}
+			{% endif %}
 
 			const dataC = {
 				labels: labelsC,
@@ -209,32 +218,50 @@
 					{
 					label: 'HTTP traffic',
 					backgroundColor: 'rgb(255, 99, 132)',
-					data: [{% for yr,year in years %}{value: {{ year.total.http }}, formatted: '{{ year.total.http|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					{% if range starts with 'days' or range == 'currentmonth' %}
+						data: [{% for d,dd in days %}{value: {{ dd.http }}, formatted: '{{ dd.http|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
+					{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
+						data: [{% for m,md in months %}{value: {{ md.http }}, formatted: '{{ md.http|formatBytes }}', axisv: '{{ m }}'},{% endfor %}],
+					{% else %}
+						data: [{% for yr,year in years %}{value: {{ year.http }}, formatted: '{{ year.http|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
+					{% endif %}
 					parsing: {
-						xAxisKey: 'year'
+						xAxisKey: 'axisv'
 					}
 				},
 				{
 					label: 'FTP traffic',
 					backgroundColor: 'rgb(200, 199, 132)',
-					data: [{% for yr,year in years %}{value: {{ year.total.ftp }}, formatted: '{{ year.total.ftp|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					{% if range starts with 'days' or range == 'currentmonth' %}
+						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{% for d,dd in bydate[y][m] %}{value: {{ md.ftp }}, formatted: '{{ md.ftp|formatBytes }}', axisv: '{{ d }}.{{ m }}.{{ y }}'},{% endfor %}{% endfor %}{% endfor %}],
+					{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
+						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{value: {{ md.total.ftp }}, formatted: '{{ md.total.ftp|formatBytes }}', axisv: '{{ m }}/{{ y }}'},{% endfor %}{% endfor %}],
+					{% else %}
+						data: [{% for yr,year in bydate %}{value: {{ year.total.ftp }}, formatted: '{{ year.total.ftp|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
+					{% endif %}
 					parsing: {
-						xAxisKey: 'year'
+						xAxisKey: 'axisv'
 					}
 				},
 				{
 					label: 'Mail traffic',
 					backgroundColor: 'rgb(255, 99, 0)',
-					data: [{% for yr,year in years %}{value: {{ year.total.mail }}, formatted: '{{ year.total.mail|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					{% if range starts with 'days' or range == 'currentmonth' %}
+						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{% for d,dd in bydate[y][m] %}{value: {{ md.mail }}, formatted: '{{ md.mail|formatBytes }}', axisv: '{{ d }}.{{ m }}.{{ y }}'},{% endfor %}{% endfor %}{% endfor %}],
+					{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
+						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{value: {{ md.total.mail }}, formatted: '{{ md.total.mail|formatBytes }}', axisv: '{{ m }}/{{ y }}'},{% endfor %}{% endfor %}],
+					{% else %}
+						data: [{% for yr,year in bydate %}{value: {{ year.total.mail }}, formatted: '{{ year.total.mail|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
+					{% endif %}
 					parsing: {
-						xAxisKey: 'year'
+						xAxisKey: 'axisv'
 					}
 				},
 				]
 			};
 
 			const configC = {
-				type: 'bar',
+				type: 'line',
 				data: dataC,
 				options: {
 					parsing: {
@@ -252,7 +279,7 @@
 					plugins: {
 						title: {
 							display: true,
-							text: 'All-time by year'
+							text: 'Specified by range'
 						},
 						tooltip: {
 							enabled: true,

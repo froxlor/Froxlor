@@ -1,11 +1,12 @@
 // import libs
 import 'bootstrap';
 import '@fortawesome/fontawesome-free';
-import 'chart.js/dist/chart';
+import Chart from 'chart.js/auto';
 
-// set jquery & bootstrap
+// set jquery & bootstrap & chart
 global.$ = require('jquery');
 global.bootstrap = require('bootstrap');
+window.Chart = Chart;
 
 $(function () {
 	window.$theme = 'Froxlor';

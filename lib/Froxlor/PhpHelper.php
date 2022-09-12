@@ -208,30 +208,10 @@ class PhpHelper
 		}
 	}
 
-	public static function loadConfigArrayDir()
+	public static function loadConfigArrayDir(...$configdirs)
 	{
-		// we now use dynamic function parameters
-		// so we can read from more than one directory
-		// and still be valid for old calls
-		$numargs = func_num_args();
-		if ($numargs <= 0) {
+		if (count($configdirs) <= 0) {
 			return null;
-		}
-
-		// variable that holds all dirs that will
-		// be parsed for inclusion
-		$configdirs = [];
-		// if one of the parameters is an array
-		// we assume that this is a list of
-		// setting-groups to be selected
-		$selection = null;
-		for ($x = 0; $x < $numargs; $x++) {
-			$arg = func_get_arg($x);
-			if (is_array($arg) && isset($arg[0])) {
-				$selection = $arg;
-			} else {
-				$configdirs[] = $arg;
-			}
 		}
 
 		$data = [];
@@ -255,20 +235,6 @@ class PhpHelper
 			foreach ($data_files as $data_filename) {
 				$data = array_merge_recursive($data, include $data_filename);
 			}
-		}
-
-		// if we have specific setting-groups
-		// to select, we'll handle this here
-		// (this is for multiserver-client settings)
-		$_data = [];
-		if ($selection != null && is_array($selection) && isset($selection[0])) {
-			$_data['groups'] = [];
-			foreach ($data['groups'] as $group => $data) {
-				if (in_array($group, $selection)) {
-					$_data['groups'][$group] = $data;
-				}
-			}
-			$data = $_data;
 		}
 
 		return $data;

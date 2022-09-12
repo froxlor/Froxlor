@@ -44,6 +44,7 @@ class Traffic
 		$users = [];
 		$years = [];
 		$months = [];
+		$days = [];
 		foreach ($trafficCollection['data']['list'] as $item) {
 			// per user total
 			$users[$item['customerid']]['loginname'] = $item['customer']['loginname'];
@@ -52,15 +53,20 @@ class Traffic
 			$users[$item['customerid']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
 			$users[$item['customerid']]['mail'] += $item['mail'];
 			// per year
-			$years[$item['year']]['total']['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$years[$item['year']]['total']['http'] += $item['http'];
-			$years[$item['year']]['total']['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$years[$item['year']]['total']['mail'] += $item['mail'];
+			$years[$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$years[$item['year']]['http'] += $item['http'];
+			$years[$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$years[$item['year']]['mail'] += $item['mail'];
 			// per month
-			$months[$item['year']][$item['month']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$months[$item['year']][$item['month']]['http'] += $item['http'];
-			$months[$item['year']][$item['month']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$months[$item['year']][$item['month']]['mail'] += $item['mail'];
+			$months[$item['month'].'/'.$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$months[$item['month'].'/'.$item['year']]['http'] += $item['http'];
+			$months[$item['month'].'/'.$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$months[$item['month'].'/'.$item['year']]['mail'] += $item['mail'];
+			// per day
+			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['http'] += $item['http'];
+			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['mail'] += $item['mail'];
 		}
 
 		// calculate overview for given range from users
@@ -73,7 +79,7 @@ class Traffic
 		}
 
 		// get all possible years for filter
-		$sel_stmt = Database::prepare("SELECT DISTINCT year FROM `".TABLE_PANEL_TRAFFIC."` WHERE 1 ORDER BY `year` DESC");
+		$sel_stmt = Database::prepare("SELECT DISTINCT year FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE 1 ORDER BY `year` DESC");
 		Database::pexecute($sel_stmt);
 		$years_avail = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -82,6 +88,7 @@ class Traffic
 			'users' => $users,
 			'years' => $years,
 			'months' => $months,
+			'days' => $days,
 			'range' => $range,
 			'years_avail' => $years_avail
 		];
@@ -93,25 +100,20 @@ class Traffic
 
 		if (preg_match("/year:([0-9]{4})/", $range, $matches)) {
 			$dateParams = ['year' => $matches[1]];
-		}
-		elseif (preg_match("/months:([1-9]([0-9]+)?)/", $range, $matches)) {
-			$dt = (new \DateTime())->sub(new \DateInterval('P'.$matches[1].'M'))->format('U');
+		} elseif (preg_match("/months:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('P' . $matches[1] . 'M'))->format('U');
 			$dateParams = ['date_from' => $dt];
-		}
-		elseif (preg_match("/days:([1-9]([0-9]+)?)/", $range, $matches)) {
-			$dt = (new \DateTime())->sub(new \DateInterval('P'.$matches[1].'D'))->format('U');
+		} elseif (preg_match("/days:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('P' . $matches[1] . 'D'))->format('U');
 			$dateParams = ['date_from' => $dt];
-		}
-		elseif (preg_match("/hours:([1-9]([0-9]+)?)/", $range, $matches)) {
-			$dt = (new \DateTime())->sub(new \DateInterval('PT'.$matches[1].'H'))->format('U');
+		} elseif (preg_match("/hours:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('PT' . $matches[1] . 'H'))->format('U');
 			$dateParams = ['date_from' => $dt];
-		}
-		elseif (preg_match("/currentmonth/", $range, $matches)) {
-			$dt = (new \DateTime("first day of this month"))->setTime(0,0,0,1)->format('U');
+		} elseif (preg_match("/currentmonth/", $range, $matches)) {
+			$dt = (new \DateTime("first day of this month"))->setTime(0, 0, 0, 1)->format('U');
 			$dateParams = ['date_from' => $dt];
-		}
-		elseif (preg_match("/currentyear/", $range, $matches)) {
-			$dt = \DateTime::createFromFormat("d.m.Y", '01.01.'.date('Y'))->setTime(0,0,0,1)->format('U');
+		} elseif (preg_match("/currentyear/", $range, $matches)) {
+			$dt = \DateTime::createFromFormat("d.m.Y", '01.01.' . date('Y'))->setTime(0, 0, 0, 1)->format('U');
 			$dateParams = ['date_from' => $dt];
 		}
 
