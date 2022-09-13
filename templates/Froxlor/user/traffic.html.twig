@@ -233,11 +233,11 @@
 					label: 'FTP traffic',
 					backgroundColor: 'rgb(200, 199, 132)',
 					{% if range starts with 'days' or range == 'currentmonth' %}
-						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{% for d,dd in bydate[y][m] %}{value: {{ md.ftp }}, formatted: '{{ md.ftp|formatBytes }}', axisv: '{{ d }}.{{ m }}.{{ y }}'},{% endfor %}{% endfor %}{% endfor %}],
+						data: [{% for d,dd in days %}{value: {{ dd.ftp }}, formatted: '{{ dd.ftp|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
 					{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
-						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{value: {{ md.total.ftp }}, formatted: '{{ md.total.ftp|formatBytes }}', axisv: '{{ m }}/{{ y }}'},{% endfor %}{% endfor %}],
+						data: [{% for m,md in months %}{value: {{ md.ftp }}, formatted: '{{ md.ftp|formatBytes }}', axisv: '{{ m }}'},{% endfor %}],
 					{% else %}
-						data: [{% for yr,year in bydate %}{value: {{ year.total.ftp }}, formatted: '{{ year.total.ftp|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
+						data: [{% for yr,year in years %}{value: {{ year.ftp }}, formatted: '{{ year.ftp|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
 					{% endif %}
 					parsing: {
 						xAxisKey: 'axisv'
@@ -247,11 +247,11 @@
 					label: 'Mail traffic',
 					backgroundColor: 'rgb(255, 99, 0)',
 					{% if range starts with 'days' or range == 'currentmonth' %}
-						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{% for d,dd in bydate[y][m] %}{value: {{ md.mail }}, formatted: '{{ md.mail|formatBytes }}', axisv: '{{ d }}.{{ m }}.{{ y }}'},{% endfor %}{% endfor %}{% endfor %}],
+						data: [{% for d,dd in days %}{value: {{ dd.mail }}, formatted: '{{ dd.mail|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
 					{% elseif range starts with 'months' or range starts with 'year' or range == 'currentyear' %}
-						data: [{% for y,yd in bydate %}{% for m,md in bydate[y] %}{value: {{ md.total.mail }}, formatted: '{{ md.total.mail|formatBytes }}', axisv: '{{ m }}/{{ y }}'},{% endfor %}{% endfor %}],
+						data: [{% for m,md in months %}{value: {{ md.ftp }}, formatted: '{{ md.ftp|formatBytes }}', axisv: '{{ m }}'},{% endfor %}],
 					{% else %}
-						data: [{% for yr,year in bydate %}{value: {{ year.total.mail }}, formatted: '{{ year.total.mail|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
+						data: [{% for yr,year in years %}{value: {{ year.mail }}, formatted: '{{ year.mail|formatBytes }}', axisv: '{{ yr }}'},{% endfor %}],
 					{% endif %}
 					parsing: {
 						xAxisKey: 'axisv'
