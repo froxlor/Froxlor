@@ -36,6 +36,14 @@ section h5 {
 	color: $dark-bg;
 }
 
+.page-header {
+	color: $light;
+}
+
+.form-control:focus {
+	color: $dark-bg;
+}
+
 .form-control-plaintext {
 	color: $white;
 }
