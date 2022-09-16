@@ -43,7 +43,9 @@ section h5 {
 .form-control:focus {
 	color: $dark-bg;
 }
-
+.form-control[readonly]:focus {
+	color: $white;
+}
 .form-control-plaintext {
 	color: $white;
 }
