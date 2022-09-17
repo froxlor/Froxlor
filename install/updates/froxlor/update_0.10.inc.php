@@ -232,7 +232,7 @@ if (Froxlor::isDatabaseVersion('201902120')) {
 		foreach ($domain_ids as $domain_id) {
 			$domain_in .= "'" . $domain_id['id'] . "',";
 		}
-		$domain_in = substr($domain_in, 0, - 1);
+		$domain_in = substr($domain_in, 0, -1);
 		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` IN (" . $domain_in . ")");
 	}
 	// check for froxlor domain using let's encrypt
@@ -319,7 +319,7 @@ if (Froxlor::isDatabaseVersion('201907270')) {
 		"templates/Sparkle/customer/tickets"
 	);
 	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = ! in_array('exec', $disabled);
+	$exec_allowed = !in_array('exec', $disabled);
 	$del_list = "";
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = Froxlor::getInstallDir() . $filedir;
@@ -560,7 +560,7 @@ if (Froxlor::isFroxlorVersion('0.10.10')) {
 if (Froxlor::isDatabaseVersion('201912311')) {
 	Update::showUpdateStep("Migrate logfiles_format setting");
 	$current_format = Settings::Set('system.logfiles_format');
-	if (! empty($current_format)) {
+	if (!empty($current_format)) {
 		Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
 		Update::lastStepStatus(0);
 	} else {
@@ -770,7 +770,7 @@ if (Froxlor::isDatabaseVersion('202102200') || Froxlor::isDatabaseVersion('20210
 			$columnfound = 1;
 		}
 	}
-	if (! $columnfound) {
+	if (!$columnfound) {
 		Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
 	}
 	$result = Database::query("DESCRIBE `mail_virtual`");
@@ -780,7 +780,7 @@ if (Froxlor::isDatabaseVersion('202102200') || Froxlor::isDatabaseVersion('20210
 			$columnfound = 1;
 		}
 	}
-	if (! $columnfound) {
+	if (!$columnfound) {
 		Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
 	}
 	Update::lastStepStatus(0);
@@ -800,67 +800,67 @@ if (Froxlor::isDatabaseVersion('202103110')) {
 }
 
 if (Froxlor::isFroxlorVersion('0.10.25')) {
-    Update::showUpdateStep("Updating from 0.10.25 to 0.10.26", false);
-    Froxlor::updateToVersion('0.10.26');
+	Update::showUpdateStep("Updating from 0.10.25 to 0.10.26", false);
+	Froxlor::updateToVersion('0.10.26');
 }
 
 if (Froxlor::isDatabaseVersion('202103240')) {
 
-    Update::showUpdateStep("Adding setting for default serveralias value for new domains", true);
-    Settings::AddNew("system.domaindefaultalias", '0');
-    Update::lastStepStatus(0);
+	Update::showUpdateStep("Adding setting for default serveralias value for new domains", true);
+	Settings::AddNew("system.domaindefaultalias", '0');
+	Update::lastStepStatus(0);
 
-    Froxlor::updateToDbVersion('202106160');
+	Froxlor::updateToDbVersion('202106160');
 }
 
 if (Froxlor::isDatabaseVersion('202106160')) {
 
-    Update::showUpdateStep("Adjusting Let's Encrypt endpoint configuration to support ZeroSSL", true);
-    if (Settings::Get('system.letsencryptca') == 'testing') {
-        Settings::Set("system.letsencryptca", 'letsencrypt_test');
-    } else {
-        Settings::Set("system.letsencryptca", 'letsencrypt');
-    }
-    Update::lastStepStatus(0);
+	Update::showUpdateStep("Adjusting Let's Encrypt endpoint configuration to support ZeroSSL", true);
+	if (Settings::Get('system.letsencryptca') == 'testing') {
+		Settings::Set("system.letsencryptca", 'letsencrypt_test');
+	} else {
+		Settings::Set("system.letsencryptca", 'letsencrypt');
+	}
+	Update::lastStepStatus(0);
 
-    Froxlor::updateToDbVersion('202106270');
+	Froxlor::updateToDbVersion('202106270');
 }
 
 if (Froxlor::isDatabaseVersion('202106270')) {
-    Update::showUpdateStep("Adding custom logo image settings", true);
-    Settings::AddNew("panel.logo_image_header", '');
-    Settings::AddNew("panel.logo_image_login", '');
-    Update::lastStepStatus(0);
+	Update::showUpdateStep("Adding custom logo image settings", true);
+	Settings::AddNew("panel.logo_image_header", '');
+	Settings::AddNew("panel.logo_image_login", '');
+	Update::lastStepStatus(0);
 
-    // Migrating old custom logo over, if exists
-    $custom_logo_file_old = Froxlor::getInstallDir() . '/templates/Sparkle/assets/img/logo_custom.png';
-    if (file_exists($custom_logo_file_old)) {
-        Update::showUpdateStep("Migrating existing custom logo to new settings", true);
+	// Migrating old custom logo over, if exists
+	$custom_logo_file_old = Froxlor::getInstallDir() . '/templates/Sparkle/assets/img/logo_custom.png';
+	if (file_exists($custom_logo_file_old)) {
+		Update::showUpdateStep("Migrating existing custom logo to new settings", true);
 
-        $path = Froxlor::getInstallDir().'/img/';
-        if (!is_dir($path) && !mkdir($path, 0775)) {
-            throw new \Exception("img directory does not exist and cannot be created");
-        }
-        if (!is_writable($path)) {
-            if (!chmod($path, 0775)) {
-                throw new \Exception("Cannot write to img directory");
-            }
-        }
+		$path = Froxlor::getInstallDir() . '/img/';
+		if (!is_dir($path) && !mkdir($path, 0775)) {
+			throw new \Exception("img directory does not exist and cannot be created");
+		}
+		if (!is_writable($path)) {
+			if (!chmod($path, 0775)) {
+				throw new \Exception("Cannot write to img directory");
+			}
+		}
 
-        // Save as new custom logo header
-        $save_to = 'logo_header.png';
-        copy($custom_logo_file_old, $path.$save_to);
-        Settings::Set("panel.logo_image_header", "img/{$save_to}?v=".time());
+		// Save as new custom logo header
+		$save_to = 'logo_header.png';
+		copy($custom_logo_file_old, $path . $save_to);
+		Settings::Set("panel.logo_image_header", "img/{$save_to}?v=" . time());
 
-        // Save as new custom logo login
-        $save_to = 'logo_login.png';
-        copy($custom_logo_file_old, $path.$save_to);
-        Settings::Set("panel.logo_image_login", "img/{$save_to}?v=".time());
+		// Save as new custom logo login
+		$save_to = 'logo_login.png';
+		copy($custom_logo_file_old, $path . $save_to);
+		Settings::Set("panel.logo_image_login", "img/{$save_to}?v=" . time());
 
-        Update::lastStepStatus(0);
-    }
+		Update::lastStepStatus(0);
+	}
 
-    Froxlor::updateToDbVersion('202107070');
+	Froxlor::updateToDbVersion('202107070');
 }
 
 if (Froxlor::isFroxlorVersion('0.10.26')) {
@@ -885,7 +885,8 @@ if (Froxlor::isDatabaseVersion('202107200')) {
 
 if (Froxlor::isDatabaseVersion('202107210')) {
 	Update::showUpdateStep("Normalizing ipv6 for correct comparison", true);
-	$result_stmt = Database::prepare("
+	$result_stmt = Database::prepare(
+		"
 		SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "`"
 	);
 	Database::pexecute($result_stmt);
@@ -961,8 +962,8 @@ if (Froxlor::isDatabaseVersion('202109040')) {
 }
 
 if (Froxlor::isFroxlorVersion('0.10.31')) {
-        Update::showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
-        Froxlor::updateToVersion('0.10.32');
+	Update::showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
+	Froxlor::updateToVersion('0.10.32');
 }
 
 if (Froxlor::isFroxlorVersion('0.10.32')) {
@@ -996,12 +997,12 @@ if (Froxlor::isFroxlorVersion('0.10.35.1')) {
 	Froxlor::updateToVersion('0.10.36');
 }
 
-if (\Froxlor\Froxlor::isFroxlorVersion('0.10.36')) {
-	showUpdateStep("Updating from 0.10.36 to 0.10.37", false);
-	\Froxlor\Froxlor::updateToVersion('0.10.37');
+if (Froxlor::isFroxlorVersion('0.10.36')) {
+	Update::showUpdateStep("Updating from 0.10.36 to 0.10.37", false);
+	Froxlor::updateToVersion('0.10.37');
 }
 
-if (\Froxlor\Froxlor::isFroxlorVersion('0.10.37')) {
-        showUpdateStep("Updating from 0.10.37 to 0.10.38", false);
-        \Froxlor\Froxlor::updateToVersion('0.10.38');
+if (Froxlor::isFroxlorVersion('0.10.37')) {
+	Update::showUpdateStep("Updating from 0.10.37 to 0.10.38", false);
+	Froxlor::updateToVersion('0.10.38');
 }
