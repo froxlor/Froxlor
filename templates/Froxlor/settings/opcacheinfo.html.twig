@@ -22,7 +22,7 @@
 					<h5 class="card-title">{{ lng('opcacheinfo.memusage') }}</h5>
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.used_memory_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.used_memory }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.total_memory }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.used_memory_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ opcacheinfo.overview.used_memory_percentage }}%</small>
 					</div>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -52,7 +52,7 @@
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.hit_rate_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.hits }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.hits + opcacheinfo.overview.misses }}"></div>
 						<div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - opcacheinfo.overview.hit_rate_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.misses }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.hits + opcacheinfo.overview.misses }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.hit_rate_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ opcacheinfo.overview.hit_rate_percentage }}%</small>
 					</div>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -81,7 +81,7 @@
 					<h5 class="card-title">{{ lng('opcacheinfo.usedkey') }}</h5>
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.used_key_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.num_cached_keys }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.max_cached_keys }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.used_key_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ opcacheinfo.overview.used_key_percentage }}%</small>
 					</div>
 				</div>
 				<ul class="list-group list-group-flush">

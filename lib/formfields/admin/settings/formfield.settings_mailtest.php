@@ -68,6 +68,11 @@ return [
 					]
 				]
 			]
+		],
+		'buttons' => [
+			[
+				'label' => lng('admin.smtptestsend')
+			]
 		]
 	]
 ];

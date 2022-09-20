@@ -470,6 +470,7 @@ return [
 		'smtpsettings' => 'SMTP settings',
 		'smtptestaddr' => 'Send test-mail to',
 		'smtptestnote' => 'Note that the values below reflect your current settings and can only be adjusted there (see link in top right corner)',
+		'smtptestsend' => 'Send test-mail',
 		'mysqlserver' => [
 			'mysqlserver' => 'MySQL Server',
 			'dbserver' => 'Server #',
@@ -490,6 +491,7 @@ return [
 			'ssl_cert_file' => 'The file path to the SSL certificate authority',
 			'verify_ca' => 'Enable verification of the server SSL certificate',
 		],
+		'settings_importfile' => 'Chose import file',
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',
@@ -1308,6 +1310,10 @@ Yours sincerely, your administrator',
 		'mandatoryfield' => 'Field is mandatory',
 		'select_all' => 'Select all',
 		'unselect_all' => 'Unselect all',
+		'searchtablecolumnsmodal' => [
+			'title' => 'Search in fields',
+			'description' => 'Select the field you want to search in'
+		],
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',

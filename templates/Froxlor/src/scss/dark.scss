@@ -29,23 +29,22 @@
     border-top: 1px solid var(--bs-body-bg)!important;
 }
 
-.form-select, .form-control,
+.form-select,
+.form-control,
+.form-control:focus,
 section h3,
 section h3 + span,
 section h5 {
 	color: $dark-bg;
 }
 
+.card-title,
 .page-header {
 	color: $light;
 }
 
-.form-control:focus {
-	color: $dark-bg;
-}
-.form-control[readonly]:focus {
-	color: $white;
-}
+
+.form-control[readonly]:focus,
 .form-control-plaintext {
 	color: $white;
 }

@@ -9,7 +9,7 @@
 
 {% block content %}
 	<div class="card table-responsive">
-		<table class="table table-borderless table-striped align-middle mb-0 px-3">
+		<table class="table table-borderless table-striped align-middle mb-0 px-3" id="phpinfotable">
 			<tbody>
 				{% for name,section in phpinfo %}
 					{% if name|lower == 'phpinfo' %}

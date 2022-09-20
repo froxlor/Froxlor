@@ -22,7 +22,7 @@
 					<h5 class="card-title">{{ lng('apcuinfo.memnote') }}</h5>
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.mem_used_percentage }}%" aria-valuenow="{{ apcuinfo.mem_used }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.mem_avail }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.mem_used_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ apcuinfo.mem_used_percentage }}%</small>
 					</div>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -48,7 +48,7 @@
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.num_hits_percentage }}%" aria-valuenow="{{ apcuinfo.num_hits }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.num_hits_and_misses }}"></div>
 						<div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - apcuinfo.num_misses_percentage }}%" aria-valuenow="{{ apcuinfo.num_misses }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.num_hits_and_misses }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.num_hits_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ apcuinfo.num_hits_percentage }}%</small>
 					</div>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -98,7 +98,7 @@
 				{% if apcuinfo.fragmentation is iterable %}
 					<div class="progress position-relative">
 						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.fragmentation.used_percentage }}%" aria-valuenow="{{ apcuinfo.fragmentation.used_bytes }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.fragmentation.total_bytes }}"></div>
-						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.fragmentation.used_percentage }}%</small>
+						<small class="justify-content-center d-flex position-absolute w-100 text-dark">{{ apcuinfo.fragmentation.used_percentage }}%</small>
 					</div>
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item d-flex justify-content-between align-items-center">

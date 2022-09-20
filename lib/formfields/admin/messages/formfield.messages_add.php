@@ -49,6 +49,11 @@ return [
 					]
 				]
 			]
+		],
+		'buttons' => [
+			[
+				'label' => lng('admin.message')
+			]
 		]
 	]
 ];

@@ -73,7 +73,7 @@ if ($page == 'domains' || $page == 'overview') {
 				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'import']),
 				'label' => lng('domains.domain_import'),
 				'icon' => 'fa-solid fa-file-import',
-				'class' => 'btn-secondary'
+				'class' => 'btn-outline-secondary'
 			];
 		}
 

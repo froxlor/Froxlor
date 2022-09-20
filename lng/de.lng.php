@@ -463,6 +463,7 @@ return [
 		'smtpsettings' => 'SMTP Einstellungen',
 		'smtptestaddr' => 'Test-Email senden an',
 		'smtptestnote' => 'Bitte beachten: Die untenstehenden Werte reflektieren die aktuellen Einstellungen und können auch nur dort angepasst werden (siehe Link in der oberen rechten Ecke)',
+		'smtptestsend' => 'Test-Email senden',
 		'mysqlserver' => [
 			'caption' => 'Beschreibung',
 			'user' => 'Privilegierter Benutzer',
@@ -479,6 +480,7 @@ return [
 			'ssl_cert_file' => 'Dateipfad zur SSL certificate authority',
 			'verify_ca' => 'Aktiviere SSL Zertifikats-Verifikation',
 		],
+		'settings_importfile' => 'Wähle Import-Datei',
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',
@@ -1198,6 +1200,10 @@ Vielen Dank, Ihr Administrator',
 		'mandatoryfield' => 'Pflichtfeld',
 		'select_all' => 'Alle auswählen',
 		'unselect_all' => 'Alle abwählen',
+		'searchtablecolumnsmodal' => [
+			'title' => 'Feld-Suche',
+			'description' => 'Wähle das zu durchsuchende Feld aus'
+		],
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',

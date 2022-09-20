@@ -31,7 +31,7 @@ return [
 			'section_a' => [
 				'fields' => [
 					'import_file' => [
-						'label' => 'Chose file for import',
+						'label' => lng('admin.settings_importfile'),
 						'type' => 'file',
 						'mandatory' => true
 					]
