@@ -101,15 +101,15 @@
 									</span><br/>
 									{{ lng('customer.diskspace') }}:
 									<span class="{% if user.diskspace_used == user.diskspace_used_new %}text-success{% else %}warning{% endif %}">
-										<b>{{ user.diskspace_used|formatBytes }}
+										<b>{{ (user.diskspace_used * 1024)|formatBytes }}
 											-&gt;
-											{{ user.diskspace_used_new|formatBytes }}</b>
+											{{ (user.diskspace_used_new * 1024)|formatBytes }}</b>
 									</span><br/>
 									{{ lng('customer.traffic') }}:
 									<span class="{% if user.traffic_used == user.traffic_used_new %}text-success{% else %}warning{% endif %}">
-										<b>{{ user.traffic_used|formatBytes }}
+										<b>{{ (user.traffic_used * 1024)|formatBytes }}
 											-&gt;
-											{{ user.traffic_used_new|formatBytes }}</b>
+											{{ (user.traffic_used_new * 1024)|formatBytes }}</b>
 									</span>
 								</td>
 								<td class="px-3 w-25">
