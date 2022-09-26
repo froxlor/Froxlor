@@ -21,7 +21,7 @@
 {% block actions %}
 
 	{% if formdata.self_overview is defined and formdata.self_overview is iterable %}
-		{% if action_links is not defined %}{% set actions_links = [] %}{% endif %}
+		{% if actions_links is not defined %}{% set actions_links = [] %}{% endif %}
 		{% set actions_tmp = actions_links %}
 		{% set actions_links = {'href': linker(formdata.self_overview), 'icon': 'fa-solid fa-reply','label': lng('panel.backtooverview')} %}
 		{% set actions_links = {actions_links}|merge(actions_tmp) %}
