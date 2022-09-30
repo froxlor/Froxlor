@@ -31,6 +31,7 @@ return [
 		'title' => lng('menue.extras.directoryprotection'),
 		'icon' => 'fa-solid fa-lock',
 		'self_overview' => ['section' => 'extras', 'page' => 'htpasswds'],
+		'default_sorting' => ['path' => 'asc'],
 		'columns' => [
 			'username' => [
 				'label' => lng('login.username'),

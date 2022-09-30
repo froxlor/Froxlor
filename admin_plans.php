@@ -48,7 +48,7 @@ if ($page == '' || $page == 'overview') {
 		try {
 			$plan_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.plans.php';
 			$collection = (new Collection(HostingPlans::class, $userinfo))
-				->withPagination($plan_list_data['plan_list']['columns']);
+				->withPagination($plan_list_data['plan_list']['columns'], $plan_list_data['plan_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

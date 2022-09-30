@@ -45,7 +45,7 @@ if ($page == 'mysqlserver' || $page == 'overview') {
 		try {
 			$mysqlserver_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.mysqlserver.php';
 			$collection = (new Collection(MysqlServer::class, $userinfo))
-				->withPagination($mysqlserver_list_data['mysqlserver_list']['columns']);
+				->withPagination($mysqlserver_list_data['mysqlserver_list']['columns'], $mysqlserver_list_data['mysqlserver_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

@@ -55,7 +55,7 @@ if ($page == 'overview' || $page == 'emails') {
 		try {
 			$email_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails.php';
 			$collection = (new Collection(Emails::class, $userinfo))
-				->withPagination($email_list_data['email_list']['columns']);
+				->withPagination($email_list_data['email_list']['columns'], $email_list_data['email_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

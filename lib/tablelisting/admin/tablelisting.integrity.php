@@ -32,6 +32,7 @@ return [
 		'title' => lng('admin.integritycheck'),
 		'icon' => 'fa-solid fa-circle-check',
 		'self_overview' => ['section' => 'settings', 'page' => 'integritycheck'],
+		'default_sorting' => ['displayid' => 'asc'],
 		'columns' => [
 			'displayid' => [
 				'label' => 'ID',

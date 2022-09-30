@@ -32,6 +32,7 @@ return [
 		'title' => lng('menue.mysql.databases'),
 		'icon' => 'fa-solid fa-database',
 		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
+		'default_sorting' => ['databasename' => 'asc'],
 		'columns' => [
 			'databasename' => [
 				'label' => lng('mysql.databasename'),

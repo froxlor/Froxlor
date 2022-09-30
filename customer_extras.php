@@ -63,7 +63,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		try {
 			$htpasswd_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htpasswd.php';
 			$collection = (new Collection(DirProtections::class, $userinfo))
-				->withPagination($htpasswd_list_data['htpasswd_list']['columns']);
+				->withPagination($htpasswd_list_data['htpasswd_list']['columns'], $htpasswd_list_data['htpasswd_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
@@ -180,7 +180,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		try {
 			$htaccess_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htaccess.php';
 			$collection = (new Collection(DirOptions::class, $userinfo))
-				->withPagination($htaccess_list_data['htaccess_list']['columns']);
+				->withPagination($htaccess_list_data['htaccess_list']['columns'], $htaccess_list_data['htaccess_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

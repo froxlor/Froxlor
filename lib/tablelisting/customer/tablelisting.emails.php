@@ -33,6 +33,7 @@ return [
 		'title' => lng('menue.email.emails'),
 		'icon' => 'fa-solid fa-envelope',
 		'self_overview' => ['section' => 'email', 'page' => 'emails'],
+		'default_sorting' => ['m.email_full' => 'asc'],
 		'columns' => [
 			'm.email_full' => [
 				'label' => lng('emails.emailaddress'),

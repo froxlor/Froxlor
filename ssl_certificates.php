@@ -62,7 +62,7 @@ $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_cert
 try {
 	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.sslcertificates.php';
 	$collection = (new Collection(Certificates::class, $userinfo))
-		->withPagination($certificates_list_data['sslcertificates_list']['columns']);
+		->withPagination($certificates_list_data['sslcertificates_list']['columns'], $certificates_list_data['sslcertificates_list']['default_sorting']);
 	if ($userinfo['adminsession'] == 1) {
 		$collection->has('domains', Domains::class, 'domainid', 'id');
 	} else {

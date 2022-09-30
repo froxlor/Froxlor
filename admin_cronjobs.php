@@ -43,7 +43,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		try {
 			$cron_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.cronjobs.php';
 			$collection = (new Collection(Cronjobs::class, $userinfo))
-				->withPagination($cron_list_data['cron_list']['columns']);
+				->withPagination($cron_list_data['cron_list']['columns'], $cron_list_data['cron_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

@@ -36,6 +36,7 @@ return [
 		'description' => lng('admin.customers_list_desc'),
 		'icon' => 'fa-solid fa-user',
 		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
+		'default_sorting' => ['c.name' => 'asc'],
 		'columns' => [
 			'c.customerid' => [
 				'label' => 'ID',

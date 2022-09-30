@@ -30,6 +30,7 @@ return [
 		'title' => lng('admin.templates.templates'),
 		'icon' => 'fa-solid fa-envelope',
 		'self_overview' => ['section' => 'templates', 'page' => 'email'],
+		'default_sorting' => ['template' => 'asc'],
 		'columns' => [
 			'language' => [
 				'label' => lng('login.language'),

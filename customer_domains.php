@@ -57,8 +57,7 @@ if ($page == 'overview' || $page == 'domains') {
 		try {
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.domains.php';
 			$collection = (new Collection(SubDomains::class, $userinfo))
-				//->addParam(['sql_search' => ['d.parentdomainid' => $parentdomain_id]])
-				->withPagination($domain_list_data['domain_list']['columns']);
+				->withPagination($domain_list_data['domain_list']['columns'], $domain_list_data['domain_list']['default_sorting']);
 			$parentDomainCollection = (new Collection(SubDomains::class, $userinfo, ['sql_search' => ['d.parentdomainid' => 0]]));
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());

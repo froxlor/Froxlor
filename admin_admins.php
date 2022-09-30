@@ -48,7 +48,7 @@ if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettin
 		try {
 			$admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
 			$collection = (new Collection(Admins::class, $userinfo))
-				->withPagination($admin_list_data['admin_list']['columns']);
+				->withPagination($admin_list_data['admin_list']['columns'], $admin_list_data['admin_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

@@ -51,7 +51,7 @@ if ($page == 'overview' || $page == 'accounts') {
 		try {
 			$ftp_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.ftps.php';
 			$collection = (new Collection(Ftps::class, $userinfo))
-				->withPagination($ftp_list_data['ftp_list']['columns']);
+				->withPagination($ftp_list_data['ftp_list']['columns'], $ftp_list_data['ftp_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

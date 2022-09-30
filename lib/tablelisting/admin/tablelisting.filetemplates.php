@@ -30,6 +30,7 @@ return [
 		'title' => lng('admin.templates.filetemplates'),
 		'icon' => 'fa-solid fa-file-lines',
 		'self_overview' => ['section' => 'templates', 'page' => 'email'],
+		'default_sorting' => ['template' => 'asc'],
 		'columns' => [
 			'template' => [
 				'label' => lng('admin.templates.action'),

@@ -36,6 +36,7 @@ return [
 		'title' => lng('admin.admin'),
 		'icon' => 'fa-solid fa-user',
 		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
+		'default_sorting' => ['loginname' => 'asc'],
 		'columns' => [
 			'adminid' => [
 				'label' => 'ID',

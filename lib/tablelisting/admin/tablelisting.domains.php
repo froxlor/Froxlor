@@ -35,6 +35,7 @@ return [
 		'icon' => 'fa-solid fa-globe',
 		'empty_msg' => $customerCollection->count() == 0 ? lng('admin.domain_nocustomeraddingavailable') : '',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
+		'default_sorting' => ['d.domain_ace' => 'asc'],
 		'columns' => [
 			'd.id' => [
 				'label' => 'ID',

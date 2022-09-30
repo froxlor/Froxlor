@@ -32,6 +32,7 @@ return [
 		'title' => lng('admin.ipsandports.ipsandports'),
 		'icon' => 'fa-solid fa-ethernet',
 		'self_overview' => ['section' => 'ipsandports', 'page' => 'ipsandports'],
+		'default_sorting' => ['ip' => 'asc'],
 		'columns' => [
 			'ip' => [
 				'label' => lng('admin.ipsandports.ip'),

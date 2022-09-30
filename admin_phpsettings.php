@@ -44,7 +44,7 @@ if ($page == 'overview') {
 		try {
 			$phpconf_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.phpconfigs.php';
 			$collection = (new Collection(PhpSettings::class, $userinfo, ['with_subdomains' => true]))
-				->withPagination($phpconf_list_data['phpconf_list']['columns']);
+				->withPagination($phpconf_list_data['phpconf_list']['columns'], $phpconf_list_data['phpconf_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
@@ -180,7 +180,7 @@ if ($page == 'overview') {
 		try {
 			$fpmconf_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.fpmconfigs.php';
 			$collection = (new Collection(FpmDaemons::class, $userinfo))
-				->withPagination($fpmconf_list_data['fpmconf_list']['columns']);
+				->withPagination($fpmconf_list_data['fpmconf_list']['columns'], $fpmconf_list_data['fpmconf_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

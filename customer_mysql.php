@@ -60,7 +60,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		try {
 			$mysql_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.mysqls.php';
 			$collection = (new Collection(Mysqls::class, $userinfo))
-				->withPagination($mysql_list_data['mysql_list']['columns']);
+				->withPagination($mysql_list_data['mysql_list']['columns'], $mysql_list_data['mysql_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

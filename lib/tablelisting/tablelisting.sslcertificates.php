@@ -32,6 +32,7 @@ return [
 		'title' => lng('domains.ssl_certificates'),
 		'icon' => 'fa-solid fa-shield',
 		'self_overview' => ['section' => 'domains', 'page' => 'sslcertificates'],
+		'default_sorting' => ['domains.domain_ace' => 'asc'],
 		'columns' => [
 			'd.domain' => [
 				'label' => lng('domains.domainname'),

@@ -57,7 +57,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
 			$collection = (new Collection(Domains::class, $userinfo))
 				->has('customer', Customers::class, 'customerid', 'customerid')
-				->withPagination($domain_list_data['domain_list']['columns']);
+				->withPagination($domain_list_data['domain_list']['columns'], $domain_list_data['domain_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

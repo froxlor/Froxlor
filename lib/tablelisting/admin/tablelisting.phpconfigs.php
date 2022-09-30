@@ -33,6 +33,7 @@ return [
 		'title' => lng('menue.phpsettings.maintitle'),
 		'icon' => 'fa-brands fa-php',
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'overview'],
+		'default_sorting' => ['c.description' => 'asc'],
 		'columns' => [
 			'c.id' => [
 				'label' => 'ID',

@@ -45,7 +45,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		try {
 			$ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
 			$collection = (new Collection(IpsAndPorts::class, $userinfo))
-				->withPagination($ipsandports_list_data['ipsandports_list']['columns']);
+				->withPagination($ipsandports_list_data['ipsandports_list']['columns'], $ipsandports_list_data['ipsandports_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

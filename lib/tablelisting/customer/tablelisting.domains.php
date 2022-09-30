@@ -33,6 +33,7 @@ return [
 		'title' => lng('admin.domains'),
 		'icon' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
+		'default_sorting' => ['d.domain_ace' => 'asc'],
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => lng('domains.domainname'),

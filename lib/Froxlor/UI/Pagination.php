@@ -54,8 +54,9 @@ class Pagination
 	 * @param array $fields
 	 * @param int $total_entries
 	 * @param int $perPage
+	 * @param array $default_sorting array of key=sortfield,value=sortorder for default sorting
 	 */
-	public function __construct(array $fields = [], int $total_entries = 0, int $perPage = 20)
+	public function __construct(array $fields = [], int $total_entries = 0, int $perPage = 20, array $default_sorting = [])
 	{
 		$this->fields = $fields;
 		$this->entries = $total_entries;
@@ -87,8 +88,14 @@ class Pagination
 			$this->sortfield = $_REQUEST['sortfield'];
 			$this->addOrderBy($this->sortfield, $this->sortorder);
 		} else {
+			// add default ordering by given order
+			if (!empty($default_sorting)) {
+				$this->sortfield = array_key_first($default_sorting);
+				$this->sortorder = array_shift($default_sorting) ?? $this->sortorder;
+				$this->addOrderBy($this->sortfield, $this->sortorder);
+			}
 			// add default ordering by given fields
-			if (count($fields) > 0) {
+			if (count($fields) > 0 && empty($this->sortfield)) {
 				$orderfields = array_keys($fields);
 				$this->sortfield = $orderfields[0];
 				$this->addOrderBy($orderfields[0], $this->sortorder);

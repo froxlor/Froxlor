@@ -32,6 +32,7 @@ return [
 		'title' => lng('menue.extras.pathoptions'),
 		'icon' => 'fa-solid fa-folder',
 		'self_overview' => ['section' => 'extras', 'page' => 'htaccess'],
+		'default_sorting' => ['path' => 'asc'],
 		'columns' => [
 			'path' => [
 				'label' => lng('panel.path'),

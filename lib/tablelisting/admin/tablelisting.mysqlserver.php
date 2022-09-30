@@ -31,6 +31,7 @@ return [
 		'title' => lng('admin.mysqlserver.mysqlserver'),
 		'icon' => 'fa-solid fa-server',
 		'self_overview' => ['section' => 'mysqlserver', 'page' => 'mysqlserver'],
+		'default_sorting' => ['caption' => 'asc'],
 		'columns' => [
 			'id' => [
 				'label' => lng('admin.mysqlserver.dbserver'),

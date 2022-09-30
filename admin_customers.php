@@ -51,7 +51,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 		try {
 			$customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
 			$collection = (new Collection(Customers::class, $userinfo, ['show_usages' => true]))
-				->withPagination($customer_list_data['customer_list']['columns']);
+				->withPagination($customer_list_data['customer_list']['columns'], $customer_list_data['customer_list']['default_sorting']);
 			if ($userinfo['change_serversettings']) {
 				$collection->has('admin', Admins::class, 'adminid', 'adminid');
 			}

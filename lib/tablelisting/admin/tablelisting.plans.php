@@ -31,6 +31,7 @@ return [
 		'title' => lng('admin.plans.plans'),
 		'icon' => 'fa-solid fa-clipboard-list',
 		'self_overview' => ['section' => 'plans', 'page' => 'overview'],
+		'default_sorting' => ['p.name' => 'asc'],
 		'columns' => [
 			'p.id' => [
 				'label' => 'ID',

@@ -32,6 +32,7 @@ return [
 		'title' => lng('menue.ftp.accounts'),
 		'icon' => 'fa-solid fa-users',
 		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
+		'default_sorting' => ['username' => 'asc'],
 		'columns' => [
 			'username' => [
 				'label' => lng('login.username'),

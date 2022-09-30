@@ -32,6 +32,7 @@ return [
 		'title' => lng('menue.phpsettings.fpmdaemons'),
 		'icon' => 'fa-brands fa-php',
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
+		'default_sorting' => ['description' => 'asc'],
 		'columns' => [
 			'id' => [
 				'label' => 'ID',

@@ -38,8 +38,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 		try {
 			$syslog_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.syslog.php';
 			$collection = (new Collection(SysLog::class, $userinfo))
-				->addParam(['sql_orderby' => ['date' => 'DESC']])
-				->withPagination($syslog_list_data['syslog_list']['columns']);
+				->withPagination($syslog_list_data['syslog_list']['columns'], $syslog_list_data['syslog_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
