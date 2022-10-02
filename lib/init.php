@@ -296,6 +296,7 @@ unset($css);
 
 $action = Request::get('action');
 $page = Request::get('page', 'overview');
+$gSearchText = Request::get('searchtext');
 
 // clear request data
 if (!$action && isset($_SESSION)) {
@@ -305,6 +306,7 @@ if (!$action && isset($_SESSION)) {
 UI::twig()->addGlobal('action', $action);
 UI::twig()->addGlobal('page', $page);
 UI::twig()->addGlobal('area', AREA);
+UI::twig()->addGlobal('gSearchText', $gSearchText);
 
 /**
  * Initialize the mailingsystem
