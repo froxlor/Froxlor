@@ -61,7 +61,7 @@ return [
 						'visible' => Settings::Get('system.allow_customer_shell') == '1',
 						'label' => lng('panel.shell'),
 						'type' => 'select',
-						'select_var' => $shells_avail,
+						'select_var' => $shells,
 						'selected' => $result['shell'] ?? '/bin/false'
 					]
 				]

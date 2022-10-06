@@ -133,8 +133,11 @@ if ($page == 'overview' || $page == 'accounts') {
 					$shells['/bin/false'] = "/bin/false";
 					$shells_avail = Settings::Get('system.available_shells');
 					if (!empty($shells_avail)) {
-						$shells_avail = explode(",", $shells_avail);
-						$shells_avail = array_map("trim", $shells_avail);
+						$shells_avail_arr = explode(",", $shells_avail);
+						$shells_avail_arr = array_map("trim", $shells_avail_arr);
+						foreach ($shells_avail_arr as $shell) {
+							$shells[$shell] = $shell;
+						}
 					}
 				}
 
@@ -180,8 +183,11 @@ if ($page == 'overview' || $page == 'accounts') {
 					$shells['/bin/false'] = "/bin/false";
 					$shells_avail = Settings::Get('system.available_shells');
 					if (!empty($shells_avail)) {
-						$shells_avail = explode(",", $shells_avail);
-						$shells_avail = array_map("trim", $shells_avail);
+						$shells_avail_arr = explode(",", $shells_avail);
+						$shells_avail_arr = array_map("trim", $shells_avail_arr);
+						foreach ($shells_avail_arr as $shell) {
+							$shells[$shell] = $shell;
+						}
 					}
 				}
 

@@ -45,7 +45,7 @@ final class UserCommand extends CliCommand
 		$this->setDescription('Various user actions');
 		$this->addArgument('user', InputArgument::REQUIRED, 'Loginname of the target user')
 			->addArgument('admin', InputArgument::OPTIONAL, 'Loginname of the executing admin/reseller user', 'admin');
-		$this->addOption('unlock', 'u', InputOption::VALUE_NONE, 'Unock user after too many failed login attempts')
+		$this->addOption('unlock', 'u', InputOption::VALUE_NONE, 'Unlock user after too many failed login attempts')
 			->addOption('change-passwd', 'p', InputOption::VALUE_NONE, 'Set new password for given user')
 			->addOption('show-info', 's', InputOption::VALUE_NONE, 'Output information details of given user');
 	}
