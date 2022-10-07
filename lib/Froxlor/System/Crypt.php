@@ -206,11 +206,10 @@ class Crypt
 	 *            Password to be encrypted
 	 * @param bool $htpasswd
 	 *            optional whether to generate a SHA1 password for directory protection
+	 * @param bool $openssl
+	 *            optional generates $htpasswd like strings but for proftpd
 	 *
-	 * @return string encrypted password
-	 * @author Michal Wojcik <m.wojcik@sonet3.pl>
-	 * @author Michael Kaufmann <mkaufmann@nutime.de>
-	 * @author Froxlor team <team@froxlor.org> (2010-)
+	 * @return string encrypted password)
 	 *
 	 *         0 - default crypt (depends on system configuration)
 	 *         1 - MD5 $1$
@@ -219,10 +218,10 @@ class Crypt
 	 *         4 - SHA-512 $6$
 	 *
 	 */
-	public static function makeCryptPassword($password, $htpasswd = false)
+	public static function makeCryptPassword($password, $htpasswd = false, $openssl = false)
 	{
-		if ($htpasswd) {
-			return '{SHA}' . base64_encode(sha1($password, true));
+		if ($htpasswd || $openssl) {
+			return '{SHA' . ($openssl ? '1' : '') . '}' . base64_encode(sha1($password, true));
 		}
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
 		return password_hash($password, $algo);

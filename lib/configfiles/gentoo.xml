@@ -3453,7 +3453,7 @@ AllowOverwrite			on
 </Directory>
 
 # SQL settings
-SQLAuthTypes Crypt
+SQLAuthTypes Crypt OpenSSL
 SQLAuthenticate users* groups*
 SQLConnectInfo <SQL_DB>@<SQL_HOST> <SQL_UNPRIVILEGED_USER> <SQL_UNPRIVILEGED_PASSWORD>
 SQLUserInfo ftp_users username password uid gid homedir shell

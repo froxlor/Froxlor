@@ -4472,7 +4472,7 @@ SQLEngine on
 SQLAuthenticate on
 #
 # Use both an encrypted or plaintext password
-SQLAuthTypes Crypt
+SQLAuthTypes Crypt OpenSSL
 
 SQLAuthenticate users* groups*
 
