@@ -52,6 +52,6 @@
 
 	{% import "Froxlor/form/form.html.twig" as form %}
 
-	{{ form.form(formdata, formaction|default('#'), formdata.title, editid|default('')) }}
+	{{ form.form(formdata, formaction|default('#'), formdata.title, editid|default(''), false, , idprefix|default('')) }}
 
 {% endblock %}

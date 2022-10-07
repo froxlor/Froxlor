@@ -53,7 +53,7 @@
 		{% endif %}
 	</a>
 	{% if data.modal is defined and data.modal is iterable %}
-		<div class="modal fade" data-action="apikeys" data-entry="{{ data.modal.entry }}" id="{{ data.modal.id }}" aria-hidden="true" aria-labelledby="{{ data.modal.id }}Label" tabindex="-1">
+		<div class="modal fade" data-action="{{ data.modal.action|default('') }}" data-entry="{{ data.modal.entry }}" id="{{ data.modal.id }}" aria-hidden="true" aria-labelledby="{{ data.modal.id }}Label" tabindex="-1">
 			<div class="modal-dialog {{ data.modal.size|default('modal-xl') }} modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -64,7 +64,7 @@
 						{{ data.modal.body|raw }}
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-primary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
 					</div>
 				</div>
 			</div>

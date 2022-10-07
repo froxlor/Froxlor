@@ -101,6 +101,7 @@ class Text
 			'entry' => $attributes['fields']['id'],
 			'id' => 'akModal' . $attributes['fields']['id'],
 			'title' => 'API-key ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
+			'action' => 'apikeys',
 			'body' => $body
 		];
 	}

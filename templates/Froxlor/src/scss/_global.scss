@@ -4,6 +4,10 @@
 	outline: none;
 }
 
+.form-control[readonly] {
+	background: rgba(0, 0, 0, .15);
+}
+
 .page-header {
 	margin-bottom: 2rem;
 
