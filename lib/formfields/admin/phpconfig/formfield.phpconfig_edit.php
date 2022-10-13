@@ -39,7 +39,8 @@ return [
 						'label' => lng('admin.phpsettings.description'),
 						'type' => 'text',
 						'maxlength' => 50,
-						'value' => $result['description']
+						'value' => $result['description'],
+						'mandatory' => true
 					],
 					'binary' => [
 						'visible' => Settings::Get('system.mod_fcgid') == 1,
@@ -182,7 +183,8 @@ return [
 						'type' => 'textarea',
 						'cols' => 80,
 						'rows' => 20,
-						'value' => $result['phpsettings']
+						'value' => $result['phpsettings'],
+						'mandatory' => true
 					],
 					'allow_all_customers' => [
 						'label' => lng('serversettings.phpfpm_settings.allow_all_customers.title'),

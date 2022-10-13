@@ -25,30 +25,33 @@
 
 return [
 	'fpmconfig_add' => [
-		'title' => lng('admin.phpsettings.addsettings'),
+		'title' => lng('admin.fpmsettings.addnew'),
 		'image' => 'fa-solid fa-plus',
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'sections' => [
 			'section_a' => [
-				'title' => lng('admin.phpsettings.addsettings'),
+				'title' => lng('admin.fpmsettings.addnew'),
 				'image' => 'icons/phpsettings_add.png',
 				'fields' => [
 					'description' => [
 						'label' => lng('admin.phpsettings.description'),
 						'type' => 'text',
-						'maxlength' => 50
+						'maxlength' => 50,
+						'mandatory' => true
 					],
 					'reload_cmd' => [
 						'label' => lng('serversettings.phpfpm_settings.reload'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => 'service php7.4-fpm restart'
+						'value' => 'service php7.4-fpm restart',
+						'mandatory' => true
 					],
 					'config_dir' => [
 						'label' => lng('serversettings.phpfpm_settings.configdir'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => '/etc/php/7.4/fpm/pool.d/'
+						'value' => '/etc/php/7.4/fpm/pool.d/',
+						'mandatory' => true
 					],
 					'pm' => [
 						'label' => lng('serversettings.phpfpm_settings.pm'),

@@ -25,31 +25,34 @@
 
 return [
 	'fpmconfig_edit' => [
-		'title' => lng('admin.phpsettings.editsettings'),
+		'title' => lng('admin.fpmsettings.edit'),
 		'image' => 'fa-solid fa-pen',
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'sections' => [
 			'section_a' => [
-				'title' => lng('admin.phpsettings.editsettings'),
+				'title' => lng('admin.fpmsettings.edit'),
 				'image' => 'icons/phpsettings_edit.png',
 				'fields' => [
 					'description' => [
 						'label' => lng('admin.phpsettings.description'),
 						'type' => 'text',
 						'maxlength' => 50,
-						'value' => $result['description']
+						'value' => $result['description'],
+						'mandatory' => true
 					],
 					'reload_cmd' => [
 						'label' => lng('serversettings.phpfpm_settings.reload'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => $result['reload_cmd']
+						'value' => $result['reload_cmd'],
+						'mandatory' => true
 					],
 					'config_dir' => [
 						'label' => lng('serversettings.phpfpm_settings.configdir'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => $result['config_dir']
+						'value' => $result['config_dir'],
+						'mandatory' => true
 					],
 					'pm' => [
 						'label' => lng('serversettings.phpfpm_settings.pm'),

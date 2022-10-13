@@ -301,6 +301,7 @@ return [
 		'misc' => 'Sonstiges',
 		'fpmsettings' => [
 			'addnew' => 'Neue PHP Version erstellen',
+			'edit' => 'PHP version bearbeiten',
 		],
 		'phpconfig' => [
 			'template_replace_vars' => 'Variablen, die in den Konfigurationen ersetzt werden',

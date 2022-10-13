@@ -203,6 +203,11 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			// validation
 			$description = Validate::validate($description, 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '', '', [], true);
+			$sel_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_FPMDAEMONS."` WHERE `reload_cmd` = :rc");
+			$dupcheck = Database::pexecute_first($sel_stmt, ['rc' => $reload_cmd]);
+			if ($dupcheck && $dupcheck['id']) {
+				throw new Exception("PHP-FPM version with the given restart command already exists", 406);
+			}
 			$config_dir = Validate::validate($config_dir, 'config_dir', Validate::REGEX_DIR, '', [], true);
 			if (!in_array($pmanager, [
 				'static',
@@ -323,6 +328,11 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			// validation
 			$description = Validate::validate($description, 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '', '', [], true);
+			$sel_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_FPMDAEMONS."` WHERE `reload_cmd` = :rc");
+			$dupcheck = Database::pexecute_first($sel_stmt, ['rc' => $reload_cmd]);
+			if ($dupcheck && $dupcheck['id'] != $id) {
+				throw new Exception("PHP-FPM version with the given restart command already exists", 406);
+			}
 			$config_dir = Validate::validate($config_dir, 'config_dir', Validate::REGEX_DIR, '', [], true);
 			if (!in_array($pmanager, [
 				'static',
