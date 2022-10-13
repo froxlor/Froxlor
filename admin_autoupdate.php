@@ -105,7 +105,7 @@ if ($page == 'overview') {
 		}
 	} else {
 		// no new version
-		Response::standardSuccess('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')]);
+		Response::standardSuccess('update.noupdatesavail', (Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : ''));
 	}
 } // download the new archive
 elseif ($page == 'getdownload') {
