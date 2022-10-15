@@ -132,7 +132,7 @@ UI::view('user/dns-editor.html.twig', [
 				'action' => 'edit',
 				'id' => $domain_id
 			]),
-			'label' => lng('panel.edit'),
+			'label' => lng('admin.domain_edit'),
 			'icon' => 'fa-solid fa-pen'
 		],
 		[

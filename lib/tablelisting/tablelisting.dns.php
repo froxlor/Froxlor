@@ -33,6 +33,7 @@ return [
 		'description' => $domain,
 		'icon' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domaindnseditor'],
+		'default_sorting' => ['record' => 'asc'],
 		'columns' => [
 			'record' => [
 				'label' => 'Record',
