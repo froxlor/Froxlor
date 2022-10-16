@@ -43,18 +43,22 @@ return [
 				'label' => lng('ssl_certificates.certificate_for'),
 				'field' => 'domain',
 				'callback' => [SSLCertificate::class, 'domainWithSan'],
+				'searchable' => false,
 			],
 			'c.issuer' => [
 				'label' => lng('ssl_certificates.issuer'),
 				'field' => 'issuer',
+				'searchable' => false,
 			],
 			'c.validfromdate' => [
 				'label' => lng('ssl_certificates.valid_from'),
 				'field' => 'validfromdate',
+				'searchable' => false,
 			],
 			'c.validtodate' => [
 				'label' => lng('ssl_certificates.valid_until'),
 				'field' => 'validtodate',
+				'searchable' => false,
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [

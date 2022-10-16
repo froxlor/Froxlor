@@ -24,7 +24,7 @@
 {% block actions %}
 
 	{% if listing.is_search and listing.self_overview is defined and listing.self_overview is iterable  %}
-		{% set actions_tmp = actions_links %}
+		{% set actions_tmp = actions_links|default([]) %}
 		{% set actions_links = {'href': linker(listing.self_overview), 'icon': 'fa-solid fa-reply','label': lng('panel.backtooverview')} %}
 		{% set actions_links = {actions_links}|merge(actions_tmp) %}
 	{% endif %}

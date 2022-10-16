@@ -31,6 +31,7 @@ return [
 		'title' => lng('admin.cron.cronsettings'),
 		'icon' => 'fa-solid fa-clock-rotate-left',
 		'default_sorting' => ['c.id' => 'asc'],
+		'no_search' => true,
 		'columns' => [
 			'c.desc_lng_key' => [
 				'label' => lng('cron.description'),

@@ -11,10 +11,12 @@
 	{% else %}
 		<div class="d-flex flex-column align-items-end mt-n2">
 			<div class="rounded-top bg-white small py-1 px-2 me-3 opacity-75 text-dark">
-				{% if gSearchText is not empty %}
-					<span class="me-2"><a href="{{ linker(listing.self_overview) }}"><i class="fa-solid fa-xmark"></i></a> Filter: <strong>{{ gSearchText }}</strong></span>
+				{% if listing.no_search is not defined or (listing.no_search is defined and listing.no_search == false) %}
+					{% if gSearchText is not empty %}
+						<span class="me-2"><a href="{{ linker(listing.self_overview) }}"><i class="fa-solid fa-xmark"></i></a> Filter: <strong>{{ gSearchText }}</strong></span>
+					{% endif %}
+					<span type="button" data-bs-toggle="modal" data-bs-target="#searchColumnsModal" class="me-2"><i class="fa-solid fa-search"></i></span>
 				{% endif %}
-				<span type="button" data-bs-toggle="modal" data-bs-target="#searchColumnsModal" class="me-2"><i class="fa-solid fa-search"></i></span>
 				<span type="button" data-bs-toggle="modal" data-bs-target="#manageColumnsModal"><i class="fa-solid fa-cog"></i></span>
 			</div>
 		</div>
@@ -94,6 +96,7 @@
 		</div>
 	</div>
 
+	{% if listing.no_search is not defined or (listing.no_search is defined and listing.no_search == false) %}
 	<!-- Modal -->
 	<div class="modal fade" id="searchColumnsModal" tabindex="-1" aria-labelledby="searchColumnsModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -130,4 +133,5 @@
 			</form>
 		</div>
 	</div>
+	{% endif %}
 {% endmacro %}

@@ -52,6 +52,7 @@ class Listing
 			'is_search' => $collection->getPagination() instanceof Pagination && $collection->getPagination()->isSearchResult(),
 			'self_overview' => $tabellisting['self_overview'] ?? [],
 			'available_columns' => self::getAvailableColumnsForListing($tabellisting),
+			'no_search' => $tabellisting['no_search'] ?? false,
 			'listing_search_additional_param' => $listing_search_additional_param,
 		];
 	}
@@ -69,7 +70,8 @@ class Listing
 			'pagination' => $collection['pagination'],
 			'empty_msg' => $tabellisting['empty_msg'] ?? null,
 			'self_overview' => $tabellisting['self_overview'] ?? [],
-			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
+			'available_columns' => self::getAvailableColumnsForListing($tabellisting),
+			'no_search' => $tabellisting['no_search'] ?? false,
 		];
 	}
 

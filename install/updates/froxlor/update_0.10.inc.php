@@ -986,7 +986,6 @@ if (Froxlor::isFroxlorVersion('0.10.34.1')) {
 	Froxlor::updateToVersion('0.10.35');
 }
 
-
 if (Froxlor::isFroxlorVersion('0.10.35')) {
 	Update::showUpdateStep("Updating from 0.10.35 to 0.10.35.1", false);
 	Froxlor::updateToVersion('0.10.35.1');
