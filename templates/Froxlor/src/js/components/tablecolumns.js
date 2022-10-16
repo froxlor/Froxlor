@@ -2,14 +2,12 @@ $(function () {
 	/*
 	 * table columns - manage columns modal
 	 */
-	let form = $('#manageColumnsModal form');
-
-	form.on('submit', function (event) {
+	$('.manageColumnsModal form').on('submit', function (event) {
 		$.ajax({
-			url: 'lib/ajax.php?action=updatetablelisting&listing=' + form.data('listing') + '&theme=' + window.$theme,
+			url: 'lib/ajax.php?action=updatetablelisting&listing=' + $(this).data('listing') + '&theme=' + window.$theme,
 			type: 'POST',
 			dataType: 'json',
-			data: form.serialize(),
+			data: $(this).serialize(),
 			success: function () {
 				window.location.href = '';
 			},
@@ -20,7 +18,8 @@ $(function () {
 		event.preventDefault();
 	});
 
-	$('#manageColumnsModal form #reset').on('click', function () {
+	$('.manageColumnsModal form button[data-action="reset"]').on('click', function () {
+		var form = $(this).parents('form:first');
 		$.ajax({
 			url: 'lib/ajax.php?action=resettablelisting&listing=' + form.data('listing') + '&theme=' + window.$theme,
 			type: 'POST',
@@ -35,11 +34,11 @@ $(function () {
 		});
 	});
 
-	$('#manageColumnsModal form #select-all').on('click', function () {
-		$('#manageColumnsModal form input:checkbox').prop('checked', true);
+	$('.manageColumnsModal form button[data-action="select-all"]').on('click', function () {
+		$(this).parents('form:first').find('input:checkbox').prop('checked', true);
 	});
 
-	$('#manageColumnsModal form #unselect-all').on('click', function () {
-		$('#manageColumnsModal form input:checkbox').prop('checked', false);
+	$('.manageColumnsModal form button[data-action="unselect-all"]').on('click', function () {
+		$(this).parents('form:first').find('input:checkbox').prop('checked', false);
 	});
 });

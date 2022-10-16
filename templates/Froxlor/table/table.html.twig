@@ -15,9 +15,9 @@
 					{% if gSearchText is not empty %}
 						<span class="me-2"><a href="{{ linker(listing.self_overview) }}"><i class="fa-solid fa-xmark"></i></a> Filter: <strong>{{ gSearchText }}</strong></span>
 					{% endif %}
-					<span type="button" data-bs-toggle="modal" data-bs-target="#searchColumnsModal" class="me-2"><i class="fa-solid fa-search"></i></span>
+					<span type="button" data-bs-toggle="modal" data-bs-target="#searchColumnsModal-{{ listing.id }}" class="me-2"><i class="fa-solid fa-search"></i></span>
 				{% endif %}
-				<span type="button" data-bs-toggle="modal" data-bs-target="#manageColumnsModal"><i class="fa-solid fa-cog"></i></span>
+				<span type="button" data-bs-toggle="modal" data-bs-target="#manageColumnsModal-{{ listing.id }}"><i class="fa-solid fa-cog"></i></span>
 			</div>
 		</div>
 		<div class="card table-responsive">
@@ -67,11 +67,11 @@
 	{% endif %}
 
 	<!-- Modal -->
-	<div class="modal fade" id="manageColumnsModal" tabindex="-1" aria-labelledby="manageColumnsModalLabel" aria-hidden="true">
+	<div class="modal fade manageColumnsModal" id="manageColumnsModal-{{ listing.id }}" tabindex="-1" aria-labelledby="manageColumnsModalLabel-{{ listing.id }}" aria-hidden="true">
 		<div class="modal-dialog">
 			<form method="POST" class="modal-content" data-listing="{{ listing.id }}">
 				<div class="modal-header">
-					<h5 class="modal-title" id="manageColumnsModalLabel">{{ lng('panel.managetablecolumnsmodal.title') }}</h5>
+					<h5 class="modal-title" id="manageColumnsModalLabel-{{ listing.id }}">{{ lng('panel.managetablecolumnsmodal.title') }}</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -86,9 +86,9 @@
 					{% endfor %}
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" id="select-all">{{ lng('panel.select_all') }}</button>
-					<button type="button" class="btn btn-secondary" id="unselect-all">{{ lng('panel.unselect_all') }}</button>
-					<button type="button" class="btn btn-secondary" id="reset">{{ lng('panel.default') }}</button>
+					<button type="button" class="btn btn-secondary" data-action="select-all">{{ lng('panel.select_all') }}</button>
+					<button type="button" class="btn btn-secondary" data-action="unselect-all">{{ lng('panel.unselect_all') }}</button>
+					<button type="button" class="btn btn-secondary" data-action="reset">{{ lng('panel.default') }}</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
 					<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
 				</div>
@@ -98,11 +98,11 @@
 
 	{% if listing.no_search is not defined or (listing.no_search is defined and listing.no_search == false) %}
 	<!-- Modal -->
-	<div class="modal fade" id="searchColumnsModal" tabindex="-1" aria-labelledby="searchColumnsModalLabel" aria-hidden="true">
+	<div class="modal fade searchColumnsModal" id="searchColumnsModal-{{ listing.id }}" tabindex="-1" aria-labelledby="searchColumnsModalLabel-{{ listing.id }}" aria-hidden="true">
 		<div class="modal-dialog">
 			<form method="GET" class="modal-content" action="{{ linker(listing.self_overview) }}">
 				<div class="modal-header">
-					<h5 class="modal-title" id="searchColumnsModalLabel">{{ lng('panel.searchtablecolumnsmodal.title') }}</h5>
+					<h5 class="modal-title" id="searchColumnsModalLabel-{{ listing.id }}">{{ lng('panel.searchtablecolumnsmodal.title') }}</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">

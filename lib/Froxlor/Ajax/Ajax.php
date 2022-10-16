@@ -219,11 +219,14 @@ class Ajax
 	private function updateTablelisting()
 	{
 		$columns = [];
-		foreach (Request::get('columns') as $value) {
+		foreach ((Request::get('columns') ?? []) as $value) {
 			$columns[] = $value;
 		}
-		Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
-		return $this->jsonResponse($columns);
+		if (!empty($columns)) {
+			Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
+			return $this->jsonResponse($columns);
+		}
+		return $this->errorResponse('At least one column must be selected', 406);
 	}
 
 	private function resetTablelisting()

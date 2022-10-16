@@ -1,6 +1,6 @@
 {% macro fieldrow(id, field, norow = false, nohide = false, em = false) %}
 	{% if field.visible is not defined or (field.visible is defined and field.visible) or nohide == true %}
-		{% if norow == false and field.type != 'hidden' %}
+		{% if norow == false and (field.type != 'hidden' or (field.type == 'hidden' and field.display is defined and field.display is not empty)) %}
 			<div class="row g-0 formfield d-flex align-items-center">
 				{% if field.label is iterable %}
 					<label for="{{ id }}" class="col-sm-6 col-form-label pe-3">
@@ -56,7 +56,7 @@
 				{% if field.note is defined and field.note is not empty %}
 					<small class="text-info">{{ field.note|raw }}</small>
 				{% endif %}
-				{% if norow == false and field.type != 'hidden' %}
+				{% if norow == false and (field.type != 'hidden' or (field.type == 'hidden' and field.display is defined and field.display is not empty)) %}
 				</div>
 			</div>
 		{% endif %}
