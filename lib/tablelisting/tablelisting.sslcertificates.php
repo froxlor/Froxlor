@@ -32,11 +32,11 @@ return [
 		'title' => lng('domains.ssl_certificates'),
 		'icon' => 'fa-solid fa-shield',
 		'self_overview' => ['section' => 'domains', 'page' => 'sslcertificates'],
-		'default_sorting' => ['domain' => 'asc'],
+		'default_sorting' => ['d.domain' => 'asc'],
 		'columns' => [
 			'd.domain' => [
 				'label' => lng('domains.domainname'),
-				'field' => 'domains.domain_ace',
+				'field' => 'domain',
 				'callback' => [Domain::class, 'domainWithCustomerLink'],
 			],
 			'c.domain' => [
