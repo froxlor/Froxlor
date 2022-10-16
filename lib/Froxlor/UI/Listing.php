@@ -57,9 +57,10 @@ class Listing
 		];
 	}
 
-	public static function formatFromArray(array $collection, array $tabellisting): array
+	public static function formatFromArray(array $collection, array $tabellisting, string $id): array
 	{
 		return [
+			'id' => $id,
 			'title' => $tabellisting['title'],
 			'description' => $tabellisting['description'] ?? null,
 			'icon' => $tabellisting['icon'] ?? null,

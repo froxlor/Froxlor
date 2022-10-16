@@ -258,7 +258,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	];
 
 	UI::view('user/table.html.twig', [
-		'listing' => Listing::formatFromArray($collection, $integrity_list_data['integrity_list']),
+		'listing' => Listing::formatFromArray($collection, $integrity_list_data['integrity_list'], 'integrity_list'),
 		'actions_links' => [
 			[
 				'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'fix']),

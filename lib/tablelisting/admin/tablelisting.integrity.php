@@ -33,6 +33,7 @@ return [
 		'icon' => 'fa-solid fa-circle-check',
 		'self_overview' => ['section' => 'settings', 'page' => 'integritycheck'],
 		'default_sorting' => ['displayid' => 'asc'],
+		'no_search' => true,
 		'columns' => [
 			'displayid' => [
 				'label' => 'ID',

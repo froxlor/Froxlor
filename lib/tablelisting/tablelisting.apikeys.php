@@ -33,6 +33,7 @@ return [
 		'title' => lng('menue.main.apikeys'),
 		'icon' => 'fa-solid fa-key',
 		'self_overview' => ['section' => 'index', 'page' => 'apikeys'],
+		'no_search' => true,
 		'columns' => [
 			'a.loginname' => [
 				'label' => lng('login.username'),

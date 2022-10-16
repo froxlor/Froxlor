@@ -31,6 +31,7 @@ return [
 		'icon' => 'fa-solid fa-envelope',
 		'self_overview' => ['section' => 'templates', 'page' => 'email'],
 		'default_sorting' => ['template' => 'asc'],
+		'no_search' => true,
 		'columns' => [
 			'language' => [
 				'label' => lng('login.language'),

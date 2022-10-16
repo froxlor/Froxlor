@@ -175,8 +175,8 @@ if ($action == '') {
 	}
 
 	UI::view('user/table-tpl.html.twig', [
-		'maillisting' => Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
-		'filelisting' => Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
+		'maillisting' => Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list'], 'mailtpl_list'),
+		'filelisting' => Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list'], 'filetpl_list'),
 		'actions_links' => array_merge($mail_actions_links, $file_actions_links)
 	]);
 } elseif ($action == 'delete' && $subjectid != 0 && $mailbodyid != 0) {
