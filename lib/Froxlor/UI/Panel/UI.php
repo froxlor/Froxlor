@@ -271,8 +271,8 @@ class UI
 		$theme = self::$default_theme;
 		if (!self::$install_mode) {
 			// system default
-			if (Froxlor::DBVERSION <= 202299999) {
-				// @fixme set this to the last 0.10.x DBVERSION to fallback to the new theme
+			if (Froxlor::versionCompare2(Settings::Get('panel.version'), '2.0.0-beta1') == -1) {
+				// pre 2.0
 				Settings::Set('panel.default_theme', 'Froxlor');
 			}
 			$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $theme;
