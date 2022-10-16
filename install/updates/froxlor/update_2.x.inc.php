@@ -153,9 +153,16 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 		'Portugu&ecirc;s' => 'pt',
 		'Italiano' => 'it',
 		'Nederlands' => 'nl',
-		'Svenska' => 'sv',
-		'&#268;esk&aacute; republika' => 'cs'
+		'Svenska' => 'se',
+		'&#268;esk&aacute; republika' => 'cz'
 	];
+	// update user default languages
+	$upd_adm_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `def_language` = :nv WHERE `def_language` = :ov");
+	$upd_cus_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language` = :nv WHERE `def_language` = :ov");
+	foreach ($lang_map as $old_val => $new_val) {
+		Database::pexecute($upd_adm_stmt, ['nv' => $new_val, 'ov' => $old_val]);
+		Database::pexecute($upd_cus_stmt, ['nv' => $new_val, 'ov' => $old_val]);
+	}
 	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'letsencryptcountrycode'");
