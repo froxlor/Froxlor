@@ -36,16 +36,6 @@
 							<label for="password" class="col-form-label">{{ lng('login.password') }}</label>
 							<input class="form-control" type="password" name="password" id="password" value="" required/>
 						</div>
-
-						<div>
-							<label for="language" class="col-form-label">{{ lng('login.language') }}</label>
-							<select class="form-select" name="language" id="language" required>
-								<option value="profile">{{ lng('login.profile_lng') }}</option>
-								{% for val,lang in languages %}
-									<option value="{{ val }}">{{ lang|raw }}</option>
-								{% endfor %}
-							</select>
-						</div>
 					</div>
 
 					<div class="card-body d-grid gap-2">

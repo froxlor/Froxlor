@@ -397,7 +397,6 @@ if ($action == '2fa_entercode') {
 
 		UI::view('login/login.html.twig', [
 			'pagetitle' => 'Login',
-			'languages' => $languages,
 			'lastscript' => $lastscript,
 			'lastqrystr' => $lastqrystr,
 			'upd_in_progress' => $update_in_progress,
@@ -695,21 +694,10 @@ if ($action == 'resetpwd') {
 
 function finishLogin($userinfo)
 {
-	global $languages;
-
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
 		CurrentUser::setData($userinfo);
 
-		if (isset($_POST['language'])) {
-			$language = Validate::validate($_POST['language'], 'language');
-			if ($language == 'profile') {
-				$language = $userinfo['def_language'];
-			} elseif (!isset($languages[$language])) {
-				$language = Settings::Get('panel.standardlanguage');
-			}
-		} else {
-			$language = Settings::Get('panel.standardlanguage');
-		}
+		$language = $userinfo['def_language'] ?? Settings::Get('panel.standardlanguage');
 		CurrentUser::setField('language', $language);
 
 		if (isset($userinfo['theme']) && $userinfo['theme'] != '') {
