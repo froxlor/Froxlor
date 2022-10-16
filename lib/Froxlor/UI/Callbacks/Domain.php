@@ -36,13 +36,15 @@ class Domain
 	{
 		$linker = UI::getLinker();
 		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
-		$result .= ' (<a href="' . $linker->getLink([
-			'section' => 'customers',
-			'page' => 'customers',
-			'action' => 'su',
-			'sort' => $attributes['fields']['loginname'],
-			'id' => $attributes['fields']['customerid'],
-		]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+		if ((int)UI::getCurrentUser()['adminsession'] == 1) {
+			$result .= ' (<a href="' . $linker->getLink([
+				'section' => 'customers',
+				'page' => 'customers',
+				'action' => 'su',
+				'sort' => $attributes['fields']['loginname'],
+				'id' => $attributes['fields']['customerid'],
+			]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+		}
 		return $result;
 	}
 
@@ -185,12 +187,12 @@ class Domain
 		// shared certificates (e.g. subdomain if domain where certificate is specified)
 		elseif ($attributes['fields']['domain_hascert'] == 2) {
 			$result['icon'] .= ' text-warning';
-			$result['title'] .= "\n".lng('panel.ssleditor_infoshared');
+			$result['title'] .= "\n" . lng('panel.ssleditor_infoshared');
 		}
 		// no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
 		elseif ($attributes['fields']['domain_hascert'] == 0) {
 			$result['icon'] .= ' text-danger';
-			$result['title'] .= "\n".lng('panel.ssleditor_infoglobal');
+			$result['title'] .= "\n" . lng('panel.ssleditor_infoglobal');
 		}
 
 		$result['visible'] = [Domain::class, 'canEditSSL'];
@@ -203,7 +205,7 @@ class Domain
 		if (isset($attributes['fields']['ipsandports']) && !empty($attributes['fields']['ipsandports'])) {
 			$iplist = "";
 			foreach ($attributes['fields']['ipsandports'] as $ipport) {
-				$iplist .= $ipport['ip'].':'.$ipport['port'].'<br>';
+				$iplist .= $ipport['ip'] . ':' . $ipport['port'] . '<br>';
 			}
 			return $iplist;
 		}
