@@ -36,7 +36,7 @@ class Domain
 	{
 		$linker = UI::getLinker();
 		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
-		if ((int)UI::getCurrentUser()['adminsession'] == 1) {
+		if ((int)UI::getCurrentUser()['adminsession'] == 1 && $attributes['fields']['customerid']) {
 			$result .= ' (<a href="' . $linker->getLink([
 				'section' => 'customers',
 				'page' => 'customers',
