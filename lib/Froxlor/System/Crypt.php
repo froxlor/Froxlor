@@ -43,7 +43,7 @@ class Crypt
 		$numeric = '0123456789';
 		$special = Settings::Get('panel.password_special_char');
 		if (empty($length)) {
-			$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : $length;
+			$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : 10;
 		}
 
 		$pw = self::specialShuffle($alpha_lower);
