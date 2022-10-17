@@ -46,7 +46,7 @@ final class ConfigServices extends CliCommand
 		'bullseye',
 		'buster',
 		'focal',
-		/* 'jammy', */
+		'jammy',
 	];
 
 	protected function configure()
