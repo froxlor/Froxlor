@@ -2025,6 +2025,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'createstdsubdom_default' => [
 			'title' => 'Standardwert für "Standardsubdomain anlegen" bei Erstellung eines Kunden',
+			'description' => '',
 		],
 		'froxlorusergroup' => [
 			'title' => 'Benutzerdefinierte Gruppe für alle Kunden-Benutzer',

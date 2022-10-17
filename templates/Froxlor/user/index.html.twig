@@ -279,6 +279,7 @@
 				</div>
 			{% endif %}
 
+			{% if (get_setting('admin.show_news_feed') == 1 and userinfo.adminsession == 1) or (get_setting('customer.show_news_feed') == 1 and userinfo.adminsession == 0)  %}
 			<div id="newsfeed" class="card">
 				<div class="card-header">
 					<i class="fa-solid fa-info-circle me-1"></i>
@@ -295,6 +296,7 @@
 					</div>
 				</div>
 			</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}

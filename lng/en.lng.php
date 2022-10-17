@@ -2142,6 +2142,7 @@ Yours sincerely, your administrator',
 		],
 		'createstdsubdom_default' => [
 			'title' => 'Preselected value for "Create standard subdomain" when creating a customer',
+			'description' => '',
 		],
 		'froxlorusergroup' => [
 			'title' => 'Custom system group for all customer users',

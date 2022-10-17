@@ -165,7 +165,7 @@ $collection = [
 $tpl = 'user/table.html.twig';
 
 UI::view($tpl, [
-	'listing' => Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list'], 'apikyes_list'),
+	'listing' => Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list'], 'apikeys_list'),
 	'actions_links' => (int)$userinfo['api_allowed'] == 1 ? [
 		[
 			'href' => $linker->getLink(['section' => 'index', 'page' => $page, 'action' => 'add']),

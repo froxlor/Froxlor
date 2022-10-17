@@ -27,6 +27,7 @@ return [
 	'cronjobs_edit' => [
 		'title' => lng('admin.cronjob_edit'),
 		'image' => 'fa-solid fa-clock-rotate-left',
+		'self_overview' => ['section' => 'cronjobs', 'page' => 'overview'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('cronjob.cronjobsettings'),
