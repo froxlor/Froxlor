@@ -254,12 +254,16 @@ class Froxlor extends ApiCommand
 	/**
 	 * returns a random password based on froxlor settings for min-length, included characters, etc.
 	 *
+	 * @param int $length
+	 *            optional length of password, defaults to 10
+	 *
 	 * @access admin, customer
 	 * @return string
 	 */
 	public function generatePassword()
 	{
-		return $this->response(Crypt::generatePassword());
+		$length = $this->getParam('length', true, 10);
+		return $this->response(Crypt::generatePassword($length));
 	}
 
 	/**

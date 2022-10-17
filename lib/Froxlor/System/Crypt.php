@@ -36,13 +36,15 @@ class Crypt
 	/**
 	 * Generates a random password
 	 */
-	public static function generatePassword()
+	public static function generatePassword(int $length = 0)
 	{
 		$alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
 		$alpha_upper = strtoupper($alpha_lower);
 		$numeric = '0123456789';
 		$special = Settings::Get('panel.password_special_char');
-		$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : 10;
+		if (empty($length)) {
+			$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : $length;
+		}
 
 		$pw = self::specialShuffle($alpha_lower);
 		$n = floor(($length) / 4);
