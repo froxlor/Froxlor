@@ -1506,7 +1506,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> ''
 ]]>
 							</content>
 						</file>
@@ -1631,7 +1631,7 @@ readme_directory = no
 compatibility_level = 2
 
 # INTERNET HOST AND DOMAIN NAMES
-# 
+#
 # The myhostname parameter specifies the internet hostname of this
 # mail system. The default is to use the fully-qualified domain name
 # from gethostname(). $myhostname is used as a default value for many
@@ -4066,9 +4066,9 @@ aliases:     files
 						<command><![CDATA[useradd -s /bin/false -g {{settings.system.mod_fcgid_httpgroup}} {{settings.system.mod_fcgid_httpuser}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_configdir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
-						<command><![CDATA[a2dismod php7.4]]></command>
+						<command><![CDATA[a2dismod php8.1]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}bin/froxlor-cli froxlor:cron --force]]></command>
 				</daemon>
@@ -4099,9 +4099,9 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php7.4]]></command>
+						<command><![CDATA[a2dismod php8.1]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}bin/froxlor-cli froxlor:cron --force]]></command>
 				</daemon>
