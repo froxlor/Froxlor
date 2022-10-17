@@ -120,22 +120,32 @@ class Ajax
 
 		// Check for simplexml_load_file
 		if (!function_exists("simplexml_load_file")) {
-			return $this->errorResponse(
+			return $this->errorResponse([
 				"Newsfeed not available due to missing php-simplexml extension",
 				"Please install the php-simplexml extension in order to view our newsfeed."
-			);
+			]);
 		}
 
 		// Check for curl_version
 		if (!function_exists('curl_version')) {
-			return $this->errorResponse(
+			return $this->errorResponse([
 				"Newsfeed not available due to missing php-curl extension",
 				"Please install the php-curl extension in order to view our newsfeed."
-			);
+			]);
 		}
 
 		$output = HttpClient::urlGet($feed);
 		$news = simplexml_load_string(trim($output));
+
+		if ($news === false) {
+			$err = [];
+			foreach(libxml_get_errors() as $error) {
+				$err[] = $error->message;
+			}
+			return $this->errorResponse(
+				$err
+			);
+		}
 
 		// Handle items
 		if ($news) {
