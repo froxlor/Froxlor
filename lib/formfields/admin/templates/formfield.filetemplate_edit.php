@@ -27,6 +27,7 @@ return [
 	'filetemplate_edit' => [
 		'title' => lng('admin.templates.template_edit'),
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'templates', 'page' => 'email'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.templates.template_edit'),

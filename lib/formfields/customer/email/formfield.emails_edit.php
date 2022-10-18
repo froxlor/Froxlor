@@ -34,7 +34,6 @@ return [
 			'section_a' => [
 				'title' => lng('emails.emails_edit'),
 				'image' => 'icons/email_edit.png',
-				'nobuttons' => true,
 				'fields' => [
 					'email_full' => [
 						'label' => lng('emails.emailaddress'),
@@ -120,9 +119,7 @@ return [
 			]
 		],
 		'buttons' => [
-			[
-				'label' => lng('panel.backtooverview')
-			]
+			/* none */
 		]
 	]
 ];

@@ -27,6 +27,7 @@ return [
 	'filetemplate_add' => [
 		'title' => lng('admin.templates.template_add'),
 		'image' => 'fa-solid fa-plus',
+		'self_overview' => ['section' => 'templates', 'page' => 'email'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.templates.template_add'),
