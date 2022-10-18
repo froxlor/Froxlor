@@ -56,4 +56,4 @@ jobs:
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < /tmp/froxlor.sql
 
       - name: Run testing
-        run: ant quick-build >> $GITHUB_OUTPUT
+        run: ant quick-build

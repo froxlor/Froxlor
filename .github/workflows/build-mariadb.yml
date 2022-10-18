@@ -47,4 +47,35 @@ jobs:
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < /tmp/froxlor.sql
 
       - name: Run testing
-        run: ant quick-build >> $GITHUB_OUTPUT
+        run: ant quick-build
+
+#      - name: irc push
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'push'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} pushed ${{ github.event.ref }} ${{ github.event.compare }}
+#            ${{ join(github.event.commits.*.message) }}
+
+#      - name: irc pull request
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'pull_request'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} opened PR ${{ github.event.pull_request.html_url }}
+
+#      - name: irc tag created
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'create' && github.event.ref_type == 'tag'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} tagged ${{ github.repository }} ${{ github.event.ref }}
