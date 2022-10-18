@@ -285,7 +285,26 @@ if ($page == 'overview' || $page == 'emails') {
 
 				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'email', 'id' => $id]),
-					'formdata' => $account_add_data['emails_addaccount']
+					'formdata' => $account_add_data['emails_addaccount'],
+					'actions_links' => [
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'emails',
+								'action' => 'edit',
+								'id' => $id
+							]),
+							'label' => lng('emails.emails_edit'),
+							'icon' => 'fa-solid fa-pen'
+						],
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'label' => lng('menue.email.emails'),
+							'icon' => 'fa-solid fa-envelope'
+						]
+					],
 				]);
 			}
 		} else {
@@ -324,7 +343,26 @@ if ($page == 'overview' || $page == 'emails') {
 
 				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'email', 'id' => $id]),
-					'formdata' => $account_changepw_data['emails_accountchangepasswd']
+					'formdata' => $account_changepw_data['emails_accountchangepasswd'],
+					'actions_links' => [
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'emails',
+								'action' => 'edit',
+								'id' => $id
+							]),
+							'label' => lng('emails.emails_edit'),
+							'icon' => 'fa-solid fa-pen'
+						],
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'label' => lng('menue.email.emails'),
+							'icon' => 'fa-solid fa-envelope'
+						]
+					],
 				]);
 			}
 		}
@@ -358,7 +396,26 @@ if ($page == 'overview' || $page == 'emails') {
 
 				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'email', 'id' => $id]),
-					'formdata' => $quota_edit_data['emails_accountchangequota']
+					'formdata' => $quota_edit_data['emails_accountchangequota'],
+					'actions_links' => [
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'emails',
+								'action' => 'edit',
+								'id' => $id
+							]),
+							'label' => lng('emails.emails_edit'),
+							'icon' => 'fa-solid fa-pen'
+						],
+						[
+							'class' => 'btn-secondary',
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'label' => lng('menue.email.emails'),
+							'icon' => 'fa-solid fa-envelope'
+						]
+					],
 				]);
 			}
 		}
@@ -425,7 +482,26 @@ if ($page == 'overview' || $page == 'emails') {
 
 					UI::view('user/form.html.twig', [
 						'formaction' => $linker->getLink(['section' => 'email', 'id' => $id]),
-						'formdata' => $forwarder_add_data['emails_addforwarder']
+						'formdata' => $forwarder_add_data['emails_addforwarder'],
+						'actions_links' => [
+							[
+								'class' => 'btn-secondary',
+								'href' => $linker->getLink([
+									'section' => 'email',
+									'page' => 'emails',
+									'action' => 'edit',
+									'id' => $id
+								]),
+								'label' => lng('emails.emails_edit'),
+								'icon' => 'fa-solid fa-pen'
+							],
+							[
+								'class' => 'btn-secondary',
+								'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+								'label' => lng('menue.email.emails'),
+								'icon' => 'fa-solid fa-envelope'
+							]
+						],
 					]);
 				}
 			}

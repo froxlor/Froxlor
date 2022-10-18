@@ -7,7 +7,10 @@
 						{% if em %}
 							<mark>
 							{% endif %}
-							{{ field.label.title|raw }}{% if field.mandatory is defined and field.mandatory %}<span class="text-danger">*</span>{% endif %}
+							{{ field.label.title|raw }}
+							{% if field.mandatory is defined and field.mandatory %}
+								<span class="text-danger">*</span>
+							{% endif %}
 							{% if em %}
 							</mark>
 						{% endif %}
@@ -19,7 +22,10 @@
 						{% if em %}
 							<mark>
 							{% endif %}
-							{{ field.label|raw }}{% if field.mandatory is defined and field.mandatory %}<span class="text-danger">*</span>{% endif %}
+							{{ field.label|raw }}
+							{% if field.mandatory is defined and field.mandatory %}
+								<span class="text-danger">*</span>
+							{% endif %}
 							{% if em %}
 							</mark>
 						{% endif %}
@@ -66,18 +72,18 @@
 {# installation specific format #}
 {% macro field(id, field, norow = true, nohide = false, em = false) %}
 	{% if field.type == 'checkbox' %}
-	<div class="form-check form-switch mb-3">
-		<input type="hidden" value="0" name="{{ id }}" />
-		<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
-		<label for="{{ id }}" class="form-check-label">{{ field.label|raw }}</label>
-	</div>
+		<div class="form-check form-switch mb-3">
+			<input type="hidden" value="0" name="{{ id }}"/>
+			<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
+			<label for="{{ id }}" class="form-check-label">{{ field.label|raw }}</label>
+		</div>
 	{% elseif field.type == 'hidden' %}
 		{{ _self.fieldrow(id, field, norow, nohide, em) }}
 	{% else %}
-	<div class="form-floating mb-3">
-		{{ _self.fieldrow(id, field, norow, nohide, em) }}
-		<label for="{{ id }}" class="form-label">{{ field.label|raw }}</label>
-	</div>
+		<div class="form-floating mb-3">
+			{{ _self.fieldrow(id, field, norow, nohide, em) }}
+			<label for="{{ id }}" class="form-label">{{ field.label|raw }}</label>
+		</div>
 	{% endif %}
 {% endmacro %}
 
@@ -85,7 +91,7 @@
 	{% if field.is_array is defined and field.is_array == 1 and field.values is not empty %}
 		{% for subfield in field.values %}
 			<div class="form-check form-switch">
-				<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %}{% if field.mandatory is defined and field.mandatory %} required {% endif %}>
+				<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %} {% if field.mandatory is defined and field.mandatory %} required {% endif %}>
 				<label class="form-check-label">
 					{{ subfield.label|raw }}
 				</label>
@@ -93,8 +99,8 @@
 		{% endfor %}
 	{% else %}
 		<div class="form-check form-switch">
-			<input type="hidden" value="0" name="{{ id }}" />
-			<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}{% if field.mandatory is defined and field.mandatory %} required {% endif %}>
+			<input type="hidden" value="0" name="{{ id }}"/>
+			<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %} {% if field.mandatory is defined and field.mandatory %} required {% endif %}>
 		</div>
 	{% endif %}
 {% endmacro %}
@@ -116,18 +122,14 @@
 {% endmacro %}
 
 {% macro plain(id, field) %}
+	<input type="text" readonly class="form-control-plaintext" id="{{ id }}" name="{{ id }}" value="{{ field.value|raw }}">
 	{% if field.next_to is defined %}
-		<div class="input-group">
-		{% endif %}
-		<input type="text" readonly class="form-control-plaintext" id="{{ id }}" name="{{ id }}" value="{{ field.value|raw }}">
-		{% if field.next_to is defined %}
-			{% for nid, nfield in field.next_to %}
-				{% if nfield.next_to_prefix is defined %}
-					<span class="input-group-text">{{ nfield.next_to_prefix }}</span>
-				{% endif %}
-				{{ _self.fieldrow(nid, nfield, true) }}
-			{% endfor %}
-		</div>
+		{% for nid, nfield in field.next_to %}
+			{% if nfield.next_to_prefix is defined %}
+				<span class="input-group-text">{{ nfield.next_to_prefix }}</span>
+			{% endif %}
+			{{ _self.fieldrow(nid, nfield, true) }}
+		{% endfor %}
 	{% endif %}
 {% endmacro %}
 
