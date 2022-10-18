@@ -118,6 +118,18 @@
 						{% endif %}
 					</ul>
 				</div>
+
+				{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+					<div class="card mb-3">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									{{ userinfo.custom_notes|nl2br|raw }}
+								</div>
+							</li>
+						</ul>
+					</div>
+				{% endif %}
 			</div>
 		{% else %}
 			<div
@@ -280,22 +292,23 @@
 			{% endif %}
 
 			{% if (get_setting('admin.show_news_feed') == 1 and userinfo.adminsession == 1) or (get_setting('customer.show_news_feed') == 1 and userinfo.adminsession == 0)  %}
-			<div id="newsfeed" class="card"{% if userinfo.adminsession == 0 %} data-role="customer"{% endif %}>
-				<div class="card-header">
-					<i class="fa-solid fa-info-circle me-1"></i>
-					{% if get_setting('customer.news_feed_url') is empty %}Froxlor {% endif %}Newsfeed
-				</div>
-				<div class="list-group list-group-flush" id="newsfeeditems">
-					<div class="list-group-item d-flex justify-content-between align-items-start">
-						<div class="ms-2 me-auto">
-							Loading newsfeed...
+				<div id="newsfeed" class="card" {% if userinfo.adminsession == 0 %} data-role="customer" {% endif %}>
+					<div class="card-header">
+						<i class="fa-solid fa-info-circle me-1"></i>
+						{% if get_setting('customer.news_feed_url') is empty %}Froxlor
+						{% endif %}Newsfeed
+					</div>
+					<div class="list-group list-group-flush" id="newsfeeditems">
+						<div class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								Loading newsfeed...
+							</div>
+							<span>
+								<i class="fa-solid fa-spinner fa-spin"></i>
+							</span>
 						</div>
-						<span>
-							<i class="fa-solid fa-spinner fa-spin"></i>
-						</span>
 					</div>
 				</div>
-			</div>
 			{% endif %}
 		</div>
 	</div>
