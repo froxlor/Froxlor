@@ -280,7 +280,7 @@
 			{% endif %}
 
 			{% if (get_setting('admin.show_news_feed') == 1 and userinfo.adminsession == 1) or (get_setting('customer.show_news_feed') == 1 and userinfo.adminsession == 0)  %}
-			<div id="newsfeed" class="card"{% if userinfo.adminsession == 0 %}data-role="customer"{% endif %}>
+			<div id="newsfeed" class="card"{% if userinfo.adminsession == 0 %} data-role="customer"{% endif %}>
 				<div class="card-header">
 					<i class="fa-solid fa-info-circle me-1"></i>
 					{% if get_setting('customer.news_feed_url') is empty %}Froxlor {% endif %}Newsfeed
