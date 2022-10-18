@@ -20,9 +20,6 @@
 }
 
 @include media-breakpoint-down(md) {
-	.form-control-plaintext {
-		color: $white;
-	}
 	.navbar {
 		background: $dark;
 

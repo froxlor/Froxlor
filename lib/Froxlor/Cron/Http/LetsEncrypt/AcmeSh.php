@@ -525,10 +525,15 @@ EOC;
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $domain . " due to no system known IP address via DNS check");
 					unset($domains[$idx]);
 					// in order to avoid a cron-loop that tries to get a certificate every 5 minutes, we disable let's encrypt for this domain
-					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `letsencrypt` = '0' WHERE `id` = :did");
-					Database::pexecute($upd_stmt, [
-						'did' => $domain_id
-					]);
+					if ($domain_id > 0) {
+						$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `letsencrypt` = '0' WHERE `id` = :did");
+						Database::pexecute($upd_stmt, [
+							'did' => $domain_id
+						]);
+					} else {
+						// froxlor's hostname
+						Settings::Set('system.le_froxlor_enabled', 0);
+					}
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt deactivated for domain " . $domain);
 				}
 			}

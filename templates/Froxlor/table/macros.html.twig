@@ -44,14 +44,14 @@
 
 {% macro button(data) %}
 	{% apply spaceless %}
-	<a class="{% if data.class is defined %}btn btn-sm {{ data.class }}{% else %}btn btn-sm btn-outline-secondary{% endif %}" {% if data.modal is defined and data.modal is iterable %} data-bs-toggle="modal" role="button" href="#{{ data.modal.id }}" {% else %} href="{{ data.href }}" {% endif %} {% if data.target is defined %} target="{{ data.target }}" {% endif %} {% if data.title is defined %} title="{{ data.title }}" {% endif %}>
+	<{% if data.href is defined %}a{% else %}span{% endif %} class="{% if data.class is defined %}btn btn-sm {{ data.class }}{% else %}btn btn-sm btn-outline-secondary{% endif %}" {% if data.modal is defined and data.modal is iterable %} data-bs-toggle="modal" role="button" href="#{{ data.modal.id }}" {% else %} {% if data.href is defined %}href="{{ data.href }}"{% endif %} {% endif %} {% if data.target is defined %} target="{{ data.target }}" {% endif %} {% if data.title is defined %} title="{{ data.title }}" {% endif %}>
 		{% if data.icon is defined %}
 			<i class="{{ data.icon }}"></i>
 		{% endif %}
 		{% if data.text is defined %}
 			{{ data.text }}
 		{% endif %}
-	</a>
+	</{% if data.href is defined %}a{% else %}span{% endif %}>
 	{% if data.modal is defined and data.modal is iterable %}
 		<div class="modal fade" data-action="{{ data.modal.action|default('') }}" data-entry="{{ data.modal.entry }}" id="{{ data.modal.id }}" aria-hidden="true" aria-labelledby="{{ data.modal.id }}Label" tabindex="-1">
 			<div class="modal-dialog {{ data.modal.size|default('modal-xl') }} modal-dialog-centered">
