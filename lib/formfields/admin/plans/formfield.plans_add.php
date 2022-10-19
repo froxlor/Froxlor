@@ -27,6 +27,7 @@ return [
 	'plans_add' => [
 		'title' => lng('admin.plans.add'),
 		'image' => 'fa-solid fa-plus',
+		'self_overview' => ['section' => 'plans', 'page' => 'overview'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.plans.plan_details'),
