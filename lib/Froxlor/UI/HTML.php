@@ -87,7 +87,8 @@ class HTML
 							'target' => $target,
 							'active' => $active,
 							'label' => $navlabel,
-							'icon' => $icon
+							'icon' => $icon,
+							'add_shortlink' => $element['add_shortlink'] ?? null
 						];
 					}
 				}

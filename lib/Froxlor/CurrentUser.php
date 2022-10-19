@@ -26,6 +26,9 @@
 namespace Froxlor;
 
 use Froxlor\Database\Database;
+use Froxlor\UI\Collection;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\SubDomains;
 
 /**
  * Class to manage the current user / session
@@ -126,4 +129,30 @@ class CurrentUser
 	{
 		$_SESSION['userinfo'] = $data;
 	}
+
+	public static function canAddResource(string $resource): bool
+	{
+		$addition = true;
+		// special cases
+		if ($resource == 'emails') {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(`id`) as emaildomains
+				FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `customerid`= :cid AND `isemaildomain` = '1'
+			");
+			$result = Database::pexecute_first($result_stmt, [
+				"cid" => $_SESSION['userinfo']['customerid']
+			]);
+			$addition = $result['emaildomains'] != 0;
+		} elseif ($resource == 'subdomains') {
+			$parentDomainCollection = (new Collection(SubDomains::class, $_SESSION['userinfo'], ['sql_search' => ['d.parentdomainid' => 0]]));
+			$addition = $parentDomainCollection != 0;
+		} elseif ($resource == 'domains') {
+			$customerCollection = (new Collection(Customers::class, $_SESSION['userinfo']));
+			$addition = $customerCollection != 0;
+		}
+
+		return ($_SESSION['userinfo'][$resource.'_used'] < $_SESSION['userinfo'][$resource] || $_SESSION['userinfo'][$resource] == '-1') && $addition;
+	}
+
 }

@@ -37,6 +37,7 @@ use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
@@ -66,7 +67,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		}
 
 		$actions_links = false;
-		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
+		if (CurrentUser::canAddResource('mysqls')) {
 			$actions_links = [
 				[
 					'href' => $linker->getLink(['section' => 'mysql', 'page' => 'mysqls', 'action' => 'add']),

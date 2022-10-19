@@ -40,6 +40,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
+use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -64,7 +65,7 @@ if ($page == 'overview' || $page == 'domains') {
 		}
 
 		$actions_links = false;
-		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentDomainCollection->count() != 0) {
+		if (CurrentUser::canAddResource('subdomains')) {
 			$actions_links = [
 				[
 					'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),

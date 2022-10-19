@@ -40,6 +40,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Check;
+use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'email')) {
@@ -71,7 +72,7 @@ if ($page == 'overview' || $page == 'emails') {
 		$emaildomains_count = $result2['emaildomains'];
 
 		$actions_links = false;
-		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count != 0) {
+		if (CurrentUser::canAddResource('emails')) {
 			$actions_links = [
 				[
 					'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),

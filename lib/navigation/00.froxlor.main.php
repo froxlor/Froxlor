@@ -24,6 +24,7 @@
  */
 
 use Froxlor\Settings;
+use Froxlor\CurrentUser;
 
 return [
 	'customer' => [
@@ -36,12 +37,8 @@ return [
 				[
 					'url' => 'customer_email.php?page=emails',
 					'label' => lng('menue.email.emails'),
-					'required_resources' => 'emails'
-				],
-				[
-					'url' => 'customer_email.php?page=emails&action=add',
-					'label' => lng('emails.emails_add'),
-					'required_resources' => 'emails'
+					'required_resources' => 'emails',
+					'add_shortlink' => CurrentUser::canAddResource('emails') ? 'customer_email.php?page=emails&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.webmail_url'),
@@ -61,7 +58,8 @@ return [
 				[
 					'url' => 'customer_mysql.php?page=mysqls',
 					'label' => lng('menue.mysql.databases'),
-					'required_resources' => 'mysqls'
+					'required_resources' => 'mysqls',
+					'add_shortlink' => CurrentUser::canAddResource('mysqls')? 'customer_mysql.php?page=mysqls&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.phpmyadmin_url'),
@@ -80,7 +78,8 @@ return [
 			'elements' => [
 				[
 					'url' => 'customer_domains.php?page=domains',
-					'label' => lng('menue.domains.settings')
+					'label' => lng('menue.domains.settings'),
+					'add_shortlink' => CurrentUser::canAddResource('subdomains') ? 'customer_domains.php?page=domains&action=add' : null,
 				],
 				[
 					'url' => 'customer_domains.php?page=sslcertificates',
@@ -96,7 +95,8 @@ return [
 			'elements' => [
 				[
 					'url' => 'customer_ftp.php?page=accounts',
-					'label' => lng('menue.ftp.accounts')
+					'label' => lng('menue.ftp.accounts'),
+					'add_shortlink' => CurrentUser::canAddResource('ftps') ? 'customer_ftp.php?page=accounts&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.webftp_url'),
@@ -115,12 +115,14 @@ return [
 				[
 					'url' => 'customer_extras.php?page=htpasswds',
 					'label' => lng('menue.extras.directoryprotection'),
-					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection'))
+					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection')),
+					'add_shortlink' => 'customer_extras.php?page=htpasswds&action=add',
 				],
 				[
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => lng('menue.extras.pathoptions'),
-					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions'))
+					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')),
+					'add_shortlink' => 'customer_extras.php?page=htaccess&action=add',
 				],
 				[
 					'url' => 'customer_logger.php?page=log',
@@ -160,17 +162,20 @@ return [
 				[
 					'url' => 'admin_customers.php?page=customers',
 					'label' => lng('admin.customers'),
-					'required_resources' => 'customers'
+					'required_resources' => 'customers',
+					'add_shortlink' => CurrentUser::canAddResource('customers') ? 'admin_customers.php?page=customers&action=add' : null,
 				],
 				[
 					'url' => 'admin_admins.php?page=admins',
 					'label' => lng('admin.admins'),
-					'required_resources' => 'change_serversettings'
+					'required_resources' => 'change_serversettings',
+					'add_shortlink' => 'admin_admins.php?page=admins&action=add'
 				],
 				[
 					'url' => 'admin_domains.php?page=domains',
 					'label' => lng('admin.domains'),
-					'required_resources' => 'domains'
+					'required_resources' => 'domains',
+					'add_shortlink' => CurrentUser::canAddResource('domains') ? 'admin_domains.php?page=domains&action=add' : null,
 				],
 				[
 					'url' => 'admin_domains.php?page=sslcertificates',
@@ -180,16 +185,20 @@ return [
 				[
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => lng('admin.ipsandports.ipsandports'),
-					'required_resources' => 'change_serversettings'
+					'required_resources' => 'change_serversettings',
+					'add_shortlink' => 'admin_ipsandports.php?page=ipsandports&action=add'
 				],
 				[
 					'url' => 'admin_mysqlserver.php?page=mysqlserver',
 					'label' => lng('admin.mysqlserver.mysqlserver'),
+					'required_resources' => 'change_serversettings',
+					'add_shortlink' => 'admin_mysqlserver.php?page=mysqlserver&action=add'
 				],
 				[
 					'url' => 'admin_plans.php?page=overview',
 					'label' => lng('admin.plans.plans'),
-					'required_resources' => 'customers'
+					'required_resources' => 'customers',
+					'add_shortlink' => 'admin_plans.php?page=overview&action=add'
 				],
 				[
 					'url' => 'admin_settings.php?page=updatecounters',
@@ -262,12 +271,14 @@ return [
 				[
 					'url' => 'admin_phpsettings.php?page=overview',
 					'label' => lng('menue.phpsettings.maintitle'),
-					'show_element' => (Settings::Get('system.mod_fcgid') == true || Settings::Get('phpfpm.enabled') == true)
+					'show_element' => (Settings::Get('system.mod_fcgid') == true || Settings::Get('phpfpm.enabled') == true),
+					'add_shortlink' => 'admin_phpsettings.php?page=overview&action=add'
 				],
 				[
 					'url' => 'admin_phpsettings.php?page=fpmdaemons',
 					'label' => lng('menue.phpsettings.fpmdaemons'),
-					'show_element' => Settings::Get('phpfpm.enabled') == true
+					'show_element' => Settings::Get('phpfpm.enabled') == true,
+					'add_shortlink' => 'admin_phpsettings.php?page=fpmdaemons&action=add'
 				],
 				[
 					'url' => 'admin_settings.php?page=phpinfo',

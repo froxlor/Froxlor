@@ -45,6 +45,7 @@ use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
+use Froxlor\CurrentUser;
 
 $id = (int)Request::get('id');
 
@@ -63,7 +64,7 @@ if ($page == 'domains' || $page == 'overview') {
 		}
 
 		$actions_links = false;
-		if (($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $customerCollection->count() != 0) {
+		if (CurrentUser::canAddResource('domains')) {
 			$actions_links = [];
 			$actions_links[] = [
 				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'add']),

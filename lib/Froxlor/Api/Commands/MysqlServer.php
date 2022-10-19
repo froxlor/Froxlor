@@ -45,7 +45,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 */
 	private function validateAccess()
 	{
-		if ($this->isAdmin() == false || ($this->isAdmin()  && $this->getUserDetail('change_serversettings') == 0)) {
+		if ($this->isAdmin() == false || ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 0)) {
 			throw new Exception("You cannot access this resource", 405);
 		}
 	}

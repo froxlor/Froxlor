@@ -60,7 +60,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 		}
 
 		$actions_links = false;
-		if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') {
+		if (CurrentUser::canAddResource('customers')) {
 			$actions_links = [
 				[
 					'href' => $linker->getLink(['section' => 'customers', 'page' => $page, 'action' => 'add']),

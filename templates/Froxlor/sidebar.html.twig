@@ -12,8 +12,13 @@
 					<div class="collapse {% if mitems.active == 1 %}show{% endif %}" id="sub{{ idx }}" aria-expanded="{% if mitems.active == 1 %}true{% else %}false{% endif %}">
 						<ul class="flex-column ps-3 nav">
 							{% for item in mitems.items %}
-								<li class="nav-item" {% if item.active == 1 %}aria-current="page"{% endif %}>
-									<a class="nav-link text-light {% if item.active == 1 %}active fw-bold{% endif %}" href="{{ item.url|raw }}">{{ item.label|raw }}</a>
+								<li class="nav-item d-flex justify-content-between align-items-center" {% if item.active == 1 %}aria-current="page"{% endif %}>
+									<div class="me-auto">
+										<a class="nav-link text-light {% if item.active == 1 %}active fw-bold{% endif %}" href="{{ item.url|raw }}">{{ item.label|raw }}</a>
+									</div>
+									{% if item.add_shortlink is defined and item.add_shortlink is not empty %}
+										<a href="{{ item.add_shortlink|raw }}" class="text-secondary me-2"><i class="fa-solid fa-plus-circle"></i></a>
+									{% endif %}
 								</li>
 							{% endfor %}
 						</ul>

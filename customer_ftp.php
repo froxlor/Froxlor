@@ -37,6 +37,7 @@ use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'ftp')) {
@@ -57,7 +58,7 @@ if ($page == 'overview' || $page == 'accounts') {
 		}
 
 		$actions_links = false;
-		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
+		if (CurrentUser::canAddResource('ftps')) {
 			$actions_links = [
 				[
 					'href' => $linker->getLink(['section' => 'ftp', 'page' => 'accounts', 'action' => 'add']),
