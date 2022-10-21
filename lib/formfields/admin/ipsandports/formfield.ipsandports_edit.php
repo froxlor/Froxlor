@@ -56,7 +56,7 @@ return [
 				'image' => 'icons/ipsports_edit.png',
 				'fields' => [
 					'listen_statement' => [
-						'visible' => !Settings::Get('system.webserver') == 'nginx',
+						'visible' => Settings::Get('system.webserver') != 'nginx',
 						'label' => lng('admin.ipsandports.create_listen_statement'),
 						'type' => 'checkbox',
 						'value' => '1',

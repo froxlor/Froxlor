@@ -16,8 +16,8 @@
 
 	<!-- Range -->
 	<!-- TODO: set url on change. e.g.: ?param=days:7 -->
-	<div class="d-flex justify-content-end">
-		<select class="form-select mb-4 w-auto mt-n4" aria-label="select the traffic range" name="range" data-baseref="{{ linker({'section':'traffic'}) }}">
+	<div class="d-flex justify-content-center justify-content-md-end">
+		<select class="form-select mb-3 mb-md-4 w-auto mt-md-n4" aria-label="select the traffic range" name="range" data-baseref="{{ linker({'section':'traffic'}) }}">
 			<option value="hours:24" {% if range == 'hours:24' %}selected{% endif %}>last 24 hours</option>
 			<option value="days:7" {% if range == 'days:7' %}selected{% endif %}>last 7 days</option>
 			<option value="days:30" {% if range == 'days:30' %}selected{% endif %}>last 30 days</option>
