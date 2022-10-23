@@ -1,5 +1,8 @@
+// Fontawesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/css/all";
 
+// Generic
 .form-control-plaintext {
 	outline: none;
 }
@@ -16,7 +19,7 @@
 		display: block;
 		height: 3px;
 		width: 100px;
-		background: $froxlor-blue-dark;
+		background: $froxlor-800;
 		border-radius: 3px;
 		content: ' ';
 	}

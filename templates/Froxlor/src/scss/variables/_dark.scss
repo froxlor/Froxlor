@@ -1,20 +1,53 @@
 @import "main";
 
+// Color
+$primary: $froxlor-700;
+$secondary: $neutral-500;
+$info: $froxlor-800;
+
 // Body
-$body-bg: $dark-bg;
-$body-color: $dark-font-color;
+$body-bg: $neutral-900;
+$body-color: $neutral-100;
 
-// Card
-$card-bg: lighten($body-bg, 10);
+// Borders
+$border-color: $neutral-900;
+$border-color-translucent: $neutral-900;
 
-$navbar-bg: $dark-bg;
-
-$list-group-bg: lighten($dark-bg, 10);
-$list-group-color: $body-color;
-
+// Link
+$link-color: $froxlor-500;
 $nav-link-color: $body-color;
 
-$white: #e9ecef;
-$light: #f8f9fa;
+// List groups
+$list-group-bg: $neutral-800;
+$list-group-color: $body-color;
 
-$link-color: $froxlor-blue-light;
+// Navbar
+$navbar-bg: $neutral-800;
+$navbar-light-color: $neutral-200;
+$navbar-light-hover-color: $neutral-500;
+$navbar-light-active-color: $neutral-500;
+
+// Sidebar
+
+// Card
+$card-bg: $neutral-800;
+$card-border-color: $neutral-600;
+
+// Heading
+$heading-bg: $neutral-800;
+$heading-color: $body-color;
+$heading-border-color: rgba(0,0,0,0.15);
+
+// Dropdown
+$dropdown-bg: $neutral-800;
+$dropdown-color: $neutral-100;
+$dropdown-link-color: $neutral-100;
+$dropdown-link-hover-bg: $neutral-900;
+
+// Modal
+$modal-content-bg: $neutral-800;
+
+// Form control
+$input-bg: $neutral-900;
+$input-border-color: $black;
+$input-group-addon-bg: $neutral-800;

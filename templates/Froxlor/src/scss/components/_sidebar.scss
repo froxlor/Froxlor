@@ -1,5 +1,6 @@
 .sidebar, .sub-sidebar {
 	width: $sidebar-width;
+	z-index: 10;
 }
 
 .sidebar {

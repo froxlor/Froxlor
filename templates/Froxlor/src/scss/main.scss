@@ -3,15 +3,15 @@
 // Bootstrap
 @import "variables/main";
 @import "~bootstrap/scss/bootstrap";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
 
 // Theme
-@import "global";
+@import "components/generic";
 @import "components/alert";
 @import "components/card";
 @import "components/dropdown";
 @import "components/footer";
 @import "components/form";
+@import "components/heading";
 @import "components/navbar";
 @import "components/sidebar";
 @import "components/search";

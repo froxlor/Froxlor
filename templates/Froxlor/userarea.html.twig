@@ -19,7 +19,7 @@
 
 	<nav class="navbar navbar-expand-md navbar-light p-0 {% if not block('heading') %}shadow-sm{% endif %}">
 		<div class="container-fluid gx-0">
-			<a class="navbar-brand" href="{{ linker({'section': 'index'}) }}">
+			<a class="navbar-brand {% if block('heading') %}shadow-sm{% endif %}" href="{{ linker({'section': 'index'}) }}">
 				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
 			</a>
 			<div class="me-3 me-sm-0">
@@ -109,7 +109,7 @@
 
 			<main class="d-flex flex-column flex-grow-1 overflow-auto">
 				{% if block('heading') %}
-					<section class="py-3 px-3 px-lg-5 bg-white shadow-sm border-top d-flex justify-content-between align-items-center">
+					<section class="py-3 px-3 px-lg-5 heading shadow-sm d-flex justify-content-between align-items-center">
 						<div>{% block heading %}{% endblock %}</div>
 						<div>{% block actions %}{% endblock %}</div>
 					</section>

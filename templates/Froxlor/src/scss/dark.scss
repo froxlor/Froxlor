@@ -3,64 +3,18 @@
 // Bootstrap
 @import "variables/dark";
 @import "~bootstrap/scss/bootstrap";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
 
 // Theme
-@import "global";
+@import "components/generic";
 @import "components/alert";
 @import "components/card";
 @import "components/dropdown";
 @import "components/footer";
 @import "components/form";
+@import "components/heading";
 @import "components/navbar";
 @import "components/sidebar";
 @import "components/search";
-
-.input-group-text {
-	background-color: $dark-bg;
-}
-.form-control:disabled, .form-control[readonly] {
-	background-color: $dark-bg;
-	opacity: 1;
-	color: #ddd;
-}
-
-.border-top {
-    border-top: 1px solid var(--bs-body-bg)!important;
-}
-
-.form-select,
-.form-control,
-.form-control:focus,
-section h3,
-section h3 + span,
-section h5 {
-	color: $dark-bg;
-}
-
-.card-title,
-.page-header {
-	color: $light;
-}
-
-
-.form-control[readonly]:focus,
-.form-control-plaintext {
-	color: $white;
-}
-.navbar {
-	background: $dark;
-
-	.navbar-nav {
-		.nav-link {
-			color: $white;
-
-			&:hover {
-				color: rgba(255,255,255,.45);
-			}
-		}
-	}
-}
 
 .navbar-light {
 	.navbar-toggler {
@@ -71,7 +25,6 @@ section h5 {
 	}
 }
 
-.modal-body,
 tr.bg-info td,
 tr.bg-warning td {
 	color: $dark-bg !important;

@@ -1,7 +1,5 @@
 {
     "/js/main.js": "/js/main.js",
-    "/css/dark.css": "/css/dark.css",
-    "/css/main.css": "/css/main.css",
     "/webfonts/fa-brands-400.ttf": "/webfonts/fa-brands-400.ttf",
     "/webfonts/fa-brands-400.woff2": "/webfonts/fa-brands-400.woff2",
     "/webfonts/fa-regular-400.ttf": "/webfonts/fa-regular-400.ttf",
@@ -9,5 +7,7 @@
     "/webfonts/fa-solid-900.ttf": "/webfonts/fa-solid-900.ttf",
     "/webfonts/fa-solid-900.woff2": "/webfonts/fa-solid-900.woff2",
     "/webfonts/fa-v4compatibility.ttf": "/webfonts/fa-v4compatibility.ttf",
-    "/webfonts/fa-v4compatibility.woff2": "/webfonts/fa-v4compatibility.woff2"
+    "/webfonts/fa-v4compatibility.woff2": "/webfonts/fa-v4compatibility.woff2",
+    "/css/dark.css": "/css/dark.css",
+    "/css/main.css": "/css/main.css"
 }

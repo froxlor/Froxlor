@@ -1,5 +1,5 @@
 .navbar {
-	background: darken($navbar-bg, 3);
+	z-index: 20;
 }
 
 .navbar-brand {
@@ -8,7 +8,7 @@
 
 @include media-breakpoint-up(md) {
 	.navbar {
-		background: $white;
+		background: $navbar-bg;
 
 		.navbar-brand {
 			background: $dark;
@@ -21,7 +21,7 @@
 
 @include media-breakpoint-down(md) {
 	.navbar {
-		background: $dark;
+		background: darken($navbar-bg, 90);
 
 		.navbar-nav {
 			.nav-link {
