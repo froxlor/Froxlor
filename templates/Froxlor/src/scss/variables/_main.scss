@@ -10,35 +10,35 @@ $froxlor-700: #1a83b6;
 $froxlor-800: #1872a2;
 $froxlor-900: #0e5380;
 
-$neutral-50: #fafafa;
-$neutral-100: #f5f5f5;
-$neutral-200: #e5e5e5;
-$neutral-300: #d4d4d4;
-$neutral-400: #a3a3a3;
-$neutral-500: #737373;
-$neutral-600: #525252;
-$neutral-700: #404040;
-$neutral-800: #262626;
-$neutral-900: #171717;
-
-$dark: $neutral-800;
+// Gray
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
 
 // Colors
-$light-bg: $neutral-100;
-$dark-bg: $neutral-800;
-
-$light-font-color: $neutral-800;
-$dark-font-color: $neutral-100;
-
-$black: #000000;
-$white: #ffffff;
-$light: $neutral-100;
+$light: $gray-100;
 $primary: $froxlor-800;
-$secondary: $neutral-600;
+$secondary: $gray-600;
 $info: $froxlor-900;
 $warning: #FBBF24;
 $danger: #BE123C;
 $success: #059669;
+
+// Body
+$light-bg: $gray-100;
+$dark-bg: $gray-800;
+
+// Typography
+$light-font-color: $gray-800;
+$dark-font-color: $gray-100;
 
 $alert-bg-scale: 0;
 $alert-color-scale: 0;
