@@ -2243,6 +2243,7 @@ Yours sincerely, your administrator',
 		'http' => 'HTTP',
 		'ftp' => 'FTP',
 		'mail' => 'Mail',
+		'nocustomers' => 'You need at least one customer to view the traffic reports.',
 	],
 	'translator' => '',
 	'update' => [

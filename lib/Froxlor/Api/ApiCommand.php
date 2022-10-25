@@ -470,7 +470,7 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @param string $customer_hide_option
 	 *            optional, when called as customer, some options might be hidden due to the
-	 *            panel.customer_hide_options ettings
+	 *            panel.customer_hide_options settings
 	 *
 	 * @return array
 	 * @throws Exception

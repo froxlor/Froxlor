@@ -37,6 +37,9 @@ if ($page == 'overview' || $page == 'customers') {
 	try {
 		$context = Traffic::getCustomerStats($userinfo, $range);
 	} catch (Exception $e) {
+		if ($e->getCode() === 405) {
+			Response::dynamicError(lng('traffic.nocustomers'));
+		}
 		Response::dynamicError($e->getMessage());
 	}
 
