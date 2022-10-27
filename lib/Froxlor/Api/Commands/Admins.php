@@ -227,7 +227,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$ipaddress = $this->getParam('ipaddress', true, - 1);
 
 			// validation
-			$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
+			$name = \Froxlor\Validate\Validate::validate($name, 'name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
@@ -527,7 +527,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				}
 
 				// validation
-				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
+				$name = \Froxlor\Validate\Validate::validate($name, 'name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);

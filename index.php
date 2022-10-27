@@ -22,6 +22,7 @@ require './lib/init.php';
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\FroxlorLogger;
+use Froxlor\Validate\Validate;
 
 if ($action == '') {
 	$action = 'login';
@@ -353,7 +354,11 @@ if ($action == '2fa_entercode') {
 				break;
 			case 4:
 				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
-				$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
+				if (!Validate::validateEmail($cmail)) {
+					$message = str_replace('%s', 'invalid.address', $lng['error']['errorsendingmail']);
+				} else {
+					$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
+				}
 				break;
 			case 5:
 				$message = $lng['error']['user_banned'];

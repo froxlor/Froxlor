@@ -404,12 +404,12 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				}
 
 				// validation
-				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
-				$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', '', '', array(), true);
-				$company = \Froxlor\Validate\Validate::validate($company, 'company', '', '', array(), true);
-				$street = \Froxlor\Validate\Validate::validate($street, 'street', '', '', array(), true);
+				$name = \Froxlor\Validate\Validate::validate($name, 'name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+				$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+				$company = \Froxlor\Validate\Validate::validate($company, 'company', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+				$street = \Froxlor\Validate\Validate::validate($street, 'street', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 				$zipcode = \Froxlor\Validate\Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-				$city = \Froxlor\Validate\Validate::validate($city, 'city', '', '', array(), true);
+				$city = \Froxlor\Validate\Validate::validate($city, 'city', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 				$phone = \Froxlor\Validate\Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
@@ -998,12 +998,12 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		// validation
 		if ($this->isAdmin()) {
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
-			$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', '', '', array(), true);
-			$company = \Froxlor\Validate\Validate::validate($company, 'company', '', '', array(), true);
-			$street = \Froxlor\Validate\Validate::validate($street, 'street', '', '', array(), true);
+			$name = \Froxlor\Validate\Validate::validate($name, 'name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+			$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+			$company = \Froxlor\Validate\Validate::validate($company, 'company', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
+			$street = \Froxlor\Validate\Validate::validate($street, 'street', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$zipcode = \Froxlor\Validate\Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-			$city = \Froxlor\Validate\Validate::validate($city, 'city', '', '', array(), true);
+			$city = \Froxlor\Validate\Validate::validate($city, 'city', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$phone = \Froxlor\Validate\Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 			$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
