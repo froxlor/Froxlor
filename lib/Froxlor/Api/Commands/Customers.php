@@ -361,12 +361,12 @@ class Customers extends ApiCommand implements ResourceEntity
 				}
 
 				// validation
-				$name = Validate::validate($name, 'name', '', '', [], true);
-				$firstname = Validate::validate($firstname, 'first name', '', '', [], true);
-				$company = Validate::validate($company, 'company', '', '', [], true);
-				$street = Validate::validate($street, 'street', '', '', [], true);
+				$name = Validate::validate($name, 'name', Validate::REGEX_DESC_TEXT, '', [], true);
+				$firstname = Validate::validate($firstname, 'first name', Validate::REGEX_DESC_TEXT, '', [], true);
+				$company = Validate::validate($company, 'company', Validate::REGEX_DESC_TEXT, '', [], true);
+				$street = Validate::validate($street, 'street', Validate::REGEX_DESC_TEXT, '', [], true);
 				$zipcode = Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', [], true);
-				$city = Validate::validate($city, 'city', '', '', [], true);
+				$city = Validate::validate($city, 'city', Validate::REGEX_DESC_TEXT, '', [], true);
 				$phone = Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', [], true);
 				$fax = Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', [], true);
 				$idna_convert = new IdnaWrapper();
@@ -1080,12 +1080,12 @@ class Customers extends ApiCommand implements ResourceEntity
 		// validation
 		if ($this->isAdmin()) {
 			$idna_convert = new IdnaWrapper();
-			$name = Validate::validate($name, 'name', '', '', [], true);
-			$firstname = Validate::validate($firstname, 'first name', '', '', [], true);
-			$company = Validate::validate($company, 'company', '', '', [], true);
-			$street = Validate::validate($street, 'street', '', '', [], true);
+			$name = Validate::validate($name, 'name', Validate::REGEX_DESC_TEXT, '', [], true);
+			$firstname = Validate::validate($firstname, 'first name', Validate::REGEX_DESC_TEXT, '', [], true);
+			$company = Validate::validate($company, 'company', Validate::REGEX_DESC_TEXT, '', [], true);
+			$street = Validate::validate($street, 'street', Validate::REGEX_DESC_TEXT, '', [], true);
 			$zipcode = Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', [], true);
-			$city = Validate::validate($city, 'city', '', '', [], true);
+			$city = Validate::validate($city, 'city', Validate::REGEX_DESC_TEXT, '', [], true);
 			$phone = Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', [], true);
 			$fax = Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', [], true);
 			$email = $idna_convert->encode(Validate::validate($email, 'email', '', '', [], true));

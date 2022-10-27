@@ -245,7 +245,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$ipaddress = $this->getParam('ipaddress', true, -1);
 
 			// validation
-			$name = Validate::validate($name, 'name', '', '', [], true);
+			$name = Validate::validate($name, 'name', Validate::REGEX_DESC_TEXT, '', [], true);
 			$idna_convert = new IdnaWrapper();
 			$email = $idna_convert->encode(Validate::validate($email, 'email', '', '', [], true));
 			$def_language = Validate::validate($def_language, 'default language', '', '', [], true);
@@ -581,7 +581,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				}
 
 				// validation
-				$name = Validate::validate($name, 'name', '', '', [], true);
+				$name = Validate::validate($name, 'name', Validate::REGEX_DESC_TEXT, '', [], true);
 				$idna_convert = new IdnaWrapper();
 				$email = $idna_convert->encode(Validate::validate($email, 'email', '', '', [], true));
 				$def_language = Validate::validate($def_language, 'default language', '', '', [], true);
