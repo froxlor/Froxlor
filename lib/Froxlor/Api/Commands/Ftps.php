@@ -451,8 +451,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, [
 				"customerid" => $customer['customerid'],
 				"id" => $id,
-				"password" => $cryptPassword,
-				"passwordc" => $cryptPasswordCompat
+				"password" => $cryptPassword
 			], true, true);
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
 		}
