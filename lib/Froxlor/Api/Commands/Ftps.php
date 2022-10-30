@@ -173,15 +173,17 @@ class Ftps extends ApiCommand implements ResourceEntity
 			} else {
 				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 				$cryptPassword = Crypt::makeCryptPassword($password, false, true);
+				$cryptPasswordCompat = Crypt::makeCryptPassword($password, true, true);
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
-						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
-						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid, :shell)");
+						(`customerid`, `username`, `description`, `password`, `password_compat`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
+						VALUES (:customerid, :username, :description, :password, :passwordc, :homedir, 'y', :guid, :guid, :shell)");
 				$params = [
 					"customerid" => $customer['customerid'],
 					"username" => $username,
 					"description" => $description,
 					"password" => $cryptPassword,
+					"passwordc" => $cryptPasswordCompat,
 					"homedir" => $path,
 					"guid" => $customer['guid'],
 					"shell" => $shell
@@ -442,16 +444,18 @@ class Ftps extends ApiCommand implements ResourceEntity
 				Response::standardError('passwordshouldnotbeusername', '', true);
 			}
 			$cryptPassword = Crypt::makeCryptPassword($password, false, true);
+			$cryptPasswordCompat = Crypt::makeCryptPassword($password, true, true);
 
 			$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-				SET `password` = :password
+				SET `password` = :password, `password_compat` = :passwordc
 				WHERE `customerid` = :customerid
 				AND `id` = :id
 			");
 			Database::pexecute($stmt, [
 				"customerid" => $customer['customerid'],
 				"id" => $id,
-				"password" => $cryptPassword
+				"password" => $cryptPassword,
+				"passwordc" => $cryptPasswordCompat
 			], true, true);
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
 		}

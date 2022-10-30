@@ -207,24 +207,23 @@ class Crypt
 	 * @param string $password
 	 *            Password to be encrypted
 	 * @param bool $htpasswd
-	 *            optional whether to generate a SHA1 password for directory protection
+	 *            optional whether to generate a SHA1 password for directory protection, if this and $openssl is set, outputs sha1-hash
 	 * @param bool $openssl
-	 *            optional generates $htpasswd like strings but for proftpd
+	 *            optional generates $htpasswd like strings but for proftpd {algo}base64encoded_hash, if this and $htpasswd is set, outputs sha1-hash
 	 *
-	 * @return string encrypted password)
-	 *
-	 *         0 - default crypt (depends on system configuration)
-	 *         1 - MD5 $1$
-	 *         2 - BLOWFISH $2y$07$
-	 *         3 - SHA-256 $5$ (default)
-	 *         4 - SHA-512 $6$
-	 *
+	 * @return string encrypted password
 	 */
 	public static function makeCryptPassword($password, $htpasswd = false, $openssl = false)
 	{
 		if ($htpasswd || $openssl) {
+			if ($htpasswd && $openssl) {
+				// sha1 compatible for pure-ftpd (not encoded)
+				return sha1($password);
+			}
+			// sha1 hash for either dir-protection or (if openssl=1) for proftpd
 			return '{SHA' . ($openssl ? '1' : '') . '}' . base64_encode(sha1($password, true));
 		}
+		// crypt using the specified crypt-algorithm or system default
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
 		return password_hash($password, $algo);
 	}
