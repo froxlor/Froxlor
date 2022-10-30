@@ -173,17 +173,15 @@ class Ftps extends ApiCommand implements ResourceEntity
 			} else {
 				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 				$cryptPassword = Crypt::makeCryptPassword($password, false, true);
-				$cryptPasswordCompat = Crypt::makeCryptPassword($password, true, true);
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
-						(`customerid`, `username`, `description`, `password`, `password_compat`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
+						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
 						VALUES (:customerid, :username, :description, :password, :passwordc, :homedir, 'y', :guid, :guid, :shell)");
 				$params = [
 					"customerid" => $customer['customerid'],
 					"username" => $username,
 					"description" => $description,
 					"password" => $cryptPassword,
-					"passwordc" => $cryptPasswordCompat,
 					"homedir" => $path,
 					"guid" => $customer['guid'],
 					"shell" => $shell
@@ -444,10 +442,9 @@ class Ftps extends ApiCommand implements ResourceEntity
 				Response::standardError('passwordshouldnotbeusername', '', true);
 			}
 			$cryptPassword = Crypt::makeCryptPassword($password, false, true);
-			$cryptPasswordCompat = Crypt::makeCryptPassword($password, true, true);
 
 			$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
-				SET `password` = :password, `password_compat` = :passwordc
+				SET `password` = :password
 				WHERE `customerid` = :customerid
 				AND `id` = :id
 			");

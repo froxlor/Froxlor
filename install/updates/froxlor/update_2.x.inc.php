@@ -70,9 +70,6 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
 	// ftp_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
-	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` ADD `password_compat` varchar(255) NOT NULL default '' AFTER `password`;");
-	// update existing entries
-	Database::query("UPDATE `" . TABLE_FTP_USERS . "` SET `password_compat` = `password`;");
 	// mail_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password_enc` varchar(255) NOT NULL default '';");

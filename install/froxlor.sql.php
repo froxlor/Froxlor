@@ -43,7 +43,6 @@ CREATE TABLE `ftp_users` (
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
   `password` varchar(255) NOT NULL,
-  `password_compat` varchar(255) NOT NULL,
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',

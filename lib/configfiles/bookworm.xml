@@ -3098,7 +3098,7 @@ MYSQLCrypt      any
 
 # Query to execute in order to fetch the password
 
-MYSQLGetPW      SELECT password_compat FROM ftp_users WHERE username="\L" AND login_enabled="y"
+MYSQLGetPW      SELECT password FROM ftp_users WHERE username="\L" AND login_enabled="y"
 
 
 # Query to execute in order to fetch the system user name or uid

@@ -3577,7 +3577,7 @@ MYSQLUser       <SQL_UNPRIVILEGED_USER>
 MYSQLPassword   <SQL_UNPRIVILEGED_PASSWORD>
 MYSQLDatabase   <SQL_DB>
 MYSQLCrypt      any
-MYSQLGetPW      SELECT password_compat FROM ftp_users WHERE username="\L" AND login_enabled="y"
+MYSQLGetPW      SELECT password FROM ftp_users WHERE username="\L" AND login_enabled="y"
 MYSQLGetUID     SELECT uid FROM ftp_users WHERE username="\L" AND login_enabled="y"
 MYSQLGetGID     SELECT gid FROM ftp_users WHERE username="\L" AND login_enabled="y"
 MYSQLGetDir     SELECT homedir FROM ftp_users WHERE username="\L" AND login_enabled="y"
