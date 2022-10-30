@@ -176,7 +176,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
 						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
-						VALUES (:customerid, :username, :description, :password, :passwordc, :homedir, 'y', :guid, :guid, :shell)");
+						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid, :shell)");
 				$params = [
 					"customerid" => $customer['customerid'],
 					"username" => $username,
