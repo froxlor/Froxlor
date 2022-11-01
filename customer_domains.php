@@ -181,7 +181,8 @@ if ($page == 'overview' || $page == 'domains') {
 
 				$openbasedir = [
 					0 => lng('domain.docroot'),
-					1 => lng('domain.homedir')
+					1 => lng('domain.homedir'),
+					2 => lng('domain.docparent')
 				];
 				$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
@@ -302,7 +303,8 @@ if ($page == 'overview' || $page == 'domains') {
 
 				$openbasedir = [
 					0 => lng('domain.docroot'),
-					1 => lng('domain.homedir')
+					1 => lng('domain.homedir'),
+					2 => lng('domain.docparent')
 				];
 
 				// create serveralias options

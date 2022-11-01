@@ -74,7 +74,11 @@ class Domain
 
 	public static function domainExternalLinkInfo(array $attributes)
 	{
-		$result = '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+		$result = '';
+		if ($attributes['fields']['parentdomainid'] != 0) {
+				$result = '<i class="fa-solid fa-turn-up me-2 fa-rotate-90 opacity-50"></i>';
+		}
+		$result .= '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
 		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
 			$statsapp = 'webalizer';

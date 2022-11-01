@@ -994,6 +994,8 @@ class Apache extends HttpConfigBase
 			if ($domain['openbasedir'] == '1') {
 				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
 					$_phpappendopenbasedir = Domain::appendOpenBasedirPath($domain['customerroot'], true);
+				} else if ($domain['openbasedir_path'] == '2' && strpos(dirname($domain['documentroot']).'/', $domain['customerroot']) !== false) {
+					$_phpappendopenbasedir = Domain::appendOpenBasedirPath(dirname($domain['documentroot']).'/', true);
 				} else {
 					$_phpappendopenbasedir = Domain::appendOpenBasedirPath($domain['documentroot'], true);
 				}

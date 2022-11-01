@@ -90,9 +90,11 @@ class Pagination
 		} else {
 			// add default ordering by given order
 			if (!empty($default_sorting)) {
-				$this->sortfield = array_key_first($default_sorting);
-				$this->sortorder = array_shift($default_sorting) ?? $this->sortorder;
-				$this->addOrderBy($this->sortfield, $this->sortorder);
+				while (!empty($default_sorting)) {
+					$this->sortfield = array_key_first($default_sorting);
+					$this->sortorder = array_shift($default_sorting) ?? $this->sortorder;
+					$this->addOrderBy($this->sortfield, $this->sortorder);
+				}
 			}
 			// add default ordering by given fields
 			if (count($fields) > 0 && empty($this->sortfield)) {

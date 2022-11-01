@@ -172,6 +172,8 @@ class Fcgid
 
 			if ($this->domain['openbasedir_path'] == '0' && strstr($this->domain['documentroot'], ":") === false) {
 				$openbasedir = Domain::appendOpenBasedirPath($this->domain['documentroot'], true);
+			} else if ($this->domain['openbasedir_path'] == '2' && strpos(dirname($this->domain['documentroot']).'/', $this->domain['customerroot']) !== false) {
+				$openbasedir = Domain::appendOpenBasedirPath(dirname($this->domain['documentroot']).'/', true);
 			} else {
 				$openbasedir = Domain::appendOpenBasedirPath($this->domain['customerroot'], true);
 			}

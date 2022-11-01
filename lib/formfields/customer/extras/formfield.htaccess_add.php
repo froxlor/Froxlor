@@ -40,6 +40,7 @@ return [
 						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescription') : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
+						'selected' => $pathSelect['value'],
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
 						'mandatory' => true

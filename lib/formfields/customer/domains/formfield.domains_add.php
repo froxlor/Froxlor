@@ -53,9 +53,10 @@ return [
 					],
 					'path' => [
 						'label' => lng('panel.path'),
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescriptionSubdomain') : null),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescriptionSubdomain').(Settings::Get('system.documentroot_use_default_value') == 1 ? lng('panel.pathDescriptionEx') : '') : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
+						'selected' => $pathSelect['value'],
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
 					],
