@@ -91,9 +91,10 @@ if ($page == 'overview') {
 
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 
-				UI::view('user/form.html.twig', [
+				UI::view('user/form-replacers.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'phpsettings']),
-					'formdata' => $phpconfig_add_data['phpconfig_add']
+					'formdata' => $phpconfig_add_data['phpconfig_add'],
+					'replacers' => $phpconfig_add_data['phpconfig_replacers']
 				]);
 			}
 		} else {
@@ -165,9 +166,10 @@ if ($page == 'overview') {
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 
-				UI::view('user/form.html.twig', [
+				UI::view('user/form-replacers.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'phpsettings', 'id' => $id]),
 					'formdata' => $phpconfig_edit_data['phpconfig_edit'],
+					'replacers' => $phpconfig_edit_data['phpconfig_replacers'],
 					'editid' => $id
 				]);
 			}
