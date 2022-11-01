@@ -29,3 +29,7 @@ tr.bg-info td,
 tr.bg-warning td {
 	color: $dark-bg !important;
 }
+
+.badge.bg-secondary {
+	color: $gray-700;
+}

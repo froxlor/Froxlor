@@ -1,25 +1,19 @@
 {
+	"name": "froxlor",
 	"private": true,
 	"scripts": {
-		"dev": "npm run development",
-		"development": "mix",
-		"watch": "mix watch",
-		"watch-poll": "mix watch -- --watch-options-poll=1000",
-		"hot": "mix watch --hot",
-		"prod": "npm run production",
-		"production": "mix --production"
+		"dev": "mix watch",
+		"build": "mix --production"
 	},
 	"devDependencies": {
-		"laravel-mix": "^6.0.42",
-		"resolve-url-loader": "^5.0.0",
-		"sass": "^1.49.7",
-		"sass-loader": "^12.5.0"
-	},
-	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.2.0",
 		"@popperjs/core": "^2.11.6",
 		"bootstrap": "^5.2.1",
 		"chart.js": "^3.9.1",
-		"jquery": "^3.6.1"
+		"jquery": "^3.6.1",
+		"laravel-mix": "^6.0.42",
+		"resolve-url-loader": "^5.0.0",
+		"sass": "^1.49.7",
+		"sass-loader": "^12.5.0"
 	}
 }
