@@ -26,18 +26,22 @@
 {% endblock %}
 
 {% block content %}
-	<div class="d-md-flex align-items-start">
-		<div class="nav flex-column nav-pills me-md-3 mb-3 mb-md-0" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-			<button class="nav-link active" id="v-pills-error-tab" data-bs-toggle="pill" data-bs-target="#v-pills-error" type="button" role="tab" aria-controls="v-pills-error" aria-selected="true">Error log</button>
-			<button class="nav-link" id="v-pills-access-tab" data-bs-toggle="pill" data-bs-target="#v-pills-access" type="button" role="tab" aria-controls="v-pills-access" aria-selected="false">Access log</button>
-		</div>
-		<div class="tab-content flex-grow-1" id="v-pills-tabContent">
-			<div class="tab-pane fade show active" id="v-pills-error" role="tabpanel" aria-labelledby="v-pills-error-tab">
+
+	<ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+		<li class="nav-item" role="presentation">
+			<a class="nav-link active" id="ex1-tab-1" data-bs-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">Error log</a>
+		</li>
+		<li class="nav-item" role="presentation">
+			<a class="nav-link" id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">Access log</a>
+		</li>
+	</ul>
+
+	<div class="tab-content" id="ex1-content">
+		<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
 				<textarea rows="16" class="logcontent" readonly>{{ error_log_content }}</textarea>
-			</div>
-			<div class="tab-pane fade" id="v-pills-access" role="tabpanel" aria-labelledby="v-pills-access-tab">
+		</div>
+		<div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
 				<textarea rows="16" class="logcontent" readonly>{{ access_log_content }}</textarea>
-			</div>
 		</div>
 	</div>
 {% endblock %}
