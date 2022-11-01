@@ -4333,6 +4333,26 @@ TLSVerifyClient                         off
 				<!-- Pureftpd -->
 				<daemon name="pureftpd" title="PureFTPd">
 					<install><![CDATA[apt-get install pure-ftpd-common pure-ftpd-mysql]]></install>
+					<file name="/etc/pure-ftpd/create-cert.sh" chown="root:0"
+						chmod="0700">
+						<content><![CDATA[#!/bin/bash
+[ -f /etc/ssl/private/pure-ftpd.pem ] || openssl req -x509 -nodes -days 7300 -newkey rsa:4096 -keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"
+openssl dhparam -out /etc/ssl/private/pure-ftpd-dhparams.pem 3072
+chmod 0600 /etc/ssl/private/pure-ftpd.pem /etc/ssl/private/pure-ftpd-dhparams.pem
+]]>
+						</content>
+					</file>
+					<commands index="1">
+						<command><![CDATA[/etc/pure-ftpd/create-cert.sh]]></command>
+						<command><![CDATA[rm -f /etc/pure-ftpd/create-cert.sh]]></command>
+					</commands>
+					<file name="/etc/pure-ftpd/conf/TLS"
+						chown="root:0" chmod="0644">
+						<content><![CDATA[
+1
+]]>
+						</content>
+					</file>
 					<file name="/etc/pure-ftpd/conf/MinUID" chown="root:0"
 						chmod="0644">
 						<content><![CDATA[
@@ -4683,6 +4703,7 @@ aliases:     files
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
+					<install><![CDATA[apt-get install cron]]></install>
 					<command><![CDATA[/usr/bin/php <BASE_PATH>bin/froxlor-cli froxlor:cron --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>

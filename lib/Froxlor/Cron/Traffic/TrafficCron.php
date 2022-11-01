@@ -78,7 +78,7 @@ class TrafficCron extends FroxlorCron
 				// Fork failed
 				return 1;
 			}
-		} else {
+		} else if (!defined('CRON_NOFORK_FLAG')) {
 			if (extension_loaded('pcntl')) {
 				$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
 			} else {

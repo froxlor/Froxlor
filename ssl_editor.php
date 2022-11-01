@@ -97,7 +97,7 @@ if ($action == '' || $action == 'view') {
 		'editid' => $id,
 		'actions_links' => [
 			[
-				'class' => 'btn-secondary',
+				'class' => 'btn-outline-secondary',
 				'href' => $linker->getLink([
 					'section' => 'domains',
 					'page' => 'domains',

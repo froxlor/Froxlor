@@ -68,6 +68,11 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 	Database::query($sql);
 	// new customer allowed_mysqlserver field
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
+	// ftp_users adjustments
+	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
+	// mail_users adjustments
+	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password_enc` varchar(255) NOT NULL default '';");
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Checking for multiple mysql-servers to allow acccess to customers for existing databases");

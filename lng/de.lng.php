@@ -2117,6 +2117,7 @@ Vielen Dank, Ihr Administrator',
 		'http' => 'HTTP',
 		'ftp' => 'FTP',
 		'mail' => 'Mail',
+		'nocustomers' => 'Es wird mindestens ein Kunde benötigt um die Traffic Statistiken anzuzeigen.',
 	],
 	'translator' => '',
 	'update' => [

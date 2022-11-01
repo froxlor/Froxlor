@@ -20,6 +20,8 @@ $nav-link-color: $body-color;
 // List groups
 $list-group-bg: $gray-800;
 $list-group-color: $body-color;
+$list-group-hover-bg: $gray-700;
+$list-group-action-color: $body-color;
 
 // Navbar
 $navbar-bg: $gray-800;
@@ -51,3 +53,9 @@ $modal-content-bg: $gray-800;
 $input-bg: $gray-900;
 $input-border-color: $black;
 $input-group-addon-bg: $gray-800;
+
+// Progress bar
+$progress-bg: $gray-900;
+
+// Search
+$search-bg: $gray-800;

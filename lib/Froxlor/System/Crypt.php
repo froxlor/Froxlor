@@ -35,8 +35,13 @@ class Crypt
 
 	/**
 	 * Generates a random password
+	 *
+	 * @param int $length optional, will be read from settings if not given
+	 * @param bool $isSalt optional, default false, do not include special characters
+	 *
+	 * @return string
 	 */
-	public static function generatePassword(int $length = 0)
+	public static function generatePassword(int $length = 0, bool $isSalt = false)
 	{
 		$alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
 		$alpha_upper = strtoupper($alpha_lower);
@@ -57,7 +62,7 @@ class Crypt
 			$pw .= mb_substr(self::specialShuffle($numeric), 0, $n);
 		}
 
-		if (Settings::Get('panel.password_special_char_required')) {
+		if (Settings::Get('panel.password_special_char_required') && !$isSalt) {
 			$pw .= mb_substr(self::specialShuffle($special), 0, $n);
 		}
 
@@ -208,23 +213,22 @@ class Crypt
 	 *            Password to be encrypted
 	 * @param bool $htpasswd
 	 *            optional whether to generate a SHA1 password for directory protection
-	 * @param bool $openssl
-	 *            optional generates $htpasswd like strings but for proftpd
+	 * @param bool $ftpd
+	 *            optional generates sha256 password strings for proftpd/pureftpd
 	 *
-	 * @return string encrypted password)
-	 *
-	 *         0 - default crypt (depends on system configuration)
-	 *         1 - MD5 $1$
-	 *         2 - BLOWFISH $2y$07$
-	 *         3 - SHA-256 $5$ (default)
-	 *         4 - SHA-512 $6$
-	 *
+	 * @return string encrypted password
 	 */
-	public static function makeCryptPassword($password, $htpasswd = false, $openssl = false)
+	public static function makeCryptPassword(string $password, bool $htpasswd = false, bool $ftpd = false)
 	{
-		if ($htpasswd || $openssl) {
-			return '{SHA' . ($openssl ? '1' : '') . '}' . base64_encode(sha1($password, true));
+		if ($htpasswd || $ftpd) {
+			if ($ftpd) {
+				// sha256 compatible for proftpd and pure-ftpd
+				return crypt($password, '$5$' . self::generatePassword(16, true) . '$');
+			}
+			// sha1 hash for dir-protection
+			return '{SHA}' . base64_encode(sha1($password, true));
 		}
+		// crypt using the specified crypt-algorithm or system default
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
 		return password_hash($password, $algo);
 	}

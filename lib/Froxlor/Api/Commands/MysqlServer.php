@@ -131,7 +131,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) &&!is_array($sql_root)) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) && !is_array($sql_root)) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -377,7 +377,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$mysql_ca = $this->getParam('mysql_ca', true, $result['ssl']['caFile'] ?? '');
 		$mysql_verifycert = $this->getBoolParam('mysql_verifycert', true, $result['ssl']['verifyServerCertificate'] ?? 0);
 		$privileged_user = $this->getParam('privileged_user', true, $result['user']);
-		$privileged_password = $this->getParam('privileged_password', true, $result['password']);
+		$privileged_password = $this->getParam('privileged_password', true, '');
 		$description = $this->getParam('description', true, $result['caption']);
 		$allow_all_customers = $this->getParam('allow_all_customers', true, 0);
 		$test_connection = $this->getParam('test_connection', true, 1);
@@ -396,6 +396,11 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$mysql_port = Validate::validate($mysql_port, 'port', Validate::REGEX_PORT, '', [3306], true);
 		$privileged_password = Validate::validate($privileged_password, 'password', '', '', [], true);
 		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
+		// keep old password?
+		if (empty($privileged_password)) {
+			$privileged_password = $result['password'];
+		}
 
 		if ($mysql_host != $result['host']) {
 			// check whether the server is in use by any customer

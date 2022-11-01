@@ -120,7 +120,6 @@ if ($action == '2fa_entercode') {
 	]);
 	exit();
 } elseif ($action == 'login') {
-	$languages = Language::getLanguages();
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$password = Validate::validate($_POST['password'], 'password');
@@ -358,7 +357,11 @@ if ($action == '2fa_entercode') {
 				break;
 			case 4:
 				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
-				$message = str_replace('%s', $cmail, lng('error.errorsendingmail'));
+				if (!Validate::validateEmail($cmail)) {
+					$message = lng('error.errorsendingmail', ['invalid.address']);
+				} else {
+					$message = lng('error.errorsendingmail', [$cmail]);
+ 				}
 				break;
 			case 5:
 				$message = lng('error.user_banned');
