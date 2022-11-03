@@ -718,11 +718,11 @@ class Lighttpd extends HttpConfigBase
 		$stats_text = '';
 
 		$statTool = Settings::Get('system.traffictool');
-		$statDomain = ($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain'];
+		$statDomain = "";
 		if ($domain['speciallogfile'] == '1') {
-			$statDomain = $domain['domain'];
+			$statDomain = "/" . $domain['domain'];
 		}
-		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/'.$statTool.'/' . $statDomain);
+		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/' . $statTool . $statDomain);
 
 		$stats_text .= '  alias.url = ( "/'.$statTool.'/" => "' . $statDocroot . '" )' . "\n";
 
