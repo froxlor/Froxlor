@@ -3672,7 +3672,7 @@ account     required    pam_mysql.so user=<SQL_UNPRIVILEGED_USER> passwd=<SQL_UN
 				<!-- goaccess -->
 				<daemon name="goaccess"
 					title="goaccess (traffic analyzer)" default="true">
-					<install><![CDATA[emerge net-analyzer/goaccess]]></install>
+					<install><![CDATA[emerge net-analyzer/goaccess app-misc/jq]]></install>
 				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"

@@ -241,7 +241,7 @@ class TrafficCron extends FroxlorCron
 				if ($statsTool == 'awstats') {
 					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']], $current_stamp));
 				} elseif ($statsTool == 'goaccess') {
-					$httptraffic += floatval(self::callGoaccessGetTraffic($row['loginname'], $row['documentroot'] . '/goaccess/', $caption, $domainlist[$row['customerid']], ['month' => $current_month_short, 'year' => $current_year]));
+					$httptraffic += floatval(self::callGoaccessGetTraffic($row['customerid'], $row['loginname'], $row['documentroot'] . '/goaccess/', $caption, $domainlist[$row['customerid']], ['month' => $current_month_short, 'year' => $current_year]));
 				} else {
 					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
@@ -621,6 +621,7 @@ class TrafficCron extends FroxlorCron
 	/**
 	 * Run goaccess to create statistics and return used traffic since last run
 	 *
+	 * @param int $customerid
 	 * @param string $logfile Name of logfile
 	 * @param string $outputdir Place where stats should be build
 	 * @param string $caption Caption for webalizer output
@@ -628,13 +629,12 @@ class TrafficCron extends FroxlorCron
 	 * 
 	 * @return int Used traffic
 	 */
-	private static function callGoaccessGetTraffic($logfile, $outputdir, $caption, array $usersdomainlist = [], array $monthyear_arr = [])
+	private static function callGoaccessGetTraffic($customerid, $logfile, $outputdir, $caption, array $usersdomainlist = [], array $monthyear_arr = [])
 	{
 		$returnval = 0;
 
 		$logfile = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $logfile . '-access.log');
 		if (file_exists($logfile)) {
-
 			$outputdir = FileDir::makeCorrectDir($outputdir);
 			if (!file_exists($outputdir)) {
 				FileDir::safe_exec('mkdir -p ' . escapeshellarg($outputdir));
@@ -650,11 +650,36 @@ class TrafficCron extends FroxlorCron
 			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " - ", $return_value, ['|']);
 
 			if (file_exists($outputdir . '.tmp.json')) {
-				$statscontent = json_decode(file_get_contents($outputdir . '.tmp.json'), true);
-				if ($statscontent) {
-					$returnval = $statscontent['general']['bandwidth'] ?? 0;
-				}
+				// need jq here because of potentially LARGE json files
+				$returnval = FileDir::safe_exec("jq -c '.general.bandwidth' " . escapeshellarg($outputdir . '.tmp.json'));
+				$returnval = array_shift($returnval);
 				@unlink($outputdir . '.tmp.json');
+			}
+		}
+
+		if ($returnval > 0) {
+			/**
+			 * now, because this traffic is being saved daily, we have to
+			 * subtract the values from all the month's values to return
+			 * a sane value for our panel_traffic and to remain the whole stats
+			 * (awstats overwrites the customers .html stats-files)
+			 */
+			if ($customerid !== false) {
+				$result_stmt = Database::prepare("
+					SELECT SUM(`http`) as `trafficmonth` FROM `" . TABLE_PANEL_TRAFFIC . "`
+					WHERE `customerid` = :customerid
+					AND `year` = :year AND `month` = :month
+				");
+				$result_data = [
+					'customerid' => $customerid,
+					'year' => date('Y', $current_stamp),
+					'month' => date('m', $current_stamp)
+				];
+				$result = Database::pexecute_first($result_stmt, $result_data);
+
+				if (is_array($result) && isset($result['trafficmonth'])) {
+					$returnval = ($returnval - floatval($result['trafficmonth']));
+				}
 			}
 		}
 		return $returnval;

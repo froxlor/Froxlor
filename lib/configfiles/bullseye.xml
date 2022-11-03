@@ -4798,7 +4798,7 @@ UPLOADGID=
 				<!-- goaccess -->
 				<daemon name="goaccess"
 					title="goaccess (traffic analyzer)" default="true">
-					<install><![CDATA[apt-get install goaccess]]></install>
+					<install><![CDATA[apt-get install goaccess jq]]></install>
 				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
