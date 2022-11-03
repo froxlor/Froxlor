@@ -475,15 +475,23 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'traffictool' && $newfieldvalue != $fielddata['value']) {
-			$oldpath = '/'.$fielddata['value'].'/';
-			$newpath = '/'.$newfieldvalue.'/';
-			$upd_stmt = Database::query("
-				UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `path` = :newpath WHERE `path` = :oldpath
+			$oldpath = '/' . $fielddata['value'] . '/';
+			$newpath = '/' . $newfieldvalue . '/';
+			$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `path` LIKE :oldpath");
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `path` = :newpath WHERE `id` = :id
 			");
-			Database::pexecute($upd_stmt, [
-				'newpath' => $newpath,
-				'oldpath' => $oldpath
+			Database::pexecute($sel_stmt, [
+				'oldpath' => '%' . $oldpath
 			]);
+			while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$full_path = str_replace($oldpath, $newpath, $entry['path']);
+				$eid = (int)$entry['id'];
+				Database::pexecute($upd_stmt, [
+					'newpath' => $full_path,
+					'id' => $eid
+				]);
+			}
 		}
 
 		return $returnvalue;
