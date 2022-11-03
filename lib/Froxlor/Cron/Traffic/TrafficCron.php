@@ -224,7 +224,7 @@ class TrafficCron extends FroxlorCron
 					if ($statsTool != 'awstats') {
 						foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
 							if ($statsTool == 'goaccess') {
-								$httptraffic += floatval(self::callGoaccessGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/goaccess/' . $domain . '/', $domain, $domainlist[$row['customerid']], ['month' => $current_month_short, 'year' => $current_year]));
+								$httptraffic += floatval(self::callGoaccessGetTraffic($row['customerid'], $row['loginname'] . '-' . $domain, $row['documentroot'] . '/goaccess/' . $domain . '/', $domain, ['month' => $current_month_short, 'year' => $current_year], $current_stamp));
 							} else {
 								$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 							}
@@ -241,7 +241,7 @@ class TrafficCron extends FroxlorCron
 				if ($statsTool == 'awstats') {
 					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']], $current_stamp));
 				} elseif ($statsTool == 'goaccess') {
-					$httptraffic += floatval(self::callGoaccessGetTraffic($row['customerid'], $row['loginname'], $row['documentroot'] . '/goaccess/', $caption, $domainlist[$row['customerid']], ['month' => $current_month_short, 'year' => $current_year]));
+					$httptraffic += floatval(self::callGoaccessGetTraffic($row['customerid'], $row['loginname'], $row['documentroot'] . '/goaccess/', $caption, ['month' => $current_month_short, 'year' => $current_year], $current_stamp));
 				} else {
 					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
@@ -625,11 +625,12 @@ class TrafficCron extends FroxlorCron
 	 * @param string $logfile Name of logfile
 	 * @param string $outputdir Place where stats should be build
 	 * @param string $caption Caption for webalizer output
-	 * @param array $usersdomainlist
+	 * @param array $monthyear_arr
+	 * @param int $current_stamp
 	 * 
 	 * @return int Used traffic
 	 */
-	private static function callGoaccessGetTraffic($customerid, $logfile, $outputdir, $caption, array $usersdomainlist = [], array $monthyear_arr = [])
+	private static function callGoaccessGetTraffic($customerid, $logfile, $outputdir, $caption, array $monthyear_arr = [], int $current_stamp = 0)
 	{
 		$returnval = 0;
 
