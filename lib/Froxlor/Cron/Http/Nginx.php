@@ -1120,7 +1120,7 @@ class Nginx extends HttpConfigBase
 		$statTool = Settings::Get('system.traffictool');
 		$statDomain = "";
 		if ($domain['speciallogfile'] == '1') {
-			$statDomain = "/" . $domain['domain'];
+			$statDomain = "/" . (($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain']);
 		}
 		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/' . $statTool . $statDomain);
 
