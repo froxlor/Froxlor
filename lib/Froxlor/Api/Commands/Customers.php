@@ -633,10 +633,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						'passwd' => $htpasswdPassword
 					];
 
-					$stats_folder = 'webalizer';
-					if (Settings::Get('system.awstats_enabled') == '1') {
-						$stats_folder = 'awstats';
-					}
+					$stats_folder = Settings::Get('system.traffictool');
 					$ins_data['path'] = FileDir::makeCorrectDir($documentroot . '/' . $stats_folder . '/');
 					$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added " . $stats_folder . " htpasswd for user '" . $loginname . "'");
 					Database::pexecute($ins_stmt, $ins_data, true, true);

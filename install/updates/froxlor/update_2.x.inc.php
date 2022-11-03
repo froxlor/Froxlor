@@ -176,3 +176,14 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 
 	Froxlor::updateToVersion($update_to);
 }
+
+if (Froxlor::isDatabaseVersion('202112310')) {
+
+	Update::showUpdateStep("Adjusting traffic tool settings");
+	$traffic_tool = Settings::Get('system.awstats_enabled') == 1 ? 'awstats' : 'webalizer';
+	Settings::AddNew("system.traffictool", $traffic_tool);
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'awstats_enabled'");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202211030');
+}

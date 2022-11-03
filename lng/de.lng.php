@@ -1535,8 +1535,6 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Der Inhalt dieses Feldes wird in die 05_froxlor_dirfix_nofcgid.conf Apache Konfigurationsdatei eingefügt. Wenn leer werden folgende Standardwerte verwendet:<br><br>apache >=2.4<br><code>Require all granted<br>AllowOverride All</code><br><br>apache <=2.2<br><code>Order allow,deny<br>allow from all</code>',
 		],
 		'decimal_places' => 'Nachkommastellen bei der Ausgabe von Traffic/Webspace',
-		'webalizer_enabled' => 'Nutze Webalizer-Statistiken',
-		'awstats_enabled' => 'Nutze AWStats-Statistiken',
 		'selfdns' => [
 			'title' => 'Manuelle DNS-Einstellungen für Domains',
 		],
@@ -2039,6 +2037,9 @@ Vielen Dank, Ihr Administrator',
 		'update_channel' => [
 			'title' => 'froxlor Update Kanal',
 			'description' => 'Wähle den bevorzugten Update Kanal. Standard ist "stable"',
+		],
+		'traffictool' => [
+			'toolselect' => 'Traffic Analyzer',
 		],
 	],
 	'spf' => [

@@ -3996,9 +3996,19 @@ UPLOADGID=
 			</service>
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
+				<!-- Webalizer -->
+				<daemon name="webalizer"
+					title="Webalizer (traffic analyzer)">
+					<install><![CDATA[apt-get install webalizer]]></install>
+				</daemon>
+				<!-- goaccess -->
+				<daemon name="goaccess"
+					title="goaccess (traffic analyzer)" default="true">
+					<install><![CDATA[apt-get install goaccess]]></install>
+				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
-					title="Awstats (webalizer alternative)">
+					title="Awstats  (traffic analyzer)">
 					<install><![CDATA[apt-get install awstats]]></install>
 					<command><![CDATA[mv {{settings.system.awstats_conf}}/awstats.conf {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>

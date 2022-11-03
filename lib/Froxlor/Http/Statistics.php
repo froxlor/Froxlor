@@ -148,12 +148,7 @@ class Statistics
 		}
 
 		// get correct directory
-		$dir = $row['documentroot'];
-		if (Settings::Get('system.awstats_enabled') == '1') {
-			$dir .= '/awstats/';
-		} else {
-			$dir .= '/webalizer/';
-		}
+		$dir = $row['documentroot'] . '/' . Settings::Get('system.traffictool') . '/';
 
 		// only run chown if directory exists
 		if (file_exists($dir)) {

@@ -725,7 +725,7 @@ class Nginx extends HttpConfigBase
 		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $logtype . ';' . "\n";
 		$logfiles_text .= "\t" . 'error_log    ' . $error_log . ' ' . Settings::Get('system.errorlog_level') . ';' . "\n";
 
-		if (Settings::Get('system.awstats_enabled') == '1') {
+		if (Settings::Get('system.traffictool') == 'awstats') {
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
@@ -962,6 +962,7 @@ class Nginx extends HttpConfigBase
 						switch ($single['path']) {
 							case '/awstats/':
 							case '/webalizer/':
+							case '/goaccess/':
 								// no stats-alias in "location /"-context
 								break;
 							default:
@@ -1023,6 +1024,7 @@ class Nginx extends HttpConfigBase
 				switch ($single['path']) {
 					case '/awstats/':
 					case '/webalizer/':
+					case '/goaccess/':
 						$path_options .= $this->getStats($domain, $single);
 						unset($htpasswds[$idx]);
 						break;
@@ -1115,35 +1117,21 @@ class Nginx extends HttpConfigBase
 	{
 		$stats_text = '';
 
-		// define basic path to the stats
-		if (Settings::Get('system.awstats_enabled') == '1') {
-			$alias_dir = FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/');
-		} else {
-			$alias_dir = FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/');
+		$statTool = Settings::Get('system.traffictool');
+		$statDomain = ($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain'];
+		if ($domain['speciallogfile'] == '1') {
+			$statDomain = $domain['domain'];
 		}
+		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/'.$statTool.'/' . $statDomain);
 
-		// if this is a parentdomain, we use this domain-name
-		if ($domain['parentdomainid'] == '0') {
-			$alias_dir = FileDir::makeCorrectDir($alias_dir . '/' . $domain['domain']);
-		} else {
-			$alias_dir = FileDir::makeCorrectDir($alias_dir . '/' . $domain['parentdomain']);
-		}
-
-		if (Settings::Get('system.awstats_enabled') == '1') {
-			// awstats
-			$stats_text .= "\t" . 'location ^~ /awstats/ {' . "\n";
-		} else {
-			// webalizer
-			$stats_text .= "\t" . 'location ^~ /webalizer {' . "\n";
-		}
-
-		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
+		$stats_text .= "\t" . 'location ^~ /'.$statTool.' {' . "\n";
+		$stats_text .= "\t\t" . 'alias ' . $statDocroot . '/;' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic            "' . $single['authname'] . '";' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
-		// awstats icons
-		if (Settings::Get('system.awstats_enabled') == '1') {
+		// awstats special requirement for icons
+		if ($statTool == 'awstats') {
 			$stats_text .= "\t" . 'location ~ ^/awstats-icon/(.*)$ {' . "\n";
 			$stats_text .= "\t\t" . 'alias ' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '$1;' . "\n";
 			$stats_text .= "\t" . '}' . "\n\n";

@@ -205,21 +205,16 @@ class TasksCron extends FroxlorCron
 			$usermaildir = FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/');
 
 			// stats directory
-			if (Settings::Get('system.awstats_enabled') == '1') {
-				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
-				FileDir::safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
+			$statsdir = FileDir::makeCorrectDir($userhomedir . '/' . Settings::Get('system.traffictool'));
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($statsdir));
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($statsdir));
+
+			foreach (['webalizer', 'awstats', 'goaccess'] as $statstools) {
+				$statsdir = FileDir::makeCorrectDir($userhomedir . '/' . $statstool);
 				// in case we changed from the other stats -> remove old
-				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'webalizer')) {
-					FileDir::safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'webalizer'));
-				}
-			} else {
-				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
-				FileDir::safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
-				// in case we changed from the other stats -> remove old
-				// (yes i know, the stats are lost - that's why you should not change all the time!)
-				if (file_exists($userhomedir . 'awstats')) {
-					FileDir::safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'awstats'));
+				if (Settings::Get('system.traffictool') != $statstools && file_exists($statsdir)) {
+					// (yes i know, the stats are lost - that's why you should not change all the time!)
+					FileDir::safe_exec('rm -rf ' . escapeshellarg($statsdir));
 				}
 			}
 

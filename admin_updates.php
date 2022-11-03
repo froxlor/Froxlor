@@ -26,7 +26,6 @@
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
-use Exception;
 use Froxlor\Cron\TaskId;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;

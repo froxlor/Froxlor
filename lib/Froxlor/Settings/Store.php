@@ -469,4 +469,23 @@ class Store
 		}
 		return $value;
 	}
+
+	public static function storeSettingUpdateTrafficTool($fieldname, $fielddata, $newfieldvalue)
+	{
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'traffictool' && $newfieldvalue != $fielddata['value']) {
+			$oldpath = '/'.$fielddata['value'].'/';
+			$newpath = '/'.$newfieldvalue.'/';
+			$upd_stmt = Database::query("
+				UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET `path` = :newpath WHERE `path` = :oldpath
+			");
+			Database::pexecute($upd_stmt, [
+				'newpath' => $newpath,
+				'oldpath' => $oldpath
+			]);
+		}
+
+		return $returnvalue;
+	}
 }

@@ -46,7 +46,7 @@
 										<div class="form-check">
 											{% set recommended = false %}
 											{% if 
-												(dtype == 'awstats' and get_setting('system.awstats_enabled') == '1') or
+												(dtype == get_setting('system.traffictool')) or
 												(dtype == 'libnssextrausers' and (get_setting('system.mod_fcgid') == '1' or get_setting('phpfpm.enabled') == '1' or get_setting('system.apacheitksupport') == '1')) or
 												(dtype == 'logrotate') or
 												(dtype == 'fcgid' and get_setting('system.mod_fcgid') == '1') or

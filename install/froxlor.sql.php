@@ -575,8 +575,6 @@ opcache.validate_timestamps'),
 	('system', 'default_sslvhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
-	('system', 'webalizer_enabled', '1'),
-	('system', 'awstats_enabled', '0'),
 	('system', 'httpuser', 'www-data'),
 	('system', 'httpgroup', 'www-data'),
 	('system', 'webserver', 'apache2'),
@@ -700,6 +698,7 @@ opcache.validate_timestamps'),
 	('system', 'update_channel', 'stable'),
 	('system', 'updatecheck_data', ''),
 	('system', 'update_notify_last', '2.0.0-beta1'),
+	('system', 'traffictool', 'goaccess'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -743,7 +742,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.0-beta1'),
-	('panel', 'db_version', '202112310');
+	('panel', 'db_version', '202211030');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -81,11 +81,8 @@ class Domain
 		$result .= '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
 		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
-			$statsapp = 'webalizer';
-			if (Settings::Get('system.awstats_enabled') == '1') {
-				$statsapp = 'awstats';
-			}
-			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
+			$statsapp = Settings::Get('system.traffictool');
+			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" target="_blank" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
 		}
 		if ($attributes['fields']['registration_date'] != '') {
 			$result .= '<br><small>' . lng('domains.registration_date') . ': ' . $attributes['fields']['registration_date'] . '</small>';

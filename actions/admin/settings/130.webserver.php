@@ -185,7 +185,7 @@ return [
 						'apache2',
 						'nginx'
 					],
-					'visible' => Settings::Get('system.awstats_enabled') == 1,
+					'visible' => Settings::Get('system.traffictool') != 'webalizer',
 					'advanced_mode' => true
 				],
 				'system_logfiles_type' => [

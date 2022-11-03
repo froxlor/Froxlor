@@ -1652,8 +1652,6 @@ Yours sincerely, your administrator',
 			'description' => 'The content of this field will be included into the domain vHost container directly. You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (if applicable)<br/> Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!',
 		],
 		'decimal_places' => 'Number of decimal places in traffic/webspace output',
-		'webalizer_enabled' => 'Enable webalizer statistics',
-		'awstats_enabled' => 'Enable AWstats statistics',
 		'selfdns' => [
 			'title' => 'Customer domain dns settings',
 		],
@@ -2159,6 +2157,12 @@ Yours sincerely, your administrator',
 		],
 		'uc_stable' => 'stable',
 		'uc_testing' => 'testing',
+		'traffictool' => [
+			'toolselect' => 'Traffic analyzer',
+			'webalizer' => 'Webalizer',
+			'awstats' => 'AWStats',
+			'goaccess' => 'goacccess'
+		],
 	],
 	'spf' => [
 		'use_spf' => 'Activate SPF for domains?',

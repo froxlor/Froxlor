@@ -661,7 +661,7 @@ class Core
 
 	private function createJsonArray()
 	{
-		$system_params = ["cron", "libnssextrausers", "logrotate"];
+		$system_params = ["cron", "libnssextrausers", "logrotate", "goaccess"];
 		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
 			$system_params[] = 'php-fpm';
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {

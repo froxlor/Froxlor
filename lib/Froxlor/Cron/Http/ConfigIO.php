@@ -85,7 +85,7 @@ class ConfigIO
 	 */
 	private function cleanAwstatsFiles()
 	{
-		if (Settings::Get('system.awstats_enabled') == '0') {
+		if (Settings::Get('system.traffictool') != 'awstats') {
 			return;
 		}
 

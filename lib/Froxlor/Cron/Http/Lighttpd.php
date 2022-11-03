@@ -717,38 +717,18 @@ class Lighttpd extends HttpConfigBase
 	{
 		$stats_text = '';
 
+		$statTool = Settings::Get('system.traffictool');
+		$statDomain = ($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain'];
 		if ($domain['speciallogfile'] == '1') {
-			if ($domain['parentdomainid'] == '0') {
-				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
-				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '/" )' . "\n";
-				}
-			} else {
-				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
-				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '/" )' . "\n";
-				}
-			}
-		} else {
-			if ($domain['customerroot'] != $domain['documentroot']) {
-				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
-				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/') . '" )' . "\n";
-				}
-			} elseif (Settings::Get('system.awstats_enabled') == '1') {
-				// if the docroots are equal, we still have to set an alias for awstats
-				// because the stats are in /awstats/[domain], not just /awstats/
-				// also, the awstats-icons are someplace else too!
-				// -> webalizer does not need this!
-				$stats_text .= '  alias.url = ( "/awstats/" => "' . FileDir::makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-				$stats_text .= '  alias.url += ( "/awstats-icon" => "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
-			}
+			$statDomain = $domain['domain'];
+		}
+		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/'.$statTool.'/' . $statDomain);
+
+		$stats_text .= '  alias.url = ( "/'.$statTool.'/" => "' . $statDocroot . '" )' . "\n";
+
+		// awstats special requirement for icons
+		if ($statTool == 'awstats') {
+			$stats_text .= '  alias.url += ( "/awstats-icon" => "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 		}
 
 		return $stats_text;
@@ -837,7 +817,7 @@ class Lighttpd extends HttpConfigBase
 			$logfiles_text .= '  accesslog.filename	= "' . $access_log . '"' . "\n";
 		}
 
-		if (Settings::Get('system.awstats_enabled') == '1') {
+		if (Settings::Get('system.traffictool') == 'awstats') {
 			if ((int)$domain['parentdomainid'] == 0) {
 				// prepare the aliases and subdomains for stats config files
 				$server_alias = '';
