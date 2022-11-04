@@ -654,6 +654,8 @@ class TrafficCron extends FroxlorCron
 				// need jq here because of potentially LARGE json files
 				$returnval = FileDir::safe_exec("jq -c '.general.bandwidth' " . escapeshellarg($outputdir . '.tmp.json'));
 				$returnval = array_shift($returnval);
+				// return KB as the others two do
+				$returnval = floatval($returnval / 1024);
 				@unlink($outputdir . '.tmp.json');
 			}
 		}
@@ -682,7 +684,6 @@ class TrafficCron extends FroxlorCron
 					$returnval = ($returnval - floatval($result['trafficmonth']));
 				}
 			}
-			$returnval = floatval($returnval / 1024);
 		}
 		return $returnval;
 	}

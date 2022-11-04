@@ -159,6 +159,11 @@ class Traffic extends ApiCommand implements ResourceEntity
 		}
 		Database::pexecute($result_stmt, $params, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			// make Bytes from KB
+			$row['http'] *= 1024;
+			$row['ftp_up'] *= 1024;
+			$row['ftp_down'] *= 1024;
+			$row['mail'] *= 1024;
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list traffic");

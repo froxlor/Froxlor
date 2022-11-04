@@ -83,6 +83,7 @@ class ReportsCron extends FroxlorCron
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$row['traffic'] *= 1024;
+				$row['traffic_used'] *= 1024;
 				if (isset($row['traffic']) && $row['traffic'] > 0 && $row['traffic_used'] != null && (($row['traffic_used'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')) {
 					$rep_userinfo = [
 						'name' => $row['name'],
@@ -100,7 +101,6 @@ class ReportsCron extends FroxlorCron
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
 						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'], null, 'bi'),
 						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used'], null, 'bi'),
-						/* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					];
@@ -178,6 +178,7 @@ class ReportsCron extends FroxlorCron
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$row['traffic'] *= 1024;
+				$row['traffic_used_total'] *= 1024;
 				if (isset($row['traffic']) && $row['traffic'] > 0 && (($row['traffic_used_total'] * 100) / ($row['traffic'])) >= (int)Settings::Get('system.report_trafficmax')) {
 					$replace_arr = [
 						'NAME' => $row['name'],
@@ -264,9 +265,9 @@ class ReportsCron extends FroxlorCron
 
 					while ($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$customer['traffic'] *= 1024;
-						$t = $customer['traffic_used_total'];
+						$t = $customer['traffic_used_total'] * 1024;
 						if ($customer['traffic'] > 0) {
-							$p = (($customer['traffic_used_total'] * 100) / $customer['traffic']);
+							$p = (($t * 100) / $customer['traffic']);
 							$tg = $customer['traffic'];
 							$str = sprintf('%s  ( %00.1f %% )', PhpHelper::sizeReadable($t, null, 'bi'), $p);
 							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%s', PhpHelper::sizeReadable($tg, null, 'bi')) . "\n";
@@ -283,7 +284,7 @@ class ReportsCron extends FroxlorCron
 
 					$t = $row['traffic_used_total'];
 					if ($row['traffic'] > 0) {
-						$p = (($row['traffic_used_total'] * 100) / $row['traffic']);
+						$p = (($t * 100) / $row['traffic']);
 						$tg = $row['traffic'];
 						$str = sprintf('%s  ( %00.1f %% )', PhpHelper::sizeReadable($t, null, 'bi'), $p);
 						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%s', PhpHelper::sizeReadable($tg, null, 'bi')) . "\n";
