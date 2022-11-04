@@ -682,6 +682,7 @@ class TrafficCron extends FroxlorCron
 					$returnval = ($returnval - floatval($result['trafficmonth']));
 				}
 			}
+			$returnval = floatval($returnval / 1024);
 		}
 		return $returnval;
 	}

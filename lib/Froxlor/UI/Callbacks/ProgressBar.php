@@ -89,6 +89,6 @@ class ProgressBar
 	 */
 	public static function traffic(array $attributes): array
 	{
-		return self::pbData('traffic', $attributes['fields'], 1, (int)Settings::Get('system.report_trafficmax'));
+		return self::pbData('traffic', $attributes['fields'], 1024, (int)Settings::Get('system.report_trafficmax'));
 	}
 }

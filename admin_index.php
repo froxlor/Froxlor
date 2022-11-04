@@ -101,7 +101,7 @@ if ($page == 'overview') {
 
 	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : -1;
 	$overview['traffic_bytes'] = $overview['traffic_assigned'] * 1024;
-	$overview['traffic_bytes_used'] = $overview['traffic_used'];
+	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
