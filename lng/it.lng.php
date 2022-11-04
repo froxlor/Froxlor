@@ -1025,11 +1025,11 @@ Percorso: {USR_PATH}
 Cordiali Saluti, Team Froxlor',
 		],
 		'trafficmaxpercent' => [
-			'mailbody' => 'Salve {NAME},\\n\\nhai utilizzato {TRAFFICUSED} MB di {TRAFFIC} MB traffico disponibile.\\nQuesto è più del {MAX_PERCENT}%.\\n\\nCordiali Saluti, il Team Froxlor',
+			'mailbody' => 'Salve {NAME},\\n\\nhai utilizzato {TRAFFICUSED} MB di {TRAFFIC} MB traffico disponibile.\\nQuesto è più del {MAX_PERCENT}%%.\\n\\nCordiali Saluti, il Team Froxlor',
 			'subject' => 'Raggiunto il limite di traffico',
 		],
 		'diskmaxpercent' => [
-			'mailbody' => 'Salve {NAME},\\n\\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\\nQuesto è più del {MAX_PERCENT}%.\\n\\nCordiali Saluti, il Team Froxlor',
+			'mailbody' => 'Salve {NAME},\\n\\nhai utilizzato {DISKUSED} MB di {DISKAVAILABLE} MB di spazio disponibile.\\nQuesto è più del {MAX_PERCENT}%%.\\n\\nCordiali Saluti, il Team Froxlor',
 			'subject' => 'Raggiungere il limite di spazio su disco',
 		],
 	],

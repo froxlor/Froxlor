@@ -56,6 +56,10 @@ class ReportsCron extends FroxlorCron
 		 */
 		$mail = new Mailer(true);
 
+		// set default language before anything else to
+		// ensure that we can display messages
+		Language::setLanguage(Settings::Get('panel.standardlanguage'));
+
 		if ((int)Settings::Get('system.report_trafficmax') > 0) {
 			// Warn the customers at xx% traffic-usage
 			$result_stmt = Database::prepare("
@@ -83,6 +87,7 @@ class ReportsCron extends FroxlorCron
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
 						'company' => $row['company'],
+						'loginname' => $row['loginname'],
 						'customernumber' => $row['customernumber']
 					];
 					$replace_arr = [
@@ -116,11 +121,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.subject')), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.trafficmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.mailbody')), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.trafficmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -199,11 +204,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.subject')), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.trafficmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.mailbody')), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.trafficmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -350,6 +355,7 @@ class ReportsCron extends FroxlorCron
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
 						'company' => $row['company'],
+						'loginname' => $row['loginname'],
 						'customernumber' => $row['customernumber']
 					];
 					$replace_arr = [
@@ -383,11 +389,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.subject')), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.diskmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.mailbody')), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lLanguage::getTranslation('mails.diskmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -457,11 +463,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.subject')), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.diskmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.mailbody')), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.diskmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";

@@ -555,12 +555,12 @@ return [
 	],
 	'crondesc' => [
 		'cron_unknown_desc' => 'no description given',
-		'cron_tasks' => 'generating of configfiles',
+		'cron_tasks' => 'Generating of configfiles',
 		'cron_legacy' => 'legacy (old) cronjob',
-		'cron_traffic' => 'traffic calculation',
+		'cron_traffic' => 'Traffic calculation',
 		'cron_usage_report' => 'Web- and traffic-reports',
-		'cron_mailboxsize' => 'Calculating of mailbox-sizes',
-		'cron_letsencrypt' => 'updating Let\'s Encrypt certificates',
+		'cron_mailboxsize' => 'Mailbox-size calculation',
+		'cron_letsencrypt' => 'Let\'s Encrypt certificate updates',
 		'cron_backup' => 'Process backup jobs',
 	],
 	'cronjob' => [
@@ -1064,11 +1064,11 @@ return [
 			'subject' => 'Mail account set up successfully',
 		],
 		'createcustomer' => [
-			'mailbody' => 'Hello {FIRSTNAME} {NAME},\\n\\nhere is your account information:\\n\\nUsername: {USERNAME}\\nPassword: {PASSWORD}\\n\\nThank you,\\nyour administrator',
+			'mailbody' => 'Hello {SALUTATION},\\n\\nhere is your account information:\\n\\nUsername: {USERNAME}\\nPassword: {PASSWORD}\\n\\nThank you,\\nyour administrator',
 			'subject' => 'Account information',
 		],
 		'pop_success_alternative' => [
-			'mailbody' => 'Hello,\\n\\nyour Mail account {EMAIL}\\nwas set up successfully.\\nYour password is {PASSWORD}.\\n\\nThis is an automatically created\\ne-mail, please do not answer!\\n\\nYours sincerely, your administrator',
+			'mailbody' => 'Hello {SALUTATION},\\n\\nyour Mail account {EMAIL}\\nwas set up successfully.\\nYour password is {PASSWORD}.\\n\\nThis is an automatically created\\ne-mail, please do not answer!\\n\\nYours sincerely, your administrator',
 			'subject' => 'Mail account set up successfully',
 		],
 		'password_reset' => [
@@ -1101,11 +1101,11 @@ Path: {USR_PATH}
 Yours sincerely, your administrator',
 		],
 		'trafficmaxpercent' => [
-			'mailbody' => 'Dear {NAME},\\n\\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\\nThis is more than {MAX_PERCENT}%.\\n\\nYours sincerely, your administrator',
+			'mailbody' => 'Dear {SALUTATION},\\n\\nyou used {TRAFFICUSED} MB of your available {TRAFFIC} MB of traffic.\\nThis is more than {MAX_PERCENT}%%.\\n\\nYours sincerely, your administrator',
 			'subject' => 'Reaching your traffic limit',
 		],
 		'diskmaxpercent' => [
-			'mailbody' => 'Dear {NAME},\\n\\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\\nThis is more than {MAX_PERCENT}%.\\n\\nYours sincerely, your administrator',
+			'mailbody' => 'Dear {SALUTATION},\\n\\nyou used {DISKUSED} MB of your available {DISKAVAILABLE} MB of diskspace.\\nThis is more than {MAX_PERCENT}%%.\\n\\nYours sincerely, your administrator',
 			'subject' => 'Reaching your diskspace limit',
 		],
 		'2fa' => [
@@ -2190,7 +2190,7 @@ Yours sincerely, your administrator',
 		'sent_error_report' => 'Succesfully sent error report. Thank you for your contribution.',
 	],
 	'tasks' => [
-		'outstanding_tasks' => 'Outstanding cron-tasks',
+		'outstanding_tasks' => 'Pending cron-tasks',
 		'REBUILD_VHOST' => 'Rebuilding webserver-configuration',
 		'CREATE_HOME' => 'Adding new customer %s',
 		'REBUILD_DNS' => 'Rebuilding bind-configuration',

@@ -997,11 +997,11 @@ return [
 			'subject' => 'E-Mail-Konto erfolgreich eingerichtet',
 		],
 		'createcustomer' => [
-			'mailbody' => 'Hallo {FIRSTNAME} {NAME},\\n\\nhier Ihre Accountinformationen:\\n\\nBenutzername: {USERNAME}\\nPasswort: {PASSWORD}\\n\\nVielen Dank,\\nIhr Administrator',
+			'mailbody' => 'Hallo {SALUTATION},\\n\\nhier Ihre Accountinformationen:\\n\\nBenutzername: {USERNAME}\\nPasswort: {PASSWORD}\\n\\nVielen Dank,\\nIhr Administrator',
 			'subject' => 'Kontoinformationen',
 		],
 		'pop_success_alternative' => [
-			'mailbody' => 'Hallo,\\n\\nihr E-Mail-Konto {USERNAME}\\nwurde erfolgreich eingerichtet.\\nIhr Passwort lautet {PASSWORD}.\\n\\nDies ist eine automatisch generierte\\neMail, bitte antworten Sie nicht auf\\ndiese Mitteilung.\\n\\nIhr Administrator',
+			'mailbody' => 'Hallo {SALUTATION},\\n\\nihr E-Mail-Konto {USERNAME}\\nwurde erfolgreich eingerichtet.\\nIhr Passwort lautet {PASSWORD}.\\n\\nDies ist eine automatisch generierte\\neMail, bitte antworten Sie nicht auf\\ndiese Mitteilung.\\n\\nIhr Administrator',
 			'subject' => 'E-Mail-Konto erfolgreich eingerichtet',
 		],
 		'password_reset' => [
@@ -1034,11 +1034,11 @@ Pfad: {USR_PATH}
 Vielen Dank, Ihr Administrator',
 		],
 		'trafficmaxpercent' => [
-			'mailbody' => 'Sehr geehrte(r) {NAME},\\n\\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\\nDies sind mehr als {MAX_PERCENT}%.\\n\\nVielen Dank,\\nIhr Administrator',
+			'mailbody' => 'Hallo {SALUTATION},\\n\\nSie haben bereits {TRAFFICUSED} MB von Ihren insgesamt {TRAFFIC} MB Traffic verbraucht.\\nDies sind mehr als {MAX_PERCENT}%%.\\n\\nVielen Dank,\\nIhr Administrator',
 			'subject' => 'Sie erreichen bald Ihr Traffic-Limit',
 		],
 		'diskmaxpercent' => [
-			'mailbody' => 'Sehr geehrte(r) {NAME},\\n\\nSie haben bereits {DISKUSED} MB von Ihren insgesamt {DISKAVAILABLE} MB Speicherplatz verbraucht.\\nDies sind mehr als {MAX_PERCENT}%.\\n\\nVielen Dank,\\nIhr Administrator',
+			'mailbody' => 'Hallo {SALUTATION},\\n\\nSie haben bereits {DISKUSED} MB von Ihren insgesamt {DISKAVAILABLE} MB Speicherplatz verbraucht.\\nDies sind mehr als {MAX_PERCENT}%%.\\n\\nVielen Dank,\\nIhr Administrator',
 			'subject' => 'Sie erreichen bald Ihr Speicherplatz-Limit',
 		],
 		'2fa' => [
