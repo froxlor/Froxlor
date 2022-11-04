@@ -77,7 +77,7 @@ class TrafficTest extends TestCase
 		$json_result = Traffic::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
-		$http = 2 * (5 * 1024 * 1024 * 1024); // 2x 5 GB
+		$http = 2 * (5 * 1024 * 1024 * 1024 * 1024); // 2x 5 GB
 		$this->assertEquals($http, $result['list'][0]['http']);
 
 		$this->expectExceptionCode(303);
@@ -135,7 +135,7 @@ class TrafficTest extends TestCase
 		$json_result = Traffic::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
-		$mail = 250 * 1024 * 1024; // 250 MB
+		$mail = 250 * 1024 * 1024 * 1024; // 250 MB
 		$this->assertEquals($mail, $result['list'][0]['mail']);
 
 		$this->expectExceptionCode(303);
