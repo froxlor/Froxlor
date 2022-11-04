@@ -82,6 +82,7 @@ class ReportsCron extends FroxlorCron
 			Database::pexecute($result_stmt, $result_data);
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$row['traffic'] *= 1024;
 				if (isset($row['traffic']) && $row['traffic'] > 0 && $row['traffic_used'] != null && (($row['traffic_used'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')) {
 					$rep_userinfo = [
 						'name' => $row['name'],
@@ -97,8 +98,8 @@ class ReportsCron extends FroxlorCron
 						'COMPANY' => $rep_userinfo['company'],
 						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
-						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'] / 1024, null, 'bi'),
-						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used'] / 1024, null, 'bi'),
+						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'], null, 'bi'),
+						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used'], null, 'bi'),
 						/* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
@@ -176,13 +177,12 @@ class ReportsCron extends FroxlorCron
 			Database::pexecute($result_stmt, $result_data);
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-				if (isset($row['traffic']) && $row['traffic'] > 0 && (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')) {
+				$row['traffic'] *= 1024;
+				if (isset($row['traffic']) && $row['traffic'] > 0 && (($row['traffic_used_total'] * 100) / ($row['traffic'])) >= (int)Settings::Get('system.report_trafficmax')) {
 					$replace_arr = [
 						'NAME' => $row['name'],
-						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'] / 1024, null, 'bi'),
-						/* traffic is stored in KB, template uses MB */
-						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used_total'] / 1024, null, 'bi'),
-						/* traffic is stored in KB, template uses MB */
+						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'], null, 'bi'),
+						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used_total'], null, 'bi'),
 						'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					];
@@ -349,6 +349,8 @@ class ReportsCron extends FroxlorCron
 			$mail = new Mailer(true);
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$row['diskspace'] *= 1024;
+				$row['diskspace_used'] *= 1024;
 				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')) {
 					$rep_userinfo = [
 						'name' => $row['name'],
@@ -364,8 +366,8 @@ class ReportsCron extends FroxlorCron
 						'COMPANY' => $rep_userinfo['company'],
 						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
-						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'] / 1024, null, 'bi'),
-						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'] / 1024, null, 'bi'),
+						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'], null, 'bi'),
+						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'], null, 'bi'),
 						'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
@@ -433,11 +435,13 @@ class ReportsCron extends FroxlorCron
 			");
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$row['diskspace'] *= 1024;
+				$row['diskspace_used'] *= 1024;
 				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')) {
 					$replace_arr = [
 						'NAME' => $row['name'],
-						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'] / 1024, null, 'bi'),
-						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'] / 1024, null, 'bi'),
+						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'], null, 'bi'),
+						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'], null, 'bi'),
 						'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
