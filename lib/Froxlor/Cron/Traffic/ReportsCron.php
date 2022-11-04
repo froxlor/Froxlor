@@ -97,9 +97,8 @@ class ReportsCron extends FroxlorCron
 						'COMPANY' => $rep_userinfo['company'],
 						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
-						'TRAFFIC' => round(($row['traffic'] / 1024), 2),
-						/* traffic is stored in KB, template uses MB */
-						'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2),
+						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'] / 1024, null, 'bi'),
+						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used'] / 1024, null, 'bi'),
 						/* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
@@ -180,9 +179,9 @@ class ReportsCron extends FroxlorCron
 				if (isset($row['traffic']) && $row['traffic'] > 0 && (($row['traffic_used_total'] * 100) / $row['traffic']) >= (int)Settings::Get('system.report_trafficmax')) {
 					$replace_arr = [
 						'NAME' => $row['name'],
-						'TRAFFIC' => round(($row['traffic'] / 1024), 2),
+						'TRAFFIC' => PhpHelper::sizeReadable($row['traffic'] / 1024, null, 'bi'),
 						/* traffic is stored in KB, template uses MB */
-						'TRAFFICUSED' => round(($row['traffic_used_total'] / 1024), 2),
+						'TRAFFICUSED' => PhpHelper::sizeReadable($row['traffic_used_total'] / 1024, null, 'bi'),
 						/* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
@@ -365,10 +364,8 @@ class ReportsCron extends FroxlorCron
 						'COMPANY' => $rep_userinfo['company'],
 						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
-						'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2),
-						/* traffic is stored in KB, template uses MB */
-						'DISKUSED' => round($row['diskspace_used'] / 1024, 2),
-						/* traffic is stored in KB, template uses MB */
+						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'] / 1024, null, 'bi'),
+						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'] / 1024, null, 'bi'),
 						'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
@@ -439,10 +436,8 @@ class ReportsCron extends FroxlorCron
 				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')) {
 					$replace_arr = [
 						'NAME' => $row['name'],
-						'DISKAVAILABLE' => ($row['diskspace'] / 1024),
-						/* traffic is stored in KB, template uses MB */
-						'DISKUSED' => round($row['diskspace_used'] / 1024, 2),
-						/* traffic is stored in KB, template uses MB */
+						'DISKAVAILABLE' => PhpHelper::sizeReadable($row['diskspace'] / 1024, null, 'bi'),
+						'DISKUSED' => PhpHelper::sizeReadable($row['diskspace_used'] / 1024, null, 'bi'),
 						'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
