@@ -109,7 +109,7 @@ if ($page == 'overview') {
 	// get everything in bytes for the percentage calculation on the dashboard
 	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
 	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : -1;
-	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
+	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'];
 
 	if ($usages) {
 		$userinfo['diskspace_bytes_used'] = $usages['webspace'] * 1024;

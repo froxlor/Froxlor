@@ -51,7 +51,7 @@ return [
 						'label' => lng('admin.stdsubdomain_add') . '?',
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => $result['standardsubdomain']
+						'checked' => (bool)$result['standardsubdomain']
 					],
 					'deactivated' => [
 						'label' => lng('admin.deactivated_user'),
