@@ -393,7 +393,7 @@ class ReportsCron extends FroxlorCron
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lLanguage::getTranslation('mails.diskmaxpercent.mailbody')), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : Language::getTranslation('mails.diskmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
