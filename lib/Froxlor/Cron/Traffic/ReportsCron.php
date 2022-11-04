@@ -263,34 +263,35 @@ class ReportsCron extends FroxlorCron
 					Database::pexecute($customers_stmt, $customers_data);
 
 					while ($customer = $customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$t = $customer['traffic_used_total'] / 1048576;
+						$customer['traffic'] *= 1024;
+						$t = $customer['traffic_used_total'];
 						if ($customer['traffic'] > 0) {
 							$p = (($customer['traffic_used_total'] * 100) / $customer['traffic']);
-							$tg = $customer['traffic'] / 1048576;
-							$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
-							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
+							$tg = $customer['traffic'];
+							$str = sprintf('%s  ( %00.1f %% )', PhpHelper::sizeReadable($t, null, 'bi'), $p);
+							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%s', PhpHelper::sizeReadable($tg, null, 'bi')) . "\n";
 						} elseif ($customer['traffic'] == 0) {
-							$str = sprintf('%00.1f GB  (   -   )', $t);
+							$str = sprintf('%s  (   -   )', PhpHelper::sizeReadable($t, null, 'bi'));
 							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
 						} else {
-							$str = sprintf('%00.1f GB  (   -   )', $t);
+							$str = sprintf('%s  (   -   )', PhpHelper::sizeReadable($t, null, 'bi'));
 							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . 'unlimited' . "\n";
 						}
 					}
 
 					$mail_body .= '---------------------------------------------------------------' . "\n";
 
-					$t = $row['traffic_used_total'] / 1048576;
+					$t = $row['traffic_used_total'];
 					if ($row['traffic'] > 0) {
 						$p = (($row['traffic_used_total'] * 100) / $row['traffic']);
-						$tg = $row['traffic'] / 1048576;
-						$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
-						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
+						$tg = $row['traffic'];
+						$str = sprintf('%s  ( %00.1f %% )', PhpHelper::sizeReadable($t, null, 'bi'), $p);
+						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%s', PhpHelper::sizeReadable($tg, null, 'bi')) . "\n";
 					} elseif ($row['traffic'] == 0) {
-						$str = sprintf('%00.1f GB  (   -   )', $t);
+						$str = sprintf('%s  (   -   )', PhpHelper::sizeReadable($t, null, 'bi'));
 						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
 					} else {
-						$str = sprintf('%00.1f GB  (   -   )', $t);
+						$str = sprintf('%s  (   -   )', PhpHelper::sizeReadable($t, null, 'bi'));
 						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . 'unlimited' . "\n";
 					}
 
@@ -300,6 +301,7 @@ class ReportsCron extends FroxlorCron
 						$mail->SetFrom($row['email'], $row['name']);
 						$mail->Subject = $mail_subject;
 						$mail->Body = $mail_body;
+						$mail->MsgHTML(nl2br($mail_body));
 						$mail->AddAddress($row['email'], $row['name']);
 						$mail->Send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
