@@ -2480,6 +2480,7 @@ iterate_query = "SELECT username AS user FROM mail_users WHERE (imap = 1 OR pop3
 						<file name="/etc/dovecot/conf.d/99-froxlor.conf" chown="root:0"
 							chmod="0644" backup="true">
 							<content><![CDATA[
+disable_plaintext_auth = no
 auth_mechanisms = plain login
 !include auth-sql.conf.ext
 mail_location = mbox:~/mail:INBOX=/var/mail/%u
