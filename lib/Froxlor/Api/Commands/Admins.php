@@ -262,8 +262,8 @@ class Admins extends ApiCommand implements ResourceEntity
 				$password = Crypt::validatePassword($password, true);
 			}
 
-			$diskspace = $diskspace * 1024;
-			$traffic = $traffic * 1024 * 1024;
+			$diskspace *= 1024;
+			$traffic *= 1024 * 1024;
 
 			// Check if the account already exists
 			// do not check via api as we skip any permission checks for this task
@@ -576,8 +576,8 @@ class Admins extends ApiCommand implements ResourceEntity
 					$change_serversettings = $this->getBoolParam('change_serversettings', true, $result['change_serversettings']);
 					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != -1 ? json_decode($result['ip'], true) : -1));
 
-					$diskspace = $diskspace * 1024;
-					$traffic = $traffic * 1024 * 1024;
+					$diskspace *= 1024;
+					$traffic *= 1024 * 1024;
 				}
 
 				// validation

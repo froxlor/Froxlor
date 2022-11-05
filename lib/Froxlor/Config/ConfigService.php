@@ -143,7 +143,7 @@ class ConfigService
 					$name = str_replace('.', '', $value);
 					$versiontag = "[@version='" . $value . "']";
 				} elseif ($key == 'version' && $name != '') {
-					$name = $name . str_replace('.', '', $value);
+					$name .= str_replace('.', '', $value);
 					$versiontag = "[@version='" . $value . "']";
 				}
 			}

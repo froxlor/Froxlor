@@ -235,7 +235,7 @@ final class ConfigServices extends CliCommand
 				$title = $dd->title;
 				if ($dd->default) {
 					$default_daemon = $di;
-					$title = $title . " (default)";
+					$title .= " (default)";
 				}
 				$table_rows[] = [$di, $title];
 				$valid_options[] = $di;

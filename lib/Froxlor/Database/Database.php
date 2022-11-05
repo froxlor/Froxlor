@@ -248,7 +248,7 @@ class Database
 		$replacements = [];
 
 		foreach ($substitutions as $search => $replace) {
-			$replacements = $replacements + self::createShiftedSubstitutions($search, $replace, $minLength);
+			$replacements += self::createShiftedSubstitutions($search, $replace, $minLength);
 		}
 
 		$content = str_replace(array_keys($replacements), array_values($replacements), $content);

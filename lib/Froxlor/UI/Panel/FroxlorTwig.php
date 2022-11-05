@@ -89,7 +89,7 @@ class FroxlorTwig extends AbstractExtension
 
 	public function formatBytesFilter($size, $suffix = "B", $factor = 1)
 	{
-		$size = $size * $factor;
+		$size *= $factor;
 		$units = [
 			'',
 			'K',
