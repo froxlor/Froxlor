@@ -666,6 +666,7 @@ $lng['admin']['message'] = 'Rundmail senden';
 $lng['admin']['text'] = 'Nachricht';
 $lng['menu']['message'] = 'Nachrichten';
 $lng['error']['errorsendingmail'] = 'Das Versenden der Nachricht an "%s" schlug fehl.';
+$lng['error']['errorsendingmailpub'] = 'Das Versenden der Nachricht an die angegebene E-Mail Adresse schlug fehl.';
 $lng['error']['cannotreaddir'] = 'Der Ordner "%s" kann nicht gelesen werden';
 $lng['message']['success'] = 'Nachricht erfolgreich an "%s" Empfänger gesendet';
 $lng['message']['norecipients'] = 'Es wurde keine E-Mail versendet, da sich keine Empfänger in der Datenbank befinden';

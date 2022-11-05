@@ -673,6 +673,7 @@ $lng['admin']['message'] = 'Write a Message';
 $lng['admin']['text'] = 'Message';
 $lng['menu']['message'] = 'Messages';
 $lng['error']['errorsendingmail'] = 'The message to "%s" failed';
+$lng['error']['errorsendingmailpub'] = 'The message to the given email-address failed';
 $lng['error']['cannotreaddir'] = 'Unable to read directory "%s"';
 $lng['message']['success'] = 'Successfully sent message to %s recipients';
 $lng['message']['norecipients'] = 'No e-mail has been sent because there are no recipients in the database';

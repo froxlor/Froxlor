@@ -353,12 +353,7 @@ if ($action == '2fa_entercode') {
 				$message = sprintf($lng['error']['login_blocked'], Settings::Get('login.deactivatetime'));
 				break;
 			case 4:
-				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
-				if (!Validate::validateEmail($cmail)) {
-					$message = str_replace('%s', 'invalid.address', $lng['error']['errorsendingmail']);
-				} else {
-					$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
-				}
+				$message = $lng['error']['errorsendingmailpub'];
 				break;
 			case 5:
 				$message = $lng['error']['user_banned'];
