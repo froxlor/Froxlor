@@ -864,6 +864,7 @@ return [
 		'nomessagetosend' => 'You did not enter a message.',
 		'norecipientsgiven' => 'You did not specify any recipient',
 		'errorsendingmail' => 'The message to "%s" failed',
+		'errorsendingmailpub' => 'The message to the given email-address failed',
 		'cannotreaddir' => 'Unable to read directory "%s"',
 		'invalidip' => 'Invalid IP address: %s',
 		'invalidmysqlhost' => 'Invalid MySQL host address: %s',

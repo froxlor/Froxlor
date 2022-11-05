@@ -799,6 +799,7 @@ return [
 		'nomessagetosend' => 'Keine Nachricht angegeben',
 		'norecipientsgiven' => 'Keine Empfänger angegeben',
 		'errorsendingmail' => 'Das Versenden der Nachricht an "%s" schlug fehl.',
+		'errorsendingmailpub' => 'Das Versenden der Nachricht an die angegebene E-Mail Adresse schlug fehl.',
 		'cannotreaddir' => 'Der Ordner "%s" kann nicht gelesen werden',
 		'invalidip' => 'Ungültige IP-Adresse: "%s"',
 		'invalidmysqlhost' => 'Ungültige MySQL-Host-Adresse: "%s"',
