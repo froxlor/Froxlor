@@ -1377,6 +1377,7 @@ Yours sincerely, your administrator',
 		'plan_reallydelete' => 'Do you really want to delete the hosting plan %s?',
 		'apikey_reallydelete' => 'Do you really want to delete this api-key?',
 		'dnsentry_reallydelete' => 'Do you really want to delete this zone entry?',
+		'certificate_reallydelete' => 'Do you really want to delete this certificate?',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'default',

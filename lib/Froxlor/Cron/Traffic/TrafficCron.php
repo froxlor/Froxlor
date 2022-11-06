@@ -645,10 +645,20 @@ class TrafficCron extends FroxlorCron
 				@unlink($outputdir . '.tmp.json');
 			}
 
+			// goaccess <1.4
+			$keep_params = '--keep-db-files --load-from-disk';
+			$res = FileDir::safe_exec('goaccess --version');
+			$ver_str = array_shift($res);
+			$cGoVer = substr($ver_str, strrpos($ver_str, " ") + 1, -1);
+			if (version_compare($cGoVer, '1.4', '>=')) {
+				// at least 1.4
+				$keep_params = '--persist --restore';
+			}
+
 			$format = Settings::Get('system.logfiles_type') == '2' ? 'VCOMBINED' : 'COMBINED';
 			$monthyear = $monthyear_arr['month'] . '/' . $monthyear_arr['year'];
 			$return_value = false;
-			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " - ", $return_value, ['|']);
+			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess " . $keep_params . " --db-path=" . escapeshellarg($outputdir) . " -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " - ", $return_value, ['|']);
 
 			if (file_exists($outputdir . '.tmp.json')) {
 				// need jq here because of potentially LARGE json files

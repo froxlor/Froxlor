@@ -41,10 +41,19 @@ use Froxlor\UI\Response;
 // and therefore does not need to require lib/init.php
 
 $success_message = "";
+$id = (int)Request::get('id');
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
-	$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+	HTML::askYesNo('certificate_reallydelete', $filename, [
+		'id' => $id,
+		'page' => $page,
+		'action' => 'deletesure'
+	], '', [
+		'section' => 'index',
+		'page' => $page
+	]);
+} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
 	if ($id > 0) {
 		try {
 			$json_result = Certificates::getLocal($userinfo, [

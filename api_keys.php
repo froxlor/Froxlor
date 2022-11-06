@@ -61,7 +61,7 @@ if ($action == 'delete' && $id > 0) {
 		'section' => 'index',
 		'page' => $page
 	]);
-} elseif ($action == 'deletesure' && $id > 0) {
+} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
 	$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
 	if (AREA == 'customer') {
 		$chk_stmt = Database::prepare("

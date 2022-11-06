@@ -82,7 +82,7 @@ if ($action == 'add_record' && !empty($_POST)) {
 		'page' => $page,
 		'domain_id' => $domain_id
 	]);
-} elseif ($action == 'deletesure' && !empty($_POST)) {
+} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && !empty($_POST)) {
 	$entry_id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 	$domain_id = isset($_POST['domain_id']) ? (int)$_POST['domain_id'] : 0;
 	// remove entry

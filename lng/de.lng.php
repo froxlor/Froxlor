@@ -1267,6 +1267,7 @@ Vielen Dank, Ihr Administrator',
 		'plan_reallydelete' => 'Wollen Sie den Hostingplan %s wirklich löschen?',
 		'apikey_reallydelete' => 'Wollen Sie den Api-Key wirklich löschen?',
 		'dnsentry_reallydelete' => 'Wollen Sie den DNS-Eintrag wirklich löschen?',
+		'certificate_reallydelete' => 'Wollen Sie diese Zertifikat wirklich löschen?',
 	],
 	'serversettings' => [
 		'session_timeout' => [
