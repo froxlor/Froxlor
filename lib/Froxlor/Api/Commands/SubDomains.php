@@ -95,7 +95,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 */
 	public function add()
 	{
-		if ($this->getUserDetail('subdomains_used') < $this->getUserDetail('subdomains') || $this->getUserDetail('subdomains') == '-1') {
+		if (($this->getUserDetail('subdomains_used') < $this->getUserDetail('subdomains') || $this->getUserDetail('subdomains') == '-1') || $this->isAdmin()) {
 			// parameters
 			$subdomain = $this->getParam('subdomain');
 			$domain = $this->getParam('domain');
