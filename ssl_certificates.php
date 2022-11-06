@@ -35,6 +35,7 @@ use Froxlor\FroxlorLogger;
 use Froxlor\UI\Collection;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
 // This file is being included in admin_domains and customer_domains
