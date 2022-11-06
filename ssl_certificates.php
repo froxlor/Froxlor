@@ -33,6 +33,7 @@ use Froxlor\Api\Commands\Domains;
 use Froxlor\Api\Commands\SubDomains;
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -51,7 +52,7 @@ if ($action == 'delete') {
 		'page' => $page,
 		'action' => 'deletesure'
 	], '', [
-		'section' => 'index',
+		'section' => 'domains',
 		'page' => $page
 	]);
 } elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
