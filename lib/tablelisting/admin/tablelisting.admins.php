@@ -74,7 +74,7 @@ return [
 			'traffic' => [
 				'label' => lng('customer.traffic'),
 				'field' => 'traffic',
-				'callback' => [ProgressBar::class, 'traffic'],
+				'callback' => [ProgressBar::class, 'traffic_admins'],
 			],
 			'caneditphpsettings' => [
 				'label' => lng('admin.caneditphpsettings'),
