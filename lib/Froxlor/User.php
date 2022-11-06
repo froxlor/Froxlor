@@ -122,15 +122,14 @@ class User
 			self::addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
 			foreach ([
-					'mysqls',
-					'ftps',
-					'emails',
-					'email_accounts',
-					'email_forwarders',
-					'email_quota',
-					'subdomains'
-				] as $field
-			) {
+				'mysqls',
+				'ftps',
+				'emails',
+				'email_accounts',
+				'email_forwarders',
+				'email_quota',
+				'subdomains'
+			] as $field) {
 				self::addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
 			}
 
@@ -262,7 +261,17 @@ class User
 			// now get the customer resource usage which we have re-calculated previously
 			foreach ($admin_customers as $acustomer) {
 				foreach ($resource_fields as $field) {
-					$admin[$field . '_new'] += $acustomer[$field];
+					if ($field == 'diskspace_used') {
+						// admin/reseller-usage == what has been assign to the customer
+						$admin[$field . '_new'] += $acustomer['diskspace'];
+					} else if ($field != 'traffic_used') {
+						if ($acustomer[str_replace("_used", "", $field)] != '-1') {
+							$admin[$field . '_new'] += $acustomer[str_replace("_used", "", $field)];
+						}
+					} else {
+						// traffic is always the current usage, not the assigned value
+						$admin[$field . '_new'] += $acustomer[$field];
+					}
 				}
 				// check for std-subdomain
 				if ($acustomer['standardsubdomain'] > 0) {
@@ -326,9 +335,9 @@ class User
 	{
 		self::initArrField($used_field, $arr, 0);
 		if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
-			$arr[$used_field] += intval($customer_arr[$used_field]);
+			$arr[$used_field] += intval($customer_arr[$field]);
 		} elseif ($field == 'traffic_used') {
-			$arr[$used_field] += intval($customer_arr[$used_field]);
+			$arr[$used_field] += intval($customer_arr[$field]);
 		}
 	}
 
