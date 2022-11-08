@@ -42,7 +42,8 @@ return [
 						'\\Froxlor\\Validate\\Check',
 						'checkFcgidPhpFpm'
 					],
-					'overview_option' => true
+					'overview_option' => true,
+					'requires_reconf' => ['http', 'system:php-fpm']
 				],
 				'system_phpfpm_defaultini' => [
 					'label' => lng('serversettings.mod_fcgid.defaultini'),

@@ -29,9 +29,9 @@ return [
 	'groups' => [
 		'froxlorvhost' => [
 			'title' => lng('admin.froxlorvhost') . (call_user_func([
-					'\Froxlor\Settings\FroxlorVhostSettings',
-					'hasVhostContainerEnabled'
-				]) == false ? lng('admin.novhostcontainer') : ''),
+				'\Froxlor\Settings\FroxlorVhostSettings',
+				'hasVhostContainerEnabled'
+			]) == false ? lng('admin.novhostcontainer') : ''),
 			'icon' => 'fa-solid fa-wrench',
 			'fields' => [
 				/**
@@ -67,9 +67,10 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingClearCertificates',
 					'visible' => Settings::Get('system.leenabled') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true)
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
+					'requires_reconf' => ['http']
 				],
 				'system_le_froxlor_redirect' => [
 					'label' => lng('serversettings.le_froxlor_redirect'),
@@ -79,9 +80,9 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true)
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true)
 				],
 				'system_hsts_maxage' => [
 					'label' => lng('admin.domain_hsts_maxage'),
@@ -93,9 +94,9 @@ return [
 					'default' => 10368000,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true),
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
 					'advanced_mode' => true
 				],
 				'system_hsts_incsub' => [
@@ -106,9 +107,9 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true),
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
 					'advanced_mode' => true
 				],
 				'system_hsts_preload' => [
@@ -119,9 +120,9 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true),
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
 					'advanced_mode' => true
 				],
 				'system_honorcipherorder' => [
@@ -132,9 +133,9 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true),
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
 					'advanced_mode' => true
 				],
 				'system_sessiontickets' => [
@@ -145,9 +146,9 @@ return [
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						], true),
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					], true),
 					'advanced_mode' => true
 				],
 				/**
@@ -164,9 +165,10 @@ return [
 						'apache2'
 					],
 					'visible' => Settings::Get('system.mod_fcgid') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:fcgid']
 				],
 				'system_mod_fcgid_httpuser' => [
 					'label' => lng('admin.mod_fcgid_user'),
@@ -179,9 +181,10 @@ return [
 						'apache2'
 					],
 					'visible' => Settings::Get('system.mod_fcgid') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:fcgid']
 				],
 				'system_mod_fcgid_httpgroup' => [
 					'label' => lng('admin.mod_fcgid_group'),
@@ -194,9 +197,10 @@ return [
 						'apache2'
 					],
 					'visible' => Settings::Get('system.mod_fcgid') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:fcgid']
 				],
 				'system_mod_fcgid_defaultini_ownvhost' => [
 					'label' => lng('serversettings.mod_fcgid.defaultini_ownvhost'),
@@ -213,9 +217,9 @@ return [
 						'apache2'
 					],
 					'visible' => Settings::Get('system.mod_fcgid') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					])
 				],
 				/**
 				 * php-fpm
@@ -228,9 +232,10 @@ return [
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('phpfpm.enabled') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:php-fpm']
 				],
 				'system_phpfpm_httpuser' => [
 					'label' => lng('phpfpm.vhost_httpuser'),
@@ -240,9 +245,10 @@ return [
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'visible' => Settings::Get('phpfpm.enabled') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:php-fpm']
 				],
 				'system_phpfpm_httpgroup' => [
 					'label' => lng('phpfpm.vhost_httpgroup'),
@@ -252,9 +258,10 @@ return [
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('phpfpm.enabled') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					]),
+					'requires_reconf' => ['system:php-fpm']
 				],
 				'system_phpfpm_defaultini_ownvhost' => [
 					'label' => lng('serversettings.mod_fcgid.defaultini_ownvhost'),
@@ -268,9 +275,9 @@ return [
 					],
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('phpfpm.enabled') && call_user_func([
-							'\Froxlor\Settings\FroxlorVhostSettings',
-							'hasVhostContainerEnabled'
-						])
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					])
 				],
 				/**
 				 * DNS

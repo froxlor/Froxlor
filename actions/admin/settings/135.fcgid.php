@@ -44,7 +44,8 @@ return [
 						'\\Froxlor\\Validate\\Check',
 						'checkFcgidPhpFpm'
 					],
-					'overview_option' => true
+					'overview_option' => true,
+					'requires_reconf' => ['http', 'system:fcgid']
 				],
 				'system_mod_fcgid_configdir' => [
 					'label' => lng('serversettings.mod_fcgid.configdir'),
@@ -57,7 +58,8 @@ return [
 						'\\Froxlor\\Validate\\Check',
 						'checkPathConflicts'
 					],
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['system:fcgid']
 				],
 				'system_mod_fcgid_tmpdir' => [
 					'label' => lng('serversettings.mod_fcgid.tmpdir'),
@@ -66,7 +68,8 @@ return [
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_mod_fcgid_peardir' => [
 					'label' => lng('serversettings.mod_fcgid.peardir'),

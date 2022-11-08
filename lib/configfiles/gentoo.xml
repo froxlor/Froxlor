@@ -57,8 +57,6 @@
 						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_diroptions}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.documentroot_prefix}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.logfiles_directory}}]]></command>
-						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
-						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command>
 							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
 							</visibility>
@@ -3876,6 +3874,7 @@ aliases:     files
 						<command><![CDATA[useradd -s /bin/false -g {{settings.system.mod_fcgid_httpgroup}} {{settings.system.mod_fcgid_httpuser}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_configdir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
+						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command>
 							<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 							</visibility>

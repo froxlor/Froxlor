@@ -2043,6 +2043,7 @@ Vielen Dank, Ihr Administrator',
 		'traffictool' => [
 			'toolselect' => 'Traffic Analyzer',
 		],
+		'requires_reconfiguration' => 'Änderungen an dieser Einstellungen benötigen unter Umständen eine erneute Konfiguration der folgenden Dienste: <strong>%s</strong>',
 	],
 	'spf' => [
 		'use_spf' => 'Aktiviere SPF für Domains?',

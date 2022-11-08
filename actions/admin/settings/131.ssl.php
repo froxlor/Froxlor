@@ -39,7 +39,8 @@ return [
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'overview_option' => true
+					'overview_option' => true,
+					'requires_reconf' => ['http']
 				],
 				'system_ssl_protocols' => [
 					'label' => lng('serversettings.ssl.ssl_protocols'),
@@ -145,7 +146,8 @@ return [
 					'type' => 'checkbox',
 					'default' => false,
 					'cronmodule' => 'froxlor/letsencrypt',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_acmeshpath' => [
 					'label' => lng('serversettings.acmeshpath'),
@@ -164,23 +166,9 @@ return [
 					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/etc/apache2/conf-enabled/acme.conf',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
-				/**
-				 * currently the only option anyway
-				 *
-				 * 'system_leapiversion' => array(
-				 * 'label' => lng('serversettings.leapiversion'),
-				 * 'settinggroup' => 'system',
-				 * 'varname' => 'leapiversion',
-				 * 'type' => 'select',
-				 * 'default' => '2',
-				 * 'select_var' => array(
-				 * '2' => 'ACME v2'
-				 * ),
-				 * 'save_method' => 'storeSettingField'
-				 * ),
-				 */
 				'system_letsencryptca' => [
 					'label' => lng('serversettings.letsencryptca'),
 					'settinggroup' => 'system',
@@ -204,7 +192,8 @@ return [
 					'string_emptyallowed' => false,
 					'default' => Froxlor::getInstallDir(),
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'requires_reconf' => ['http']
 				],
 				'system_letsencryptkeysize' => [
 					'label' => lng('serversettings.letsencryptkeysize'),

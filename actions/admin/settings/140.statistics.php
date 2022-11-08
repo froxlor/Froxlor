@@ -43,6 +43,7 @@ return [
 						'goaccess' => lng('serversettings.traffictool.goaccess')
 					],
 					'save_method' => 'storeSettingUpdateTrafficTool',
+					'requires_reconf' => ['system']
 				],
 				'system_webalizer_quiet' => [
 					'label' => lng('serversettings.webalizer_quiet'),
@@ -86,7 +87,8 @@ return [
 					'string_type' => 'dir',
 					'default' => '/etc/awstats/',
 					'save_method' => 'storeSettingField',
-					'visible' => Settings::Get('system.traffictool') == 'awstats'
+					'visible' => Settings::Get('system.traffictool') == 'awstats',
+					'requires_reconf' => ['system:awstats']
 				],
 				'system_awstats_icons' => [
 					'label' => lng('serversettings.awstats_icons'),

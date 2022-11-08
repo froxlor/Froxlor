@@ -337,6 +337,8 @@ class User
 		if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
 			$arr[$used_field] += intval($customer_arr[$field]);
 		} elseif ($field == 'traffic_used') {
+			// no check for -1 here because we don't want the assigned traffic for admins/resellers but
+			// the actually used (for stats reasons)
 			$arr[$used_field] += intval($customer_arr[$field]);
 		}
 	}

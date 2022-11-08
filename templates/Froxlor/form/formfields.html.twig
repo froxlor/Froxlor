@@ -16,6 +16,11 @@
 						{% endif %}
 						{% if field.label.description is defined and field.label.description is not empty %}<br><small>{{ field.label.description|raw }}</small>
 						{% endif %}
+						{% if field.requires_reconf is defined and field.requires_reconf is not empty %}
+							<div class="bg-info bg-opacity-25 rounded p-2 mt-2 d-flex align-items-center" role="alert">
+								<i class="fa-solid fa-circle-exclamation me-2"></i><p class="mb-0">{{ lng('serversettings.requires_reconfiguration', [field.requires_reconf|join(', ')])|raw }}</p>
+							</div>
+						{% endif %}
 					</label>
 				{% else %}
 					<label for="{{ id }}" class="col-sm-6 col-form-label pe-3">
@@ -30,6 +35,11 @@
 							</mark>
 						{% endif %}
 						{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+						{% endif %}
+						{% if field.requires_reconf is defined and field.requires_reconf is not empty %}
+							<div class="bg-info bg-opacity-25 rounded p-2 mt-2 d-flex align-items-center" role="alert">
+								<i class="fa-solid fa-circle-exclamation me-2"></i><p class="mb-0">{{ lng('serversettings.requires_reconfiguration', [field.requires_reconf|join(', ')])|raw }}</p>
+							</div>
 						{% endif %}
 					</label>
 				{% endif %}

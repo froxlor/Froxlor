@@ -40,7 +40,8 @@ return [
 					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkPathConflicts'
-					]
+					],
+					'requires_reconf' => ['http']
 				],
 				'system_documentroot_use_default_value' => [
 					'label' => lng('serversettings.documentroot_use_default_value'),

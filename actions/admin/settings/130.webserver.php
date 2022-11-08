@@ -46,7 +46,8 @@ return [
 					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkPhpInterfaceSetting'
-					]
+					],
+					'requires_reconf' => ['http']
 				],
 				'system_apache_24' => [
 					'label' => lng('serversettings.apache_24'),
@@ -120,7 +121,8 @@ return [
 					'type' => 'text',
 					'string_type' => 'filedir',
 					'default' => '/etc/apache2/sites-enabled/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_apacheconf_diroptions' => [
 					'label' => lng('serversettings.apacheconf_diroptions'),
@@ -129,7 +131,8 @@ return [
 					'type' => 'text',
 					'string_type' => 'filedir',
 					'default' => '/etc/apache2/sites-enabled/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_apacheconf_htpasswddir' => [
 					'label' => lng('serversettings.apacheconf_htpasswddir'),
@@ -147,7 +150,8 @@ return [
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/logs/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_logfiles_script' => [
 					'label' => lng('serversettings.logfiles_script'),
@@ -252,7 +256,8 @@ return [
 					'string_type' => 'dir',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['http']
 				],
 				'system_default_vhostconf' => [
 					'label' => lng('serversettings.default_vhostconf'),

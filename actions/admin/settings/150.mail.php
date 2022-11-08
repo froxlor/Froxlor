@@ -38,7 +38,8 @@ return [
 					'min' => 2,
 					'max' => 65535,
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'requires_reconf' => ['smtp']
 				],
 				'system_vmail_gid' => [
 					'label' => lng('serversettings.vmail_gid'),
@@ -49,7 +50,8 @@ return [
 					'min' => 2,
 					'max' => 65535,
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'requires_reconf' => ['smtp']
 				],
 				'system_vmail_homedir' => [
 					'label' => lng('serversettings.vmail_homedir'),
@@ -58,7 +60,8 @@ return [
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/mail/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['smtp']
 				],
 				'system_vmail_maildirname' => [
 					'label' => lng('serversettings.vmail_maildirname'),

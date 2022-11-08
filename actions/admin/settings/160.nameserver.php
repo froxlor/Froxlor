@@ -23,6 +23,8 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Settings;
+
 return [
 	'groups' => [
 		'nameserver' => [
@@ -36,7 +38,8 @@ return [
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
-					'overview_option' => true
+					'overview_option' => true,
+					'requires_reconf' => ['dns']
 				],
 				'system_dnsenabled' => [
 					'label' => lng('serversettings.dnseditorenable'),
@@ -56,7 +59,8 @@ return [
 						'Bind' => 'Bind9',
 						'PowerDNS' => 'PowerDNS'
 					],
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'requires_reconf' => ['dns']
 				],
 				'system_bindconf_directory' => [
 					'label' => lng('serversettings.bindconf_directory'),
@@ -65,7 +69,9 @@ return [
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/etc/bind/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => Settings::Get('system.dns_server') == 'Bind',
+					'requires_reconf' => ['dns:bind']
 				],
 				'system_bindreload_command' => [
 					'label' => lng('serversettings.bindreload_command'),
@@ -117,7 +123,8 @@ return [
 						'Master' => 'Master'
 					],
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'visible' => Settings::Get('system.dns_server') == 'PowerDNS',
 				],
 				'system_dns_createmailentry' => [
 					'label' => lng('serversettings.mail_also_with_mxservers'),

@@ -2165,6 +2165,7 @@ Yours sincerely, your administrator',
 			'awstats' => 'AWStats',
 			'goaccess' => 'goacccess'
 		],
+		'requires_reconfiguration' => 'Changing this settings might require a reconfiguration of the following services: <strong>%s</strong>',
 	],
 	'spf' => [
 		'use_spf' => 'Activate SPF for domains?',
