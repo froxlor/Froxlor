@@ -37,6 +37,11 @@ return [
 					]
 				]
 			]
+		],
+		'buttons' => [
+			[
+				'label' => lng('panel.upload_import')
+			]
 		]
 	]
 ];

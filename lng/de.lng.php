@@ -1207,6 +1207,7 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Feld-Suche',
 			'description' => 'Wähle das zu durchsuchende Feld aus'
 		],
+		'upload_import' => 'Hochladen und importieren',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',
