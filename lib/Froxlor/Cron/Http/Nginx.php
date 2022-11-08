@@ -948,7 +948,7 @@ class Nginx extends HttpConfigBase
 				if ($row['options_indexes'] != '0') {
 					$this->vhost_root_autoindex = true;
 				}
-				$path_options .= "\t" . 'location ' . $path . ' {' . "\n";
+				$path_options .= "\t" . 'location ' . FileDir::makeCorrectDir($path) . ' {' . "\n";
 				if ($this->vhost_root_autoindex) {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
@@ -974,9 +974,6 @@ class Nginx extends HttpConfigBase
 									} else {
 										$path_options .= "\t\t" . 'index    index.html index.htm;' . "\n";
 									}
-									$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
-									$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
-									$path_options .= "\t\t" . '}' . "\n";
 									// remove already used entries so we do not have doubles
 									unset($htpasswds[$idx]);
 								}
@@ -987,7 +984,7 @@ class Nginx extends HttpConfigBase
 
 				$this->vhost_root_autoindex = false;
 			} else {
-				$path_options .= "\t" . 'location ' . $path . ' {' . "\n";
+				$path_options .= "\t" . 'location ^~ ' . FileDir::makeCorrectFile($path) . ' {' . "\n";
 				if ($this->vhost_root_autoindex || $row['options_indexes'] != '0') {
 					$path_options .= "\t\t" . 'autoindex  on;' . "\n";
 					$this->vhost_root_autoindex = false;
@@ -1029,7 +1026,11 @@ class Nginx extends HttpConfigBase
 						unset($htpasswds[$idx]);
 						break;
 					default:
-						$path_options .= "\t" . 'location ' . FileDir::makeCorrectDir($single['path']) . ' {' . "\n";
+						if ($single['path'] == '/') {
+							$path_options .= "\t" . 'location ' . FileDir::makeCorrectDir($single['path']) . ' {' . "\n";
+						} else {
+							$path_options .= "\t" . 'location ^~ ' . FileDir::makeCorrectFile($single['path']) . ' {' . "\n";
+						}
 						$path_options .= "\t\t" . 'auth_basic            "' . $single['authname'] . '";' . "\n";
 						$path_options .= "\t\t" . 'auth_basic_user_file  ' . FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 						if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
@@ -1037,9 +1038,6 @@ class Nginx extends HttpConfigBase
 						} else {
 							$path_options .= "\t\t" . 'index    index.html index.htm;' . "\n";
 						}
-						$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
-						$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
-						$path_options .= "\t\t" . '}' . "\n";
 						$path_options .= "\t" . '}' . "\n";
 				}
 				// }
@@ -1053,14 +1051,17 @@ class Nginx extends HttpConfigBase
 	protected function getHtpasswds($domain)
 	{
 		$result_stmt = Database::prepare("
-			SELECT *
+			SELECT a.*
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON c.customerid = b.customerid
 			WHERE b.customerid = :customerid AND b.domain = :domain
+			AND (a.path = CONCAT(c.documentroot, :ttool, '/') OR INSTR(a.path, b.documentroot));
 		");
 		Database::pexecute($result_stmt, [
 			'customerid' => $domain['customerid'],
-			'domain' => $domain['domain']
+			'domain' => $domain['domain'],
+			'ttool' => Settings::Get('system.traffictool')
 		]);
 
 		$returnval = [];
@@ -1144,11 +1145,14 @@ class Nginx extends HttpConfigBase
 	{
 		$phpopts = '';
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
-			$phpopts = "\tlocation ~ \.php {\n";
-			$phpopts .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
-			$phpopts .= "\t" . '}' . "\n\n";
+			$phpopts = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+			if ($domain['notryfiles'] != 1) {
+				$phpopts .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+				$phpopts .= "\t" . '}' . "\n\n";
 
-			$phpopts .= "\tlocation @php {\n";
+				$phpopts .= "\tlocation @php {\n";
+				$phpopts .= "\t\t" . 'try_files $1 =404;' . "\n\n";
+			}
 			$phpopts .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 			$phpopts .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
