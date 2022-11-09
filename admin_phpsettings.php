@@ -212,9 +212,10 @@ if ($page == 'overview') {
 			} else {
 				$fpmconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_add.php';
 
-				UI::view('user/form.html.twig', [
+				UI::view('user/form-replacers.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'phpsettings', 'page' => 'fpmdaemons']),
-					'formdata' => $fpmconfig_add_data['fpmconfig_add']
+					'formdata' => $fpmconfig_add_data['fpmconfig_add'],
+					'replacers' => $fpmconfig_add_data['fpmconfig_replacers']
 				]);
 			}
 		} else {
@@ -282,9 +283,10 @@ if ($page == 'overview') {
 			} else {
 				$fpmconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_edit.php';
 
-				UI::view('user/form.html.twig', [
+				UI::view('user/form-replacers.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'phpsettings', 'page' => 'fpmdaemons', 'id' => $id]),
 					'formdata' => $fpmconfig_edit_data['fpmconfig_edit'],
+					'replacers' => $fpmconfig_edit_data['fpmconfig_replacers'],
 					'editid' => $id
 				]);
 			}

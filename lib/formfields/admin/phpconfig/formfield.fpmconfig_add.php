@@ -116,5 +116,57 @@ return [
 				]
 			]
 		]
+	],
+	'fpmconfig_replacers' => [
+		'replacers' => [
+			[
+				'var' => 'PEAR_DIR',
+				'description' => lng('admin.phpconfig.pear_dir')
+			],
+			[
+				'var' => 'OPEN_BASEDIR_C',
+				'description' => lng('admin.phpconfig.open_basedir_c')
+			],
+			[
+				'var' => 'OPEN_BASEDIR',
+				'description' => lng('admin.phpconfig.open_basedir')
+			],
+			[
+				'var' => 'OPEN_BASEDIR_GLOBAL',
+				'description' => lng('admin.phpconfig.open_basedir_global')
+			],
+			[
+				'var' => 'TMP_DIR',
+				'description' => lng('admin.phpconfig.tmp_dir')
+			],
+			[
+				'var' => 'CUSTOMER_EMAIL',
+				'description' => lng('admin.phpconfig.customer_email')
+			],
+			[
+				'var' => 'ADMIN_EMAIL',
+				'description' => lng('admin.phpconfig.admin_email')
+			],
+			[
+				'var' => 'DOMAIN',
+				'description' => lng('admin.phpconfig.domain')
+			],
+			[
+				'var' => 'CUSTOMER',
+				'description' => lng('admin.phpconfig.customer')
+			],
+			[
+				'var' => 'ADMIN',
+				'description' => lng('admin.phpconfig.admin')
+			],
+			[
+				'var' => 'DOCUMENT_ROOT',
+				'description' => lng('admin.phpconfig.docroot')
+			],
+			[
+				'var' => 'CUSTOMER_HOMEDIR',
+				'description' => lng('admin.phpconfig.homedir')
+			]
+		]
 	]
 ];

@@ -85,6 +85,12 @@ class Check
 						];
 					}
 				}
+			} elseif ((int)Settings::Get($check_array[$fieldname]['other_enabled']) == 1) {
+				// not in the same POST so we still need to check whether the other one's enabled
+				$returnvalue = [
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					$check_array[$fieldname]['other_enabled_lng']
+				];
 			}
 			if (in_array(self::FORMFIELDS_PLAUSIBILITY_CHECK_OK, $returnvalue)) {
 				// be sure to deactivate the other one for the froxlor-vhost

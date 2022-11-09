@@ -105,13 +105,14 @@ return [
 						'value' => $result['fpm_reqslow']
 					],
 					'phpfpm_pass_authorizationheader' => [
-						'visible' => Settings::Get('phpfpm.enabled') == 1,
+						'visible' => Settings::Get('phpfpm.enabled') == 1 && Settings::Get('system.webserver') == "apache2",
 						'label' => lng('admin.phpsettings.pass_authorizationheader'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['pass_authorizationheader']
 					],
 					'override_fpmconfig' => [
+						'visible' => Settings::Get('phpfpm.enabled') == 1,
 						'label' => lng('serversettings.phpfpm_settings.override_fpmconfig'),
 						'type' => 'checkbox',
 						'value' => '1',
