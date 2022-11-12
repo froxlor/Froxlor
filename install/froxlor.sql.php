@@ -916,7 +916,7 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 
 DROP TABLE IF EXISTS `ftp_quotalimits`;
 CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
-  `name` varchar(30) default NULL,
+  `name` varchar(255) default NULL,
   `quota_type` enum('user','group','class','all') NOT NULL default 'user',
   `per_session` enum('false','true') NOT NULL default 'false',
   `limit_type` enum('soft','hard') NOT NULL default 'hard',
@@ -935,7 +935,7 @@ INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`
 
 DROP TABLE IF EXISTS `ftp_quotatallies`;
 CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
-  `name` varchar(30) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `quota_type` enum('user','group','class','all') NOT NULL,
   `bytes_in_used` float NOT NULL,
   `bytes_out_used` float NOT NULL,

@@ -555,7 +555,7 @@ abstract class ApiCommand extends ApiParameter
 	 * @param boolean $internal
 	 *            optional whether called internally, default false
 	 *
-	 * @return ApiCommand
+	 * @return static
 	 * @throws Exception
 	 */
 	public static function getLocal($userinfo = null, $params = null, $internal = false)

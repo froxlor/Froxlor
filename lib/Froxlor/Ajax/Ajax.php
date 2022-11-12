@@ -251,6 +251,10 @@ class Ajax
 		$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
 		$valid_until = isset($_POST['valid_until']) ? $_POST['valid_until'] : "";
 
+		if (empty($keyid)) {
+			return $this->errorResponse('Invalid call', 406);
+		}
+
 		// validate allowed_from
 		if (!empty($allowed_from)) {
 			$ip_list = array_map('trim', explode(",", $allowed_from));

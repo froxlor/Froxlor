@@ -2109,7 +2109,7 @@ connect = host=<SQL_HOST> dbname=<SQL_DB> user=<SQL_UNPRIVILEGED_USER> password=
 # List of supported schemes is in
 # http://wiki2.dovecot.org/Authentication/PasswordSchemes
 #
-default_pass_scheme = CRYPT
+#default_pass_scheme = CRYPT
 
 # passdb query to retrieve the password. It can return fields:
 #   password - The user's password. This field must be returned.

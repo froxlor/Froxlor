@@ -424,6 +424,22 @@ class MailsTest extends TestCase
 		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['popaccountid']);
+
+		switch (Settings::Get('system.passwordcryptfunc')) {
+			case PASSWORD_ARGON2I:
+				$cpPrefix = '{ARGON2I}';
+				break;
+			case PASSWORD_ARGON2ID:
+				$cpPrefix = '{ARGON2ID}';
+				break;
+			default:
+				$cpPrefix = '{BLF-CRYPT}';
+				break;
+		}
+		// password is not being returned by API, so query directly
+		$sel_stmt = Database::prepare("SELECT `password_enc` FROM `" . TABLE_MAIL_USERS . "` WHERE `email` = :email");
+		$result2 = Database::pexecute_first($sel_stmt, ['email' => $result['email']]);
+		$this->assertEquals($cpPrefix, substr($result2['password_enc'], 0, strlen($cpPrefix)));
 	}
 
 	public function testAdminEmailAccountsUpdate()

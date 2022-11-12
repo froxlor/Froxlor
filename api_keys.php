@@ -93,7 +93,7 @@ if ($action == 'delete' && $id > 0) {
 			'page' => $page
 		]);
 	}
-} elseif ($action == 'add') {
+} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'add') {
 	$ins_stmt = Database::prepare("
 		INSERT INTO `" . TABLE_API_KEYS . "` SET
 		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''

@@ -1475,7 +1475,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> ''
 ]]>
 							</content>
 						</file>
@@ -1644,7 +1644,7 @@ data_directory = /var/lib/postfix
 #default_privs = nobody
 
 # INTERNET HOST AND DOMAIN NAMES
-# 
+#
 # The myhostname parameter specifies the internet hostname of this
 # mail system. The default is to use the fully-qualified domain name
 # from gethostname(). $myhostname is used as a default value for many
@@ -1670,7 +1670,7 @@ myhostname = mail.$mydomain
 mydomain = <SERVERNAME>
 
 # SENDING MAIL
-# 
+#
 # The myorigin parameter specifies the domain that locally-posted
 # mail appears to come from. The default is to append $myhostname,
 # which is fine for small sites.  If you run a domain with multiple
@@ -1772,7 +1772,7 @@ mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 #
 # - You define $mydestination domain recipients in files other than
 #   /etc/passwd, /etc/aliases, or the $virtual_alias_maps files.
-#   For example, you define $mydestination domain recipients in    
+#   For example, you define $mydestination domain recipients in
 #   the $virtual_mailbox_maps files.
 #
 # - You redefine the local delivery agent in master.cf.
@@ -1792,7 +1792,7 @@ mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 # The right-hand side of the lookup tables is conveniently ignored.
 # In the left-hand side, specify a bare username, an @domain.tld
 # wild-card, or specify a user@domain.tld address.
-# 
+#
 #local_recipient_maps = unix:passwd.byname $alias_maps
 #local_recipient_maps = proxy:unix:passwd.byname $alias_maps
 #local_recipient_maps =
@@ -1824,16 +1824,16 @@ unknown_local_recipient_reject_code = 550
 # clients in the same IP subnetworks as the local machine.
 # On Linux, this does works correctly only with interfaces specified
 # with the "ifconfig" command.
-# 
+#
 # Specify "mynetworks_style = class" when Postfix should "trust" SMTP
 # clients in the same IP class A/B/C networks as the local machine.
 # Don't do this with a dialup site - it would cause Postfix to "trust"
 # your entire provider's network.  Instead, specify an explicit
 # mynetworks list by hand, as described below.
-#  
+#
 # Specify "mynetworks_style = host" when Postfix should "trust"
 # only the local machine.
-# 
+#
 #mynetworks_style = class
 #mynetworks_style = subnet
 #mynetworks_style = host
@@ -1863,7 +1863,7 @@ mynetworks = 127.0.0.0/8
 # - from "untrusted" clients to destinations that match $relay_domains or
 #   subdomains thereof, except addresses with sender-specified routing.
 # The default relay_domains value is $mydestination.
-# 
+#
 # In addition to the above, the Postfix SMTP server by default accepts mail
 # that Postfix is final destination for:
 # - destinations that match $inet_interfaces or $proxy_interfaces,
@@ -1871,7 +1871,7 @@ mynetworks = 127.0.0.0/8
 # - destinations that match $virtual_alias_domains,
 # - destinations that match $virtual_mailbox_domains.
 # These destinations do not need to be listed in $relay_domains.
-# 
+#
 # Specify a list of hosts or domains, /file/name patterns or type:name
 # lookup tables, separated by commas and/or whitespace.  Continue
 # long lines by starting the next line with whitespace. A file name
@@ -1916,7 +1916,7 @@ mynetworks = 127.0.0.0/8
 # The right-hand side of the lookup tables is conveniently ignored.
 # In the left-hand side, specify an @domain.tld wild-card, or specify
 # a user@domain.tld address.
-# 
+#
 #relay_recipient_maps = hash:/etc/postfix/relay_recipients
 
 # INPUT RATE CONTROL
@@ -1925,15 +1925,15 @@ mynetworks = 127.0.0.0/8
 # flow control. This feature is turned on by default, although it
 # still needs further development (it's disabled on SCO UNIX due
 # to an SCO bug).
-# 
+#
 # A Postfix process will pause for $in_flow_delay seconds before
 # accepting a new message, when the message arrival rate exceeds the
 # message delivery rate. With the default 100 SMTP server process
 # limit, this limits the mail inflow to 100 messages a second more
 # than the number of messages delivered per second.
-# 
+#
 # Specify 0 to disable the feature. Valid delays are 0..10.
-# 
+#
 #in_flow_delay = 1s
 
 # ADDRESS REWRITING
@@ -1963,7 +1963,7 @@ mynetworks = 127.0.0.0/8
 # On systems with NIS, the default is to search the local alias
 # database, then the NIS alias database. See aliases(5) for syntax
 # details.
-# 
+#
 # If you change the alias database, run "postalias /etc/aliases" (or
 # wherever your system stores the mail alias file), or simply run
 # "newaliases" to build the necessary DBM or DB file.
@@ -2006,7 +2006,7 @@ mynetworks = 127.0.0.0/8
 #
 #home_mailbox = Mailbox
 #home_mailbox = Maildir/
- 
+
 # The mail_spool_directory parameter specifies the directory where
 # UNIX-style mailboxes are kept. The default setting depends on the
 # system type.
@@ -2048,7 +2048,7 @@ mailbox_command = /usr/lib/dovecot/deliver
 #
 # NOTE: if you use this feature for accounts not in the UNIX password
 # file, then you must update the "local_recipient_maps" setting in
-# the main.cf file, otherwise the SMTP server will reject mail for    
+# the main.cf file, otherwise the SMTP server will reject mail for
 # non-UNIX accounts with "User unknown in local recipient table".
 #
 # Cyrus IMAP over LMTP. Specify ``lmtpunix      cmd="lmtpd"
@@ -2070,7 +2070,7 @@ mailbox_command = /usr/lib/dovecot/deliver
 #
 # NOTE: if you use this feature for accounts not in the UNIX password
 # file, then you must update the "local_recipient_maps" setting in
-# the main.cf file, otherwise the SMTP server will reject mail for    
+# the main.cf file, otherwise the SMTP server will reject mail for
 # non-UNIX accounts with "User unknown in local recipient table".
 #
 #fallback_transport = lmtp:unix:/file/name
@@ -2093,15 +2093,15 @@ mailbox_command = /usr/lib/dovecot/deliver
 #
 # NOTE: if you use this feature for accounts not in the UNIX password
 # file, then you must specify "local_recipient_maps =" (i.e. empty) in
-# the main.cf file, otherwise the SMTP server will reject mail for    
+# the main.cf file, otherwise the SMTP server will reject mail for
 # non-UNIX accounts with "User unknown in local recipient table".
 #
 #luser_relay = $user@other.host
 #luser_relay = $local@other.host
 #luser_relay = admin+$local
-  
+
 # JUNK MAIL CONTROLS
-# 
+#
 # The controls listed here are only a very small subset. The file
 # SMTPD_ACCESS_README provides an overview.
 
@@ -2123,11 +2123,11 @@ mailbox_command = /usr/lib/dovecot/deliver
 # deferred mail, so that mail can be flushed quickly with the SMTP
 # "ETRN domain.tld" command, or by executing "sendmail -qRdomain.tld".
 # See the ETRN_README document for a detailed description.
-# 
+#
 # The fast_flush_domains parameter controls what destinations are
 # eligible for this service. By default, they are all domains that
 # this server is willing to relay mail to.
-# 
+#
 #fast_flush_domains = $relay_domains
 
 # SHOW SOFTWARE VERSION OR NOT
@@ -2153,7 +2153,7 @@ smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
 # too many are run at the same time. With SMTP deliveries, 10
 # simultaneous connections to the same domain could be sufficient to
 # raise eyebrows.
-# 
+#
 # Each message delivery transport has its XXX_destination_concurrency_limit
 # parameter.  The default is $default_destination_concurrency_limit for
 # most delivery transports. For the local delivery agent the default is 2.
@@ -2211,11 +2211,11 @@ debugger_command =
 # INSTALL-TIME CONFIGURATION INFORMATION
 #
 # The following parameters are used when installing a new Postfix version.
-# 
+#
 # sendmail_path: The full pathname of the Postfix sendmail command.
 # This is the Sendmail-compatible mail posting interface.
-# 
-sendmail_path = /usr/sbin/sendmail 
+#
+sendmail_path = /usr/sbin/sendmail
 
 # newaliases_path: The full pathname of the Postfix newaliases command.
 # This is the Sendmail-compatible command to build alias databases.
@@ -2224,7 +2224,7 @@ newaliases_path = /usr/bin/newaliases
 
 # mailq_path: The full pathname of the Postfix mailq command.  This
 # is the Sendmail-compatible mail queue listing command.
-# 
+#
 mailq_path = /usr/bin/mailq
 
 # setgid_group: The group for mail submission and queue management
@@ -2491,7 +2491,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 # Enable installed protocols
 !include_try /usr/share/dovecot/protocols.d/*.protocol
 
-# A comma separated list of IPs or hosts where to listen in for connections. 
+# A comma separated list of IPs or hosts where to listen in for connections.
 # "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
 # If you want to specify non-default ports or anything more complex,
 # edit conf.d/master.conf.
@@ -2516,7 +2516,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 #login_trusted_networks =
 
 # Space separated list of login access check sockets (e.g. tcpwrap)
-#login_access_sockets = 
+#login_access_sockets =
 
 # With proxy_maybe=yes if proxy destination matches any of these IPs, don't do
 # proxying. This isn't necessary normally, but may be useful if the destination
@@ -2635,7 +2635,7 @@ driver = mysql
 #     option_file            - Read options from the given file instead of
 #                              the default my.cnf location
 #     option_group           - Read options from the given group (default: client)
-# 
+#
 #   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
 #   Note that currently you can't use spaces in parameters.
 #
@@ -2654,7 +2654,7 @@ connect = host=<SQL_HOST> dbname=<SQL_DB> user=<SQL_UNPRIVILEGED_USER> password=
 # List of supported schemes is in
 # http://wiki2.dovecot.org/Authentication/PasswordSchemes
 #
-default_pass_scheme = CRYPT
+#default_pass_scheme = CRYPT
 
 # passdb query to retrieve the password. It can return fields:
 #   password - The user's password. This field must be returned.
@@ -2674,7 +2674,7 @@ default_pass_scheme = CRYPT
 #   %u = entire user@domain
 #   %n = user part of user@domain
 #   %d = domain part of user@domain
-# 
+#
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
 # difficult to have eg. usernames containing '%' characters.
@@ -2758,7 +2758,7 @@ disable_plaintext_auth = no
 
 # Default realm/domain to use if none was specified. This is used for both
 # SASL realms and appending @domain to username in plaintext logins.
-#auth_default_realm = 
+#auth_default_realm =
 
 # List of allowed characters in username. If the user-given username contains
 # a character not listed in here, the login automatically fails. This is just
@@ -2801,7 +2801,7 @@ disable_plaintext_auth = no
 # Kerberos keytab to use for the GSSAPI mechanism. Will use the system
 # default (usually /etc/krb5.keytab) if not specified. You may need to change
 # the auth service to run as root to be able to read this file.
-#auth_krb5_keytab = 
+#auth_krb5_keytab =
 
 # Do NTLM and GSS-SPNEGO authentication using Samba's winbind daemon and
 # ntlm_auth helper. <doc/wiki/Authentication/Mechanisms/Winbind.txt>
@@ -2816,9 +2816,9 @@ disable_plaintext_auth = no
 # Require a valid SSL client certificate or the authentication fails.
 #auth_ssl_require_client_cert = no
 
-# Take the username from client's SSL certificate, using 
+# Take the username from client's SSL certificate, using
 # X509_NAME_get_text_by_NID() which returns the subject's DN's
-# CommonName. 
+# CommonName.
 #auth_ssl_username_from_cert = no
 
 # Space separated list of wanted authentication mechanisms:
@@ -2908,11 +2908,11 @@ namespace inbox {
   # Hierarchy separator to use. You should use the same separator for all
   # namespaces or some clients get confused. '/' is usually a good one.
   # The default however depends on the underlying mail storage format.
-  #separator = 
+  #separator =
 
   # Prefix required to access this namespace. This needs to be different for
   # all namespaces. For example "Public/".
-  #prefix = 
+  #prefix =
 
   # Physical location of the mailbox. This is in same format as
   # mail_location, which is also the default for it.
@@ -2994,7 +2994,7 @@ mail_privileged_group = mail
 
 # A comment or note that is associated with the server. This value is
 # accessible for authenticated users through the IMAP METADATA server
-# entry "/shared/comment". 
+# entry "/shared/comment".
 #mail_server_comment = ""
 
 # Indicates a method for contacting the server administrator. According to
@@ -3002,7 +3002,7 @@ mail_privileged_group = mail
 # is currently not enforced. Use for example mailto:admin@example.com. This
 # value is accessible for authenticated users through the IMAP METADATA server
 # entry "/shared/admin".
-#mail_server_admin = 
+#mail_server_admin =
 
 ##
 ## Mail processes
@@ -3058,7 +3058,7 @@ mail_privileged_group = mail
 # WARNING: Never add directories here which local users can modify, that
 # may lead to root exploit. Usually this should be done only if you don't
 # allow shell access for users. <doc/wiki/Chrooting.txt>
-#valid_chroot_dirs = 
+#valid_chroot_dirs =
 
 # Default chroot directory for mail processes. This can be overridden for
 # specific users in user database by giving /./ in user's home directory
@@ -3066,7 +3066,7 @@ mail_privileged_group = mail
 # need to do chrooting, Dovecot doesn't allow users to access files outside
 # their mail directory anyway. If your home directories are prefixed with
 # the chroot directory, append "/." to mail_chroot. <doc/wiki/Chrooting.txt>
-#mail_chroot = 
+#mail_chroot =
 
 # UNIX socket path to master authentication server to find users.
 # This is used by imap (for shared users) and lda.
@@ -3077,7 +3077,7 @@ mail_privileged_group = mail
 
 # Space separated list of plugins to load for all services. Plugins specific to
 # IMAP, LDA, etc. are added to this list in their own .conf files.
-#mail_plugins = 
+#mail_plugins =
 
 ##
 ## Mailbox handling optimizations
@@ -3205,7 +3205,7 @@ protocol !indexer-worker {
 # fallbacks to re-reading the whole mbox file whenever something in mbox isn't
 # how it's expected to be. The only real downside to this setting is that if
 # some other MUA changes message flags, Dovecot doesn't notice it immediately.
-# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK 
+# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK
 # commands.
 #mbox_dirty_syncs = yes
 
@@ -3348,7 +3348,7 @@ service lmtp {
   #inet_listener lmtp {
     # Avoid making LMTP visible for the entire internet
     #address =
-    #port = 
+    #port =
   #}
 }
 
@@ -3387,8 +3387,8 @@ service auth {
   # permissions (e.g. 0777 allows everyone full permissions).
   unix_listener auth-userdb {
     #mode = 0666
-    #user = 
-    #group = 
+    #user =
+    #group =
   }
 
   # Postfix smtp-auth
@@ -3421,8 +3421,8 @@ service dict {
   # For example: mode=0660, group=vmail and global mail_access_groups=vmail
   unix_listener dict {
     #mode = 0600
-    #user = 
-    #group = 
+    #user =
+    #group =
   }
 }
 
@@ -3465,7 +3465,7 @@ ssl_key = </etc/dovecot/private/dovecot.key
 # PEM encoded trusted certificate authority. Set this only if you intend to use
 # ssl_verify_client_cert=yes. The file should contain the CA certificate(s)
 # followed by the matching CRL(s). (e.g. ssl_ca = </etc/ssl/certs/ca.pem)
-#ssl_ca = 
+#ssl_ca =
 
 # Require that CRL check succeeds for client certificates.
 #ssl_require_crl = yes
@@ -3533,7 +3533,7 @@ postmaster_address = postmaster@<SERVERNAME>
 
 # Hostname to use in various parts of sent mails (e.g. in Message-Id) and
 # in LMTP replies. Default is the system's real hostname@domain.
-#hostname = 
+#hostname =
 
 # If user is over quota, return with temporary failure instead of
 # bouncing the mail.
@@ -3557,7 +3557,7 @@ postmaster_address = postmaster@<SERVERNAME>
 #recipient_delimiter = +
 
 # Header where the original recipient address (SMTP's RCPT TO: address) is taken
-# from if not available elsewhere. With dovecot-lda -a parameter overrides this. 
+# from if not available elsewhere. With dovecot-lda -a parameter overrides this.
 # A commonly used header for this is X-Original-To.
 #lda_original_recipient_header =
 
@@ -3614,7 +3614,7 @@ protocol lda {
 
 # Override the IMAP CAPABILITY response. If the value begins with '+',
 # add the given capabilities on top of the defaults (e.g. +XFOO XBAR).
-#imap_capability = 
+#imap_capability =
 
 # How long to wait between "OK Still here" notifications when client is
 # IDLEing.
@@ -3623,7 +3623,7 @@ protocol lda {
 # ID field names and values to send to clients. Using * as the value makes
 # Dovecot use the default value. The following fields have default values
 # currently: name, version, os, os-version, support-url, support-email.
-#imap_id_send = 
+#imap_id_send =
 
 # ID fields sent by client to log. * means everything.
 #imap_id_log =
@@ -3646,7 +3646,7 @@ protocol lda {
 #     greyed out, instead of only later giving "not selectable" popup error.
 #
 # The list is space-separated.
-#imap_client_workarounds = 
+#imap_client_workarounds =
 
 # Host allowed in URLAUTH URLs sent by client. "*" allows all.
 #imap_urlauth_host =
@@ -3860,7 +3860,7 @@ pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 #     Outlook Express and Netscape Mail breaks if end of headers-line is
 #     missing. This option simply sends it if it's missing.
 # The list is space-separated.
-#pop3_client_workarounds = 
+#pop3_client_workarounds =
 
 protocol pop3 {
   # Space separated list of plugins to load (default is global mail_plugins).
@@ -3894,7 +3894,7 @@ protocol pop3 {
 #
 # location = [<type>:]path[;<option>[=<value>][;...]]
 #
-# If the type prefix is omitted, the script location type is 'file' and the 
+# If the type prefix is omitted, the script location type is 'file' and the
 # location is interpreted as a local filesystem path pointing to a Sieve script
 # file or directory. Refer to Pigeonhole wiki or INSTALL file for more
 # information.
@@ -3905,7 +3905,7 @@ plugin {
   # delivery. The "include" extension uses this location for retrieving
   # :personal" scripts. This is also where the  ManageSieve service will store
   # the user's scripts, if supported.
-  # 
+  #
   # Currently only the 'file:' location type supports ManageSieve operation.
   # Other location types like 'dict:' and 'ldap:' can currently only
   # be used as a read-only script source ().
@@ -3925,9 +3925,9 @@ plugin {
   #sieve_default = /var/lib/dovecot/sieve/default.sieve
   sieve_dir = ~/sieve
 
-  # The name by which the default Sieve script (as configured by the 
-  # sieve_default setting) is visible to the user through ManageSieve. 
-  #sieve_default_name = 
+  # The name by which the default Sieve script (as configured by the
+  # sieve_default setting) is visible to the user through ManageSieve.
+  #sieve_default_name =
 
   # Location for ":global" include scripts as used by the "include" extension.
   #sieve_global =
@@ -3942,7 +3942,7 @@ plugin {
   #sieve_discard =
 
   # Location Sieve of scripts that need to be executed before the user's
-  # personal script. If a 'file' location path points to a directory, all the 
+  # personal script. If a 'file' location path points to a directory, all the
   # Sieve scripts contained therein (with the proper `.sieve' extension) are
   # executed. The order of execution within that directory is determined by the
   # file names, using a normal 8bit per-character comparison.
@@ -4060,18 +4060,18 @@ plugin {
   ## TRACE DEBUGGING
   # Trace debugging provides detailed insight in the operations performed by
   # the Sieve script. These settings apply to both the LDA Sieve plugin and the
-  # IMAPSIEVE plugin. 
+  # IMAPSIEVE plugin.
   #
   # WARNING: On a busy server, this functionality can quickly fill up the trace
   # directory with a lot of trace files. Enable this only temporarily and as
   # selective as possible.
-  
+
   # The directory where trace files are written. Trace debugging is disabled if
-  # this setting is not configured or if the directory does not exist. If the 
+  # this setting is not configured or if the directory does not exist. If the
   # path is relative or it starts with "~/" it is interpreted relative to the
   # current user's home directory.
   #sieve_trace_dir =
-  
+
   # The verbosity level of the trace messages. Trace debugging is disabled if
   # this setting is not configured. Possible values are:
   #
@@ -4082,14 +4082,14 @@ plugin {
   #   "matching"       - Print all executed commands, performed tests and the
   #                      values matched in those tests.
   #sieve_trace_level =
-  
+
   # Enables highly verbose debugging messages that are usually only useful for
   # developers.
   #sieve_trace_debug = no
-  
+
   # Enables showing byte code addresses in the trace output, rather than only
   # the source line numbers.
-  #sieve_trace_addresses = no 
+  #sieve_trace_addresses = no
 }
 ]]>
 							</content>
@@ -4874,7 +4874,7 @@ aliases:     files
 						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command><![CDATA[a2dismod php7.3]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}bin/froxlor-cli froxlor:cron --force]]></command>
 				</daemon>
@@ -4907,7 +4907,7 @@ aliases:     files
 						</visibility>
 						<command><![CDATA[a2dismod php7.3]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}bin/froxlor-cli froxlor:cron --force]]></command>
 				</daemon>

@@ -146,8 +146,20 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				Response::standardError('passwordshouldnotbeusername', '', true);
 			}
 
+			// prefix hash-algo
+			switch (Settings::Get('system.passwordcryptfunc')) {
+				case PASSWORD_ARGON2I:
+					$cpPrefix = '{ARGON2I}';
+					break;
+				case PASSWORD_ARGON2ID:
+					$cpPrefix = '{ARGON2ID}';
+					break;
+				default:
+					$cpPrefix = '{BLF-CRYPT}';
+					break;
+			}
 			// encrypt the password
-			$cryptPassword = Crypt::makeCryptPassword($password);
+			$cryptPassword = $cpPrefix . Crypt::makeCryptPassword($password);
 
 			$email_user = substr($email_full, 0, strrpos($email_full, "@"));
 			$email_domain = substr($email_full, strrpos($email_full, "@") + 1);
@@ -376,7 +388,20 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				Response::standardError('passwordshouldnotbeusername', '', true);
 			}
 			$password = Crypt::validatePassword($password, true);
-			$cryptPassword = Crypt::makeCryptPassword($password);
+			// prefix hash-algo
+			switch (Settings::Get('system.passwordcryptfunc')) {
+				case PASSWORD_ARGON2I:
+					$cpPrefix = '{ARGON2I}';
+					break;
+				case PASSWORD_ARGON2ID:
+					$cpPrefix = '{ARGON2ID}';
+					break;
+				default:
+					$cpPrefix = '{BLF-CRYPT}';
+					break;
+			}
+			// encrypt the password
+			$cryptPassword = $cpPrefix . Crypt::makeCryptPassword($password);
 			$upd_query .= (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "`password_enc`= :password_enc";
 			$upd_params['password_enc'] = $cryptPassword;
 			if (Settings::Get('system.mailpwcleartext') == '1') {

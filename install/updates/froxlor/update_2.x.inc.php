@@ -37,11 +37,11 @@ if (!defined('_CRON_UPDATE')) {
 }
 
 // last 0.10.x release
-if (Froxlor::isFroxlorVersion('0.10.38')) {
+if (Froxlor::isFroxlorVersion('0.10.38.2')) {
 
 	$update_to = '2.0.0-beta1';
 
-	Update::showUpdateStep("Updating from 0.10.38 to ".$update_to, false);
+	Update::showUpdateStep("Updating from 0.10.38.2 to ".$update_to, false);
 
 	Update::showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
@@ -70,6 +70,8 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
 	// ftp_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTALIMITS . "` CHANGE `name` varchar(255) default NULL;");
+	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTATALLIES . "` CHANGE `name` varchar(255) default NULL;");
 	// mail_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password_enc` varchar(255) NOT NULL default '';");
@@ -172,6 +174,13 @@ if (Froxlor::isFroxlorVersion('0.10.38')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'letsencryptcountrycode'");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'letsencryptstate'");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Updating email account password-hashes");
+	Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = REPLACE(`password`, '$1$', '{MD5-CRYPT}$1$') WHERE SUBSTRING(`password`, 1, 3) = '$1$'");
+	Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = REPLACE(`password`, '$5$', '{SHA256-CRYPT}$5$') WHERE SUBSTRING(`password`, 1, 3) = '$5$'");
+	Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = REPLACE(`password`, '$6$', '{SHA512-CRYPT}$6$') WHERE SUBSTRING(`password`, 1, 3) = '$6$'");
+	Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = REPLACE(`password`, '$2y$', '{BLF-CRYPT}$2y$') WHERE SUBSTRING(`password`, 1, 4) = '$2y$'");
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToVersion($update_to);
