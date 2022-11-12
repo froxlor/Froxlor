@@ -32,6 +32,7 @@ use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\SImExporter;
+use Froxlor\System\Crypt;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -353,6 +354,14 @@ final class ConfigServices extends CliCommand
 			$services = $configfiles->getServices();
 			$replace_arr = $this->getReplacerArray();
 
+			// be sure the fallback certificate specified in the settings exists
+			$certFile = Settings::Get('system.ssl_cert_file');
+			$keyFile = Settings::Get('system.ssl_key_file');
+			if (empty($certFile) || empty($keyFile) || !file_exists($certFile) || !file_exists($keyFile)) {
+				$output->writeln('<comment>Creating missing certificate ' . $certFile . '</>');
+				Crypt::createSelfSignedCertificate();
+			}
+
 			foreach ($services as $si => $service) {
 				$output->writeln("--- Configuring: " . strtoupper($si) . " ---");
 				if (!isset($decoded_config[$si]) || $decoded_config[$si] == 'x') {
@@ -495,7 +504,9 @@ final class ConfigServices extends CliCommand
 			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
 			'<CUSTOMER_LOGS>' => FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
 			'<FPM_IPCDIR>' => FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
-			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
+			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup'),
+			'<SSL_CERT_FILE>' => Settings::Get('system.ssl_cert_file'),
+			'<SSL_KEY_FILE>' => Settings::Get('system.ssl_key_file'),
 		];
 		return $replace_arr;
 	}

@@ -1648,17 +1648,18 @@ virtual_mailbox_limit = 0
 ### TLS settings
 ###
 ## TLS for outgoing mails from the server to another server
-#smtp_use_tls = yes
-#smtp_tls_note_starttls_offer = yes
+smtp_tls_security_level = may
+smtp_tls_note_starttls_offer = yes
 ## TLS for incoming connections (clients or other mail servers)
-#smtpd_tls_cert_file = /etc/ssl/server/server.pem
-#smtpd_tls_key_file = /etc/ssl/server/server.key
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = <SSL_CERT_FILE>
+smtpd_tls_key_file = <SSL_KEY_FILE>
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
-#smtpd_tls_CAfile = /etc/ssl/cacert.class3.crt  # Just an example for CACert.org
-#smtpd_tls_auth_only = no
-#smtpd_tls_loglevel = 1
-#smtpd_tls_received_header = yes
-#smtpd_tls_session_cache_timeout = 3600s
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtp_use_tls = yes
+smtpd_use_tls = yes
+smtpd_tls_session_cache_timeout = 3600s
 #tls_random_source = dev:/dev/urandom
 
 ### Quota Settings with vda useflag
@@ -2002,10 +2003,10 @@ protocols = imap pop3 sieve
 ### SSL Settings
 ### After you obtained an SSL-certificate enable ssl here and
 ### set disable_plaintext_auth to yes (see above)
-ssl = no
-#ssl_cert = </etc/ssl/server/<SERVERNAME>.pem
-#ssl_key = </etc/ssl/server/<SERVERNAME>.key
-
+ssl = yes
+ssl_cert = <<SSL_CERT_FILE>
+ssl_key = <<SSL_KEY_FILE>
+ssl_dh = </etc/dovecot/dh.pem
 passdb {
 	args = /etc/dovecot/dovecot-sql.conf
 	driver = sql
@@ -2340,6 +2341,7 @@ plugin {
 ]]>
 							</content>
 						</file>
+					<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 4096]]></command>
 					<command><![CDATA[rc-update add dovecot default]]></command>
 					<command><![CDATA[/etc/init.d/dovecot restart]]></command>
 				</daemon>

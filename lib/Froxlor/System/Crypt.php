@@ -242,6 +242,18 @@ class Crypt
 	 */
 	public static function createSelfSignedCertificate()
 	{
+		// validate that we have file names in the settings
+		$certFile = Settings::Get('system.ssl_cert_file');
+		$keyFile = Settings::Get('system.ssl_key_file');
+		if (empty($certFile)) {
+			$certFile = '/etc/ssl/froxlor_selfsigned.pem';
+			Settings::Set('system.ssl_cert_file', $certFile);
+		}
+		if (empty($keyFile)) {
+			$keyFile = '/etc/ssl/froxlor_selfsigned.key';
+			Settings::Set('system.ssl_key_file', $keyFile);
+		}
+
 		// certificate info
 		$dn = [
 			"countryName" => "DE",
@@ -262,7 +274,7 @@ class Crypt
 		// sign csr
 		$x509 = openssl_csr_sign($csr, null, $privkey, 365, array('digest_alg' => 'sha384'));
 		// export to files
-		openssl_x509_export_to_file($x509, Settings::Get('system.ssl_cert_file'));
-		openssl_pkey_export_to_file($privkey, Settings::Get('system.ssl_key_file'));
+		openssl_x509_export_to_file($x509, $certFile);
+		openssl_pkey_export_to_file($privkey, $keyFile);
 	}
 }

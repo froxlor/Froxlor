@@ -85,7 +85,7 @@ return [
 					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.pem',
+					'default' => '/etc/ssl/froxlor_selfsigned.pem',
 					'save_method' => 'storeSettingField'
 				],
 				'system_ssl_key_file' => [
@@ -95,7 +95,7 @@ return [
 					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
-					'default' => '/etc/apache2/apache2.key',
+					'default' => '/etc/ssl/froxlor_selfsigned.key',
 					'save_method' => 'storeSettingField'
 				],
 				'system_ssl_cert_chainfile' => [

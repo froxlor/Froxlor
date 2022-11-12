@@ -2306,15 +2306,18 @@ virtual_mailbox_limit = 0
 ### TLS settings
 ###
 ## TLS for outgoing mails from the server to another server
-#smtp_tls_security_level = may
-#smtp_tls_note_starttls_offer = yes
+smtp_tls_security_level = may
+smtp_tls_note_starttls_offer = yes
 ## TLS for incoming connections (clients or other mail servers)
-#smtpd_tls_security_level = may
-#smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
-#smtpd_tls_key_file = $smtpd_tls_cert_file
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = <SSL_CERT_FILE>
+smtpd_tls_key_file = <SSL_KEY_FILE>
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
-#smtpd_tls_loglevel = 1
-#smtpd_tls_received_header = yes
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtp_use_tls = yes
+smtpd_use_tls = yes
+smtpd_tls_session_cache_timeout = 3600s
 ]]>
 						</content>
 					</file>
@@ -2333,35 +2336,37 @@ virtual_mailbox_limit = 0
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
-smtp      inet  n       -       y       -       -       smtpd
-#smtp      inet  n       -       y       -       1       postscreen
-#smtpd     pass  -       -       y       -       -       smtpd
-#dnsblog   unix  -       -       y       -       0       dnsblog
-#tlsproxy  unix  -       -       y       -       0       tlsproxy
-#submission inet n       -       y       -       -       smtpd
-#  -o syslog_name=postfix/submission
-#  -o smtpd_tls_security_level=encrypt
-#  -o smtpd_sasl_auth_enable=yes
-#  -o smtpd_reject_unlisted_recipient=no
+#smtp      inet  n       -       y       -       -       smtpd
+smtp      inet  n       -       y       -       1       postscreen
+smtpd     pass  -       -       y       -       -       smtpd
+dnsblog   unix  -       -       y       -       0       dnsblog
+tlsproxy  unix  -       -       y       -       0       tlsproxy
+submission inet n       -       y       -       -       smtpd
+  -o syslog_name=postfix/submission
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_reject_unlisted_recipient=no
 #  -o smtpd_client_restrictions=$mua_client_restrictions
 #  -o smtpd_helo_restrictions=$mua_helo_restrictions
 #  -o smtpd_sender_restrictions=$mua_sender_restrictions
 #  -o smtpd_recipient_restrictions=
-#  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
-#smtps     inet  n       -       y       -       -       smtpd
-#  -o syslog_name=postfix/smtps
-#  -o smtpd_tls_wrappermode=yes
-#  -o smtpd_sasl_auth_enable=yes
-#  -o smtpd_reject_unlisted_recipient=no
+  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+  -o milter_macro_daemon_name=ORIGINATING
+smtps     inet  n       -       y       -       -       smtpd
+  -o syslog_name=postfix/smtps
+  -o smtpd_tls_wrappermode=yes
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_reject_unlisted_recipient=no
 #  -o smtpd_client_restrictions=$mua_client_restrictions
 #  -o smtpd_helo_restrictions=$mua_helo_restrictions
 #  -o smtpd_sender_restrictions=$mua_sender_restrictions
 #  -o smtpd_recipient_restrictions=
-#  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
+  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+  -o milter_macro_daemon_name=ORIGINATING
 #628       inet  n       -       y       -       -       qmqpd
 pickup    unix  n       -       y       60      1       pickup
+         -o content_filter=
+         -o receive_override_options=no_header_body_checks
 cleanup   unix  n       -       y       -       0       cleanup
 qmgr      unix  n       -       n       300     1       qmgr
 #qmgr     unix  n       -       n       300     1       oqmgr
@@ -3453,8 +3458,8 @@ ssl = yes
 # dropping root privileges, so keep the key file unreadable by anyone but
 # root. Included doc/mkcert.sh can be used to easily generate self-signed
 # certificate, just make sure to update the domains in dovecot-openssl.cnf
-ssl_cert = </etc/dovecot/private/dovecot.pem
-ssl_key = </etc/dovecot/private/dovecot.key
+ssl_cert = <<SSL_CERT_FILE>
+ssl_key = <<SSL_KEY_FILE>
 
 # If key file is password protected, give the password here. Alternatively
 # give it when starting dovecot with -p parameter. Since this file is often
@@ -3491,7 +3496,7 @@ ssl_client_ca_dir = /etc/ssl/certs
 # Generate new params with `openssl dhparam -out /etc/dovecot/dh.pem 4096`
 # Or migrate from old ssl-parameters.dat file with the command dovecot
 # gives on startup when ssl_dh is unset.
-ssl_dh = </usr/share/dovecot/dh.pem
+ssl_dh = </etc/dovecot/dh.pem
 
 # Minimum SSL protocol version to use. Potentially recognized values are SSLv3,
 # TLSv1, TLSv1.1, and TLSv1.2, depending on the OpenSSL version used.
@@ -4105,6 +4110,7 @@ plugin {
 						</file>
 					</files>
 					<commands index="1">
+						<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 4096]]></command>
 						<command><![CDATA[/etc/init.d/dovecot restart]]></command>
 					</commands>
 				</general>
