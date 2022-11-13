@@ -2522,7 +2522,7 @@ service stats {
 ssl = yes
 ssl_cert = <<SSL_CERT_FILE>
 ssl_key = <<SSL_KEY_FILE>
-ssl_dh = </etc/dovecot/dh.pem
+ssl_dh = </usr/share/dovecot/dh.pem
 
 postmaster_address = postmaster@<SERVERNAME>
 
@@ -2545,7 +2545,6 @@ plugin {
 						</file>
 					</files>
 					<commands index="1">
-						<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 4096]]></command>
 						<command><![CDATA[service dovecot restart]]></command>
 					</commands>
 				</general>

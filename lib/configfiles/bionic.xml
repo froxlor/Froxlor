@@ -3462,7 +3462,7 @@ ssl_key = <<SSL_KEY_FILE>
 # Generate new params with `openssl dhparam -out /etc/dovecot/dh.pem 4096`
 # Or migrate from old ssl-parameters.dat file with the command dovecot
 # gives on startup when ssl_dh is unset.
-ssl_dh = </etc/dovecot/dh.pem
+ssl_dh = </usr/share/dovecot/dh.pem
 
 # SSL protocols to use
 #ssl_protocols = !SSLv3
@@ -3911,7 +3911,6 @@ plugin {
 						</file>
 					</files>
 					<commands index="1">
-						<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 4096]]></command>
 						<command><![CDATA[/etc/init.d/dovecot restart]]></command>
 					</commands>
 				</general>

@@ -1986,7 +1986,7 @@ sql_select: SELECT password_enc FROM mail_users WHERE username='%u@%r' OR email=
 				<!-- Dovecot -->
 				<daemon name="dovecot_postfix" version="2" title="Dovecot"
 					default="true">
-					<command><![CDATA[echo "net-mail/dovecot mysql managesieve sieve" >> /etc/portage/package.use/froxlor]]></command>
+					<command><![CDATA[echo "net-mail/dovecot argon2 mysql managesieve sieve" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-mail/dovecot]]></install>
 					<file name="/etc/dovecot/dovecot.conf" chown="root:root"
 						chmod="0640" backup="true">
@@ -2341,7 +2341,7 @@ plugin {
 ]]>
 							</content>
 						</file>
-					<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 4096]]></command>
+					<command><![CDATA[openssl dhparam -out /etc/dovecot/dh.pem 3072]]></command>
 					<command><![CDATA[rc-update add dovecot default]]></command>
 					<command><![CDATA[/etc/init.d/dovecot restart]]></command>
 				</daemon>
