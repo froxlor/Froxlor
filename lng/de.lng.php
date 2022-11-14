@@ -482,6 +482,10 @@ return [
 			'verify_ca' => 'Aktiviere SSL Zertifikats-Verifikation',
 		],
 		'settings_importfile' => 'Wähle Import-Datei',
+		'documentation' => 'Dokumentation',
+		'adminguide' => 'Admin Guide',
+		'userguide' => 'User Guide',
+		'apiguide' => 'API Guide',
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',

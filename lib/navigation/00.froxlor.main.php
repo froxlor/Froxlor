@@ -45,7 +45,8 @@ return [
 					'new_window' => true,
 					'label' => lng('menue.email.webmail'),
 					'required_resources' => 'emails_used',
-					'show_element' => (Settings::Get('panel.webmail_url') != '')
+					'show_element' => (Settings::Get('panel.webmail_url') != ''),
+					'is_external' => true,
 				]
 			]
 		],
@@ -66,7 +67,8 @@ return [
 					'new_window' => true,
 					'label' => lng('menue.mysql.phpmyadmin'),
 					'required_resources' => 'mysqls_used',
-					'show_element' => (Settings::Get('panel.phpmyadmin_url') != '')
+					'show_element' => (Settings::Get('panel.phpmyadmin_url') != ''),
+					'is_external' => true,
 				]
 			]
 		],
@@ -102,7 +104,8 @@ return [
 					'url' => Settings::Get('panel.webftp_url'),
 					'new_window' => true,
 					'label' => lng('menue.ftp.webftp'),
-					'show_element' => (Settings::Get('panel.webftp_url') != '')
+					'show_element' => (Settings::Get('panel.webftp_url') != ''),
+					'is_external' => true,
 				]
 			]
 		],
@@ -149,6 +152,25 @@ return [
 				[
 					'url' => 'customer_traffic.php',
 					'label' => lng('menue.traffic.overview')
+				]
+			]
+		],
+		'docs' => [
+			'label' => lng('admin.documentation'),
+			'icon' => 'fa-solid fa-circle-info',
+			'elements' => [
+				[
+					'url' => 'https://docs2.froxlor.org/v2/user-guide/',
+					'label' => lng('admin.userguide'),
+					'new_window' => true,
+					'is_external' => true,
+				],
+				[
+					'url' => 'https://docs2.froxlor.org/v2/api-guide/',
+					'label' => lng('admin.apiguide'),
+					'new_window' => true,
+					'show_element' => Settings::Get('api.enabled') == 1 && CurrentUser::getField('api_allowed') == 1,
+					'is_external' => true,
 				]
 			]
 		]
@@ -319,6 +341,25 @@ return [
 				[
 					'url' => 'admin_settings.php?page=testmail',
 					'label' => lng('admin.testmail')
+				]
+			]
+		],
+		'docs' => [
+			'label' => lng('admin.documentation'),
+			'icon' => 'fa-solid fa-circle-info',
+			'elements' => [
+				[
+					'url' => 'https://docs2.froxlor.org/v2/admin-guide/',
+					'label' => lng('admin.adminguide'),
+					'new_window' => true,
+					'is_external' => true,
+				],
+				[
+					'url' => 'https://docs2.froxlor.org/v2/api-guide/',
+					'label' => lng('admin.apiguide'),
+					'new_window' => true,
+					'show_element' => Settings::Get('api.enabled') == 1,
+					'is_external' => true,
 				]
 			]
 		]

@@ -19,6 +19,9 @@
 									{% if item.add_shortlink is defined and item.add_shortlink is not empty %}
 										<a href="{{ item.add_shortlink|raw }}" class="text-secondary me-2"><i class="fa-solid fa-plus-circle"></i></a>
 									{% endif %}
+									{% if item.is_external is defined and item.is_external %}
+										<span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+									{% endif %}
 								</li>
 							{% endfor %}
 						</ul>

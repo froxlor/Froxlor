@@ -493,6 +493,10 @@ return [
 			'verify_ca' => 'Enable verification of the server SSL certificate',
 		],
 		'settings_importfile' => 'Chose import file',
+		'documentation' => 'Documentation',
+		'adminguide' => 'Admin guide',
+		'userguide' => 'User guide',
+		'apiguide' => 'API guide',
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',
