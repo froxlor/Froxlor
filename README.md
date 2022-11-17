@@ -21,7 +21,7 @@ Developed by experienced server administrators, this panel simplifies the effort
 9. Have fun!
 
 ### Detailed installation
-https://docs.froxlor.org/general/installation/index.html
+https://docs.froxlor.org/latest/general/installation/
 
 ## Help
 
@@ -56,7 +56,7 @@ https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.fro
 
 ### Debian / Ubutnu repository
 
-[HowTo](https://docs.froxlor.org/general/installation/aptpackage.html)
+[HowTo](https://docs.froxlor.org/latets/general/installation/apt-package.html)
 
 #### Debian
 

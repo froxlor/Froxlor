@@ -754,7 +754,7 @@ return [
 		'import_separator' => 'Separatore',
 		'import_offset' => 'Offset',
 		'import_file' => 'File CSV',
-		'import_description' => 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="https://docs.froxlor.org/adminguide/domainimport.html" target="_blank">https://docs.froxlor.org/adminguide/domainimport.html</a>',
+		'import_description' => 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank">https://docs.froxlor.org/latest/admin-guide/domain-import/</a>',
 	],
 	'emails' => [
 		'description' => 'Qui puoi creare e cambiare i tuoi indirizzi Email.<br />Un account è come la bucalettere davanti a casa tua. Se qualcuno ti manda un\'Email, essa sarà recapitata all\'interno del tuo account.<br /><br />Per scaricare le tue Email usa le seguenti impostazioni nel tuo programma di posta elettronica: (I dati scritti in <i>corsivo</i> vanno cambiati con i tuoi!)<br />Hostname: <b><i>Nome del dominio</i></b><br />Username: <b><i>Nome dell\'account / Indirizzo Email</i></b><br />Password: <b><i>La password scelta</i></b>',
@@ -1543,7 +1543,7 @@ Cordiali Saluti, Team Froxlor',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'Abilita FCGID per i vhost Froxlor',
-			'description' => 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a>',
+			'description' => 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="_blank" href="https://docs.froxlor.org/latest/admin-guide/configuration/fcgid/">FCGID - handbook</a>',
 		],
 		'perl' => [
 			'suexecworkaround' => [
@@ -1621,7 +1621,7 @@ Cordiali Saluti, Team Froxlor',
 		],
 		'phpfpm' => [
 			'title' => 'Abilita php-fpm',
-			'description' => '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il <a target="_blank" href="https://docs.froxlor.org/general/configuration/php-fpm.html">manuale PHP-FPM</a></b>',
+			'description' => '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il <a target="_blank" href="https://docs.froxlor.org/latest/admin-guide/configuration/php-fpm/">manuale PHP-FPM</a></b>',
 		],
 		'diskquota_enabled' => 'Quota attivita?',
 		'diskquota_repquota_path' => [

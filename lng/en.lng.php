@@ -746,7 +746,7 @@ return [
 		'import_separator' => 'Separator',
 		'import_offset' => 'Offset',
 		'import_file' => 'CSV-File',
-		'import_description' => 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://docs.froxlor.org/adminguide/domainimport.html" target="_blank">https://docs.froxlor.org/adminguide/domainimport.html</a>',
+		'import_description' => 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank">https://docs.froxlor.org/latest/admin-guide/domain-import/</a>',
 		'ssl_redirect_temporarilydisabled' => '<br>The SSL redirect is temporarily deactivated while a new Let\'s Encrypt certificate is generated. It will be activated again after the certificate was generated.',
 		'termination_date' => 'Date of termination',
 		'termination_date_overview' => 'terminated as of ',
@@ -1541,7 +1541,7 @@ Yours sincerely, your administrator',
 		],
 		'mod_fcgid' => [
 			'title' => 'Enable FCGID',
-			'description' => 'Use this to run PHP with the corresponding user account.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a></b>',
+			'description' => 'Use this to run PHP with the corresponding user account.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="_blank" href="https://docs.froxlor.org/latest/admin-guide/configuration/fcgid/">FCGID - handbook</a></b>',
 			'configdir' => [
 				'title' => 'Configuration directory',
 				'description' => 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="text-danger">NOTE: This folder\'s content gets deleted regularly so avoid storing data in there manually.</div>',
@@ -1795,7 +1795,7 @@ Yours sincerely, your administrator',
 		],
 		'phpfpm' => [
 			'title' => 'Enable php-fpm',
-			'description' => '<b>This needs a special webserver configuration see <a target="_blank" href="https://docs.froxlor.org/general/configuration/php-fpm.html">PHP-FPM handbook</a></b>',
+			'description' => '<b>This needs a special webserver configuration see <a target="_blank" href="https://docs.froxlor.org/latest/admin-guide/configuration/php-fpm/">PHP-FPM handbook</a></b>',
 		],
 		'phpfpm_settings' => [
 			'configdir' => 'Configuration directory of php-fpm',
@@ -2081,7 +2081,7 @@ Yours sincerely, your administrator',
 		],
 		'enable_api' => [
 			'title' => 'Enable external API usage',
-			'description' => 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://docs.froxlor.org/apiguide/index.html" target="_new">https://docs.froxlor.org/</a>',
+			'description' => 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://docs.froxlor.org/latest/api-guide/" target="_new">https://docs.froxlor.org/</a>',
 		],
 		'dhparams_file' => [
 			'title' => 'DHParams file (Diffie–Hellman key exchange)',

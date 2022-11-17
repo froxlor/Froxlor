@@ -455,7 +455,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 * check whether a given customer / current user (as customer) has
 	 * databases on the given dbserver
 	 *
-	 * @param int mysql_server
+	 * @param int $mysql_server
 	 * @param int $customerid
 	 *            optional, admin-only, select ftp-users of a specific customer by id
 	 * @param string $loginname

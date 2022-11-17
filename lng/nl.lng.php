@@ -1051,7 +1051,7 @@ Met vriendelijke groet, uw beheerder',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'FCGID inschakelen voor de VHost voor Froxlor',
-			'description' => 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a>',
+			'description' => 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="_blank" href="https://docs.froxlor.org/latest/admin-guide/configuration/fcgid/">FCGID - handbook</a>',
 		],
 		'perl' => [
 			'suexecworkaround' => [
