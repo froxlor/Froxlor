@@ -160,13 +160,13 @@ return [
 			'icon' => 'fa-solid fa-circle-info',
 			'elements' => [
 				[
-					'url' => 'https://docs2.froxlor.org/v2/user-guide/',
+					'url' => 'https://docs.froxlor.org/v2/user-guide/',
 					'label' => lng('admin.userguide'),
 					'new_window' => true,
 					'is_external' => true,
 				],
 				[
-					'url' => 'https://docs2.froxlor.org/v2/api-guide/',
+					'url' => 'https://docs.froxlor.org/v2/api-guide/',
 					'label' => lng('admin.apiguide'),
 					'new_window' => true,
 					'show_element' => Settings::Get('api.enabled') == 1 && CurrentUser::getField('api_allowed') == 1,
@@ -349,13 +349,13 @@ return [
 			'icon' => 'fa-solid fa-circle-info',
 			'elements' => [
 				[
-					'url' => 'https://docs2.froxlor.org/v2/admin-guide/',
+					'url' => 'https://docs.froxlor.org/v2/admin-guide/',
 					'label' => lng('admin.adminguide'),
 					'new_window' => true,
 					'is_external' => true,
 				],
 				[
-					'url' => 'https://docs2.froxlor.org/v2/api-guide/',
+					'url' => 'https://docs.froxlor.org/v2/api-guide/',
 					'label' => lng('admin.apiguide'),
 					'new_window' => true,
 					'show_element' => Settings::Get('api.enabled') == 1,
