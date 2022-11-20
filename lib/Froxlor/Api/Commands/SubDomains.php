@@ -630,6 +630,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		]);
 		$id = $result['id'];
 
+		if ($this->isAdmin() == false && (int)$result['caneditdomain'] == 0) {
+			throw new Exception(lng('error.domaincannotbeedited', [$result['domain']]), 406);
+		}
+
 		// parameters
 		$aliasdomain = $this->getParam('alias', true, 0);
 		$path = $this->getParam('path', true, $result['documentroot']);

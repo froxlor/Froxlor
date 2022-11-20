@@ -149,13 +149,6 @@ return [
 						'select_var' => $serveraliasoptions,
 						'selected' => Settings::Get('system.domaindefaultalias')
 					],
-					'speciallogfile' => [
-						'label' => lng('admin.speciallogfile.title'),
-						'desc' => lng('admin.speciallogfile.description'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					],
 					'specialsettings' => [
 						'visible' => $userinfo['change_serversettings'] == '1',
 						'label' => lng('admin.ownvhostsettings'),
@@ -185,7 +178,14 @@ return [
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
-					]
+					],
+					'speciallogfile' => [
+						'label' => lng('admin.speciallogfile.title'),
+						'desc' => lng('admin.speciallogfile.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => false
+					],
 				]
 			],
 			'section_bssl' => [

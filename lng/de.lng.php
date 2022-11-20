@@ -421,8 +421,8 @@ return [
 			'description' => 'Die optionale "includeSubDomains" Direktive, wenn vorhanden, signalisiert dem UA, dass die HSTS Regel für diese Domain und auch jede Subdomain dieser gilt.',
 		],
 		'domain_hsts_preload' => [
-			'title' => 'Füge Domain in die <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload Liste</a> hinzu',
-			'description' => 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktivieren Sie diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachten Sie die Details unter <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.',
+			'title' => 'Füge Domain in die <a href="https://hstspreload.org/" target="_blank">HSTS preload Liste</a> hinzu',
+			'description' => 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktivieren Sie diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachten Sie die Details unter <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> bevor ein Header mit "preload" gesendet wird.',
 		],
 		'domain_ocsp_stapling' => [
 			'title' => 'OCSP stapling',
@@ -724,7 +724,7 @@ return [
 		'directorymustexist' => 'Das Verzeichnis "%s" muss existieren. Legen Sie es bitte mit Ihrem FTP-Programm an.',
 		'filemustexist' => 'Die Datei "%s" muss existieren.',
 		'allresourcesused' => 'Sie haben bereits alle Ihnen zur Verfügung stehenden Ressourcen verbraucht.',
-		'domains_cantdeletemaindomain' => 'Sie können keine Domain, die als E-Mail-Domain verwendet wird, löschen. ',
+		'domains_cantdeletemaindomain' => 'Sie können keine zugewiesene Domain löschen. ',
 		'domains_canteditdomain' => 'Sie können diese Domain nicht bearbeiten. Dies wurde durch den Admin verweigert.',
 		'domains_cantdeletedomainwithemail' => 'Sie können keine Domain löschen, die noch als E-Mail-Domain verwendet wird. Löschen Sie zuerst alle E-Mail-Adressen dieser Domain.',
 		'firstdeleteallsubdomains' => 'Sie müssen zuerst alle Subdomains löschen, bevor Sie eine Wildcarddomain anlegen können.',
@@ -914,6 +914,7 @@ return [
 		'notallowedphpconfigused' => 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist',
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
 		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
+		'domaincannotbeedited' => 'Keine Berechtigung, um die Domain %s zu bearbeiten',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',

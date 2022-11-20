@@ -428,8 +428,8 @@ return [
 			'description' => 'The optional "includeSubDomains" directive, if present, signals the UA that the HSTS Policy applies to this HSTS Host as well as any subdomains of the host\'s domain name.',
 		],
 		'domain_hsts_preload' => [
-			'title' => 'Include domain in <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload list</a>',
-			'description' => 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> before sending the header with "preload".',
+			'title' => 'Include domain in <a href="https://hstspreload.org/" target="_blank">HSTS preload list</a>',
+			'description' => 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> before sending the header with "preload".',
 		],
 		'domain_ocsp_stapling' => [
 			'title' => 'OCSP stapling',
@@ -788,7 +788,7 @@ return [
 		'directorymustexist' => 'The directory %s must exist. Please create it with your FTP client.',
 		'filemustexist' => 'The file %s must exist.',
 		'allresourcesused' => 'You have already used all of your resources.',
-		'domains_cantdeletemaindomain' => 'You cannot delete a domain which is used as an email-domain.',
+		'domains_cantdeletemaindomain' => 'You cannot delete an assigned domain.',
 		'domains_canteditdomain' => 'You cannot edit this domain. It has been disabled by the admin.',
 		'domains_cantdeletedomainwithemail' => 'You cannot delete a domain which is used as an email-domain. Delete all email addresses first.',
 		'firstdeleteallsubdomains' => 'You have to delete all subdomains first before you can create a wildcard domain.',
@@ -981,6 +981,7 @@ return [
 		'notallowedphpconfigused' => 'Trying to use php-config which is not assigned to customer',
 		'pathmustberelative' => 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).',
 		'mysqlserverstillhasdbs' => 'Cannot remove database server from customers allow-list as there are still databases on it.',
+		'domaincannotbeedited' => 'You are not permitted to edit the domain %s',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

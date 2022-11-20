@@ -223,6 +223,11 @@ if ($page == 'overview' || $page == 'domains') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
+
+			if ((int) $result['caneditdomain'] == 0) {
+				Response::standardError('domaincannotbeedited', $result['domain']);
+			}
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->update();
