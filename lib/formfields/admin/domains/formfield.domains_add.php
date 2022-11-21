@@ -394,13 +394,13 @@ return [
 				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
 				'fields' => [
 					'isbinddomain' => [
-						'label' => 'Nameserver',
+						'label' => lng('admin.createzonefile'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
 					],
 					'zonefile' => [
-						'label' => 'Zonefile',
+						'label' => lng('admin.custombindzone'),
 						'desc' => lng('admin.bindzonewarning'),
 						'type' => 'text'
 					]

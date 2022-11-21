@@ -43,7 +43,8 @@ return [
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,
-						'value' => $result['ssl_cert_file']
+						'value' => $result['ssl_cert_file'],
+						'placeholder' => lng('domain.ssl_certificate_placeholder')
 					],
 					'ssl_key_file' => [
 						'label' => lng('admin.ipsandports.ssl_key_file_content'),
@@ -51,7 +52,8 @@ return [
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,
-						'value' => $result['ssl_key_file']
+						'value' => $result['ssl_key_file'],
+						'placeholder' => lng('domain.ssl_key_placeholder')
 					],
 					'ssl_cert_chainfile' => [
 						'label' => lng('admin.ipsandports.ssl_cert_chainfile_content'),

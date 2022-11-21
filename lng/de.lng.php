@@ -173,6 +173,8 @@ return [
 			'SERVER_PORT' => 'Wird mit dem Standard-Port ersetzt',
 			'DOMAINNAME' => 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)',
 		],
+		'createzonefile' => 'DNS Zone für Domain erstellen',
+		'custombindzone' => 'Eigene / manuelle Zone',
 		'bindzonewarning' => 'Leer für Standardeinstellung.<br /><strong class="text-danger">WARNUNG:</strong> Bei der Verwendung einer Zonendatei müssen alle benötigten Records aller Subdomains ebenfalls manuell verwaltet werden.',
 		'ipsandports' => [
 			'ipsandports' => 'IPs und Ports',

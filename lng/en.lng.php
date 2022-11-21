@@ -176,6 +176,8 @@ return [
 			'DOMAINNAME' => 'Replaces the customers standard-subdomain (can be empty if none is generated)',
 		],
 		'webserver' => 'Webserver',
+		'createzonefile' => 'Create dns zone for domain',
+		'custombindzone' => 'Custom / unmanaged zone file',
 		'bindzonewarning' => 'empty for defaults<br /><strong class="text-danger">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.',
 		'ipsandports' => [
 			'ipsandports' => 'IPs and Ports',
@@ -705,6 +707,8 @@ return [
 		'docroot' => 'Path from field above',
 		'homedir' => 'Home directory',
 		'docparent' => 'Parent-directory of path from field above',
+		'ssl_certificate_placeholder' => '---- BEGIN CERTIFICATE---' . PHP_EOL . '[...]' . PHP_EOL . '----END CERTIFICATE----',
+		'ssl_key_placeholder' => '---- BEGIN RSA PRIVATE KEY-----' . PHP_EOL . '[...]' . PHP_EOL . '-----END RSA PRIVATE KEY-----',
 	],
 	'domains' => [
 		'description' => 'Here you can create (sub-)domains and change their paths.<br />The system will need some time to apply the new settings after every change.',
