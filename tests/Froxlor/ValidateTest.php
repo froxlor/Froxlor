@@ -198,7 +198,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateUsername('web123sql2', true, $mysql_max);
 		$this->assertTrue($result);
 		// too long
-		$result = Validate::validateUsername('myperfectsuperduperwebuser123sql2', true, $mysql_max);
+		$result = Validate::validateUsername('myperfectsuperduperwebuserwhosnameisenormouslylongandprettyandshouldinnowaybeaccepted123sql2', true, $mysql_max);
 		$this->assertFalse($result);
 		// not unix-conform
 		$result = Validate::validateUsername('web123-sql2', true, $mysql_max);
