@@ -190,10 +190,16 @@ class Database
 	 */
 	public static function getSqlUsernameLength()
 	{
-		// MySQL user names can be up to 32 characters long (16 characters before MySQL 5.7.8).
-		$mysql_max = 32;
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.8', '<')) {
-			$mysql_max = 16;
+		// MariaDB supports up to 80 characters but only 64 for databases and as we use the loginname also for
+		// database names, we set the limit to 64 here
+		if (strpos(strtolower(Database::getAttribute(\PDO::ATTR_SERVER_VERSION)), "mariadb") !== false) {
+			$mysql_max = 64;
+		} else {
+			// MySQL user names can be up to 32 characters long (16 characters before MySQL 5.7.8).
+			$mysql_max = 32;
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.8', '<')) {
+				$mysql_max = 16;
+			}
 		}
 		return $mysql_max;
 	}
