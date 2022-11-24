@@ -149,7 +149,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateDomain('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz');
 		$this->assertFalse($result);
 	}
-	
+
 	public function testValidateHostname()
 	{
 		$result = Validate::validateLocalHostname('localhost');
@@ -167,7 +167,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateLocalHostname('a-----------------------------------------------------------------');
 		$this->assertFalse($result);
 	}
-	
+
 	public function testValidateEmail()
 	{
 		$result = Validate::validateEmail('team@froxlor.org');
@@ -175,7 +175,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateEmail('team.froxlor.org');
 		$this->assertFalse($result);
 	}
-	
+
 	public function testValidateUsername()
 	{
 		$result = Validate::validateUsername('web123sql2');
@@ -184,7 +184,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateUsername('web123sql2', true, $mysql_max);
 		$this->assertTrue($result);
 		// too long
-		$result = Validate::validateUsername('myperfectsuperduperwebuser123sql2', true, $mysql_max);
+		$result = Validate::validateUsername('myperfectsuperduperwebuserwhosnameisenormouslylongandprettyandshouldinnowaybeaccepted123sql2', true, $mysql_max);
 		$this->assertFalse($result);
 		// not unix-conform
 		$result = Validate::validateUsername('web123-sql2', true, $mysql_max);
@@ -199,7 +199,7 @@ class ValidateTest extends TestCase
 		$result = Validate::validateUsername('web123sql2-', false, $mysql_max);
 		$this->assertFalse($result);
 	}
-	
+
 	public function testValidateSqlInterval()
 	{
 		$result = Validate::validateSqlInterval('60 HOUR');
