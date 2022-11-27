@@ -21,7 +21,7 @@ class FroxlorTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['isnewerversion']);
 		if (defined('DEV_FROXLOR') && DEV_FROXLOR == 1) {
-			$this->assertEquals("You already have the latest testing version of Froxlor installed.", $result['additional_info']);
+			$this->assertEquals("You already have the latest testing-version of Froxlor installed.", $result['additional_info']);
 		} else {
 			$this->assertEquals("You already have the latest version of Froxlor installed.", $result['additional_info']);
 		}
