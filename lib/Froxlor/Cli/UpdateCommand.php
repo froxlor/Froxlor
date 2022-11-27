@@ -103,7 +103,7 @@ final class UpdateCommand extends CliCommand
 						return self::SUCCESS;
 					}
 					// no new version
-					$output->writeln('<info>' . lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')]) . '</>');
+					$output->writeln('<info>' . AutoUpdate::getFromResult('info') . '</>');
 					$result = self::SUCCESS;
 				}
 			} catch (Exception $e) {

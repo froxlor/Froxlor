@@ -34,6 +34,7 @@ use Froxlor\Database\Database;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Http\HttpClient;
+use Froxlor\Install\Update;
 use Froxlor\Settings;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
@@ -193,8 +194,14 @@ class Ajax
 		try {
 			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($this->userinfo)->checkUpdate();
 			$result = json_decode($json_result, true)['data'];
-			$result = UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
-			return $this->jsonResponse($result);
+			$result['full_version'] = Froxlor::getFullVersion();
+			$result['dbversion'] = Froxlor::DBVERSION;
+			$uc_data = Update::getUpdateCheckData();
+			$result['last_update_check'] = $uc_data['ts'];
+			$result['channel'] = Settings::Get('system.update_channel');
+
+			$result_rendered = UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
+			return $this->jsonResponse($result_rendered);
 		} catch (Exception $e) {
 			// don't display anything if just not allowed due to permissions
 			if ($e->getCode() != 403) {

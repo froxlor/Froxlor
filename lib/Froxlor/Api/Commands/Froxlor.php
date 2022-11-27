@@ -87,7 +87,8 @@ class Froxlor extends ApiCommand
 						'version' => $this->version,
 						'message' => $text,
 						'link' => AutoUpdate::getFromResult('url'),
-						'additional_info' => AutoUpdate::getFromResult('info')
+						'additional_info' => AutoUpdate::getFromResult('info'),
+						'aucheck' => $aucheck
 					];
 				} else if ($aucheck < 0 || $aucheck > 1) {
 					// errors
@@ -105,7 +106,8 @@ class Froxlor extends ApiCommand
 						'version' => $this->version,
 						'message' => '',
 						'link' => '',
-						'additional_info' => $errmsg
+						'additional_info' => $errmsg,
+						'aucheck' => $aucheck
 					];
 				} else {
 					$response = [
@@ -113,7 +115,8 @@ class Froxlor extends ApiCommand
 						'version' => $this->version,
 						'message' => '',
 						'link' => '',
-						'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')])
+						'additional_info' => AutoUpdate::getFromResult('info'),
+						'aucheck' => $aucheck
 					];
 				}
 

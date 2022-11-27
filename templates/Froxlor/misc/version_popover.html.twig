@@ -1,0 +1,26 @@
+{% macro vpopover(isnewerversion, additional_info, full_version, dbversion, channel, last_update_check, message) %}
+	{% if isnewerversion == 0 %}
+		<p>{{ additional_info }}</p>
+		<div class='d-flex justify-content-between'>
+			<div class='fw-bold'>Version:</div>
+			<div>{{ full_version }}</div>
+		</div>
+		<div class='d-flex justify-content-between'>
+			<div class='fw-bold'>Database version:</div>
+			<div>{{ dbversion }}</div>
+		</div>
+		<div class='d-flex justify-content-between'>
+			<div class='fw-bold'>Channel:</div>
+			<div>{{ channel }}</div>
+		</div>
+		<div class='d-flex justify-content-between'>
+			<div class='fw-bold'>Last checked:</div>
+			<div>{{ last_update_check|date('d.m.Y H:i') }}</div>
+		</div>
+	{% else %}
+		<p>{{ message }}</p>
+		{% if get_config('enable_webupdate') %}
+			<a class='btn d-block btn-outline-warning' href='admin_autoupdate.php?page=overview'>Open updater</a>
+		{% endif %}
+	{% endif %}
+{% endmacro %}

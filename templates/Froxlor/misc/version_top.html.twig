@@ -1,8 +1,12 @@
-<a class="nav-link {% if isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}" {% if isnewerversion == 0 %} href="#" {% else %} href="admin_autoupdate.php?page=overview" {% endif %} title="{% if isnewerversion == 0 %}{{ additional_info }}{% else %}{{ message }}{% endif %}">
-	{% if isnewerversion == 0 %}
+{% import "Froxlor/misc/version_popover.html.twig" as vc %}
+<span id="ucheck" class="nav-link {% if isnewerversion == 0 and aucheck < 0 %}text-muted{% elseif isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}"
+	  data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="hover focus click" data-bs-html="true"
+	  data-bs-content="{{ vc.vpopover(isnewerversion, additional_info, full_version, dbversion, channel, last_update_check, message) }}"
+>
+	{% if isnewerversion == 0 and aucheck == 0 %}
 		<i class="fa-solid fa-circle-check me-1"></i>
 	{% else %}
 		<i class="fa-solid fa-circle-exclamation me-1"></i>
 	{% endif %}
-	<span class="d-md-none d-xl-inline">{{ version }}</span>
-</a>
+	<span class="d-none d-xl-inline">{{ version }}</span>
+</span>
