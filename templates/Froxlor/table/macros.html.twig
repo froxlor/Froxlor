@@ -4,7 +4,7 @@
 	</div>
 	<div class="text-end small">
 		{% if data.infotext is not empty %}
-			<i class="fa-solid fa-circle-info" data-toggle="tooltip" data-placement="right" title="{{ data.infotext|raw }}"></i>
+			<i class="fa-solid fa-circle-info" data-bs-trigger="hover" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content="{{ data.infotext|raw|nl2br }}"></i>
 		{% endif %}
 		{{ data.text }}
 	</div>

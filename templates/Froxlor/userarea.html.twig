@@ -43,7 +43,7 @@
 				<ul class="navbar-nav ms-auto">
 					{% if call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is iterable %}
 						<a class="nav-link text-success" href="{{ linker({'section': 'index', 'action': 'suback'}) }}">
-							<i class="fa-solid fa-reply me-1"></i> {{ userinfo.switched_user.loginname }}
+							<i class="fa-solid fa-reply me-1"></i><span class="d-none d-xl-inline">{{ userinfo.switched_user.loginname }}</span>
 						</a>
 					{% endif %}
 					{% if userinfo.adminsession == 1 %}
@@ -51,12 +51,12 @@
 					{% endif %}
 					<li class="nav-item">
 						<a class="nav-link" href="{{ linker({'section': 'index'}) }}">
-							{{ lng('panel.dashboard') }}
+							<i class="fa-solid fa-house me-1"></i><span class="d-none d-xl-inline">{{ lng('panel.dashboard') }}</span>
 						</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							{{ userinfo.loginname }}
+							<i class="fa-solid fa-user me-1"></i><span class="d-none d-xl-inline">{{ userinfo.loginname }}</span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarOpts">
 							<li>
