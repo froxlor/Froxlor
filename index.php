@@ -579,7 +579,7 @@ if ($action == 'forgotpwd') {
 					unset($user);
 				}
 			} else {
-				$message = $lng['login']['usernotfound'];
+				$message = $lng['pwdreminder']['notallowed'];
 			}
 		}
 	}

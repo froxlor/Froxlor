@@ -754,7 +754,7 @@ $lng['pwdreminder']['success'] = 'Das Zurücksetzen des Passworts wurde erfolgre
 // ADDED IN 1.2.19-svn18
 
 $lng['serversettings']['allow_password_reset']['title'] = 'Erlaube das Zurücksetzen des Kundenpassworts.';
-$lng['pwdreminder']['notallowed'] = 'Das Zurücksetzen des Passworts ist deaktiviert.';
+$lng['pwdreminder']['notallowed'] = 'Unbekannter Benutzer oder Zurücksetzen des Passworts ist deaktiviert.';
 
 // ADDED IN 1.2.19-svn21
 

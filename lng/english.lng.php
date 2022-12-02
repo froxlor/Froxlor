@@ -761,7 +761,7 @@ $lng['pwdreminder']['success'] = 'Password reset successfully requested. Please 
 // ADDED IN 1.2.19-svn18
 
 $lng['serversettings']['allow_password_reset']['title'] = 'Allow password reset by customers';
-$lng['pwdreminder']['notallowed'] = 'Password reset is disabled';
+$lng['pwdreminder']['notallowed'] = 'Unknown user or password reset is disabled';
 
 // ADDED IN 1.2.19-svn21
 
