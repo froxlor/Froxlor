@@ -585,7 +585,7 @@ if ($action == 'forgotpwd') {
 					}
 				}
 			} else {
-				$message = lng('login.usernotfound');
+				$message = lng('pwdreminder.notallowed');
 			}
 		}
 	}

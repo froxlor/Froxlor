@@ -1347,7 +1347,7 @@ Yours sincerely, your administrator',
 	'privacy' => 'Privacy policy',
 	'pwdreminder' => [
 		'success' => 'Password reset successfully requested. Please follow the instructions in the email you received.',
-		'notallowed' => 'Password reset is disabled',
+		'notallowed' => 'Unknown user or password reset is disabled',
 		'changed' => 'Your password has been updated successfully. You can now login with your new password.',
 		'wrongcode' => 'Sorry, your activation-code does not exist or has already expired.',
 		'choosenew' => 'Set new password',

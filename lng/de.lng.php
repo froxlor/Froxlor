@@ -1235,7 +1235,7 @@ Vielen Dank, Ihr Administrator',
 	'privacy' => 'Datenschutzerklärung',
 	'pwdreminder' => [
 		'success' => 'Das Zurücksetzen des Passworts wurde erfolgreich angefordert. Sie sollten nun eine E-Mail mit weiteren Anweisungen erhalten.',
-		'notallowed' => 'Das Zurücksetzen des Passworts ist deaktiviert.',
+		'notallowed' => 'Unbekannter Benutzer oder Zurücksetzen des Passworts ist deaktiviert.',
 		'changed' => 'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun damit anmelden.',
 		'wrongcode' => 'Der verwendete Aktivierungscode ist entweder nicht gültig oder bereits abgelaufen.',
 		'choosenew' => 'Neues Passwort auswählen',
