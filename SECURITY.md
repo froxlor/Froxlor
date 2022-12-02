@@ -1,14 +1,47 @@
-# Security Policy
+# froxlor's Security Policy
 
-## Supported Versions
+Welcome and thanks for taking interest in [froxlor](https://www.froxlor.org)!
 
-Our main and active version is currently 0.10.x. It will receive maintenance and security updates periodically. The older version 0.9.x will not receive any kind of updates. Please update to [0.10.x](https://github.com/Froxlor/Froxlor/wiki/Updating-Froxlor)
+We are mostly interested in reports by actual froxlor users but all high quality contributions are welcome.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.10.x  | :white_check_mark: |
-|  0.9.x  | :x:                |
+Please try your best to describe a clear and realistic impact for your report and please don't open any public issues on GitHub or social media, we're doing our best to respond through huntr as quickly as we can.
+
+With that, good luck hacking us ;)
+
+## Supported versions
+
+- ️✅ **2.x**  (`main` git-branch)
+- ❌ 0.10.x (`0.10.x` git-branch)
+- ❌ 0.9.x (`0.9.x`git-branch)
+
+## Qualifying Vulnerabilities
+
+### Vulnerabilities we really care about
+- SQL injection bugs
+- server-side code execution bugs
+- cross-site scripting vulnerabilities
+- cross-site request forgery vulnerabilities
+- authentication and authorization flaws
+- sensitive information disclosure
+
+### Vulnerabilities we accept
+
+Only reproducable issues on a default/clean setup from the latest stable release of a supported version will be accepted.
+
+## Non-Qualifying Vulnerabilities
+
+- Reports from automated tools or scanners
+- Theoretical attacks without proof of exploitability
+- Attacks that are the result of a third party library should be reported to the library maintainers
+- Social engineering
+- Reflected file download
+- Physical attacks
+- Weak SSL/TLS/SSH algorithms or protocols
+- Attacks involving physical access to a user’s device, or involving a device or network that’s already seriously compromised (eg man-in-the-middle).
+- The user attacks themselves
+- anything in `/doc`
+- anything in `/tests`
 
 ## Reporting a Vulnerability
 
-If you think you have found a vulnerability in froxlor, please send an email to [team@froxlor.org](mailto:team@froxlor.org) with as many information as possible. Also, please give us appropriate time to fix the issue and build update-packages before publishing anything into the wild.
+If you think you have found a vulnerability in froxlor, please head over to [https://huntr.dev/repos/froxlor/froxlor](https://huntr.dev/repos/froxlor/froxlor) and use the reporting possibilities there as we are funding the prize-pot for froxlor on this platform. Also, please give us appropriate time to fix the issue and build update-packages before publishing anything into the wild. Alternatively you can send us an email to [team@froxlor.org](team@froxlor.org).

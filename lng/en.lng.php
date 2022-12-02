@@ -750,7 +750,7 @@ return [
 		'import_separator' => 'Separator',
 		'import_offset' => 'Offset',
 		'import_file' => 'CSV-File',
-		'import_description' => 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank">https://docs.froxlor.org/latest/admin-guide/domain-import/</a>',
+		'import_description' => 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank" class="alert-link">https://docs.froxlor.org/latest/admin-guide/domain-import/</a>',
 		'ssl_redirect_temporarilydisabled' => '<br>The SSL redirect is temporarily deactivated while a new Let\'s Encrypt certificate is generated. It will be activated again after the certificate was generated.',
 		'termination_date' => 'Date of termination',
 		'termination_date_overview' => 'terminated as of ',

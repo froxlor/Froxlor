@@ -415,19 +415,33 @@ class Store
 				}
 
 				// Make sure mime-type matches an image
-				if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), [
-					'image/jpeg',
-					'image/jpg',
-					'image/png',
-					'image/gif'
-				])) {
-					throw new Exception("Uploaded file not a valid image");
+				if (function_exists('finfo_open')) {
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$mimetype = finfo_file($finfo, $_FILES[$fieldname]['tmp_name']);
+					finfo_close($finfo);
+				} else {
+					$mimetype = mime_content_type($_FILES[$fieldname]['tmp_name']);
+				}
+				if (empty($mimetype)) {
+					$mimetype = 'application/octet-stream';
+				}
+				if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
+					throw new \Exception("Uploaded file is not a valid image");
 				}
 
 				// Determine file extension
 				$spl = explode('.', $_FILES[$fieldname]['name']);
 				$file_extension = strtolower(array_pop($spl));
 				unset($spl);
+
+				if (!in_array($file_extension, [
+					'jpeg',
+					'jpg',
+					'png',
+					'gif'
+				])) {
+					throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+				}
 
 				// Move file
 				if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path . $fielddata['image_name'] . '.' . $file_extension)) {

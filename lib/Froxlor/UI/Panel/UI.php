@@ -114,7 +114,7 @@ class UI
 		// Inline-JS is no longer allowed and used
 		// See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
 		// New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
-		$csp_content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';";
+		$csp_content = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'self'; frame-src 'self'; frame-ancestors 'self';";
 		header("Content-Security-Policy: " . $csp_content);
 		header("X-Content-Security-Policy: " . $csp_content);
 		header("X-WebKit-CSP: " . $csp_content);

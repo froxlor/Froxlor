@@ -684,7 +684,7 @@ return [
 		'import_separator' => 'Trennzeichen',
 		'import_offset' => 'Versatz (offset)',
 		'import_file' => 'CSV-Datei',
-		'import_description' => 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank">https://docs.froxlor.org/latest/admin-guide/domain-import/</a> (englisch)',
+		'import_description' => 'Detaillierte Informationen über den Aufbau der Importdatei und einen erfolgreichen Import gibt es hier: <a href="https://docs.froxlor.org/latest/admin-guide/domain-import/" target="_blank" class="alert-link">https://docs.froxlor.org/latest/admin-guide/domain-import/</a> (englisch)',
 		'ssl_redirect_temporarilydisabled' => '<br>Die SSL-Umleitung ist, während ein neues Let\'s Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.',
 		'termination_date' => 'Kündigungsdatum',
 		'termination_date_overview' => 'gekündigt zum ',

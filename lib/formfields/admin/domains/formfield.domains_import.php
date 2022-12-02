@@ -55,6 +55,11 @@ return [
 					]
 				]
 			]
+		],
+		'buttons' => [
+			[
+				'label' => lng('domains.domain_import')
+			]
 		]
 	]
 ];
