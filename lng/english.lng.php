@@ -2140,6 +2140,7 @@ $lng['error']['pathmustberelative'] = 'The user does not have the permission to 
 $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
 
-$lng['question']['api_reallydelete'] = 'Do you really want to delete the api-key #%d?';
-$lng['question']['dnsentry_reallydelete'] = 'Do you really want to delete the dns entry #%d?';
-$lng['question']['certificate_reallydelete'] = 'Do you really want to delete the certificate #%d?';
+$lng['question']['api_reallydelete'] = 'Do you really want to delete the api-key?';
+$lng['question']['api_reallyadd'] = 'Do you really want to create a new api-key?';
+$lng['question']['dnsentry_reallydelete'] = 'Do you really want to delete the dns entry?';
+$lng['question']['certificate_reallydelete'] = 'Do you really want to delete the certificate?';

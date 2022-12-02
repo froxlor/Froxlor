@@ -70,26 +70,34 @@ if ($action == 'delete') {
 			), $id);
 		}
 	}
-} elseif ($action == 'add' && isset($_POST['send']) && $_POST['send'] == 'send') {
-	$ins_stmt = Database::prepare("
-		INSERT INTO `" . TABLE_API_KEYS . "` SET
-		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
-	");
-	// customer generates for himself, admins will see a customer-select-box later
-	if (AREA == 'admin') {
-		$cid = 0;
-	} elseif (AREA == 'customer') {
-		$cid = $userinfo['customerid'];
+} elseif ($action == 'add') {
+
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_API_KEYS . "` SET
+			`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
+		");
+		// customer generates for himself, admins will see a customer-select-box later
+		if (AREA == 'admin') {
+			$cid = 0;
+		} elseif (AREA == 'customer') {
+			$cid = $userinfo['customerid'];
+		}
+		$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
+		$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
+		Database::pexecute($ins_stmt, array(
+			'key' => $key,
+			'secret' => $secret,
+			'aid' => $userinfo['adminid'],
+			'cid' => $cid
+		));
+		$success_message = $lng['apikeys']['apikey_added'];
+	} else {
+		\Froxlor\UI\HTML::askYesNo('api_reallyadd', $filename, array(
+			'page' => $page,
+			'action' => $action
+		), $id);
 	}
-	$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
-	$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
-	Database::pexecute($ins_stmt, array(
-		'key' => $key,
-		'secret' => $secret,
-		'aid' => $userinfo['adminid'],
-		'cid' => $cid
-	));
-	$success_message = $lng['apikeys']['apikey_added'];
 } elseif ($action == 'jqEditApiKey') {
 	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 	if (empty($keyid)) {
