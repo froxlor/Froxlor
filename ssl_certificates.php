@@ -29,7 +29,7 @@ $success_message = "";
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
-	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+	$id = isset($_POST['id']) ? (int) $_POST['id'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 	if ($id > 0) {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
