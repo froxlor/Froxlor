@@ -425,159 +425,162 @@ if ($action == 'forgotpwd') {
 			}
 		}
 
-		if ($result_stmt !== null) {
-			$user = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-			/* Check whether user is banned */
-			if ($user['deactivated']) {
-				\Froxlor\UI\Response::redirectTo('index.php', array(
-					'showmessage' => '8'
-				));
-				exit();
+		$no_action = false;
+		if ($adminchecked) {
+			if (Settings::Get('panel.allow_preset_admin') != '1') {
+				$message = $lng['pwdreminder']['notallowed'];
+				unset($adminchecked);
 			}
+		} else {
+			if (Settings::Get('panel.allow_preset') != '1') {
+				$message = $lng['pwdreminder']['notallowed'];
+			}
+		}
 
-			if (($adminchecked && Settings::Get('panel.allow_preset_admin') == '1') || $adminchecked == false) {
-				if ($user !== false) {
-					// build a activation code
-					$timestamp = time();
-					$first = substr(md5($user['loginname'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), 0, 15);
-					$third = substr(md5($user['email'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), - 15);
-					$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
+		if (empty($message)) {
+			if ($result_stmt !== null) {
+				$user = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-					// Drop all existing activation codes for this user
-					$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
-						WHERE `userid` = :userid
-						AND `admin` = :admin");
-					$params = array(
-						"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
-						"admin" => $adminchecked ? 1 : 0
-					);
-					Database::pexecute($stmt, $params);
-
-					// Add new activation code to database
-					$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_ACTIVATION . "`
-						(userid, admin, creation, activationcode)
-						VALUES (:userid, :admin, :creation, :activationcode)");
-					$params = array(
-						"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
-						"admin" => $adminchecked ? 1 : 0,
-						"creation" => $timestamp,
-						"activationcode" => $activationcode
-					);
-					Database::pexecute($stmt, $params);
-
-					$rstlog = FroxlorLogger::getInstanceOf(array(
-						'loginname' => 'password_reset'
+				/* Check whether user is banned */
+				if ($user['deactivated']) {
+					\Froxlor\UI\Response::redirectTo('index.php', array(
+						'showmessage' => '8'
 					));
-					$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
+					exit();
+				}
 
-					// Set together our activation link
-					$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-					// this can be a fixed value to avoid potential exploiting by modifying headers
-					$host = Settings::Get('system.hostname'); // $_SERVER['HTTP_HOST'];
-					$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
-					// don't add :443 when https is used, as it is default (and just looks weird!)
-					if ($protocol == 'https' && $_SERVER['SERVER_PORT'] == '443') {
-						$port = '';
-					}
-					// there can be only one script to handle this so we can use a fixed value here
-					$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
-					if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
-						$script = \Froxlor\FileDir::makeCorrectFile("/" . basename(__DIR__) . "/" . $script);
-					}
-					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
+				if (($adminchecked && Settings::Get('panel.allow_preset_admin') == '1') || $adminchecked == false) {
+					if ($user !== false) {
+						// build a activation code
+						$timestamp = time();
+						$first = substr(md5($user['loginname'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), 0, 15);
+						$third = substr(md5($user['email'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), - 15);
+						$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
 
-					$replace_arr = array(
-						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($user),
-						'NAME' => $user['name'],
-						'FIRSTNAME' => $user['firstname'] ?? "",
-						'COMPANY' => $user['company'] ?? "",
-						'CUSTOMER_NO' => $user['customernumber'] ?? 0,
-						'USERNAME' => $loginname,
-						'LINK' => $activationlink
-					);
+						// Drop all existing activation codes for this user
+						$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`
+							WHERE `userid` = :userid
+							AND `admin` = :admin");
+						$params = array(
+							"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
+							"admin" => $adminchecked ? 1 : 0
+						);
+						Database::pexecute($stmt, $params);
 
-					$def_language = ($user['def_language'] != '') ? $user['def_language'] : Settings::Get('panel.standardlanguage');
-					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
-						WHERE `adminid`= :adminid
-						AND `language`= :lang
-						AND `templategroup`=\'mails\'
-						AND `varname`=\'password_reset_subject\'');
-					Database::pexecute($result_stmt, array(
-						"adminid" => $user['adminid'],
-						"lang" => $def_language
-					));
-					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
+						// Add new activation code to database
+						$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_ACTIVATION . "`
+							(userid, admin, creation, activationcode)
+							VALUES (:userid, :admin, :creation, :activationcode)");
+						$params = array(
+							"userid" => $adminchecked ? $user['adminid'] : $user['customerid'],
+							"admin" => $adminchecked ? 1 : 0,
+							"creation" => $timestamp,
+							"activationcode" => $activationcode
+						);
+						Database::pexecute($stmt, $params);
 
-					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
-						WHERE `adminid`= :adminid
-						AND `language`= :lang
-						AND `templategroup`=\'mails\'
-						AND `varname`=\'password_reset_mailbody\'');
-					Database::pexecute($result_stmt, array(
-						"adminid" => $user['adminid'],
-						"lang" => $def_language
-					));
-					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
-
-					$_mailerror = false;
-					$mailerr_msg = "";
-					try {
-						$mail->Subject = $mail_subject;
-						$mail->AltBody = $mail_body;
-						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$mail->AddAddress($user['email'], \Froxlor\User::getCorrectUserSalutation($user));
-						$mail->Send();
-					} catch (\PHPMailer\PHPMailer\Exception $e) {
-						$mailerr_msg = $e->errorMessage();
-						$_mailerror = true;
-					} catch (Exception $e) {
-						$mailerr_msg = $e->getMessage();
-						$_mailerror = true;
-					}
-
-					if ($_mailerror) {
 						$rstlog = FroxlorLogger::getInstanceOf(array(
 							'loginname' => 'password_reset'
 						));
-						$rstlog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
+
+						// Set together our activation link
+						$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+						// this can be a fixed value to avoid potential exploiting by modifying headers
+						$host = Settings::Get('system.hostname'); // $_SERVER['HTTP_HOST'];
+						$port = $_SERVER['SERVER_PORT'] != 80 ? ':' . $_SERVER['SERVER_PORT'] : '';
+						// don't add :443 when https is used, as it is default (and just looks weird!)
+						if ($protocol == 'https' && $_SERVER['SERVER_PORT'] == '443') {
+							$port = '';
+						}
+						// there can be only one script to handle this so we can use a fixed value here
+						$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
+						if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
+							$script = \Froxlor\FileDir::makeCorrectFile("/" . basename(__DIR__) . "/" . $script);
+						}
+						$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
+
+						$replace_arr = array(
+							'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($user),
+							'NAME' => $user['name'],
+							'FIRSTNAME' => $user['firstname'] ?? "",
+							'COMPANY' => $user['company'] ?? "",
+							'CUSTOMER_NO' => $user['customernumber'] ?? 0,
+							'USERNAME' => $loginname,
+							'LINK' => $activationlink
+						);
+
+						$def_language = ($user['def_language'] != '') ? $user['def_language'] : Settings::Get('panel.standardlanguage');
+						$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
+							WHERE `adminid`= :adminid
+							AND `language`= :lang
+							AND `templategroup`=\'mails\'
+							AND `varname`=\'password_reset_subject\'');
+						Database::pexecute($result_stmt, array(
+							"adminid" => $user['adminid'],
+							"lang" => $def_language
+						));
+						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+						$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
+
+						$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
+							WHERE `adminid`= :adminid
+							AND `language`= :lang
+							AND `templategroup`=\'mails\'
+							AND `varname`=\'password_reset_mailbody\'');
+						Database::pexecute($result_stmt, array(
+							"adminid" => $user['adminid'],
+							"lang" => $def_language
+						));
+						$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+						$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
+
+						$_mailerror = false;
+						$mailerr_msg = "";
+						try {
+							$mail->Subject = $mail_subject;
+							$mail->AltBody = $mail_body;
+							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+							$mail->AddAddress($user['email'], \Froxlor\User::getCorrectUserSalutation($user));
+							$mail->Send();
+						} catch (\PHPMailer\PHPMailer\Exception $e) {
+							$mailerr_msg = $e->errorMessage();
+							$_mailerror = true;
+						} catch (Exception $e) {
+							$mailerr_msg = $e->getMessage();
+							$_mailerror = true;
+						}
+
+						if ($_mailerror) {
+							$rstlog = FroxlorLogger::getInstanceOf(array(
+								'loginname' => 'password_reset'
+							));
+							$rstlog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+							\Froxlor\UI\Response::redirectTo('index.php', array(
+								'showmessage' => '4',
+								'customermail' => $user['email']
+							));
+							exit();
+						}
+
+						$mail->ClearAddresses();
 						\Froxlor\UI\Response::redirectTo('index.php', array(
-							'showmessage' => '4',
-							'customermail' => $user['email']
+							'showmessage' => '1'
 						));
 						exit();
+					} else {
+						$rstlog = FroxlorLogger::getInstanceOf(array(
+							'loginname' => 'password_reset'
+						));
+						$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
+						$message = $lng['login']['combination_not_found'];
 					}
 
-					$mail->ClearAddresses();
-					\Froxlor\UI\Response::redirectTo('index.php', array(
-						'showmessage' => '1'
-					));
-					exit();
-				} else {
-					$rstlog = FroxlorLogger::getInstanceOf(array(
-						'loginname' => 'password_reset'
-					));
-					$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
-					$message = $lng['login']['combination_not_found'];
+					unset($user);
 				}
-
-				unset($user);
+			} else {
+				$message = $lng['login']['usernotfound'];
 			}
-		} else {
-			$message = $lng['login']['usernotfound'];
-		}
-	}
-
-	if ($adminchecked) {
-		if (Settings::Get('panel.allow_preset_admin') != '1') {
-			$message = $lng['pwdreminder']['notallowed'];
-			unset($adminchecked);
-		}
-	} else {
-		if (Settings::Get('panel.allow_preset') != '1') {
-			$message = $lng['pwdreminder']['notallowed'];
 		}
 	}
 

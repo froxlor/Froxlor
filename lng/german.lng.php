@@ -1787,3 +1787,5 @@ $lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';
 
 $lng['question']['api_reallydelete'] = 'Api-Key #%d wirklich löschen?';
+$lng['question']['dnsentry_reallydelete'] = 'Zonen-Eintrag #%d wirklich löschen?';
+$lng['question']['certificate_reallydelete'] = 'Zertifikat #%d wirklich löschen?';

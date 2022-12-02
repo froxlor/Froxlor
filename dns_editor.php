@@ -58,15 +58,23 @@ if ($action == 'add_record' && ! empty($_POST)) {
 	// remove entry
 	$entry_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($entry_id > 0) {
-		try {
-			DomainZones::getLocal($userinfo, array(
-				'entry_id' => $entry_id,
-				'id' => $domain_id
-			))->delete();
-			// success message (inline)
-			$success_message = $lng['success']['dns_record_deleted'];
-		} catch (Exception $e) {
-			$errors = str_replace("\n", "<br>", $e->getMessage());
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			try {
+				DomainZones::getLocal($userinfo, array(
+					'entry_id' => $entry_id,
+					'id' => $domain_id
+				))->delete();
+				// success message (inline)
+				$success_message = $lng['success']['dns_record_deleted'];
+			} catch (Exception $e) {
+				$errors = str_replace("\n", "<br>", $e->getMessage());
+			}
+		} else {
+			\Froxlor\UI\HTML::askYesNo('dnsentry_reallydelete', $filename, array(
+				'page' => $page,
+				'action' => $action,
+				'id' => $id
+			), $id);
 		}
 	}
 }

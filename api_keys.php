@@ -70,7 +70,7 @@ if ($action == 'delete') {
 			), $id);
 		}
 	}
-} elseif ($action == 'add') {
+} elseif ($action == 'add' && isset($_POST['send']) && $_POST['send'] == 'send') {
 	$ins_stmt = Database::prepare("
 		INSERT INTO `" . TABLE_API_KEYS . "` SET
 		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
@@ -92,6 +92,10 @@ if ($action == 'delete') {
 	$success_message = $lng['apikeys']['apikey_added'];
 } elseif ($action == 'jqEditApiKey') {
 	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+	if (empty($keyid)) {
+		echo json_encode(false);
+		exit;
+	}
 	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
 	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : -1;
 

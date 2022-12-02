@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Settings;
 
 use Froxlor\Database\Database;
@@ -63,9 +64,9 @@ class Store
 		if (count($ids) > 0) {
 			$defaultips_new = explode(',', $newfieldvalue);
 
-			if (! empty($defaultips_old) && ! empty($newfieldvalue)) {
+			if (!empty($defaultips_old) && !empty($newfieldvalue)) {
 				$in_value = $defaultips_old . ", " . $newfieldvalue;
-			} elseif (! empty($defaultips_old) && empty($newfieldvalue)) {
+			} elseif (!empty($defaultips_old) && empty($newfieldvalue)) {
 				$in_value = $defaultips_old;
 			} else {
 				$in_value = $newfieldvalue;
@@ -280,11 +281,11 @@ class Store
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host') {
 			$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
-			if (in_array('127.0.0.1', $mysql_access_host_array) && ! in_array('localhost', $mysql_access_host_array)) {
+			if (in_array('127.0.0.1', $mysql_access_host_array) && !in_array('localhost', $mysql_access_host_array)) {
 				$mysql_access_host_array[] = 'localhost';
 			}
 
-			if (! in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
+			if (!in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
 				$mysql_access_host_array[] = '127.0.0.1';
 			}
 
@@ -306,8 +307,8 @@ class Store
 
 	private static function cleanMySQLAccessHost($value)
 	{
-		if (substr($value, 0, 1) == '[' && substr($value, - 1) == ']') {
-			return substr($value, 1, - 1);
+		if (substr($value, 0, 1) == '[' && substr($value, -1) == ']') {
+			return substr($value, 1, -1);
 		}
 		return $value;
 	}
@@ -370,66 +371,85 @@ class Store
 	}
 
 	public static function storeSettingImage($fieldname, $fielddata)
-    {
-        if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
-            $save_to = null;
-            $path = \Froxlor\Froxlor::getInstallDir().'/img/';
-            $path = \Froxlor\FileDir::makeCorrectDir($path);
+	{
+		if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
+			$save_to = null;
+			$path = \Froxlor\Froxlor::getInstallDir() . '/img/';
+			$path = \Froxlor\FileDir::makeCorrectDir($path);
 
-            // New file?
-            if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
-                // Make sure upload directory exists
-                if (!is_dir($path) && !mkdir($path, 0775)) {
-                    throw new \Exception("img directory does not exist and cannot be created");
-                }
+			// New file?
+			if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
+				// Make sure upload directory exists
+				if (!is_dir($path) && !mkdir($path, 0775)) {
+					throw new \Exception("img directory does not exist and cannot be created");
+				}
 
-                // Make sure we can write to the upload directory
-                if (!is_writable($path)) {
-                    if (!chmod($path, 0775)) {
-                        throw new \Exception("Cannot write to img directory");
-                    }
-                }
+				// Make sure we can write to the upload directory
+				if (!is_writable($path)) {
+					if (!chmod($path, 0775)) {
+						throw new \Exception("Cannot write to img directory");
+					}
+				}
 
-                // Make sure mime-type matches an image
-                if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), ['image/jpeg','image/jpg','image/png','image/gif'])) {
-                    throw new \Exception("Uploaded file not a valid image");
-                }
+				// Make sure mime-type matches an image
+				if (function_exists('finfo_open')) {
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$mimetype = finfo_file($finfo, $_FILES[$fieldname]['tmp_name']);
+					finfo_close($finfo);
+				} else {
+					$mimetype = mime_content_type($_FILES[$fieldname]['tmp_name']);
+				}
+				if (empty($mimetype)) {
+					$mimetype = 'application/octet-stream';
+				}
+				if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
+					throw new \Exception("Uploaded file is not a valid image");
+				}
 
-                // Determine file extension
-                $spl = explode('.', $_FILES[$fieldname]['name']);
-                $file_extension = strtolower(array_pop($spl));
-                unset($spl);
+				// Determine file extension
+				$spl = explode('.', $_FILES[$fieldname]['name']);
+				$file_extension = strtolower(array_pop($spl));
+				unset($spl);
 
-                // Move file
-                if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path.$fielddata['image_name'].'.'.$file_extension)) {
-                    throw new \Exception("Unable to save image to img folder");
-                }
+				if (!in_array($file_extension, [
+					'jpeg',
+					'jpg',
+					'png',
+					'gif'
+				])) {
+					throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+				}
 
-                $save_to = 'img/'.$fielddata['image_name'].'.'.$file_extension.'?v='.time();
-            }
+				// Move file
+				if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path . $fielddata['image_name'] . '.' . $file_extension)) {
+					throw new \Exception("Unable to save image to img folder");
+				}
 
-            // Delete file?
-            if ($fielddata['value'] !== "" && array_key_exists($fieldname.'_delete', $_POST) && $_POST[$fieldname.'_delete']) {
-                @unlink(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
-                $save_to = '';
-            }
+				$save_to = 'img/' . $fielddata['image_name'] . '.' . $file_extension . '?v=' . time();
+			}
 
-            // Nothing changed
-            if ($save_to === null) {
-                return array(
-                    $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $fielddata['value']
-                );
-            }
+			// Delete file?
+			if ($fielddata['value'] !== "" && array_key_exists($fieldname . '_delete', $_POST) && $_POST[$fieldname . '_delete']) {
+				@unlink(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
+				$save_to = '';
+			}
 
-            if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $save_to) === false) {
-                return false;
-            }
+			// Nothing changed
+			if ($save_to === null) {
+				return array(
+					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $fielddata['value']
+				);
+			}
 
-            return array(
-                $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $save_to
-            );
-        }
+			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $save_to) === false) {
+				return false;
+			}
 
-        return false;
-    }
+			return array(
+				$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $save_to
+			);
+		}
+
+		return false;
+	}
 }

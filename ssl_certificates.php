@@ -31,13 +31,21 @@ $success_message = "";
 if ($action == 'delete') {
 	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
-		try {
-			$json_result = Certificates::getLocal($userinfo, array(
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			try {
+				$json_result = Certificates::getLocal($userinfo, array(
+					'id' => $id
+				))->delete();
+				$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+			} catch (Exception $e) {
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			}
+		} else {
+			\Froxlor\UI\HTML::askYesNo('certificate_reallydelete', $filename, array(
+				'page' => $page,
+				'action' => $action,
 				'id' => $id
-			))->delete();
-			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			), $id);
 		}
 	}
 }
