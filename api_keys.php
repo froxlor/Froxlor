@@ -93,29 +93,40 @@ if ($action == 'delete' && $id > 0) {
 			'page' => $page
 		]);
 	}
-} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'add') {
-	$ins_stmt = Database::prepare("
-		INSERT INTO `" . TABLE_API_KEYS . "` SET
-		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
-	");
-	// customer generates for himself, admins will see a customer-select-box later
-	if (AREA == 'admin') {
-		$cid = 0;
-	} elseif (AREA == 'customer') {
-		$cid = $userinfo['customerid'];
+} elseif ($action == 'add') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_API_KEYS . "` SET
+			`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
+		");
+		// customer generates for himself, admins will see a customer-select-box later
+		if (AREA == 'admin') {
+			$cid = 0;
+		} elseif (AREA == 'customer') {
+			$cid = $userinfo['customerid'];
+		}
+		$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
+		$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
+		Database::pexecute($ins_stmt, [
+			'key' => $key,
+			'secret' => $secret,
+			'aid' => $userinfo['adminid'],
+			'cid' => $cid
+		]);
+		Response::standardSuccess('apikeys.apikey_added', '', [
+			'filename' => $filename,
+			'page' => $page
+		]);
 	}
-	$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
-	$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
-	Database::pexecute($ins_stmt, [
-		'key' => $key,
-		'secret' => $secret,
-		'aid' => $userinfo['adminid'],
-		'cid' => $cid
-	]);
-	Response::standardSuccess('apikeys.apikey_added', '', [
-		'filename' => $filename,
+	HTML::askYesNo('apikey_reallyadd', $filename, [
+		'id' => $id,
+		'page' => $page,
+		'action' => $action
+	], '', [
+		'section' => 'index',
 		'page' => $page
 	]);
+	exit;
 }
 
 $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
