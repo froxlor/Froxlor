@@ -3,7 +3,7 @@
 
 set -e
 
-WORKDIR="./"
+WORKDIR=`pwd`/build
 
 if [ -z $1 ]; then
     echo You need to specify the version to be released:
@@ -28,6 +28,7 @@ echo "done"
 
 echo "-- cloning git repository --"
 git clone git@github.com:Froxlor/Froxlor.git .
+git checkout 0.10.x
 echo "done"
 
 echo "-- tagging $1 in git --"
@@ -56,13 +57,34 @@ find -type f -exec chmod ugo-x {} \;
 echo -- setting general directory permissions --
 find -type d -exec chmod ugo+x {} \;
 
-echo -- creating archives using git archive command --
-git archive --format=tar.gz --prefix=froxlor/ $1 > ../froxlor-$1.tar.gz
-# zip for autoupdate
-git archive --format=zip --prefix= $1 > ../froxlor-$1.zip
+echo -- setting special execution permissions --
+chmod 0755 install/scripts/switch-server-ip.php
+chmod 0755 install/scripts/config-services.php
+chmod 0755 scripts/php-sessionclean.php
 
-echo "-- cding up --"
+echo -- remove unnecessary vcs file --
+rm .gitignore
+
+echo -- fetching composer requirements --
+composer install --no-dev
+
+##echo -- creating archives using git archive command --
+##git archive --format=tar.gz --prefix=froxlor/ $1 > ../froxlor-$1.tar.gz
+# zip for auto-update
+##git archive --format=zip --prefix= $1 > ../froxlor-$1.zip
+
+echo -- creating archives --
 cd ..
+mv $1 froxlor
+# zip
+cd $WORKDIR/froxlor/
+zip -r froxlor-$1.zip . -x "*.git*"
+mv froxlor-$1.zip ../froxlor-$1.zip
+cd $WORKDIR
+# tar.gz
+tar -c --gzip --exclude=.git -f froxlor-$1.tar.gz froxlor
+# rename back
+mv froxlor $1
 
 echo -n "-- generating checksums --"
 md5sum froxlor-$1.tar.gz > froxlor-$1.tar.gz.md5
