@@ -5,4 +5,9 @@ footer {
 		@extend .text-muted;
 		@extend .text-decoration-none;
 	}
+
+	.footer-link:not(:last-child):after {
+		content: ' •';
+		padding: 0 0.25rem;
+	}
 }

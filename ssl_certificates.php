@@ -56,15 +56,13 @@ if ($action == 'delete') {
 		'page' => $page
 	]);
 } elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
-	if ($id > 0) {
-		try {
-			$json_result = Certificates::getLocal($userinfo, [
-				'id' => $id
-			])->delete();
-			$success_message = lng('domains.ssl_certificate_removed', [$id]);
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
+	try {
+		$json_result = Certificates::getLocal($userinfo, [
+			'id' => $id
+		])->delete();
+		$success_message = lng('domains.ssl_certificate_removed', [$id]);
+	} catch (Exception $e) {
+		Response::dynamicError($e->getMessage());
 	}
 }
 
@@ -73,7 +71,8 @@ $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_cert
 try {
 	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.sslcertificates.php';
 	$collection = (new Collection(Certificates::class, $userinfo))
-		->withPagination($certificates_list_data['sslcertificates_list']['columns'], $certificates_list_data['sslcertificates_list']['default_sorting']);
+		->withPagination($certificates_list_data['sslcertificates_list']['columns'],
+			$certificates_list_data['sslcertificates_list']['default_sorting']);
 	if ($userinfo['adminsession'] == 1) {
 		$collection->has('domains', Domains::class, 'domainid', 'id');
 	} else {

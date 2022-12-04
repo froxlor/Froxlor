@@ -1,6 +1,10 @@
 {
 	"variants": {
 		"default": {
+			"img": {
+				"login": "logo.png",
+				"ui": "logo_white.png"
+			},
 			"css": [
 				"main.css",
 				"custom.css"
@@ -12,6 +16,10 @@
 			"description": "Default"
 		},
 		"dark": {
+			"img": {
+				"login": "logo_white.png",
+				"ui": "logo_white.png"
+			},
 			"css": [
 				"dark.css",
 				"custom.css"

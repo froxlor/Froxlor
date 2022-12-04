@@ -8,23 +8,16 @@
 				{{ call_static('\\Froxlor\\Froxlor', 'getFullVersion') }}
 			{% endif %}
 		{% endif %}
-		&copy; 2009-{{ "now"|date("Y") }} by <a href="https://www.froxlor.org/" rel="external">the Froxlor Team</a><br>
+		&copy; 2009-{{ "now"|date("Y") }} by <a href="https://www.froxlor.org/" rel="external" target="_blank">the Froxlor Team</a><br>
 		{% if install_mode is not defined %}
-			{% if (get_setting('panel.imprint_url') != '') %}
-				<a href="{{ get_setting('panel.imprint_url') }}" target="_blank" class="footer-link">{{ lng('imprint') }}</a>
-			{% endif %}
-			{% if (get_setting('panel.terms_url') != '') %}
-				<a href="{{ get_setting('panel.terms_url') }}" target="_blank" class="footer-link">{{ lng('terms') }}</a>
-			{% endif %}
-			{% if (get_setting('panel.privacy_url') != '') %}
-				<a href="{{ get_setting('panel.privacy_url') }}" target="_blank" class="footer-link">{{ lng('privacy') }}</a>
-			{% endif %}
+			{% if (get_setting('panel.imprint_url') != '') %}<a href="{{ get_setting('panel.imprint_url') }}" target="_blank" class="footer-link">{{ lng('imprint') }}</a>{% endif %}
+			{% if (get_setting('panel.terms_url') != '') %}<a href="{{ get_setting('panel.terms_url') }}" target="_blank" class="footer-link">{{ lng('terms') }}</a>{% endif %}
+			{% if (get_setting('panel.privacy_url') != '') %}<a href="{{ get_setting('panel.privacy_url') }}" target="_blank" class="footer-link">{{ lng('privacy') }}</a>{% endif %}
 		{% endif %}
 	</span>
 
     {% if lng('translator') %}
-        <span class="mt-3">
-			{{ lng('panel.translator') }}: {{ lng('translator') }}
-		</span>
+		<br/>
+        <small class="mt-3">{{ lng('panel.translator') }}: {{ lng('translator') }}</small>
     {% endif %}
 </footer>
