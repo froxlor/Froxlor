@@ -46,7 +46,7 @@ $record = isset($_POST['dns_record']) ? trim($_POST['dns_record']) : null;
 $type = isset($_POST['dns_type']) ? $_POST['dns_type'] : 'A';
 $prio = isset($_POST['dns_mxp']) ? (int)$_POST['dns_mxp'] : null;
 $content = isset($_POST['dns_content']) ? trim($_POST['dns_content']) : null;
-$ttl = isset($_POST['record']['ttl']) ? (int)$_POST['record']['ttl'] : 18000;
+$ttl = isset($_POST['dns_ttl']) ? (int)$_POST['dns_ttl'] : 18000;
 
 // get domain-name
 $domain = Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);

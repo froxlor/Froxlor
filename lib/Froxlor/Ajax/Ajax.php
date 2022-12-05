@@ -268,8 +268,7 @@ class Ajax
 			$_check_list = $ip_list;
 			foreach ($_check_list as $idx => $ip) {
 				if (Validate::validate_ip2($ip, true, 'invalidip', true, true, true) == false) {
-					unset($ip_list[$idx]);
-					continue;
+					return $this->errorResponse('Invalid ip address', 406);
 				}
 				// check for cidr
 				if (strpos($ip, '/') !== false) {
