@@ -196,3 +196,21 @@ if (Froxlor::isDatabaseVersion('202112310')) {
 
 	Froxlor::updateToDbVersion('202211030');
 }
+
+if (Froxlor::isDatabaseVersion('202211030')) {
+
+	Update::showUpdateStep("Creating backward compatibility for cronjob");
+	$complete_filedir = Froxlor::getInstallDir() . '/scripts';
+	mkdir($complete_filedir, 0750, true);
+	$newCronBin = Froxlor::getInstallDir().'/bin/froxlor-cli';
+	$compCron = <<<EOF
+<?php
+// re-create cron.d configuration file
+exec('$newCronBin froxlor:cron -r 99');
+exit;
+EOF;
+	file_put_contents($complete_filedir.'/froxlor_master_cronjob.php', $compCron);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202212060');
+}

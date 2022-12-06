@@ -34,7 +34,7 @@ final class Froxlor
 	const VERSION = '2.0.0-beta1';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202211030';
+	const DBVERSION = '202212060';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';

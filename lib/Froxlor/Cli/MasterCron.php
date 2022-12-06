@@ -150,6 +150,12 @@ final class MasterCron extends CliCommand
 		// check for cron.d-generation task and create it if necessary
 		CronConfig::checkCrondConfigurationFile();
 
+		// check for old/compatibility cronjob file
+		if (file_exists(Froxlor::getInstallDir().'/scripts/froxlor_master_cronjob.php')) {
+			@unlink(Froxlor::getInstallDir().'/scripts/froxlor_master_cronjob.php');
+			@rmdir(Froxlor::getInstallDir().'/scripts');
+		}
+
 		// reset cronlog-flag if set to "once"
 		if ((int) Settings::Get('logger.log_cron') == 1) {
 			FroxlorLogger::getInstanceOf()->setCronLog(0);
