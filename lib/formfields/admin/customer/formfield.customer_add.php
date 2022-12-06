@@ -95,16 +95,6 @@ return [
 				'title' => lng('admin.contactdata'),
 				'image' => 'icons/user_add.png',
 				'fields' => [
-					'name' => [
-						'label' => lng('customer.name'),
-						'type' => 'text',
-						'mandatory_ex' => true
-					],
-					'firstname' => [
-						'label' => lng('customer.firstname'),
-						'type' => 'text',
-						'mandatory_ex' => true
-					],
 					'gender' => [
 						'label' => lng('gender.title'),
 						'type' => 'select',
@@ -114,10 +104,23 @@ return [
 							2 => lng('gender.female')
 						]
 					],
+					'firstname' => [
+						'label' => lng('customer.firstname'),
+						'desc' => lng('customer.nameorcompany_desc'),
+						'type' => 'text',
+						'mandatory_ex' => ['company']
+					],
+					'name' => [
+						'label' => lng('customer.name'),
+						'desc' => lng('customer.nameorcompany_desc'),
+						'type' => 'text',
+						'mandatory_ex' => ['company']
+					],
 					'company' => [
 						'label' => lng('customer.company'),
+						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => true
+						'mandatory_ex' => ['firstname', 'name']
 					],
 					'street' => [
 						'label' => lng('customer.street'),

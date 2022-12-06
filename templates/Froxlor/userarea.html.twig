@@ -46,7 +46,7 @@
 							<i class="fa-solid fa-reply me-1"></i><span class="d-none d-xl-inline">{{ userinfo.switched_user.loginname }}</span>
 						</a>
 					{% endif %}
-					{% if userinfo.adminsession == 1 %}
+					{% if userinfo.adminsession == 1 and call_static('\\Froxlor\\CurrentUser', 'getField', ['change_serversettings']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['change_serversettings']) == 1 %}
 						<li class="nav-item" id="updatecheck"></li>
 					{% endif %}
 					<li class="nav-item">

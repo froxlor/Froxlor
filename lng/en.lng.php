@@ -589,6 +589,7 @@ return [
 		'name' => 'Name',
 		'firstname' => 'First name',
 		'company' => 'Company',
+		'nameorcompany_desc' => 'Either firstname/name or company is required',
 		'street' => 'Street',
 		'zipcode' => 'Zipcode',
 		'city' => 'City',

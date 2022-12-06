@@ -93,18 +93,6 @@ return [
 				'title' => lng('admin.contactdata'),
 				'image' => 'icons/user_edit.png',
 				'fields' => [
-					'name' => [
-						'label' => lng('customer.name'),
-						'type' => 'text',
-						'mandatory_ex' => true,
-						'value' => $result['name']
-					],
-					'firstname' => [
-						'label' => lng('customer.firstname'),
-						'type' => 'text',
-						'mandatory_ex' => true,
-						'value' => $result['firstname']
-					],
 					'gender' => [
 						'label' => lng('gender.title'),
 						'type' => 'select',
@@ -115,10 +103,25 @@ return [
 						],
 						'selected' => $result['gender']
 					],
+					'firstname' => [
+						'label' => lng('customer.firstname'),
+						'desc' => lng('customer.nameorcompany_desc'),
+						'type' => 'text',
+						'mandatory_ex' => ['company'],
+						'value' => $result['firstname']
+					],
+					'name' => [
+						'label' => lng('customer.name'),
+						'desc' => lng('customer.nameorcompany_desc'),
+						'type' => 'text',
+						'mandatory_ex' => ['company'],
+						'value' => $result['name']
+					],
 					'company' => [
 						'label' => lng('customer.company'),
+						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => true,
+						'mandatory_ex' => ['firstname', 'name'],
 						'value' => $result['company']
 					],
 					'street' => [

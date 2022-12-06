@@ -72,6 +72,29 @@
 				{% if field.note is defined and field.note is not empty %}
 					<small class="text-info">{{ field.note|raw }}</small>
 				{% endif %}
+
+				{% if field.mandatory_ex is not empty and field.mandatory_ex is iterable and field.mandatory_ex|length > 0 %}
+					<script>
+						$(function () {
+							$('#{{ id }}').attr('required', true);
+							$('#{{ id }}').trigger('change');
+							$('#{{ id }}').on('change', function(e) {
+								if ($(this).val().length > 0) {
+									{% for mex in field.mandatory_ex %}
+									$('#{{ mex }}').attr('required', false);
+									{% endfor %}
+									$('#{{ id }}').attr('required', true);
+								} else {
+									{% for mex in field.mandatory_ex %}
+									$('#{{ mex }}').attr('required', true);
+									{% endfor %}
+									$('#{{ id }}').attr('required', false);
+								}
+							});
+						});
+					</script>
+				{% endif %}
+
 				{% if norow == false and (field.type != 'hidden' or (field.type == 'hidden' and field.display is defined and field.display is not empty)) %}
 				</div>
 			</div>
