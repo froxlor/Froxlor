@@ -584,6 +584,8 @@ class Customers extends ApiCommand implements ResourceEntity
 					$customerid = Database::lastInsertId();
 					$ins_data['customerid'] = $customerid;
 
+					Admins::increaseUsage($this->getUserDetail('adminid'), 'customers_used');
+
 					// update admin resource-usage
 					if ($mysqls != '-1') {
 						Admins::increaseUsage($this->getUserDetail('adminid'), 'mysqls_used', '', (int)$mysqls);

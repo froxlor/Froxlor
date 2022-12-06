@@ -263,7 +263,9 @@ class User
 				foreach ($resource_fields as $field) {
 					if ($field == 'diskspace_used') {
 						// admin/reseller-usage == what has been assign to the customer
-						$admin[$field . '_new'] += $acustomer['diskspace'];
+						if (($acustomer['diskspace'] / 1024) != -1) {
+							$admin[$field . '_new'] += $acustomer['diskspace'];
+						}
 					} else if ($field != 'traffic_used') {
 						if ($acustomer[str_replace("_used", "", $field)] != '-1') {
 							$admin[$field . '_new'] += $acustomer[str_replace("_used", "", $field)];
