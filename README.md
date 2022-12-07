@@ -1,5 +1,5 @@
-[![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml/badge.svg?branch=0.11-dev)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml)
-[![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml/badge.svg?branch=0.11-dev)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml)
+[![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml/badge.svg?branch=main)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml)
+[![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml/badge.svg?branch=main)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml)
 [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.froxlor.org)
 
 # Froxlor
@@ -10,15 +10,18 @@ Developed by experienced server administrators, this panel simplifies the effort
 ## Installation
 
 ### Fast install
-1. Ensure that your webserver serves /var/www
-2. Extract froxlor into /var/www
+1. Ensure that your webserver serves /var/www/html
+2. Extract froxlor into /var/www/html
 3. Point your browser to http://[ip-of-webserver]/froxlor
 4. Follow the installer
 5. Login as administrator
-6. Adjust "System > Settings" according to your needs
-7. Choose your distribution under "System > Configuration"
-8. Follow the steps for your services
-9. Have fun!
+6. Have fun!
+
+If you have chosen to do the configuration by hand during the installation, you have to complete some more steps:
+
+1. Adjust "System > Settings" according to your needs
+2. Choose your distribution under "System > Configuration"
+3. Follow the steps for your services
 
 ### Detailed installation
 https://docs.froxlor.org/latest/general/installation/
@@ -56,7 +59,7 @@ https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.fro
 
 ### Debian / Ubutnu repository
 
-[HowTo](https://docs.froxlor.org/latets/general/installation/apt-package.html)
+[HowTo](https://docs.froxlor.org/latest/general/installation/apt-package.html)
 
 #### Debian
 
