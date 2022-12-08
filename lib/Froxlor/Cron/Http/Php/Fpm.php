@@ -87,10 +87,10 @@ class Fpm
 	private function buildIniMapping()
 	{
 		$this->ini = [
-			'php_flag' => explode("\n", Settings::Get('phpfpm.ini_flags')),
-			'php_value' => explode("\n", Settings::Get('phpfpm.ini_values')),
-			'php_admin_flag' => explode("\n", Settings::Get('phpfpm.ini_admin_flags')),
-			'php_admin_value' => explode("\n", Settings::Get('phpfpm.ini_admin_values'))
+			'php_flag' => array_map('trim', explode("\n", Settings::Get('phpfpm.ini_flags'))),
+			'php_value' => array_map('trim', explode("\n", Settings::Get('phpfpm.ini_values'))),
+			'php_admin_flag' => array_map('trim', explode("\n", Settings::Get('phpfpm.ini_admin_flags'))),
+			'php_admin_value' => array_map('trim', explode("\n", Settings::Get('phpfpm.ini_admin_values')))
 		];
 	}
 
@@ -274,7 +274,7 @@ pm.max_children = 1
 
 			$fpm_config .= "\n\n";
 			foreach ($phpini_array as $inisection) {
-				$is = explode("=", $inisection);
+				$is = explode("=", trim($inisection));
 				if (count($is) !== 2 || empty($is[0])) {
 					continue;
 				}
