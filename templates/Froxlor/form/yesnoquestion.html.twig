@@ -18,6 +18,7 @@
 				{% endif %}
 			{% endif %}
 			<p>
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
 				<input type="hidden" name="send" value="send"/>
 				{% for id,field in url_params %}
 					<input type="hidden" name="{{ id }}" value="{{ field }}"/>

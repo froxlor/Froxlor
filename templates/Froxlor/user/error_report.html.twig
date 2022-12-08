@@ -15,6 +15,7 @@
 		<code class="border rounded bg-white p-2 mb-3">{{ mail_html|nl2br }}</code>
 
 		<div>
+			<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
 			<input type="hidden" name="send" value="send"/>
 
 			<div class="col-12 text-end">

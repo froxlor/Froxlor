@@ -26,6 +26,7 @@
 		{% if nosubmit == false %}
 			<!-- submit buttons -->
 			<div>
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
 				{% if hiddenid is not empty %}
 					<input type="hidden" name="id" value="{{ hiddenid }}"/>
 				{% endif %}

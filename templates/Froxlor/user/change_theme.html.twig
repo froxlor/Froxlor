@@ -19,6 +19,7 @@
 					</div>
 
 					<div class="card-body d-grid gap-2">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
 						<input type="hidden" name="page" value="{{ page }}"/>
 						<input type="hidden" name="send" value="send"/>
 						<button class="btn btn-primary rounded-top-0" type="submit" name="dosave">

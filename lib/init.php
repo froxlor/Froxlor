@@ -308,7 +308,18 @@ UI::twig()->addGlobal('page', $page);
 UI::twig()->addGlobal('area', AREA);
 UI::twig()->addGlobal('gSearchText', $gSearchText);
 
-/**
- * Initialize the mailingsystem
- */
+// Initialize the mailingsystem
 $mail = new Mailer(true);
+
+// initialize csrf
+if (CurrentUser::hasSession()) {
+	$new_token = Froxlor::genSessionId(20);
+	UI::twig()->addGlobal('csrf_token', $new_token);
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		$current_token = $_POST['csrf_token'];
+		if ($current_token != CurrentUser::getField('csrf_token')) {
+			Response::dynamicError('CSRF validation failed');
+		}
+	}
+	CurrentUser::setField('csrf_token', $new_token);
+}
