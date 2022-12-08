@@ -77,10 +77,7 @@ class UI
 
 	private static $install_mode = false;
 
-	/**
-	 * send various security related headers
-	 */
-	public static function sendHeaders()
+	public static function requestIsHttps(): bool
 	{
 		$isHttps =
 			$_SERVER['HTTPS']
@@ -88,15 +85,18 @@ class UI
 			?? $_SERVER['HTTP_X_FORWARDED_PROTO']
 			?? null;
 
-		$isHttps =
-			$isHttps && (strcasecmp('on', $isHttps) == 0
-				|| strcasecmp('https', $isHttps) == 0
-			);
-
+		return $isHttps && (strcasecmp('on', $isHttps) == 0 || strcasecmp('https', $isHttps) == 0);
+	}
+	/**
+	 * send various security related headers
+	 */
+	public static function sendHeaders()
+	{
 		session_set_cookie_params([
+			'lifetime' => 60, // will be renewed based on settings in lib/init.php
 			'path' => '/',
 			'domain' => $_SERVER['HTTP_HOST'],
-			'secure' => $isHttps,
+			'secure' => self::requestIsHttps(),
 			'httponly' => true,
 			'samesite' => 'Strict'
 		]);

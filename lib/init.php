@@ -179,7 +179,8 @@ if (@file_exists('templates/' . $theme . '/config.json')) {
 }
 
 // check for existence of variant in theme
-if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants']))) {
+if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant,
+			$_themeoptions['variants']))) {
 	$themevariant = "default";
 }
 
@@ -322,4 +323,14 @@ if (CurrentUser::hasSession()) {
 		}
 	}
 	CurrentUser::setField('csrf_token', $new_token);
+	// update cookie lifetime
+	$cookie_params = [
+		'expires' => time() + Settings::Get('session.sessiontimeout'),
+		'path' => '/',
+		'domain' => $_SERVER['HTTP_HOST'],
+		'secure' => UI::requestIsHttps(),
+		'httponly' => true,
+		'samesite' => 'Strict'
+	];
+	setcookie(session_name(), $_COOKIE[session_name()], $cookie_params);
 }
