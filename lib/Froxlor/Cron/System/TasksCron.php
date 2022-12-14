@@ -210,7 +210,7 @@ class TasksCron extends FroxlorCron
 			FileDir::safe_exec('mkdir -p ' . escapeshellarg($statsdir));
 
 			foreach (['webalizer', 'awstats', 'goaccess'] as $statstools) {
-				$statsdir = FileDir::makeCorrectDir($userhomedir . '/' . $statstool);
+				$statsdir = FileDir::makeCorrectDir($userhomedir . '/' . $statstools);
 				// in case we changed from the other stats -> remove old
 				if (Settings::Get('system.traffictool') != $statstools && file_exists($statsdir)) {
 					// (yes i know, the stats are lost - that's why you should not change all the time!)
