@@ -34,6 +34,7 @@ class Collection
 	private array $params;
 	private array $userinfo;
 	private ?Pagination $pagination = null;
+	private bool $internal = false;
 
 	public function __construct(string $class, array $userInfo, array $params = [])
 	{
@@ -81,7 +82,7 @@ class Collection
 
 	private function getListing($class, $params): array
 	{
-		return json_decode($class::getLocal($this->userinfo, $params)->listing(), true);
+		return json_decode($class::getLocal($this->userinfo, $params, $this->internal)->listing(), true);
 	}
 
 	public function getJson(): string
@@ -130,11 +131,16 @@ class Collection
 
 	public function count(): int
 	{
-		return json_decode($this->class::getLocal($this->userinfo, $this->params)->listingCount(), true)['data'];
+		return json_decode($this->class::getLocal($this->userinfo, $this->params, $this->internal)->listingCount(), true)['data'];
 	}
 
 	public function getPagination(): ?Pagination
 	{
 		return $this->pagination;
+	}
+
+	public function setInternal(bool $internal): Collection {
+		$this->internal = $internal;
+		return $this;
 	}
 }

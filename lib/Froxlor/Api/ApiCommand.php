@@ -276,7 +276,7 @@ abstract class ApiCommand extends ApiParameter
 			];
 			$first = true;
 			foreach ($search as $field => $valoper) {
-				if ($field == '_plainsql') {
+				if ($field == '_plainsql' && $this->internal_call) {
 					if (isset($valoper['sql']) && isset($valoper['values']) && is_array($valoper['values'])) {
 						if (preg_match('/^([a-z0-9\-\.,=\+_`\(\)\:\'\"\!\<\>\ ]+)$/i', $valoper['sql']) == false) {
 							// skip

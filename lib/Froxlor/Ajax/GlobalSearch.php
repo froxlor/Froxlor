@@ -309,6 +309,7 @@ class GlobalSearch
 
 				foreach ($toSearch as $entity => $edata) {
 					$collection = (new Collection($edata['class'], $userinfo))
+						->setInternal(true)
 						->addParam([
 							'sql_search' => [
 								'_plainsql' => self::searchStringSql($edata['searchfields'], $searchtext)
