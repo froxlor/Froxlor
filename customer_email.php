@@ -43,7 +43,7 @@ use Froxlor\Validate\Check;
 use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options', 'email')) {
+if (Settings::IsInList('panel.customer_hide_options', 'email') || $userinfo['emails'] == 0) {
 	Response::redirectTo('customer_index.php');
 }
 

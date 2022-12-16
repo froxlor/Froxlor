@@ -39,8 +39,8 @@ use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\CurrentUser;
 
-// redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
+// redirect if this customer page is hidden via settings or no resources given
+if (Settings::IsInList('panel.customer_hide_options', 'mysql') || $userinfo['mysqls'] == 0)
 	Response::redirectTo('customer_index.php');
 }
 

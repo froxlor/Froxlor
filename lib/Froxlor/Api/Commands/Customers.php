@@ -1110,6 +1110,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			if (!empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}
+
+			// add permission for allowed mysql usage if customer was not allowed to use mysql prior
+			if ($result['mysqls'] == 0 && ($mysqls == -1 || $mysqls > 0)) {
+				$allowed_mysqlserver = $this->getParam('allowed_mysqlserver', true, [0]);
+			}
 			if (! empty($allowed_mysqlserver)) {
 				$allowed_mysqlserver = array_map('intval', $allowed_mysqlserver);
 			}
@@ -1152,7 +1157,7 @@ class Customers extends ApiCommand implements ResourceEntity
 
 			// validate allowed_mysqls whether the customer has databases on a removed, now disallowed db-server and abort if true
 			$former_allowed_mysqlserver = json_decode($result['allowed_mysqlserver'], true);
-			if ($allowed_mysqlserver != $former_allowed_mysqlserver) {
+			if ($allowed_mysqlserver != $former_allowed_mysqlserver && !empty($former_allowed_mysqlserver)) {
 				$to_remove_mysqlserver = array_diff($former_allowed_mysqlserver, $allowed_mysqlserver);
 				if (count($to_remove_mysqlserver) > 0) {
 					foreach ($to_remove_mysqlserver as $mysqlserver_check) {
