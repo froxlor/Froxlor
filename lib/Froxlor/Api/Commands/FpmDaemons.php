@@ -202,7 +202,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 
 			// validation
 			$description = Validate::validate($description, 'description', Validate::REGEX_DESC_TEXT, '', [], true);
-			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '', '', [], true);
+			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '/^[a-z0-9\/\._\- ]+$/i', '', [], true);
 			$sel_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_FPMDAEMONS."` WHERE `reload_cmd` = :rc");
 			$dupcheck = Database::pexecute_first($sel_stmt, ['rc' => $reload_cmd]);
 			if ($dupcheck && $dupcheck['id']) {
@@ -327,7 +327,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 
 			// validation
 			$description = Validate::validate($description, 'description', Validate::REGEX_DESC_TEXT, '', [], true);
-			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '', '', [], true);
+			$reload_cmd = Validate::validate($reload_cmd, 'reload_cmd', '/^[a-z0-9\/\._\- ]+$/i', '', [], true);
 			$sel_stmt = Database::prepare("SELECT `id` FROM `".TABLE_PANEL_FPMDAEMONS."` WHERE `reload_cmd` = :rc");
 			$dupcheck = Database::pexecute_first($sel_stmt, ['rc' => $reload_cmd]);
 			if ($dupcheck && $dupcheck['id'] != $id) {

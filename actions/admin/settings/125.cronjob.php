@@ -44,6 +44,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'croncmdline',
 					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/usr/bin/nice -n 5 /usr/bin/php -q',
 					'save_method' => 'storeSettingField'
 				],
@@ -52,6 +53,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'crondreload',
 					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/cron reload',
 					'save_method' => 'storeSettingField'
 				],

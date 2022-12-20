@@ -78,6 +78,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'bindreload_command',
 					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/bind9 reload',
 					'save_method' => 'storeSettingField'
 				],

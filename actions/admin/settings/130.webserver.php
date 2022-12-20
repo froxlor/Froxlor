@@ -305,6 +305,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'apachereload_command',
 					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/apache2 reload',
 					'save_method' => 'storeSettingField'
 				],
@@ -313,6 +314,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'phpreload_command',
 					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => [
