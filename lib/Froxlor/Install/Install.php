@@ -282,7 +282,7 @@ class Install
 	{
 		// TODO: do validations
 		if (isset($field['mandatory']) && $field['mandatory'] && empty($attribute)) {
-			throw new Exception(lng('install.errors.mandatory_field_not_set', [htmlspecialchars($field['label'])]));
+			throw new Exception(lng('install.errors.mandatory_field_not_set', [$field['label']]));
 		}
 		return $attribute;
 	}
