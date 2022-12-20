@@ -274,11 +274,12 @@ class UI
 			if (Froxlor::versionCompare2(Settings::Get('panel.version'), '2.0.0-beta1') == -1) {
 				// pre 2.0
 				Settings::Set('panel.default_theme', 'Froxlor');
-			}
-			$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $theme;
-			// customer theme
-			if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
-				$theme = CurrentUser::getField('theme');
+			} else {
+				$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $theme;
+				// customer theme
+				if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
+					$theme = CurrentUser::getField('theme');
+				}
 			}
 		}
 		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $theme)) {
