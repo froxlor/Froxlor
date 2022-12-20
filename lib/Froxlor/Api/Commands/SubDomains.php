@@ -538,7 +538,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	{
 		// check whether an URL was specified
 		$_doredirect = false;
-		if (!empty($url) && Validate::validateUrl($url)) {
+		if (!empty($url) && Validate::validateUrl($url, true)) {
 			$path = $url;
 			$_doredirect = true;
 		} else {
@@ -546,7 +546,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 
 		// check whether path is a real path
-		if (!preg_match('/^https?\:\/\//', $path) || !Validate::validateUrl($path)) {
+		if (!preg_match('/^https?\:\/\//', $path) || !Validate::validateUrl($path, true)) {
 			if (strstr($path, ":") !== false) {
 				Response::standardError('pathmaynotcontaincolon', '', true);
 			}

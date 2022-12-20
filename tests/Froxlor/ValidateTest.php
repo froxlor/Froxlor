@@ -120,17 +120,27 @@ class ValidateTest extends TestCase
 	{
 		$result = Validate::validateUrl("https://froxlor.org/");
 		$this->assertTrue($result);
+		$result = Validate::validateUrl("https://froxlor.org/", true);
+		$this->assertTrue($result);
 		$result = Validate::validateUrl("http://forum.froxlor.org/");
 		$this->assertTrue($result);
 		$result = Validate::validateUrl("https://api.froxlor.org/doc/0.10.0/index.php");
+		$this->assertTrue($result);
+		$result = Validate::validateUrl("https://api.froxlor.org/doc/0.10.0/index.php", true);
 		$this->assertTrue($result);
 		$result = Validate::validateUrl("#froxlor");
 		$this->assertFalse($result);
 		$result = Validate::validateUrl("https://82.149.225.211/");
 		$this->assertTrue($result);
+		$result = Validate::validateUrl("https://82.149.225.211/", true);
+		$this->assertTrue($result);
 		$result = Validate::validateUrl("https://82.149.225.300");
 		$this->assertFalse($result);
 		$result = Validate::validateUrl("82.149.225.211:443");
+		$this->assertTrue($result);
+		$result = Validate::validateUrl("172.16.0.1:8080");
+		$this->assertFalse($result);
+		$result = Validate::validateUrl("172.16.0.1:8080", true);
 		$this->assertTrue($result);
 	}
 

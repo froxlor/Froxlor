@@ -2824,6 +2824,17 @@ service dict {
     #group =
   }
 }
+
+service stats {
+  unix_listener stats-reader {
+    group = vmail
+    mode = 0666
+  }
+  unix_listener stats-writer {
+    group = vmail
+    mode = 0666
+  }
+}
 ]]>
 							</content>
 						</file>
