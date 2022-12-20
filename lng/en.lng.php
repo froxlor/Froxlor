@@ -2353,7 +2353,17 @@ Yours sincerely, your administrator',
 			'servernameneedstobevalid' => 'Given servername does not seem to be a FQDN or hostname',
 			'websrvuserdoesnotexist' => 'Given webserver-user does not seem to exist on the system',
 			'websrvgrpdoesnotexist' => 'Given webserver-group does not seem to exist on the system',
-			'notyetconfigured' => 'It seems that the services were not yet configured (successfully). Please either run the command shown below or check the box to do it later.'
+			'notyetconfigured' => 'It seems that the services were not yet configured (successfully). Please either run the command shown below or check the box to do it later.',
+			'mandatory_field_not_set' => 'Mandatory field "%s" is not set!',
+			'unexpected_database_error' => 'Unexpected database exception occurred.',
+			'sql_import_failed' => 'Failed to import SQL data!',
+			'unprivileged_sql_connection_failed' => 'Failed to initialize unprivileged SQL connection!',
+			'privileged_sql_connection_failed' => 'Failed to initialize privileged SQL connection!',
+			'mysqldump_backup_failed' => 'Cannot create a database backup, we got an error from mysqldump.',
+			'sql_backup_file_missing' => 'Cannot create a database backup, the backup file does not exist.',
+			'backup_binary_missing' => 'Cannot create a database backup, make sure you installed mysqldump.',
+			'creating_configfile_failed' => 'Cannot create config files, unable to write file.',
+			'database_already_exiting' => 'We found a database and were not allow to override it!'
 		]
 	],
 	'welcome' => [

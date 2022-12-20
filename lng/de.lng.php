@@ -2221,7 +2221,17 @@ Vielen Dank, Ihr Administrator',
 			'servernameneedstobevalid' => 'Der angegebene Server-Name scheint kein gültiger FQDN oder Hostname zu sein',
 			'websrvuserdoesnotexist' => 'Der angegebene Webserver-Benutzer scheint auf dem System nicht zu existieren',
 			'websrvgrpdoesnotexist' => 'Die angegebene Webserver-Gruppe scheint auf dem System nicht zu existieren',
-			'notyetconfigured' => 'Es scheint als wären die Dienste (noch) nicht erfolgreich konfiguriert worden. Bitte den angezeigten Befehl ausführen oder überspringen (direkt zum Login)'
+			'notyetconfigured' => 'Es scheint als wären die Dienste (noch) nicht erfolgreich konfiguriert worden. Bitte den angezeigten Befehl ausführen oder überspringen (direkt zum Login)',
+			'mandatory_field_not_set' => 'Pflichtfeld "%s" ist nicht gesetzt!',
+			'unexpected_database_error' => 'Eine unerwarteter Datenbankfehler ist aufgetreten.',
+			'sql_import_failed' => 'Der Import von SQL-Daten ist fehlgeschlagen!',
+			'unprivileged_sql_connection_failed' => 'Unprivilegierte SQL-Verbindung konnte nicht initialisiert werden!',
+			'privileged_sql_connection_failed' => 'Initialisierung der privilegierten SQL-Verbindung fehlgeschlagen!',
+			'mysqldump_backup_failed' => 'Es kann keine Datenbanksicherung erstellt werden, wir haben einen Fehler von mysqldump erhalten.',
+			'sql_backup_file_missing' => 'Es kann keine Datenbanksicherung erstellt werden, die Sicherungsdatei ist nicht vorhanden.',
+			'backup_binary_missing' => 'Es kann keine Datenbanksicherung erstellen werden, stelle sicher, dass mysqldump installiert wurde.',
+			'creating_configfile_failed' => 'Konfigurationsdateien können nicht erstellt werden, Datei kann nicht geschrieben werden.',
+			'database_already_exiting' => 'Es existiert bereits eine Datenbank, diese darf aber nicht überschreiben werden!'
 		]
 	],
 	'welcome' => [

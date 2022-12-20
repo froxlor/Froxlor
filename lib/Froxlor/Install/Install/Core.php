@@ -67,7 +67,7 @@ class Core
 		try {
 			$db_root = new PDO($dsn, $this->validatedData['mysql_root_user'], $this->validatedData['mysql_root_pass'], $options);
 		} catch (PDOException $e) {
-			// possibly without passwd?
+			// login failed; try to log in without passwd
 			try {
 				$db_root = new PDO($dsn, $this->validatedData['mysql_root_user'], '', $options);
 				// set the given password
@@ -78,8 +78,8 @@ class Core
 					'passwd' => $this->validatedData['mysql_root_pass']
 				]);
 			} catch (PDOException $e) {
-				// nope
-				throw new Exception('', 0, $e);
+				// login has failed; with and without password
+				throw new Exception(lng('install.errors.privileged_sql_connection_failed'), 0, $e);
 			}
 		}
 
@@ -121,6 +121,9 @@ class Core
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function getUnprivilegedPdo(): PDO
 	{
 		$options = [
@@ -143,7 +146,7 @@ class Core
 			$pdo->exec('SET sql_mode = "' . $sql_mode . '"');
 			return $pdo;
 		} catch (PDOException $e) {
-			throw new Exception('Unexpected exception occured', 0, $e);
+			throw new Exception(lng('install.errors.unexpected_database_error', [$e->getMessage()]), 0, $e);
 		}
 	}
 
@@ -166,7 +169,7 @@ class Core
 		// backup tables if exist
 		if ($rows > 0) {
 			if (!$this->validatedData['mysql_force_create']) {
-				throw new Exception('We found a database and were not allow to override it!');
+				throw new Exception(lng('install.errors.database_already_exiting'));
 			}
 
 			// create temporary backup-filename
@@ -190,11 +193,13 @@ class Core
 				$output = [];
 				exec($command, $output);
 				@unlink($cnffilename);
-				if (stristr(implode(" ", $output), "error") || !file_exists($filename)) {
-					throw new Exception('backup_failed');
+				if (stristr(implode(" ", $output), "error")) {
+					throw new Exception(lng('install.errors.mysqldump_backup_failed'));
+				} else if (!file_exists($filename)) {
+					throw new Exception(lng('install.errors.sql_backup_file_missing'));
 				}
 			} else {
-				throw new Exception('backup_binary_missing');
+				throw new Exception(lng('install.errors.backup_binary_missing'));
 			}
 		}
 	}
@@ -344,7 +349,7 @@ class Core
 		try {
 			$pdo = $this->getUnprivilegedPdo();
 		} catch (PDOException $e) {
-			throw new Exception('failed to initialize froxlor user connection!');
+			throw new Exception(lng('install.errors.unprivileged_sql_connection_failed'));
 		}
 
 		// actually import data
@@ -353,7 +358,7 @@ class Core
 
 			$pdo->query($froxlorSQL);
 		} catch (PDOException $e) {
-			throw new Exception('failed to import data!' . $e->getMessage(), 0, $e);
+			throw new Exception(lng('install.errors.sql_import_failed', [$e->getMessage()]), 0, $e);
 		}
 	}
 
@@ -651,7 +656,7 @@ class Core
 				@fputs($fp, $userdata, strlen($userdata));
 				@fclose($fp);
 			} else {
-				throw new Exception('creating_configfile_failed');
+				throw new Exception(lng('install.errors.creating_configfile_failed'));
 			}
 		}
 		@umask($umask);
