@@ -3,7 +3,7 @@
 }
 
 .navbar-brand {
-	padding: 1rem;
+	padding: 1rem 0;
 }
 
 @include media-breakpoint-up(md) {
@@ -21,15 +21,30 @@
 
 @include media-breakpoint-down(md) {
 	.navbar {
-		background: darken($navbar-bg, 90);
+		background: $navbar-bg-mobile;
 
 		.navbar-nav {
+			flex-direction: row;
+			gap: .75rem;
+
 			.nav-link {
 				color: $white;
 
 				&:hover {
 					color: rgba(255,255,255,.45);
 				}
+			}
+
+			.dropdown-menu {
+				position: absolute;
+			}
+		}
+
+		#collapseSearch {
+			border-top: solid 1px $dark;
+
+			#search {
+				margin-bottom: 1.125rem;
 			}
 		}
 	}

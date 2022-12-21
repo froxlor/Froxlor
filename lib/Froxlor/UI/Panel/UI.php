@@ -93,7 +93,7 @@ class UI
 	public static function sendHeaders()
 	{
 		session_set_cookie_params([
-			'lifetime' => 600, // will be renewed based on settings in lib/init.php
+			'lifetime' => self::$install_mode ? 7200 : 600, // will be renewed based on settings in lib/init.php
 			'path' => '/',
 			'domain' => $_SERVER['HTTP_HOST'],
 			'secure' => self::requestIsHttps(),

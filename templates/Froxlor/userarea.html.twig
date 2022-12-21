@@ -19,28 +19,19 @@
 
 	<nav class="navbar navbar-expand-md navbar-light p-0 {% if not block('heading') %}shadow-sm{% endif %}">
 		<div class="container-fluid gx-0">
-			<a class="navbar-brand {% if block('heading') %}shadow-sm{% endif %}" href="{{ linker({'section': 'index'}) }}">
-				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
-			</a>
-			<div class="me-3 me-sm-0">
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+			<div>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar"  aria-expanded="false" aria-label="Toggle sidebar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
-			<div class="collapse navbar-collapse px-3 px-lg-5" id="navbar">
-				<form id="search" method="post">
-					<div class="d-flex align-items-center">
+			<a class="navbar-brand me-0 {% if block('heading') %}shadow-sm{% endif %}" href="{{ linker({'section': 'index'}) }}">
+				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top ms-md-3">
+			</a>
+			<div class="order-0 order-md-1 d-flex flex-grow-0 flex-md-grow-1" id="navbar">
+				<ul class="navbar-nav ms-md-auto me-3 me-lg-5">
+					<a class="nav-link d-md-none" data-bs-toggle="collapse" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseSearch">
 						<i class="fa-solid fa-search text-muted"></i>
-						<input title="search" type="search" class="search-input" placeholder="{{ lng('panel.search') }}...">
-					</div>
-					<div class="search-results-box p-2 shadow" style="display:none;">
-						<div class="search-results list-group-flush"></div>
-					</div>
-				</form>
-				<ul class="navbar-nav ms-auto">
+					</a>
 					{% if call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is iterable %}
 						<a class="nav-link text-success" href="{{ linker({'section': 'index', 'action': 'suback'}) }}">
 							<i class="fa-solid fa-reply me-1"></i><span class="d-none d-xl-inline">{{ userinfo.switched_user.loginname }}</span>
@@ -91,11 +82,22 @@
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="btn btn-link pe-0" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
+						<a class="nav-link text-primary" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
 							<i class="fas fa-power-off"></i>
 						</a>
 					</li>
 				</ul>
+			</div>
+			<div class="order-1 order-md-0 collapse navbar-collapse" id="collapseSearch">
+				<form class="ms-3 mt-3 ms-lg-5 my-md-0" id="search" method="post">
+					<div class="d-flex align-items-center">
+						<i class="fa-solid fa-search text-muted"></i>
+						<input class="search-input" title="search" type="search" placeholder="{{ lng('panel.search') }}...">
+					</div>
+					<div class="search-results-box p-2 shadow" style="display:none;">
+						<div class="search-results list-group-flush"></div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</nav>
