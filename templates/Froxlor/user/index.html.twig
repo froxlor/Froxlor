@@ -1,7 +1,7 @@
 {% extends "Froxlor/userarea.html.twig" %}
 
 {% block content %}
-	<h3 class="page-header">Dashboard</h3>
+	<h3 class="page-header">{{ lng('panel.dashboard') }}</h3>
 
 	{% if get_setting('panel.is_configured') == 0 and userinfo.adminsession == 1 and userinfo.change_serversettings == 1 %}
 		<div class="alert alert-info position-relative p-5">

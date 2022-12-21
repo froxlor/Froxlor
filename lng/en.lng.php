@@ -1328,6 +1328,7 @@ Yours sincerely, your administrator',
 			'description' => 'Select the field you want to search in'
 		],
 		'upload_import' => 'Upload and import',
+		'dashboard' => 'Dashboard',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',
