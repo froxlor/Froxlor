@@ -69,6 +69,16 @@ return [
 			'c.validtodate',
 		]),
 		'actions' => [
+			'edit' => [
+				'icon' => 'fa-solid fa-edit',
+				'title' => lng('panel.edit'),
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domaindnseditor',
+					'domain_id' => ':domainid'
+				],
+				'visible' => [SSLCertificate::class, 'canEditSSL']
+			],
 			'delete' => [
 				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),

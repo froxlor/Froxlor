@@ -38,8 +38,13 @@ class SSLCertificate
 		];
 	}
 
-	public function canDelete(array $attributes): bool
+	public static function canEditSSL(array $attributes): bool
 	{
+		if ((int)$attributes['fields']['domainid'] > 0
+			&& (int)$attributes['fields']['letsencrypt'] == 0
+		) {
+			return true;
+		}
 		return false;
 	}
 }
