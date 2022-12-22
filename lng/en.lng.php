@@ -586,10 +586,10 @@ return [
 	],
 	'customer' => [
 		'documentroot' => 'Home directory',
-		'name' => 'Name',
+		'name' => 'Last name',
 		'firstname' => 'First name',
 		'company' => 'Company',
-		'nameorcompany_desc' => 'Either firstname/name or company is required',
+		'nameorcompany_desc' => 'Either firstname/lastname or company is required',
 		'street' => 'Street',
 		'zipcode' => 'Zipcode',
 		'city' => 'City',
