@@ -69,12 +69,12 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	// new customer allowed_mysqlserver field
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
 	// ftp_users adjustments
-	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
-	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTALIMITS . "` CHANGE `name` varchar(255) default NULL;");
-	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTATALLIES . "` CHANGE `name` varchar(255) default NULL;");
+	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE COLUMN `password` `password` varchar(255) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTALIMITS . "` CHANGE COLUMN `name` `name` varchar(255) default NULL;");
+	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTATALLIES . "` CHANGE COLUMN `name` `name` varchar(255) default NULL;");
 	// mail_users adjustments
-	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password` varchar(255) NOT NULL default '';");
-	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE `password_enc` varchar(255) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE COLUMN `password` `password` varchar(255) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE COLUMN `password_enc` `password_enc` varchar(255) NOT NULL default '';");
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Checking for multiple mysql-servers to allow acccess to customers for existing databases");
