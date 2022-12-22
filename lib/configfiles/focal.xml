@@ -3930,7 +3930,7 @@ MYSQLGetDir     SELECT homedir FROM ftp_users WHERE username="\L" AND login_enab
 # The number should be in Megabytes.
 # Pure-FTPd must have been compiled with virtual quotas support.
 
-MySQLGetQTASZ  SELECT panel_customers.diskspace/1024 AS QuotaSize FROM panel_customers, ftp_users WHERE username = "\L" AND panel_customers.loginname = SUBSTRING_INDEX('\L', 'ftp', 1)
+MySQLGetQTASZ SELECT CASE WHEN panel_customers.diskspace = 0 THEN -1 WHEN panel_customers.diskspace <= -1 THEN 0 ELSE panel_customers.diskspace/1024 END AS QuotaSize FROM panel_customers, ftp_users WHERE username = "\L" AND panel_customers.loginname = SUBSTRING_INDEX('\L', 'ftp', 1)
 
 
 # Optional : ratios. The server has to be compiled with ratio support.
