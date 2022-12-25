@@ -42,7 +42,7 @@ class Text
 
 	public static function customerfullname(array $attributes): string
 	{
-		return User::getCorrectFullUserDetails($attributes['fields']);
+		return User::getCorrectFullUserDetails($attributes['fields'], true);
 	}
 
 	public static function size(array $attributes): string

@@ -38,7 +38,7 @@ class User
 	 *
 	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
-	public static function getCorrectFullUserDetails($userinfo)
+	public static function getCorrectFullUserDetails($userinfo, $html = false): string
 	{
 		$returnval = '';
 
@@ -47,7 +47,11 @@ class User
 				$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'];
 			} else {
 				if ($userinfo['name'] != '' && $userinfo['firstname'] != '') {
-					$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . '<br><small>' . $userinfo['company'] . '</small>';
+					if ($html) {
+						$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . '<br><small>' . $userinfo['company'] . '</small>';
+					} else {
+						$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . ', ' . $userinfo['company'];
+					}
 				} else {
 					$returnval = $userinfo['company'];
 				}
