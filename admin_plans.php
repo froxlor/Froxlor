@@ -263,7 +263,7 @@ if ($page == '' || $page == 'overview') {
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {
-		$planid = isset($_POST['planid']) ? (int)$_POST['planid'] : 0;
+		$planid = (int)Request::get('planid', 0);
 		try {
 			$json_result = HostingPlans::getLocal($userinfo, [
 				'id' => $planid
