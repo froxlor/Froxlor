@@ -545,6 +545,7 @@ return [
 		'documentroot' => 'Heimatverzeichnis',
 		'name' => 'Name',
 		'firstname' => 'Vorname',
+		'lastname' => 'Nachname',
 		'company' => 'Firma',
 		'nameorcompany_desc' => 'Entweder Vorname/Name oder Firma ist erforderlich',
 		'street' => 'Straße',

@@ -586,8 +586,9 @@ return [
 	],
 	'customer' => [
 		'documentroot' => 'Home directory',
-		'name' => 'Last name',
+		'name' => 'Name',
 		'firstname' => 'First name',
+		'lastname' => 'Last name',
 		'company' => 'Company',
 		'nameorcompany_desc' => 'Either firstname/lastname or company is required',
 		'street' => 'Street',

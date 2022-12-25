@@ -111,7 +111,7 @@ return [
 						'mandatory_ex' => ['company']
 					],
 					'name' => [
-						'label' => lng('customer.name'),
+						'label' => lng('customer.lastname'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
 						'mandatory_ex' => ['company']
