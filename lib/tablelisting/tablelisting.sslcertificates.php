@@ -74,8 +74,9 @@ return [
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'domains',
-					'page' => 'domaindnseditor',
-					'domain_id' => ':domainid'
+					'page' => 'domainssleditor',
+					'action' => 'view',
+					'id' => ':domainid'
 				],
 				'visible' => [SSLCertificate::class, 'canEditSSL']
 			],
