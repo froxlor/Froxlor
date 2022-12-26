@@ -314,15 +314,20 @@ $mail = new Mailer(true);
 
 // initialize csrf
 if (CurrentUser::hasSession()) {
-	$new_token = Froxlor::genSessionId(20);
-	UI::twig()->addGlobal('csrf_token', $new_token);
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// create new csrf token if not set
+	if (!$csrf_token = CurrentUser::getField('csrf_token')) {
+		$csrf_token = Froxlor::genSessionId(20);
+		CurrentUser::setField('csrf_token', $csrf_token);
+	}
+	// set csrf token for twig
+	UI::twig()->addGlobal('csrf_token', $csrf_token);
+	// check if csrf token is valid
+	if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH', 'DELETE'])) {
 		$current_token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
 		if ($current_token != CurrentUser::getField('csrf_token')) {
 			Response::dynamicError('CSRF validation failed');
 		}
 	}
-	CurrentUser::setField('csrf_token', $new_token);
 	// update cookie lifetime
 	$cookie_params = [
 		'expires' => time() + Settings::Get('session.sessiontimeout'),

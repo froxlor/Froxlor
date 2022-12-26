@@ -7,7 +7,7 @@
 	<meta name="robots" content="noindex, nofollow, noarchive"/>
 	<meta name="googlebot" content="nosnippet"/>
 	<link rel="icon" type="image/x-icon" href="{{ basehref|default('') }}templates/Froxlor/assets/img/icon.png">
-	<meta name="csrf-token" content="{{ csrf_token }}" />
+	{% if csrf_token %}<meta name="csrf-token" content="{{ csrf_token }}" />{% endif %}
 
 	<!-- CSS -->
 	{% if theme_css is empty %}
