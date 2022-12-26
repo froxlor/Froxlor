@@ -1629,12 +1629,12 @@ dovecot_destination_recipient_limit = 1
 
 # Virtual delivery settings
 virtual_mailbox_base = /
-virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
-virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
-virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
-smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
-virtual_uid_maps = mysql:/etc/postfix/mysql-virtual_uid_maps.cf
-virtual_gid_maps = mysql:/etc/postfix/mysql-virtual_gid_maps.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
+virtual_alias_maps = proxy:mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = proxy:mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
+virtual_uid_maps = proxy:mysql:/etc/postfix/mysql-virtual_uid_maps.cf
+virtual_gid_maps = proxy:mysql:/etc/postfix/mysql-virtual_gid_maps.cf
 
 # Local delivery settings
 local_transport = local
@@ -1783,12 +1783,12 @@ dovecot_destination_recipient_limit = 1
 
 # Virtual delivery settings
 virtual_mailbox_base = /
-virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
-virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
-virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
-smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
-virtual_uid_maps = mysql:/etc/postfix/mysql-virtual_uid_maps.cf
-virtual_gid_maps = mysql:/etc/postfix/mysql-virtual_gid_maps.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
+virtual_alias_maps = proxy:mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = proxy:mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
+virtual_uid_maps = proxy:mysql:/etc/postfix/mysql-virtual_uid_maps.cf
+virtual_gid_maps = proxy:mysql:/etc/postfix/mysql-virtual_gid_maps.cf
 
 # Local delivery settings
 local_transport = local
@@ -1923,12 +1923,12 @@ broken_sasl_auth_clients = yes
 
 # Virtual delivery settings
 virtual_mailbox_base = /
-virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
-virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
-virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
-smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
-virtual_uid_maps = mysql:/etc/postfix/mysql-virtual_uid_maps.cf
-virtual_gid_maps = mysql:/etc/postfix/mysql-virtual_gid_maps.cf
+virtual_mailbox_maps = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
+virtual_mailbox_domains = proxy:mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
+virtual_alias_maps = proxy:mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = proxy:mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
+virtual_uid_maps = proxy:mysql:/etc/postfix/mysql-virtual_uid_maps.cf
+virtual_gid_maps = proxy:mysql:/etc/postfix/mysql-virtual_gid_maps.cf
 
 # Local delivery settings
 local_transport = local

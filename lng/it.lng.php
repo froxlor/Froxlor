@@ -52,7 +52,6 @@ return [
 		'admin_add' => 'Crea admin',
 		'admin_edit' => 'Modifica admin',
 		'customers_see_all' => 'Può vedere tutti i clienti?',
-		'domains_see_all' => 'Può vedere tutti i domini?',
 		'change_serversettings' => 'Può cambiare le impostazioni del server?',
 		'server' => 'Sistema',
 		'serversettings' => 'Opzioni',

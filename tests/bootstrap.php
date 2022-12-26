@@ -105,7 +105,6 @@ Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`customers_see_all` = 1,
 	`caneditphpsettings` = 1,
 	`domains` = -1,
-	`domains_see_all` = 1,
 	`change_serversettings` = 1,
 	`diskspace` = -1024,
 	`mysqls` = -1,

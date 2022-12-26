@@ -75,6 +75,8 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	// mail_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE COLUMN `password` `password` varchar(255) NOT NULL default '';");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_USERS . "` CHANGE COLUMN `password_enc` `password_enc` varchar(255) NOT NULL default '';");
+	// drop domains_see_all field from panel_admins
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` DROP COLUMN `domains_see_all`;");
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Checking for multiple mysql-servers to allow acccess to customers for existing databases");

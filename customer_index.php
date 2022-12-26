@@ -37,6 +37,8 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use Froxlor\Language;
+use Froxlor\System\Cronjob;
+use Froxlor\Cron\TaskId;
 
 if ($action == 'logout') {
 	$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
@@ -198,6 +200,7 @@ if ($page == 'overview') {
 					"username" => $userinfo['loginname']
 				];
 				Database::pexecute($stmt, $params);
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 
 			Response::redirectTo($filename);

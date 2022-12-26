@@ -76,7 +76,7 @@ if ($action == 'delete') {
 
 		// if type = email, send a code there for confirmation
 		if ($type == 1) {
-			$code = $tfa->getCode($tfa->createSecret());
+			$code = $tfa->getCode($data);
 			$_mailerror = false;
 			$mailerr_msg = "";
 			$replace_arr = [

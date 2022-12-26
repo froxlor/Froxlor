@@ -138,12 +138,6 @@ return [
 						'maxlength' => 9,
 						'mandatory' => true
 					],
-					'domains_see_all' => [
-						'label' => lng('admin.domains_see_all'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					],
 					'caneditphpsettings' => [
 						'label' => lng('admin.caneditphpsettings'),
 						'type' => 'checkbox',
