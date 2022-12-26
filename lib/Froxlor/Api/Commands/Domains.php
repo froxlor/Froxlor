@@ -76,7 +76,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT
-				`d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`,
+				`d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `c`.`adminid` as customeradmin,
 				`ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)

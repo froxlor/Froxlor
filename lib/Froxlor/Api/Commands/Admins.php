@@ -198,8 +198,6 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *            optional, default false
 	 * @param bool $customers_see_all
 	 *            optional, default false
-	 * @param bool $domains_see_all
-	 *            optional, default false
 	 * @param bool $caneditphpsettings
 	 *            optional, default false
 	 * @param bool $change_serversettings
@@ -239,7 +237,6 @@ class Admins extends ApiCommand implements ResourceEntity
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 
 			$customers_see_all = $this->getBoolParam('customers_see_all', true, 0);
-			$domains_see_all = $this->getBoolParam('domains_see_all', true, 0);
 			$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, 0);
 			$change_serversettings = $this->getBoolParam('change_serversettings', true, 0);
 			$ipaddress = $this->getParam('ipaddress', true, -1);
@@ -299,10 +296,6 @@ class Admins extends ApiCommand implements ResourceEntity
 					$customers_see_all = '0';
 				}
 
-				if ($domains_see_all != '1') {
-					$domains_see_all = '0';
-				}
-
 				if ($caneditphpsettings != '1') {
 					$caneditphpsettings = '0';
 				}
@@ -328,7 +321,6 @@ class Admins extends ApiCommand implements ResourceEntity
 					'customers' => $customers,
 					'customers_see_all' => $customers_see_all,
 					'domains' => $domains,
-					'domains_see_all' => $domains_see_all,
 					'caneditphpsettings' => $caneditphpsettings,
 					'diskspace' => $diskspace,
 					'traffic' => $traffic,
@@ -357,7 +349,6 @@ class Admins extends ApiCommand implements ResourceEntity
 					`customers` = :customers,
 					`customers_see_all` = :customers_see_all,
 					`domains` = :domains,
-					`domains_see_all` = :domains_see_all,
 					`caneditphpsettings` = :caneditphpsettings,
 					`diskspace` = :diskspace,
 					`traffic` = :traffic,
@@ -496,8 +487,6 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *            optional, default false
 	 * @param bool $customers_see_all
 	 *            optional, default false
-	 * @param bool $domains_see_all
-	 *            optional, default false
 	 * @param bool $caneditphpsettings
 	 *            optional, default false
 	 * @param bool $change_serversettings
@@ -547,7 +536,6 @@ class Admins extends ApiCommand implements ResourceEntity
 					$ftps = $result['ftps'];
 					$mysqls = $result['mysqls'];
 					$customers_see_all = $result['customers_see_all'];
-					$domains_see_all = $result['domains_see_all'];
 					$caneditphpsettings = $result['caneditphpsettings'];
 					$change_serversettings = $result['change_serversettings'];
 					$diskspace = $result['diskspace'];
@@ -571,7 +559,6 @@ class Admins extends ApiCommand implements ResourceEntity
 					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
 
 					$customers_see_all = $this->getBoolParam('customers_see_all', true, $result['customers_see_all']);
-					$domains_see_all = $this->getBoolParam('domains_see_all', true, $result['domains_see_all']);
 					$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, $result['caneditphpsettings']);
 					$change_serversettings = $this->getBoolParam('change_serversettings', true, $result['change_serversettings']);
 					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != -1 ? json_decode($result['ip'], true) : -1));
@@ -606,10 +593,6 @@ class Admins extends ApiCommand implements ResourceEntity
 
 					if ($customers_see_all != '1') {
 						$customers_see_all = '0';
-					}
-
-					if ($domains_see_all != '1') {
-						$domains_see_all = '0';
 					}
 
 					if ($caneditphpsettings != '1') {
@@ -675,7 +658,6 @@ class Admins extends ApiCommand implements ResourceEntity
 						'customers' => $customers,
 						'customers_see_all' => $customers_see_all,
 						'domains' => $domains,
-						'domains_see_all' => $domains_see_all,
 						'caneditphpsettings' => $caneditphpsettings,
 						'diskspace' => $diskspace,
 						'traffic' => $traffic,
@@ -705,7 +687,6 @@ class Admins extends ApiCommand implements ResourceEntity
 						`customers` = :customers,
 						`customers_see_all` = :customers_see_all,
 						`domains` = :domains,
-						`domains_see_all` = :domains_see_all,
 						`caneditphpsettings` = :caneditphpsettings,
 						`diskspace` = :diskspace,
 						`traffic` = :traffic,

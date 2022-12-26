@@ -50,7 +50,6 @@ return [
 		'admin_add' => '[Skapa en ny admin]',
 		'admin_edit' => 'Ändra admin',
 		'customers_see_all' => 'Kan se alla kunder?',
-		'domains_see_all' => 'Kan se alla domäner?',
 		'change_serversettings' => 'Kan ändra serverinställningar?',
 		'server' => 'Systemet',
 		'serversettings' => 'Inställningar',

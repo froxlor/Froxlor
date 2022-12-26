@@ -52,7 +52,6 @@ return [
 		'admin_add' => 'Ajouter un administrateur',
 		'admin_edit' => 'Modifier un administrateur',
 		'customers_see_all' => 'Peut voir tous les comptes ?',
-		'domains_see_all' => 'Peut voir tous les Domaines ?',
 		'change_serversettings' => 'Peut modifier la configuration du serveur ?',
 		'server' => 'Système',
 		'serversettings' => 'Paramètres',

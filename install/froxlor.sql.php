@@ -124,7 +124,6 @@ CREATE TABLE `panel_admins` (
   `customers_see_all` tinyint(1) NOT NULL default '0',
   `domains` int(15) NOT NULL default '0',
   `domains_used` int(15) NOT NULL default '0',
-  `domains_see_all` tinyint(1) NOT NULL default '0',
   `caneditphpsettings` tinyint(1) NOT NULL default '0',
   `change_serversettings` tinyint(1) NOT NULL default '0',
   `diskspace` int(15) NOT NULL default '0',

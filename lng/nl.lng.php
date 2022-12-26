@@ -49,7 +49,6 @@ return [
 		'admin_add' => 'Maak beheerder',
 		'admin_edit' => 'Bewerk beheerder',
 		'customers_see_all' => 'Kan alle klanten zien?',
-		'domains_see_all' => 'Kan alle domeinen zien?',
 		'change_serversettings' => 'Kan server instellingen aanpassen?',
 		'serversettings' => 'Instellingen',
 		'rebuildconf' => 'Configuratie bestanden opnieuw aanmaken',

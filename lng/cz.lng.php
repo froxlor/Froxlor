@@ -57,7 +57,6 @@ return [
 		'admin_add' => 'Vytvořit admina',
 		'admin_edit' => 'Upravit admina',
 		'customers_see_all' => 'Může vidět všechny zákazníky?',
-		'domains_see_all' => 'Může vidět všechny domény?',
 		'change_serversettings' => 'Může vidět nastavení serveru?',
 		'server' => 'Systém',
 		'serversettings' => 'Nastavení',

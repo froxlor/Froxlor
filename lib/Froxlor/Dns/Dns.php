@@ -41,7 +41,7 @@ class Dns
 
 		$where_clause = '';
 		if ($area == 'admin') {
-			if ($userinfo['domains_see_all'] != '1') {
+			if ((int)$userinfo['customers_see_all'] == 0) {
 				$where_clause = '`adminid` = :uid AND ';
 				$dom_data['uid'] = $userinfo['userid'];
 			}

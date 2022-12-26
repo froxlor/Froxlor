@@ -89,7 +89,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 					$query .= " AND `parentdomainid` = '0'";
 				}
 
-				if ((int)$this->getUserDetail('domains_see_all') == 0) {
+				if ((int)$this->getUserDetail('customers_see_all') == 0) {
 					$query .= " AND `adminid` = :adminid";
 					$query_params['adminid'] = $this->getUserDetail('adminid');
 				}
