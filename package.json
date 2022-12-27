@@ -11,6 +11,7 @@
 		"bootstrap": "^5.2.1",
 		"chart.js": "^3.9.1",
 		"jquery": "^3.6.1",
+		"jquery-validation": "^1.19.5",
 		"laravel-mix": "^6.0.42",
 		"resolve-url-loader": "^5.0.0",
 		"sass": "^1.49.7",

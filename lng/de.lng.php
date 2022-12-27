@@ -815,6 +815,7 @@ return [
 		'vmailquotawrong' => 'Die Kontingent-Größe muss positiv sein.',
 		'allocatetoomuchquota' => 'Sie versuchen "%s" MB Kontingent zu zuweisen, haben aber nicht genug übrig.',
 		'missingfields' => 'Es wurden nicht alle Felder augefüllt.',
+		'requiredfield' => 'Dieses Feld ist ein Pflichtfeld.',
 		'accountnotexisting' => 'Der angegebene E-Mail-Account existiert nicht.',
 		'nopermissionsorinvalidid' => 'Entweder fehlen Ihnen die nötigen Rechte diese Einstellung zu ändern oder es wurde eine ungültige ID übergeben',
 		'phpsettingidwrong' => 'Eine PHP-Konfiguration mit dieser ID existiert nicht',

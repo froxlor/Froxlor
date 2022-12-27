@@ -2,7 +2,7 @@
 
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
-	<form action="{{ formaction|default("") }}" method="post" enctype="multipart/form-data" class="form">
+	<form action="{{ formaction|default("") }}" {% if form_data.id is defined %}id="{{ form_data.id }}"{% endif %} method="post" enctype="multipart/form-data" class="form">
 		{% for sid,section in form_data.sections %}
 			{% if section.visible is not defined or (section.visible is defined and section.visible == true) %}
 			<div class="card mb-3" id="{{ idprefix }}{{ sid }}">
@@ -48,4 +48,9 @@
 		{% endif %}
 		<span class="text-danger">*</span> {{ lng('panel.mandatoryfield') }}
 	</form>
+
+	{# add translation for custom validations #}
+	{% if form_data.id is defined and form_data.id in ['customer_add', 'customer_edit'] %}
+		<script>$(function() { $.extend($.validator.messages, {required: "{{ lng('error.requiredfield') }}"}) });</script>
+	{% endif %}
 {% endmacro %}

@@ -32,6 +32,7 @@ return [
 		'title' => lng('admin.customer_add'),
 		'image' => 'fa-solid fa-user-plus',
 		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
+		'id' => 'customer_add',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.accountdata'),
@@ -108,19 +109,19 @@ return [
 						'label' => lng('customer.firstname'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['company']
+						'mandatory' => true
 					],
 					'name' => [
 						'label' => lng('customer.lastname'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['company']
+						'mandatory' => true
 					],
 					'company' => [
 						'label' => lng('customer.company'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['firstname', 'name']
+						'mandatory' => true
 					],
 					'street' => [
 						'label' => lng('customer.street'),

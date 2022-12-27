@@ -32,6 +32,7 @@ return [
 		'title' => lng('admin.customer_edit'),
 		'image' => 'fa-solid fa-user-pen',
 		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
+		'id' => 'customer_edit',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.accountdata'),
@@ -107,21 +108,21 @@ return [
 						'label' => lng('customer.firstname'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['company'],
+						'mandatory' => true,
 						'value' => $result['firstname']
 					],
 					'name' => [
 						'label' => lng('customer.lastname'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['company'],
+						'mandatory' => true,
 						'value' => $result['name']
 					],
 					'company' => [
 						'label' => lng('customer.company'),
 						'desc' => lng('customer.nameorcompany_desc'),
 						'type' => 'text',
-						'mandatory_ex' => ['firstname', 'name'],
+						'mandatory' => true,
 						'value' => $result['company']
 					],
 					'street' => [

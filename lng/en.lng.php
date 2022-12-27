@@ -882,6 +882,7 @@ return [
 		'vmailquotawrong' => 'The quotasize must be positive number.',
 		'allocatetoomuchquota' => 'You tried to allocate %s MB Quota, but you do not have enough left.',
 		'missingfields' => 'Not all required fields were filled out.',
+		'requiredfield' => 'This field is required.',
 		'accountnotexisting' => 'The given email account doesn\'t exist.',
 		'nopermissionsorinvalidid' => 'You don\'t have enough permissions to change these settings or an invalid id was given.',
 		'phpsettingidwrong' => 'A PHP Configuration with this id doesn\'t exist',
