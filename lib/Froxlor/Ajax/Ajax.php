@@ -365,6 +365,7 @@ class Ajax
 			$params = $_GET;
 			unset($params['action']);
 			unset($params['finish']);
+			unset($params['csrf_token']);
 			header('Content-disposition: attachment; filename=froxlor-config-' . time() . '.json');
 			return $this->jsonResponse($params);
 		}

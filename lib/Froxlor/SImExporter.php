@@ -56,7 +56,8 @@ class SImExporter
 		'system.last_tasks_run',
 		'system.last_archive_run',
 		'system.leprivatekey',
-		'system.lepublickey'
+		'system.lepublickey',
+		'system.updatecheck_data',
 	];
 
 	public static function export()
