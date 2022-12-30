@@ -40,7 +40,7 @@ use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use Froxlor\Language;
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($action == 'logout') {
 	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "logged out");

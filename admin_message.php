@@ -33,7 +33,7 @@ use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 $note_type = null;
 $note_msg = null;

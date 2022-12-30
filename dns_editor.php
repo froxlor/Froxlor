@@ -40,7 +40,7 @@ use Froxlor\UI\Response;
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
-$domain_id = (int)Request::get('domain_id');
+$domain_id = (int)Request::any('domain_id');
 
 $record = isset($_POST['dns_record']) ? trim($_POST['dns_record']) : null;
 $type = isset($_POST['dns_type']) ? $_POST['dns_type'] : 'A';

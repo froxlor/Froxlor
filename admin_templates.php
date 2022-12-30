@@ -39,9 +39,9 @@ use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use Froxlor\CurrentUser;
 
-$id = (int)Request::get('id');
-$subjectid = intval(Request::get('subjectid'));
-$mailbodyid = intval(Request::get('mailbodyid'));
+$id = (int)Request::any('id');
+$subjectid = intval(Request::any('subjectid'));
+$mailbodyid = intval(Request::any('mailbodyid'));
 
 $available_templates = [
 	'createcustomer',

@@ -80,8 +80,8 @@ class Install
 		$this->formfield = require dirname(__DIR__, 3) . '/lib/formfields/install/formfield.install.php';
 
 		// set actual step
-		$this->currentStep = $cliData['step'] ?? Request::get('step', 0);
-		$this->extendedView = $cliData['extended'] ?? Request::get('extended', 0);
+		$this->currentStep = $cliData['step'] ?? Request::any('step', 0);
+		$this->extendedView = $cliData['extended'] ?? Request::any('extended', 0);
 		$this->maxSteps = count($this->formfield['install']['sections']);
 
 		// set actual php version and extensions
@@ -114,7 +114,7 @@ class Install
 	public function handle(): void
 	{
 		// handle form data
-		if (!is_null(Request::get('submit')) && $this->currentStep) {
+		if (!is_null(Request::any('submit')) && $this->currentStep) {
 			try {
 				$this->handleFormData($this->formfield['install']);
 			} catch (Exception $e) {
@@ -266,7 +266,7 @@ class Install
 	{
 		$attributes = [];
 		foreach ($fields as $name => $field) {
-			$attributes[$name] = $this->validateAttribute(Request::get($name), $field);
+			$attributes[$name] = $this->validateAttribute(Request::any($name), $field);
 			if (isset($field['next_to'])) {
 				$attributes = array_merge($attributes, $this->validateRequest($field['next_to']));
 			}

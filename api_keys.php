@@ -49,7 +49,7 @@ if ($userinfo['adminsession'] == 1 && $userinfo['api_allowed'] == 0) {
 // and therefore does not need to require lib/init.php
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 // do the delete and then just show a success-message and the apikeys list again
 if ($action == 'delete' && $id > 0) {

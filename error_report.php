@@ -37,7 +37,7 @@ use Froxlor\UI\Response;
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
-$errid = Request::get('errorid');
+$errid = Request::any('errorid');
 
 if (!empty($errid)) {
 	// read error file

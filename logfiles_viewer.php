@@ -39,8 +39,8 @@ use Froxlor\UI\Response;
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
-$domain_id = (int)Request::get('domain_id');
-$last_n = (int)Request::get('number_of_lines', 100);
+$domain_id = (int)Request::any('domain_id');
+$last_n = (int)Request::any('number_of_lines', 100);
 
 // user's with logviewenabled = false
 if (AREA != 'admin' && $userinfo['logviewenabled'] != '1') {

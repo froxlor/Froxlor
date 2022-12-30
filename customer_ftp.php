@@ -44,7 +44,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'ftp') || $userinfo['ftps'
 	Response::redirectTo('customer_index.php');
 }
 
-$id = (int)Request::get('id', 0);
+$id = (int)Request::any('id', 0);
 
 if ($page == 'overview' || $page == 'accounts') {
 	if ($action == '') {

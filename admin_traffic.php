@@ -31,7 +31,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
-$range = Request::get('range', 'currentmonth');
+$range = Request::any('range', 'currentmonth');
 
 if ($page == 'overview' || $page == 'customers') {
 	try {

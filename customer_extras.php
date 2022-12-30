@@ -46,7 +46,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'extras')) {
 	Response::redirectTo('customer_index.php');
 }
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'htpasswds') {
 	// redirect if this customer sub-page is hidden via settings

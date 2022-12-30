@@ -47,13 +47,13 @@ if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
 	Response::redirectTo('customer_index.php');
 }
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'domains') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 
-		$parentdomain_id = (int)Request::get('pid', '0');
+		$parentdomain_id = (int)Request::any('pid', '0');
 
 		try {
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.domains.php';

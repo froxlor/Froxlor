@@ -41,8 +41,8 @@ if ($userinfo['change_serversettings'] == '1') {
 	}
 
 	// get distro from URL param
-	$distribution = Request::get('distribution');
-	$reselect = Request::get('reselect', 0);
+	$distribution = Request::any('distribution');
+	$reselect = Request::any('reselect', 0);
 
 	// check for possible setting
 	if (empty($distribution)) {

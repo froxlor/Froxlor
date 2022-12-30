@@ -50,7 +50,7 @@ Database::needSqlData();
 $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'mysqls') {
 	if ($action == '') {

@@ -43,5 +43,5 @@ function old(string $identifier, string $default = null, string $session = null)
 	if ($session && isset($_SESSION[$session])) {
 		return $_SESSION[$session][$identifier] ?? $default;
 	}
-	return Request::get($identifier, $default);
+	return Request::any($identifier, $default);
 }

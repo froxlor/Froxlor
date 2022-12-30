@@ -295,9 +295,9 @@ UI::twig()->addGlobal('theme_css', $css);
 unset($js);
 unset($css);
 
-$action = Request::get('action');
-$page = Request::get('page', 'overview');
-$gSearchText = Request::get('searchtext');
+$action = Request::any('action');
+$page = Request::any('page', 'overview');
+$gSearchText = Request::any('searchtext');
 
 // clear request data
 if (!$action && isset($_SESSION)) {

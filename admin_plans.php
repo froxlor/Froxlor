@@ -39,7 +39,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == '' || $page == 'overview') {
 	if ($action == '') {
@@ -263,7 +263,7 @@ if ($page == '' || $page == 'overview') {
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {
-		$planid = (int)Request::get('planid', 0);
+		$planid = (int)Request::any('planid', 0);
 		try {
 			$json_result = HostingPlans::getLocal($userinfo, [
 				'id' => $planid

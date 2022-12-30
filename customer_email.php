@@ -47,7 +47,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'email') || $userinfo['ema
 	Response::redirectTo('customer_index.php');
 }
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'emails') {
 	if ($action == '') {

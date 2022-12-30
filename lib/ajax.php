@@ -42,5 +42,6 @@ require_once dirname(__DIR__) . '/lib/tables.inc.php';
 try {
 	echo (new Ajax)->handle();
 } catch (Exception $e) {
+	header("Content-Type: application/json");
 	echo \Froxlor\Api\Response::jsonErrorResponse($e->getMessage(), 500);
 }

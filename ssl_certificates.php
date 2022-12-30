@@ -43,7 +43,7 @@ use Froxlor\UI\Response;
 // and therefore does not need to require lib/init.php
 
 $success_message = "";
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {

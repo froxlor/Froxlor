@@ -47,7 +47,7 @@ use Froxlor\User;
 use Froxlor\Validate\Validate;
 use Froxlor\CurrentUser;
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if ($page == 'domains' || $page == 'overview') {
 	if ($action == '') {

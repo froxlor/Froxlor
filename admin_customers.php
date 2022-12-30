@@ -42,7 +42,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
-$id = (int)Request::get('id');
+$id = (int)Request::any('id');
 
 if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '0') {
 	if ($action == '') {

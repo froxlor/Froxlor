@@ -53,8 +53,8 @@ class Ajax
 	 */
 	public function __construct()
 	{
-		$this->action = $_GET['action'] ?? $_POST['action'] ?? null;
-		$this->theme = $_GET['theme'] ?? 'Froxlor';
+		$this->action = Request::any('action');
+		$this->theme = Request::any('theme', 'Froxlor');
 
 		UI::sendHeaders();
 		UI::sendSslHeaders();
@@ -112,7 +112,8 @@ class Ajax
 		$feed = "https://inside.froxlor.org/news/";
 
 		// Set custom feed if provided
-		if (isset($_GET['role']) && $_GET['role'] == "customer") {
+		$role = Request::get('role');
+		if ($role == "customer") {
 			$custom_feed = Settings::Get("customer.news_feed_url");
 			if (!empty(trim($custom_feed))) {
 				$feed = $custom_feed;
@@ -140,7 +141,7 @@ class Ajax
 
 		if ($news === false) {
 			$err = [];
-			foreach(libxml_get_errors() as $error) {
+			foreach (libxml_get_errors() as $error) {
 				$err[] = $error->message;
 			}
 			return $this->errorResponse(
@@ -205,7 +206,7 @@ class Ajax
 		} catch (Exception $e) {
 			// don't display anything if just not allowed due to permissions
 			if ($e->getCode() != 403) {
-				Response::dynamicError($e->getMessage());
+				return $this->errorResponse($e->getMessage(), $e->getCode());
 			}
 		}
 	}
@@ -215,7 +216,7 @@ class Ajax
 	 */
 	private function searchGlobal()
 	{
-		$searchtext = Request::get('searchtext');
+		$searchtext = Request::any('searchtext');
 
 		$result = [];
 
@@ -236,11 +237,11 @@ class Ajax
 	private function updateTablelisting()
 	{
 		$columns = [];
-		foreach ((Request::get('columns') ?? []) as $value) {
+		foreach ((Request::any('columns') ?? []) as $value) {
 			$columns[] = $value;
 		}
 		if (!empty($columns)) {
-			Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
+			Listing::storeColumnListingForUser([Request::any('listing') => $columns]);
 			return $this->jsonResponse($columns);
 		}
 		return $this->errorResponse('At least one column must be selected', 406);
@@ -248,15 +249,15 @@ class Ajax
 
 	private function resetTablelisting()
 	{
-		Listing::deleteColumnListingForUser([Request::get('listing') => []]);
+		Listing::deleteColumnListingForUser([Request::any('listing') => []]);
 		return $this->jsonResponse([]);
 	}
 
 	private function editApiKey()
 	{
-		$keyid = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-		$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-		$valid_until = isset($_POST['valid_until']) ? $_POST['valid_until'] : "";
+		$keyid = Request::post('id', 0);
+		$allowed_from = Request::post('allowed_from', "");
+		$valid_until = Request::post('valid_until', "");
 
 		if (empty($keyid)) {
 			return $this->errorResponse('Invalid call', 406);
@@ -318,9 +319,9 @@ class Ajax
 	private function getConfigDetails()
 	{
 		if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1 && $this->userinfo['change_serversettings'] == 1) {
-			$distribution = isset($_POST['distro']) ? $_POST['distro'] : "";
-			$section = isset($_POST['section']) ? $_POST['section'] : "";
-			$daemon = isset($_POST['daemon']) ? $_POST['daemon'] : "";
+			$distribution = Request::post('distro', "");
+			$section = Request::post('section', "");
+			$daemon = Request::post('daemon', "");
 
 			// validate distribution config-xml exists
 			$config_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/');
@@ -375,7 +376,7 @@ class Ajax
 	 */
 	private function loadLanguageString()
 	{
-		$langid = isset($_POST['langid']) ? $_POST['langid'] : "";
+		$langid = Request::post('langid', "");
 		if (preg_match('/^([a-zA-Z\.]+)$/', $langid)) {
 			return $this->jsonResponse(lng($langid));
 		}

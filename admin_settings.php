@@ -112,7 +112,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		if ($_part == '' || $_part == 'all') {
 			UI::view('settings/index.html.twig', ['fields' => $fields]);
 		} else {
-			$em = Request::get('em', '');
+			$em = Request::any('em', '');
 			UI::view('settings/detailpart.html.twig', ['fields' => $fields, 'em' => $em]);
 		}
 	}

@@ -31,7 +31,21 @@ use voku\helper\AntiXSS;
 class Request
 {
 	/**
-	 * Get key from current request.
+	 * Get key from current $_GET or $_POST request.
+	 *
+	 * @param $key
+	 * @param string|null $default
+	 * @return mixed|string|null
+	 */
+	public static function any($key, string $default = null)
+	{
+		self::cleanAll();
+
+		return $_GET[$key] ?? $_POST[$key] ?? $default;
+	}
+
+	/**
+	 * Get key from current $_GET request.
 	 *
 	 * @param $key
 	 * @param string|null $default
@@ -41,7 +55,21 @@ class Request
 	{
 		self::cleanAll();
 
-		return $_GET[$key] ?? $_POST[$key] ?? $default;
+		return $_GET[$key] ?? $default;
+	}
+
+	/**
+	 * Get key from current $_POST request.
+	 *
+	 * @param $key
+	 * @param string|null $default
+	 * @return mixed|string|null
+	 */
+	public static function post($key, string $default = null)
+	{
+		self::cleanAll();
+
+		return $_POST[$key] ?? $default;
 	}
 
 	/**
