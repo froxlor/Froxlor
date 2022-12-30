@@ -157,7 +157,39 @@ class SImExporter
 						}
 					}
 
-					file_put_contents(Froxlor::getInstallDir() . '/' . explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0], base64_decode($value));
+					$img_data = base64_decode($value);
+					$img_filename = Froxlor::getInstallDir() . '/' . str_replace('../', '', explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0]);
+
+					file_put_contents($img_filename, $img_data);
+
+					if (function_exists('finfo_open')) {
+						$finfo = finfo_open(FILEINFO_MIME_TYPE);
+						$mimetype = finfo_file($finfo, $img_filename);
+						finfo_close($finfo);
+					} else {
+						$mimetype = mime_content_type($img_filename);
+					}
+					if (empty($mimetype)) {
+						$mimetype = 'application/octet-stream';
+					}
+					if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
+						@unlink($img_filename);
+						throw new Exception("Uploaded file is not a valid image");
+					}
+
+					$spl = explode('.', $img_filename);
+					$file_extension = strtolower(array_pop($spl));
+					unset($spl);
+
+					if (!in_array($file_extension, [
+						'jpeg',
+						'jpg',
+						'png',
+						'gif'
+					])) {
+						@unlink($img_filename);
+						throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+					}
 					continue;
 				}
 
