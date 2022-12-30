@@ -216,7 +216,7 @@ class IpsAndPortsTest extends TestCase
 			'id' => 1,
 			'listen_statement' => 0
 		];
-		$this->expectExceptionCode(405);
+		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		IpsAndPorts::getLocal($reseller_userdata, $data)->update();
 	}
