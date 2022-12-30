@@ -391,7 +391,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || !empty($this->getUserDetail('ip')))) {
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$id = $this->getParam('id');
 
 			$result = $this->apiCall('IpsAndPorts.get', [

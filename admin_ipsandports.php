@@ -38,7 +38,7 @@ use Froxlor\UI\Response;
 
 $id = (int)Request::any('id');
 
-if ($page == 'ipsandports' || $page == 'overview') {
+if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
 
