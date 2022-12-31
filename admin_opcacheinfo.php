@@ -35,15 +35,26 @@ require __DIR__ . '/lib/init.php';
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
+use Froxlor\UI\HTML;
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
-	opcache_reset();
-	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
-	header('Location: ' . $linker->getLink([
+	if ($_POST['send'] == 'send') {
+		opcache_reset();
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
+		header('Location: ' . $linker->getLink([
+				'section' => 'opcacheinfo',
+				'page' => 'showinfo'
+			]));
+		exit();
+	} else {
+		HTML::askYesNo('cache_reallydelete', $filename, [
+			'page' => $page,
+			'action' => 'reset',
+		], '', [
 			'section' => 'opcacheinfo',
 			'page' => 'showinfo'
-		]));
-	exit();
+		]);
+	}
 }
 
 if (!function_exists('opcache_get_configuration')) {

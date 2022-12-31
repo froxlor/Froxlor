@@ -1391,6 +1391,7 @@ Yours sincerely, your administrator',
 		'apikey_reallyadd' => 'Do you really want to create a new api-key?',
 		'dnsentry_reallydelete' => 'Do you really want to delete this zone entry?',
 		'certificate_reallydelete' => 'Do you really want to delete this certificate?',
+		'cache_reallydelete' => 'Do you really want to clear the cache?',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'default',

@@ -1279,6 +1279,7 @@ Vielen Dank, Ihr Administrator',
 		'apikey_reallyadd' => 'Einen neuen Api-Key erstellen?',
 		'dnsentry_reallydelete' => 'Wollen Sie den DNS-Eintrag wirklich löschen?',
 		'certificate_reallydelete' => 'Wollen Sie diese Zertifikat wirklich löschen?',
+		'cache_reallydelete' => 'Wollen Sie den Cache wirklich leeren?',
 	],
 	'serversettings' => [
 		'session_timeout' => [

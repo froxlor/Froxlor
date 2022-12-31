@@ -34,6 +34,7 @@
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
+use Froxlor\UI\HTML;
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
@@ -41,13 +42,23 @@ require __DIR__ . '/lib/init.php';
 $horizontal_bar_size = 950; // 1280px window width
 
 if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['change_serversettings'] == '1') {
-	apcu_clear_cache();
-	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
-	header('Location: ' . $linker->getLink([
+	if ($_POST['send'] == 'send') {
+		apcu_clear_cache();
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
+		header('Location: ' . $linker->getLink([
+				'section' => 'apcuinfo',
+				'page' => 'showinfo'
+			]));
+		exit();
+	} else {
+		HTML::askYesNo('cache_reallydelete', $filename, [
+			'page' => $page,
+			'action' => 'delete',
+		], '', [
 			'section' => 'apcuinfo',
 			'page' => 'showinfo'
-		]));
-	exit();
+		]);
+	}
 }
 
 if (!function_exists('apcu_cache_info') || !function_exists('apcu_sma_info')) {
