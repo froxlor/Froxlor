@@ -54,7 +54,7 @@ if (!function_exists('apcu_cache_info') || !function_exists('apcu_sma_info')) {
 	Response::standardError(lng('error.no_apcuinfo'));
 }
 
-if ($page == 'showinfo') {
+if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {
 	$cache = apcu_cache_info();
 	$mem = apcu_sma_info();
 	$time = time();

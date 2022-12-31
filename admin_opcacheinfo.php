@@ -50,7 +50,7 @@ if (!function_exists('opcache_get_configuration')) {
 	Response::standardError(lng('error.no_opcacheinfo'));
 }
 
-if ($page == 'showinfo') {
+if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {
 	$time = time();
 	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed OPcache info");
 
