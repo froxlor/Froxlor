@@ -217,7 +217,7 @@ CREATE TABLE `panel_customers` (
   `lepublickey` mediumtext default NULL,
   `leprivatekey` mediumtext default NULL,
   `leregistered` tinyint(1) NOT NULL default '0',
-  `allowed_phpconfigs` text NOT NULL default '',
+  `allowed_phpconfigs` text NOT NULL,
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(25) NOT NULL default '',
   `api_allowed` tinyint(1) NOT NULL default '1',
