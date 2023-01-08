@@ -67,8 +67,8 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
 	// new customer allowed_mysqlserver field
-	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` text NOT NULL default '[0]';");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` text NOT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `customernumber` `customernumber` varchar(100) NOT NULL default '';");
 	$has_customer_table_update_200 = true;
 	// ftp_users adjustments
