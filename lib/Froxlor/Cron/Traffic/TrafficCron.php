@@ -127,7 +127,7 @@ class TrafficCron extends FroxlorCron
 
 		while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($last_dbserver != $row_database['dbserver']) {
-				Database::needRoot(true, $row_database['dbserver']);
+				Database::needRoot(true, $row_database['dbserver'], true);
 				$last_dbserver = $row_database['dbserver'];
 
 				$databases_list = [];

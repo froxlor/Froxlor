@@ -66,8 +66,8 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	KEY customerid (customerid)
 	) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
-	Database::query("SET SESSION innodb_strict_mode=OFF;");
 	// new customer allowed_mysqlserver field
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ROW_FORMAT=DYNAMIC;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `customernumber` `customernumber` varchar(100) NOT NULL default '';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` text NOT NULL;");

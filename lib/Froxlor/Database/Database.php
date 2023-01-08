@@ -79,6 +79,8 @@ class Database
 
 	private static $sqldata = null;
 
+	private static $need_dbname = true;
+
 	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel - also fetches the
@@ -341,12 +343,13 @@ class Database
 	 * @param int $dbserver
 	 *            optional
 	 */
-	public static function needRoot($needroot = false, $dbserver = 0)
+	public static function needRoot(bool $needroot = false, int $dbserver = 0, bool $need_db = true)
 	{
 		// force re-connecting to the db with corresponding user
 		// and set the $dbserver (mostly to 0 = default)
 		self::setServer($dbserver);
 		self::$needroot = $needroot;
+		self::$need_dbname = $need_db;
 	}
 
 	/**
@@ -465,10 +468,11 @@ class Database
 			'ATTR_ERRMODE' => 'ERRMODE_EXCEPTION'
 		];
 
-		$dbconf["dsn"] = [
-			'dbname' => $sql["db"],
-			'charset' => 'utf8'
-		];
+		$dbconf["dsn"] = ['charset' => 'utf8'];
+
+		if (self::$need_dbname) {
+			$dbconf["dsn"]['dbname'] = $sql["db"];
+		}
 
 		if ($socket != null) {
 			$dbconf["dsn"]['unix_socket'] = FileDir::makeCorrectFile($socket);

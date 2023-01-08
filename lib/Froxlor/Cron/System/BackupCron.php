@@ -146,6 +146,7 @@ class BackupCron extends FroxlorCron
 			FileDir::safe_exec('mkdir -p ' . escapeshellarg(FileDir::makeCorrectDir($tmpdir . '/mysql')));
 
 			// get all customer database-names
+			// @fixme respect multiple dbservers
 			$sel_stmt = Database::prepare("SELECT `databasename` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
 			Database::pexecute($sel_stmt, [
 				'cid' => $data['customerid']

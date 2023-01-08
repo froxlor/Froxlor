@@ -34,9 +34,15 @@ return [
 					],
 					'mysql_server' => [
 						'visible' => count($mysql_servers) > 1,
+						'type' => 'hidden',
+						'value' => $result['dbserver'] ?? 0,
+					],
+					'mysql_server_info' => [
+						'visible' => count($mysql_servers) > 1,
 						'label' => lng('mysql.mysql_server'),
 						'type' => 'label',
-						'value' => $mysql_servers[$result['dbserver']] ?? 'unknown db server'
+						'disabled' => true,
+						'value' => $mysql_servers[$result['dbserver']] ?? 'unknown db server',
 					],
 					'description' => [
 						'label' => lng('mysql.databasedescription'),

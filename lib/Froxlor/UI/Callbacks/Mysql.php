@@ -32,7 +32,7 @@ class Mysql
 	public static function dbserver(array $attributes): string
 	{
 		// get sql-root access data
-		Database::needRoot(true, (int)$attributes['data']);
+		Database::needRoot(true, (int)$attributes['data'], false);
 		Database::needSqlData();
 		$sql_root = Database::getSqlData();
 		Database::needRoot(false);

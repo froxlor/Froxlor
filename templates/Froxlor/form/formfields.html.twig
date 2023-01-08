@@ -197,7 +197,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<select {% if field.visible is defined and field.visible == false %} disabled {% endif %} class="form-select {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" name="{{ id }}{% if field.select_mode is defined and field.select_mode == 'multiple' %}[]{% endif %}" id="{{ id }}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.select_mode is defined and field.select_mode == 'multiple' %} multiple="multiple" {% endif %}>
+		<select {% if field.visible is defined and field.visible == false %} disabled {% endif %} class="form-select {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" name="{{ id }}{% if field.select_mode is defined and field.select_mode == 'multiple' %}[]{% endif %}" id="{{ id }}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.select_mode is defined and field.select_mode == 'multiple' %} multiple="multiple" {% endif %}{% if field.readonly is defined and field.readonly %} readonly {% endif %}>
 			{% for val,txt in field.select_var %}
 				<option value="{{ val }}" {% if field.selected is defined and ((field.selected is not iterable and field.selected == val) or (field.selected is iterable and val in field.selected|keys)) %} selected="selected" {% endif %}>{{ txt|raw }}</option>
 			{% endfor %}

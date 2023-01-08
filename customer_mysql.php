@@ -92,7 +92,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
-			Database::needRoot(true, $result['dbserver']);
+			Database::needRoot(true, $result['dbserver'], false);
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
 			Database::needRoot(false);

@@ -225,7 +225,7 @@ CREATE TABLE `panel_customers` (
   `allowed_mysqlserver` text NOT NULL,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
 
 
 DROP TABLE IF EXISTS `panel_databases`;

@@ -2,6 +2,7 @@ install/update.log
 install/*.json
 lib/userdata.inc.php
 lib/userdata.inc.php.bak
+lib/config.inc.php
 logs/*
 !logs/index.html
 .buildpath

@@ -96,7 +96,7 @@ class DbManager
 		$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
 		while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// require privileged access for target db-server
-			Database::needRoot(true, $dbserver['dbserver']);
+			Database::needRoot(true, $dbserver['dbserver'], false);
 
 			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
 			$users = $dbm->getManager()->getAllSqlUsers(false);
@@ -144,7 +144,7 @@ class DbManager
 	 */
 	public function createDatabase($loginname = null, $password = null, int $dbserver = 0, $last_accnumber = 0)
 	{
-		Database::needRoot(true, $dbserver);
+		Database::needRoot(true, $dbserver, false);
 
 		// check whether we shall create a random username
 		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
@@ -169,17 +169,16 @@ class DbManager
 
 		// now create the database itself
 		$this->getManager()->createDatabase($username);
-		$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
-			$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
 		}
 
 		$this->getManager()->flushPrivileges();
-
 		Database::needRoot(false);
+
+		$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		return $username;
 	}

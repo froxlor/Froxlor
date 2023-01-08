@@ -90,7 +90,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 
 			// validate whether the dbserver exists
 			$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '/^[0-9]+$/', '', 0, true);
-			Database::needRoot(true, $dbserver);
+			Database::needRoot(true, $dbserver, false);
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
 			Database::needRoot(false);
@@ -150,7 +150,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					$pma = Settings::Get('panel.phpmyadmin_url');
 				}
 
-				Database::needRoot(true, $dbserver);
+				Database::needRoot(true, $dbserver, false);
 				Database::needSqlData();
 				$sql_root = Database::getSqlData();
 				Database::needRoot(false);
@@ -287,7 +287,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			Database::needRoot(true, $result['dbserver']);
+			Database::needRoot(true, $result['dbserver'], false);
 			$mbdata_stmt = Database::prepare("
 				SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 				WHERE table_schema = :table_schema
@@ -364,7 +364,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			}
 
 			// Begin root-session
-			Database::needRoot(true, $result['dbserver']);
+			Database::needRoot(true, $result['dbserver'], false);
 			$dbmgr = new DbManager($this->logger());
 			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 				$dbmgr->getManager()->grantPrivilegesTo($result['databasename'], $password, $mysql_access_host, false, true);
@@ -449,7 +449,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					'dbserver' => $_dbserver['dbserver']
 				], $query_fields), true, true);
 				// Begin root-session
-				Database::needRoot(true, $_dbserver['dbserver']);
+				Database::needRoot(true, $_dbserver['dbserver'], false);
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$mbdata_stmt = Database::prepare("
 						SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
@@ -536,7 +536,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		// Begin root-session
-		Database::needRoot(true, $result['dbserver']);
+		Database::needRoot(true, $result['dbserver'], false);
 		$dbm = new DbManager($this->logger());
 		$dbm->getManager()->deleteDatabase($result['databasename']);
 		Database::needRoot(false);
