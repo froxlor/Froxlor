@@ -273,3 +273,8 @@ EOF;
 
 	Froxlor::updateToVersion('2.0.4');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.4')) {
+	Update::showUpdateStep("Updating from 2.0.4 to 2.0.5", false);
+	Froxlor::updateToVersion('2.0.5');
+}
