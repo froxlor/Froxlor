@@ -54,11 +54,13 @@ return [
 				'label' => lng('ssl_certificates.valid_from'),
 				'field' => 'validfromdate',
 				'searchable' => false,
+				'sortable' => false,
 			],
 			'c.validtodate' => [
 				'label' => lng('ssl_certificates.valid_until'),
 				'field' => 'validtodate',
 				'searchable' => false,
+				'sortable' => false,
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [
