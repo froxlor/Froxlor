@@ -67,6 +67,11 @@ if (!empty($errid)) {
 		$mail_body .= "User-Area: " . AREA . "\n";
 		$mail_body .= "Froxlor-version: " . Froxlor::VERSION . "\n";
 		$mail_body .= "DB-version: " . Froxlor::DBVERSION . "\n\n";
+		try {
+			$mail_body .= "Database: " . Database::getAttribute(PDO::ATTR_SERVER_VERSION);
+		} catch (\Exception $e) {
+			/* ignore */
+		}
 		$mail_body .= "End of report";
 		$mail_html = nl2br($mail_body);
 
