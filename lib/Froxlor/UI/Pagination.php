@@ -63,7 +63,9 @@ class Pagination
 		$this->perPage = $perPage;
 		$this->pageno = 1;
 		// add default limitation by settings
-		$this->addLimit(Settings::Get('panel.paging'));
+		if (Settings::Get('panel.paging') > 0) {
+			$this->addLimit(Settings::Get('panel.paging'));
+		}
 		// check search request
 		$this->searchtext = '';
 		if (count($fields) > 0) {
@@ -201,7 +203,7 @@ class Pagination
 	public function getApiResponseParams(): array
 	{
 		return [
-			'pagination' => [
+			'pagination' => (Settings::Get('panel.paging') > 0) ? [
 				"total" => $this->entries,
 				"per_page" => $this->perPage,
 				"current_page" => $this->pageno,
@@ -209,7 +211,7 @@ class Pagination
 				"from" => $this->data['sql_offset'] ?? null,
 				"to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
 				'sortfields' => array_keys($this->fields),
-			]
+			] : []
 		];
 	}
 
