@@ -203,15 +203,15 @@ class Pagination
 	public function getApiResponseParams(): array
 	{
 		return [
-			'pagination' => (Settings::Get('panel.paging') > 0) ? [
+			'pagination' => [
 				"total" => $this->entries,
 				"per_page" => $this->perPage,
 				"current_page" => $this->pageno,
-				"last_page" => ceil($this->entries / $this->perPage),
+				"last_page" => (Settings::Get('panel.paging') > 0) ? ceil($this->entries / $this->perPage) : -1,
 				"from" => $this->data['sql_offset'] ?? null,
 				"to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
 				'sortfields' => array_keys($this->fields),
-			] : []
+			]
 		];
 	}
 
