@@ -222,7 +222,7 @@ CREATE TABLE `panel_customers` (
   `data_2fa` varchar(25) NOT NULL default '',
   `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
-  `allowed_mysqlserver` text NOT NULL default '[0]',
+  `allowed_mysqlserver` text NOT NULL,
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;

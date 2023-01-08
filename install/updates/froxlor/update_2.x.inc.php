@@ -232,7 +232,7 @@ if (Froxlor::isFroxlorVersion('2.0.0')) {
 	if (!isset($has_customer_table_update_200)) {
 		Update::showUpdateStep("Creating new tables and fields");
 		// new customer allowed_mysqlserver field
-		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_mysqlserver` `allowed_mysqlserver` text NOT NULL default '[0]';");
+		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_mysqlserver` `allowed_mysqlserver` text NOT NULL;");
 		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL;");
 		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `customernumber` `customernumber` varchar(100) NOT NULL default '';");
 		Update::lastStepStatus(0);
