@@ -211,7 +211,7 @@ if (Froxlor::isDatabaseVersion('202211030')) {
 	$newCronBin = Froxlor::getInstallDir().'/bin/froxlor-cli';
 	$compCron = <<<EOF
 <?php
-chmod($newCronBin, 0755);
+chmod('$newCronBin', 0755);
 // re-create cron.d configuration file
 exec('$newCronBin froxlor:cron -r 99');
 exit;
@@ -250,4 +250,26 @@ if (Froxlor::isFroxlorVersion('2.0.1')) {
 if (Froxlor::isFroxlorVersion('2.0.2')) {
 	Update::showUpdateStep("Updating from 2.0.2 to 2.0.3", false);
 	Froxlor::updateToVersion('2.0.3');
+}
+
+if (Froxlor::isFroxlorVersion('2.0.3')) {
+	Update::showUpdateStep("Updating from 2.0.3 to 2.0.4", false);
+
+	$complete_filedir = Froxlor::getInstallDir() . '/scripts';
+	// check if compat. cronjob still exists (most likely didn't run successfully b/c of error from former 2.0 release)
+	if (@file_exists($complete_filedir.'/froxlor_master_cronjob.php')) {
+		Update::showUpdateStep("Adjusting backward compatibility for cronjob");
+		$newCronBin = Froxlor::getInstallDir() . '/bin/froxlor-cli';
+		$compCron = <<<EOF
+<?php
+chmod('$newCronBin', 0755);
+// re-create cron.d configuration file
+exec('$newCronBin froxlor:cron -r 99');
+exit;
+EOF;
+		file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToVersion('2.0.4');
 }
