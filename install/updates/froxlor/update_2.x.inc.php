@@ -67,7 +67,10 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
 	// new customer allowed_mysqlserver field
-	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` text NOT NULL default '[0]';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `customernumber` `customernumber` varchar(100) NOT NULL default '';");
+	$has_customer_table_update_200 = true;
 	// ftp_users adjustments
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE COLUMN `password` `password` varchar(255) NOT NULL default '';");
 	Database::query("ALTER TABLE `" . TABLE_FTP_QUOTALIMITS . "` CHANGE COLUMN `name` `name` varchar(255) default NULL;");
@@ -207,6 +210,7 @@ if (Froxlor::isDatabaseVersion('202211030')) {
 	$newCronBin = Froxlor::getInstallDir().'/bin/froxlor-cli';
 	$compCron = <<<EOF
 <?php
+chmod($newCronBin, 0755);
 // re-create cron.d configuration file
 exec('$newCronBin froxlor:cron -r 99');
 exit;
@@ -220,4 +224,19 @@ EOF;
 if (Froxlor::isFroxlorVersion('2.0.0-beta1')) {
 	Update::showUpdateStep("Updating from 2.0.0-beta1 to 2.0.0", false);
 	Froxlor::updateToVersion('2.0.0');
+}
+
+if (Froxlor::isFroxlorVersion('2.0.0')) {
+	Update::showUpdateStep("Updating from 2.0.0 to 2.0.1", false);
+
+	if (!isset($has_customer_table_update_200)) {
+		Update::showUpdateStep("Creating new tables and fields");
+		// new customer allowed_mysqlserver field
+		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_mysqlserver` `allowed_mysqlserver` text NOT NULL default '[0]';");
+		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `allowed_phpconfigs` `allowed_phpconfigs` text NOT NULL default '';");
+		Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE COLUMN `customernumber` `customernumber` varchar(100) NOT NULL default '';");
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToVersion('2.0.1');
 }

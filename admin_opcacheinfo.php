@@ -155,6 +155,9 @@ if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {
 	if ($config['directives']['opcache.file_cache_only'] || !empty($status['file_cache_only'])) {
 		$overview = false;
 	} else {
+		$status['opcache_statistics']['start_time'] = $status['opcache_statistics']['start_time'] ?? time();
+		$status['opcache_statistics']['last_restart_time'] = $status['opcache_statistics']['last_restart_time'] ?? time();
+
 		$overview = array_merge(
 			$status['memory_usage'],
 			$status['opcache_statistics'],
