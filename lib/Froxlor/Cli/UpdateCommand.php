@@ -140,7 +140,7 @@ final class UpdateCommand extends CliCommand
 						if ($yestoall || $helper->ask($input, $output, $question)) {
 							// do extract
 							$output->writeln('Extracting...');
-							$auex = AutoUpdate::extractZip($audl);
+							$auex = AutoUpdate::extractZip(Froxlor::getInstallDir() . '/updates/' . $audl);
 							if ($auex == 0) {
 								$output->writeln("<info>Froxlor files updated successfully.</>");
 								$result = self::SUCCESS;
@@ -188,7 +188,7 @@ final class UpdateCommand extends CliCommand
 		include_once Froxlor::getInstallDir() . '/lib/tables.inc.php';
 		define('_CRON_UPDATE', 1);
 		ob_start([
-			'this',
+			$this,
 			'cleanUpdateOutput'
 		]);
 		include_once Froxlor::getInstallDir() . '/install/updatesql.php';
