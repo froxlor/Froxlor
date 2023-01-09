@@ -4678,7 +4678,7 @@ aliases:     files
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_configdir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
-						<command><![CDATA[a2dismod php7.2]]></command>
+						<command><![CDATA[a2dismod php7.4]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
@@ -4711,7 +4711,7 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php7.2]]></command>
+						<command><![CDATA[a2dismod php7.4]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
