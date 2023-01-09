@@ -701,10 +701,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$wwwserveralias = ($selectserveralias == '1') ? '1' : '0';
 
 		// if allowed, check for 'is email domain'-flag
-		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
-			$isemaildomain = intval($isemaildomain);
-		} elseif ($result['parentdomainid'] != '0') {
-			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
+		if ($isemaildomain != $result['isemaildomain']) {
+			if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2')) {
+				$isemaildomain = intval($isemaildomain);
+			} elseif ($result['parentdomainid'] != '0') {
+				$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
+			}
 		}
 
 		// check changes of openbasedir-path variable
