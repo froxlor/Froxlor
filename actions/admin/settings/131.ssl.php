@@ -180,7 +180,9 @@ return [
 						'letsencrypt' => 'Let\'s Encrypt (Live)',
 						'buypass_test' => 'Buypass (Test / Staging)',
 						'buypass' => 'Buypass (Live)',
-						'zerossl' => 'ZeroSSL (Live)'
+						'zerossl' => 'ZeroSSL (Live)',
+						'google' => 'Google (Live)',
+						'google_test' => 'Google (Test / Staging)',
 					],
 					'save_method' => 'storeSettingField'
 				],

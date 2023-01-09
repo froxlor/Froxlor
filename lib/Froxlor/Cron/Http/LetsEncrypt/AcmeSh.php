@@ -46,7 +46,9 @@ class AcmeSh extends FroxlorCron
 		'letsencrypt_test' => "https://acme-staging-v02.api.letsencrypt.org/directory",
 		'buypass' => "https://api.buypass.com/acme/directory",
 		'buypass_test' => "https://api.test4.buypass.no/acme/directory",
-		'zerossl' => "https://acme.zerossl.com/v2/DV90"
+		'zerossl' => "https://acme.zerossl.com/v2/DV90",
+		'google' => "https://dv.acme-v02.api.pki.goog/directory",
+		'google_test' => "https://dv.acme-v02.test-api.pki.goog/directory",
 	];
 	public static $no_inserttask = false;
 	private static $apiserver = "";
