@@ -260,8 +260,17 @@ class UI
 	 */
 	public static function twigBuffer($name, array $context = [])
 	{
+		$template_file = self::getTheme() . '/' . $name;
+		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $template_file)) {
+			PhpHelper::phpErrHandler(E_USER_WARNING, "Template '" . $template_file . "' could not be found, trying fallback theme", __FILE__, __LINE__);
+			$template_file = self::$default_theme . '/'. $name;
+			if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $template_file)) {
+				PhpHelper::phpErrHandler(E_USER_ERROR, "Unknown template '" . $template_file . "'", __FILE__, __LINE__);
+			}
+		}
+
 		self::$twigbuf[] = [
-			self::getTheme() . '/' . $name => $context
+			$template_file => $context
 		];
 	}
 
