@@ -332,7 +332,7 @@ if (CurrentUser::hasSession()) {
 	$cookie_params = [
 		'expires' => time() + Settings::Get('session.sessiontimeout'),
 		'path' => '/',
-		'domain' => $_SERVER['HTTP_HOST'],
+		'domain' => $_SERVER['SERVER_NAME'],
 		'secure' => UI::requestIsHttps(),
 		'httponly' => true,
 		'samesite' => 'Strict'

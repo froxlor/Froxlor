@@ -95,7 +95,7 @@ class UI
 		session_set_cookie_params([
 			'lifetime' => self::$install_mode ? 7200 : 600, // will be renewed based on settings in lib/init.php
 			'path' => '/',
-			'domain' => $_SERVER['HTTP_HOST'],
+			'domain' => $_SERVER['SERVER_NAME'],
 			'secure' => self::requestIsHttps(),
 			'httponly' => true,
 			'samesite' => 'Strict'
