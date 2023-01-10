@@ -291,3 +291,13 @@ if (Froxlor::isFroxlorVersion('2.0.5')) {
 
 	Froxlor::updateToVersion('2.0.6');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.6')) {
+	Update::showUpdateStep("Updating from 2.0.6 to 2.0.7", false);
+
+	Update::showUpdateStep("Correcting allowed_mysqlserver for customers");
+	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `allowed_mysqlserver` = '[0]' WHERE `allowed_mysqlserver` = ''");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToVersion('2.0.7');
+}
