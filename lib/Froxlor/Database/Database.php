@@ -28,6 +28,7 @@ namespace Froxlor\Database;
 use Exception;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use PDO;
@@ -137,7 +138,7 @@ class Database
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) && !is_array($sql_root)) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) && empty($sql_root)) {
 			$sql_root = [
 				0 => [
 					'caption' => 'Default',
@@ -147,12 +148,20 @@ class Database
 					'password' => $sql['root_password']
 				]
 			];
+			unset($sql['root_user']);
+			unset($sql['root_password']);
+			// write new layout so this won't happen again
+			self::generateNewUserData($sql, $sql_root);
+			// re-read file
+			require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 		}
 
 		$substitutions = [
 			$sql['password'] => 'DB_UNPRIV_PWD',
-			$sql_root[0]['password'] => 'DB_ROOT_PWD'
 		];
+		foreach ($sql_root as $dbserver => $sql_root_data) {
+			$substitutions[$sql_root_data[$dbserver]]['password'] = 'DB_ROOT_PWD';
+		}
 
 		// hide username/password in messages
 		$error_message = $error->getMessage();
@@ -408,7 +417,7 @@ class Database
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (self::$needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
 			$sql_root = [
 				0 => [
 					'caption' => 'Default',
@@ -420,6 +429,10 @@ class Database
 			];
 			unset($sql['root_user']);
 			unset($sql['root_password']);
+			// write new layout so this won't happen again
+			self::generateNewUserData($sql, $sql_root);
+			// re-read file
+			require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 		}
 
 		// either root or unprivileged user
@@ -581,5 +594,23 @@ class Database
 			self::showerror($e);
 		}
 		return $result;
+	}
+
+	/**
+	 * write new userdata.inc.php file
+	 */
+	private static function generateNewUserData(array $sql, array $sql_root)
+	{
+		$content = PhpHelper::parseArrayToPhpFile(
+			['sql' => $sql, 'sql_root' => $sql_root],
+			'automatically generated userdata.inc.php for froxlor'
+		);
+		chmod(Froxlor::getInstallDir() . "/lib/userdata.inc.php", 0700);
+		file_put_contents(Froxlor::getInstallDir() . "/lib/userdata.inc.php", $content);
+		chmod(Froxlor::getInstallDir() . "/lib/userdata.inc.php", 0400);
+		clearstatcache();
+		if (function_exists('opcache_invalidate')) {
+			@opcache_invalidate(Froxlor::getInstallDir() . "/lib/userdata.inc.php", true);
+		}
 	}
 }
