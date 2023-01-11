@@ -50,13 +50,82 @@ if (Settings::IsInList('panel.customer_hide_options', 'email') || $userinfo['ema
 $id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'emails') {
+	$result_stmt = Database::prepare("
+		SELECT COUNT(DISTINCT `domainid`) as maildomains FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :cid
+	");
+	$domain_count = Database::pexecute_first($result_stmt, [
+		"cid" => $userinfo['customerid']
+	]);
+	if (true /* $domain_count['maildomains'] && $domain_count['maildomains'] > 1 */) {
+		$searchfield = Request::get('searchfield', '');
+		$searchtext = Request::get('searchtext', '');
+		$sql_search = '';
+		if (!empty($searchfield) && !empty($searchtext)) {
+			// d.domain is a fixed searchfield for now
+			$sql_search = ' AND `d`.`domain` LIKE :domain';
+		}
+		$email_domain_stmt = Database::prepare("
+		SELECT DISTINCT d.domain, e.domainid,
+		COUNT(e.email) as addresses,
+		IFNULL(SUM(CASE WHEN e.popaccountid > 0 THEN 1 ELSE 0 END), 0) as accounts,
+		IFNULL(SUM(
+			CASE
+			WHEN LENGTH(REPLACE(e.destination, CONCAT(e.email_full, ' '), '')) - LENGTH(REPLACE(REPLACE(e.destination, CONCAT(e.email_full, ' '), ''), ' ', '')) > 0
+			THEN LENGTH(REPLACE(e.destination, CONCAT(e.email_full, ' '), '')) - LENGTH(REPLACE(REPLACE(e.destination, CONCAT(e.email_full, ' '), ''), ' ', ''))
+			WHEN e.destination <> e.email_full THEN 1
+			ELSE 0
+			END
+		), 0) as forwarder
+		FROM `mail_virtual` e
+		LEFT JOIN `panel_domains` d ON d.id = e.domainid
+		WHERE e.customerid = :cid AND d.domain IS NOT NULL " . $sql_search
+		);
+		$params = ["cid" => $userinfo['customerid']];
+		if (!empty($sql_search)) {
+			$params["domain"] = '%' . $searchtext . '%';
+		}
+		Database::pexecute($email_domain_stmt, $params);
+		$domains = [];
+		while ($row = $email_domain_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if (!empty($row['domain'])) {
+				$domains[] = $row;
+			}
+		}
+		$emaildomain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails_overview.php';
+		$collection = [
+			'data' => $domains,
+			'pagination' => []
+		];
+
+		UI::view('user/table.html.twig', [
+			'listing' => Listing::formatFromArray($collection, $emaildomain_list_data['emaildomain_list'],
+				'emaildomain_list'),
+			'actions_links' => CurrentUser::canAddResource('emails') ? [
+				[
+					'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
+					'label' => lng('emails.emails_add')
+				]
+			] : null,
+		]);
+	} else {
+		// only emails for one domain -> show email address listing directly
+		$page = 'email_domain';
+	}
+}
+if ($page == 'email_domain') {
+	$email_domainid = Request::any('domainid', 0);
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 
+		$sql_search = [];
+		if ($email_domainid > 0) {
+			$sql_search = ['sql_search' => ['m.domainid' => ['op' => '=', 'value' => $email_domainid]]];
+		}
 		try {
 			$email_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails.php';
-			$collection = (new Collection(Emails::class, $userinfo))
-				->withPagination($email_list_data['email_list']['columns'], $email_list_data['email_list']['default_sorting']);
+			$collection = (new Collection(Emails::class, $userinfo, $sql_search))
+				->withPagination($email_list_data['email_list']['columns'],
+					$email_list_data['email_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
@@ -71,15 +140,21 @@ if ($page == 'overview' || $page == 'emails') {
 		]);
 		$emaildomains_count = $result2['emaildomains'];
 
-		$actions_links = false;
-		if (CurrentUser::canAddResource('emails')) {
-			$actions_links = [
-				[
-					'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
-					'label' => lng('emails.emails_add')
-				]
-			];
-		}
+		$actions_links = [
+			[
+				'class' => 'btn-outline-primary',
+				'href' => $linker->getLink([
+					'section' => 'email',
+					'page' => 'emails',
+				]),
+				'label' => 'back to domain overview',
+				'icon' => 'fa-solid fa-reply'
+			],
+			CurrentUser::canAddResource('emails') ? [
+				'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
+				'label' => lng('emails.emails_add')
+			] : null
+		];
 
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $email_list_data, 'email_list'),
@@ -249,6 +324,7 @@ if ($page == 'overview' || $page == 'emails') {
 		]);
 	}
 } elseif ($page == 'accounts') {
+	$email_domainid = Request::any('domainid', 0);
 	if ($action == 'add' && $id != 0) {
 		if ($userinfo['email_accounts'] == '-1' || ($userinfo['email_accounts_used'] < $userinfo['email_accounts'])) {
 			try {
@@ -267,7 +343,8 @@ if ($page == 'overview' || $page == 'emails') {
 					Response::dynamicError($e->getMessage());
 				}
 				Response::redirectTo($filename, [
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => $email_domainid,
 					'action' => 'edit',
 					'id' => $id
 				]);
@@ -292,7 +369,8 @@ if ($page == 'overview' || $page == 'emails') {
 							'class' => 'btn-secondary',
 							'href' => $linker->getLink([
 								'section' => 'email',
-								'page' => 'emails',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid,
 								'action' => 'edit',
 								'id' => $id
 							]),
@@ -301,7 +379,7 @@ if ($page == 'overview' || $page == 'emails') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -332,7 +410,8 @@ if ($page == 'overview' || $page == 'emails') {
 					Response::dynamicError($e->getMessage());
 				}
 				Response::redirectTo($filename, [
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => $email_domainid,
 					'action' => 'edit',
 					'id' => $id
 				]);
@@ -350,7 +429,8 @@ if ($page == 'overview' || $page == 'emails') {
 							'class' => 'btn-secondary',
 							'href' => $linker->getLink([
 								'section' => 'email',
-								'page' => 'emails',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid,
 								'action' => 'edit',
 								'id' => $id
 							]),
@@ -359,7 +439,7 @@ if ($page == 'overview' || $page == 'emails') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -385,7 +465,8 @@ if ($page == 'overview' || $page == 'emails') {
 					Response::dynamicError($e->getMessage());
 				}
 				Response::redirectTo($filename, [
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => $email_domainid,
 					'action' => 'edit',
 					'id' => $id
 				]);
@@ -403,7 +484,8 @@ if ($page == 'overview' || $page == 'emails') {
 							'class' => 'btn-secondary',
 							'href' => $linker->getLink([
 								'section' => 'email',
-								'page' => 'emails',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid,
 								'action' => 'edit',
 								'id' => $id
 							]),
@@ -412,7 +494,7 @@ if ($page == 'overview' || $page == 'emails') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -438,7 +520,8 @@ if ($page == 'overview' || $page == 'emails') {
 					Response::dynamicError($e->getMessage());
 				}
 				Response::redirectTo($filename, [
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => $email_domainid,
 					'action' => 'edit',
 					'id' => $id
 				]);
@@ -446,12 +529,14 @@ if ($page == 'overview' || $page == 'emails') {
 				HTML::askYesNoWithCheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, [
 					'id' => $id,
 					'page' => $page,
+					'domainid' => $email_domainid,
 					'action' => $action
 				], $idna_convert->decode($result['email_full']));
 			}
 		}
 	}
 } elseif ($page == 'forwarders') {
+	$email_domainid = Request::any('domainid', 0);
 	if ($action == 'add' && $id != 0) {
 		if ($userinfo['email_forwarders_used'] < $userinfo['email_forwarders'] || $userinfo['email_forwarders'] == '-1') {
 			try {
@@ -471,7 +556,8 @@ if ($page == 'overview' || $page == 'emails') {
 						Response::dynamicError($e->getMessage());
 					}
 					Response::redirectTo($filename, [
-						'page' => 'emails',
+						'page' => 'email_domain',
+						'domainid' => $email_domainid,
 						'action' => 'edit',
 						'id' => $id
 					]);
@@ -489,7 +575,8 @@ if ($page == 'overview' || $page == 'emails') {
 								'class' => 'btn-secondary',
 								'href' => $linker->getLink([
 									'section' => 'email',
-									'page' => 'emails',
+									'page' => 'email_domain',
+									'domainid' => $email_domainid,
 									'action' => 'edit',
 									'id' => $id
 								]),
@@ -498,7 +585,7 @@ if ($page == 'overview' || $page == 'emails') {
 							],
 							[
 								'class' => 'btn-secondary',
-								'href' => $linker->getLink(['section' => 'email', 'page' => 'emails']),
+								'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
 								'label' => lng('menue.email.emails'),
 								'icon' => 'fa-solid fa-envelope'
 							]
@@ -540,7 +627,8 @@ if ($page == 'overview' || $page == 'emails') {
 						Response::dynamicError($e->getMessage());
 					}
 					Response::redirectTo($filename, [
-						'page' => 'emails',
+						'page' => 'email_domain',
+						'domainid' => $email_domainid,
 						'action' => 'edit',
 						'id' => $id
 					]);
@@ -549,6 +637,7 @@ if ($page == 'overview' || $page == 'emails') {
 						'id' => $id,
 						'forwarderid' => $forwarderid,
 						'page' => $page,
+						'domainid' => $email_domainid,
 						'action' => $action
 					], $idna_convert->decode($result['email_full']) . ' -> ' . $idna_convert->decode($forwarder));
 				}

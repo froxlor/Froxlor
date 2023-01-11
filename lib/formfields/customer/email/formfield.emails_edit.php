@@ -29,7 +29,7 @@ return [
 	'emails_edit' => [
 		'title' => lng('emails.emails_edit'),
 		'image' => 'fa-solid fa-pen',
-		'self_overview' => ['section' => 'email', 'page' => 'emails'],
+		'self_overview' => ['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid ?: 1],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.emails_edit'),
@@ -48,13 +48,13 @@ return [
 						'next_to' => [
 							'edit_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=changepw&amp;id=' . $result['id'],
+								'href' => $filename . '?page=accounts&amp;domainid=' . $result['domainid'] . '&amp;action=changepw&amp;id=' . $result['id'],
 								'label' => lng('menue.main.changepassword'),
 								'classes' => 'btn btn-sm btn-secondary'
 							],
 							'del_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=delete&amp;id=' . $result['id'],
+								'href' => $filename . '?page=accounts&amp;domainid=' . $result['domainid'] . '&amp;action=delete&amp;id=' . $result['id'],
 								'label' => lng('emails.account_delete'),
 								'classes' => 'btn btn-sm btn-danger'
 							]
@@ -68,7 +68,7 @@ return [
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=add&amp;id=' . $result['id'],
+								'href' => $filename . '?page=accounts&amp;domainid=' . $result['domainid'] . '&amp;action=add&amp;id=' . $result['id'],
 								'label' => lng('emails.account_add'),
 								'classes' => 'btn btn-sm btn-primary'
 							]
@@ -83,7 +83,7 @@ return [
 							'add_link' => [
 								'visible' => ((int)$result['popaccountid'] != 0 && Settings::Get('system.mail_quota_enabled')),
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=changequota&amp;id=' . $result['id'],
+								'href' => $filename . '?page=accounts&amp;domainid=' . $result['domainid'] . '&amp;action=changequota&amp;id=' . $result['id'],
 								'label' => lng('emails.quota_edit'),
 								'classes' => 'btn btn-sm btn-secondary'
 							]
@@ -96,7 +96,7 @@ return [
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'],
+								'href' => $filename . '?page=' . $page . '&amp;domainid=' . $result['domainid'] . '&amp;action=togglecatchall&amp;id=' . $result['id'],
 								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
 								'classes' => 'btn btn-sm btn-secondary'
 							]
@@ -109,7 +109,7 @@ return [
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=forwarders&amp;action=add&amp;id=' . $result['id'],
+								'href' => $filename . '?page=forwarders&amp;domainid=' . $result['domainid'] . '&amp;action=add&amp;id=' . $result['id'],
 								'label' => lng('emails.forwarder_add'),
 								'classes' => 'btn btn-sm btn-primary'
 							]
