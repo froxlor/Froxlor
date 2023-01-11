@@ -73,12 +73,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$password = $this->getParam('mysql_password');
 
 			// parameters
-			$dbserver = $this->getParam('mysql_server', true, 0);
 			$databasedescription = $this->getParam('description', true, '');
 			$databasename = $this->getParam('custom_suffix', true, '');
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 			// get needed customer info to reduce the mysql-usage-counter by one
 			$customer = $this->getCustomerData('mysqls');
+			$dbserver = $this->getParam('mysql_server', true, $this->getDefaultMySqlServer($customer));
 
 			// validation
 			$password = Validate::validate($password, 'password', '', '', [], true);
@@ -557,5 +557,14 @@ class Mysqls extends ApiCommand implements ResourceEntity
 
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		return $this->response($result);
+	}
+
+	private function getDefaultMySqlServer(array $customer) {
+		$allowed_mysqlservers = json_decode($customer['allowed_mysqlserver'] ?? '[]', true);
+		asort($allowed_mysqlservers, SORT_NUMERIC);
+		if (count($allowed_mysqlservers) == 1 && $allowed_mysqlservers[0] != 0) {
+			return (int) $allowed_mysqlservers[0];
+		}
+		return (int) array_shift($allowed_mysqlservers);
 	}
 }
