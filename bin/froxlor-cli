@@ -35,6 +35,7 @@ use Froxlor\Cli\UpdateCommand;
 use Froxlor\Cli\InstallCommand;
 use Froxlor\Cli\MasterCron;
 use Froxlor\Cli\UserCommand;
+use Froxlor\Cli\ValidateAcmeWebroot;
 use Froxlor\Froxlor;
 
 // validate correct php version
@@ -59,4 +60,5 @@ $application->add(new UpdateCommand());
 $application->add(new InstallCommand());
 $application->add(new MasterCron());
 $application->add(new UserCommand());
+$application->add(new ValidateAcmeWebroot())
 $application->run();

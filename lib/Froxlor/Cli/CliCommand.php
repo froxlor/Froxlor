@@ -37,7 +37,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CliCommand extends Command
 {
 
-	protected function validateRequirements(InputInterface $input, OutputInterface $output): int
+	protected function validateRequirements(InputInterface $input, OutputInterface $output, bool $ignore_has_updates = false): int
 	{
 		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
@@ -51,7 +51,7 @@ class CliCommand extends Command
 			$output->writeln("<error>" . $e->getMessage() . "</>");
 			return self::INVALID;
 		}
-		if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
+		if (!$ignore_has_updates && (Froxlor::hasUpdates() || Froxlor::hasDbUpdates())) {
 			if ((int)Settings::Get('system.cron_allowautoupdate') == 1) {
 				return $this->runUpdate($output);
 			} else {

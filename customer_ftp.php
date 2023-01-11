@@ -40,7 +40,7 @@ use Froxlor\UI\Response;
 use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options', 'ftp') || $userinfo['ftps'] == 0) {
+if (Settings::IsInList('panel.customer_hide_options', 'ftp')) {
 	Response::redirectTo('customer_index.php');
 }
 
