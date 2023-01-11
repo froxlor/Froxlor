@@ -80,7 +80,7 @@ final class ValidateAcmeWebroot extends CliCommand
 						$conf_content = file_get_contents($acme_domain_conf);
 					} else {
 						$io->info("No domain configuration file found in '" . $acmesh_dir . "'");
-						break;
+						continue;
 					}
 				}
 				if (!empty($conf_content)) {
