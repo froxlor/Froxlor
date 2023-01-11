@@ -60,5 +60,5 @@ $application->add(new UpdateCommand());
 $application->add(new InstallCommand());
 $application->add(new MasterCron());
 $application->add(new UserCommand());
-$application->add(new ValidateAcmeWebroot())
+$application->add(new ValidateAcmeWebroot());
 $application->run();

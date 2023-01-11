@@ -25,10 +25,12 @@
 
 namespace Froxlor\Cli;
 
+use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
 use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -59,7 +61,7 @@ final class ValidateAcmeWebroot extends CliCommand
 			$helper = $this->getHelper('question');
 			$count_changes = 0;
 			// get all Let's Encrypt enabled domains
-			$sel_stmt = Database::prepare("SELECT id, domain FROM panel_domains WHERE `letsencrypt` = '1' ORDER BY id ASC");
+			$sel_stmt = Database::prepare("SELECT id, domain FROM panel_domains WHERE `letsencrypt` = '1' AND aliasdomain IS NULL ORDER BY id ASC");
 			Database::pexecute($sel_stmt);
 			$domains = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
 			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
@@ -68,7 +70,6 @@ final class ValidateAcmeWebroot extends CliCommand
 			foreach ($domains as $domain_arr) {
 				$domain = $domain_arr['domain'];
 				$acme_domain_conf = FileDir::makeCorrectFile($acmesh_dir . '/' . $domain . '/' . $domain . '.conf');
-				$conf_content = "";
 				if (file_exists($acme_domain_conf)) {
 					$io->text("Getting info from " . $acme_domain_conf);
 					$conf_content = file_get_contents($acme_domain_conf);
@@ -78,7 +79,7 @@ final class ValidateAcmeWebroot extends CliCommand
 						$io->text("Getting info from " . $acme_domain_conf);
 						$conf_content = file_get_contents($acme_domain_conf);
 					} else {
-						$io->notice("No domain configuration file found in '" . $acmesh_dir . "'");
+						$io->info("No domain configuration file found in '" . $acmesh_dir . "'");
 						break;
 					}
 				}
@@ -111,9 +112,13 @@ final class ValidateAcmeWebroot extends CliCommand
 				}
 			}
 			if ($count_changes > 0) {
-				$question = new ConfirmationQuestion('Changes detected. Force cronjob to refresh certificates? [yes] ', true, '/^(y|j)/i');
-				if ($yestoall || $helper->ask($input, $output, $question)) {
-					passthru(FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -f -d');
+				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
+					Cronjob::inserttask(TaskId::REBUILD_VHOST);
+				} else {
+					$question = new ConfirmationQuestion('Changes detected. Force cronjob to refresh certificates? [yes] ', true, '/^(y|j)/i');
+					if ($yestoall || $helper->ask($input, $output, $question)) {
+						passthru(FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -f -d');
+					}
 				}
 			}
 		}
