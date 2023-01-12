@@ -56,6 +56,11 @@ final class ValidateAcmeWebroot extends CliCommand
 
 		$io = new SymfonyStyle($input, $output);
 
+		if ((int) Settings::Get('system.leenabled') == 0) {
+			$io->info("Let's Encrypt not activated in froxlor settings.");
+			$result = self::INVALID;
+		}
+
 		if ($result == self::SUCCESS) {
 			$yestoall = $input->getOption('yes-to-all') !== false;
 			$helper = $this->getHelper('question');
@@ -67,6 +72,26 @@ final class ValidateAcmeWebroot extends CliCommand
 			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
 			$acmesh_dir = dirname(Settings::Get('system.acmeshpath'));
 			$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
+
+			if ($acmesh_challenge_dir != Froxlor::getInstallDir()) {
+				$io->warning([
+					"ACME challenge docroot from settings differs from the current installation directory.",
+					"Settings: '" . $acmesh_challenge_dir . "'",
+					"Default/recommended value: '" . Froxlor::getInstallDir() . "'",
+				]);
+				$question = new ConfirmationQuestion('Fix ACME challenge docroot setting? [yes] ', true, '/^(y|j)/i');
+				if ($yestoall || $helper->ask($input, $output, $question)) {
+					Settings::Set('system.letsencryptchallengepath', Froxlor::getInstallDir());
+					$former_value = $acmesh_challenge_dir;
+					$acmesh_challenge_dir = Froxlor::getInstallDir();
+					// need to update the corresponding acme-alias config-file
+					$acme_alias_file = Settings::Get('system.letsencryptacmeconf');
+					$sed_params = "s@".$former_value."@" . $acmesh_challenge_dir . "@";
+					FileDir::safe_exec('sed -i -e "' . $sed_params . '" ' . escapeshellarg($acme_alias_file));
+					$count_changes++;
+				}
+			}
+
 			foreach ($domains as $domain_arr) {
 				$domain = $domain_arr['domain'];
 				$acme_domain_conf = FileDir::makeCorrectFile($acmesh_dir . '/' . $domain . '/' . $domain . '.conf');
