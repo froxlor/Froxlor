@@ -30,6 +30,7 @@ return [
 		'title' => lng('admin.domain_edit'),
 		'image' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
+		'id' => 'domain_edit',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domainsettings'),
@@ -153,8 +154,7 @@ return [
 						'type' => 'checkbox',
 						'values' => $ipsandports,
 						'value' => $usedips,
-						'is_array' => 1,
-						'mandatory' => true
+						'is_array' => 1
 					],
 					'selectserveralias' => [
 						'label' => lng('admin.selectserveralias'),
