@@ -2269,7 +2269,7 @@ Yours sincerely, your administrator',
 		'nocustomers' => 'You need at least one customer to view the traffic reports.',
 		'top5customers' => 'Top 5 customers',
 		'nodata' => 'No data for given range found.',
-		'range' => [
+		'ranges' => [
 			'last24h' => 'last 24 hours',
 			'last7d' => 'last 7 days',
 			'last30d' => 'last 30 days',

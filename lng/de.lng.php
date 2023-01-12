@@ -2138,7 +2138,7 @@ Vielen Dank, Ihr Administrator',
 		'nocustomers' => 'Es wird mindestens ein Kunde benötigt um die Traffic Statistiken anzuzeigen.',
 		'top5customers' => 'Top 5 Kunden',
 		'nodata' => 'Keine Daten im angegebenen Zeitraum.',
-		'range' => [
+		'ranges' => [
 			'last24h' => 'die letzten 24 Std',
 			'last7d' => 'die letzten 7 Tage',
 			'last30d' => 'die letzten  30 Tage',
