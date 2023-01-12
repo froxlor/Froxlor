@@ -50,7 +50,7 @@
 	</form>
 
 	{# add translation for custom validations #}
-	{% if form_data.id is defined and form_data.id in ['customer_add', 'customer_edit'] %}
+	{% if form_data.id is defined and form_data.id in ['customer_add', 'customer_edit', 'domain_add', 'domain_edit'] %}
 		<script>$(function() { $.extend($.validator.messages, {required: "{{ lng('error.requiredfield') }}"}) });</script>
 	{% endif %}
 {% endmacro %}

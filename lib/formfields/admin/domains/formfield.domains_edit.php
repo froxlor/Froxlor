@@ -154,7 +154,8 @@ return [
 						'type' => 'checkbox',
 						'values' => $ipsandports,
 						'value' => $usedips,
-						'is_array' => 1
+						'is_array' => 1,
+						'mandatory' => true
 					],
 					'selectserveralias' => [
 						'label' => lng('admin.selectserveralias'),

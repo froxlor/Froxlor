@@ -29,6 +29,9 @@ $(document).ready(function () {
 					minlength: 1
 				}
 			},
+			errorPlacement: function(error, element) {
+				$(error).prependTo($(element).parent().parent());
+			}
 		});
 	});
 });
