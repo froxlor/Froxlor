@@ -1,7 +1,7 @@
-{% macro ditem(lngstr, available, used, assigned = null, formatbytes = false) %}
+{% macro ditem(lngstr, available, used, assigned = null, formatbytes = false, byte_usage  = null) %}
     <div class="col border-end border-bottom p-3">
         <div class="row mb-1">
-            <div class="col text-truncate">{{ lng(lngstr) }}</div>
+			<div class="col text-truncate">{{ lng(lngstr) }}{% if byte_usage %} <small>({{ byte_usage|formatBytes }})</small>{% endif %}</div>
             <div class="col-auto">
                 <small>{% if formatbytes %}{{ used|formatBytes }}{% else %}{{ used }}{% endif %}/{% if available < 0 %}{{ lng('panel.unlimited') }}{% else %}{% if formatbytes %}{{ available|formatBytes }}{% else %}{{ available }}{% endif %}{% endif %}</small>
             </div>

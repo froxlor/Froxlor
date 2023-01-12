@@ -33,12 +33,13 @@
 		{% else %}
 			{# customer-resources #}
 			<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-0">
+				{{ dashboard.ditem('customer.total_diskspace', userinfo.diskspace_bytes, userinfo.total_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, userinfo.diskspace_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, userinfo.traffic_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, userinfo.subdomains_used) }}
-				{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, userinfo.mysqls_used) }}
+				{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, userinfo.mysqls_used, null, false, userinfo.dbspace_used) }}
 				{{ dashboard.ditem('customer.emails', userinfo.emails, userinfo.emails_used) }}
-				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used) }}
+				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used, null, false, userinfo.mailspace_used) }}
 				{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, userinfo.email_forwarders_used) }}
 				{{ dashboard.ditem('customer.ftps', userinfo.ftps, userinfo.ftps_used) }}
 			</div>
