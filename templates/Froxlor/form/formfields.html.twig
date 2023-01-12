@@ -165,7 +165,7 @@
 
 {% macro image(id, field) %}
 	{% if field.value is not empty %}
-		<img src="/{{ field.value }}" alt="Current Image" class="field-image-preview"><br>
+		<img src="{{ field.value }}" alt="Current Image" class="field-image-preview"><br>
 		<div class="form-check form-switch mb-2">
 			<input type="checkbox" value="1" name="{{ id }}_delete" class="form-check-input">
 			<label class="form-check-label">
