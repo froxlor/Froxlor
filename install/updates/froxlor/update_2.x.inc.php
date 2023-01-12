@@ -206,18 +206,29 @@ if (Froxlor::isDatabaseVersion('202112310')) {
 if (Froxlor::isDatabaseVersion('202211030')) {
 
 	Update::showUpdateStep("Creating backward compatibility for cronjob");
-	$complete_filedir = Froxlor::getInstallDir() . '/scripts';
-	mkdir($complete_filedir, 0750, true);
-	$newCronBin = Froxlor::getInstallDir().'/bin/froxlor-cli';
-	$compCron = <<<EOF
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = !in_array('exec', $disabled);
+	// check whether old files could be deleted in previous updates and if not,
+	// user should run cron to regenerate cron.d-file manually as he will run
+	// the other commands manually only after the update so this file would be deleted too
+	if ($exec_allowed) {
+		$complete_filedir = Froxlor::getInstallDir() . '/scripts';
+		mkdir($complete_filedir, 0750, true);
+		$newCronBin = Froxlor::getInstallDir() . '/bin/froxlor-cli';
+		$compCron = <<<EOF
 <?php
 chmod('$newCronBin', 0755);
 // re-create cron.d configuration file
 exec('$newCronBin froxlor:cron -r 99');
 exit;
 EOF;
-	file_put_contents($complete_filedir.'/froxlor_master_cronjob.php', $compCron);
-	Update::lastStepStatus(0);
+		file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
+		Update::lastStepStatus(0);
+	} else {
+		$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHO_EOL;
+		$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli').' froxlor:cron -r 99';
+		Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
+	}
 
 	Froxlor::updateToDbVersion('202212060');
 }
