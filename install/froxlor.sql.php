@@ -642,7 +642,7 @@ opcache.validate_timestamps'),
 	('system', 'leprivatekey', 'unset'),
 	('system', 'lepublickey', 'unset'),
 	('system', 'letsencryptca', 'letsencrypt'),
-	('system', 'letsencryptchallengepath', '/var/www/froxlor'),
+	('system', 'letsencryptchallengepath', '/var/www/html/froxlor'),
 	('system', 'letsencryptkeysize', '4096'),
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
@@ -741,7 +741,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.7'),
-	('panel', 'db_version', '202212060');
+	('panel', 'db_version', '202301120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

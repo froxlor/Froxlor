@@ -27,6 +27,7 @@ use Froxlor\Froxlor;
 use Froxlor\FileDir;
 use Froxlor\Config\ConfigParser;
 use Froxlor\Install\Update;
+use Froxlor\Settings;
 
 $preconfig = [
 	'title' => '2.x updates',
@@ -36,7 +37,6 @@ $return = [];
 
 if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 	$description = 'We have rearranged the settings and split them into basic and advanced categories. This makes it easier for users who do not need all the detailed or very specific settings and options and gives a better overview of the basic/mostly used settings.';
-	$return['panel_settings_mode_note'] = ['type' => 'infotext', 'value' => $description];
 	$question = '<strong>Chose settings mode (you can change that at any time)</strong>';
 	$return['panel_settings_mode'] = [
 		'type' => 'select',
@@ -45,11 +45,11 @@ if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 			1 => 'Advanced'
 		],
 		'selected' => 1,
-		'label' => $question
+		'label' => $question,
+		'prior_infotext' => $description
 	];
 
 	$description = 'The configuration page now can preselect a distribution, please select your current distribution';
-	$return['system_distribution_note'] = ['type' => 'infotext', 'value' => $description];
 	$question = '<strong>Select distribution</strong>';
 	$config_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/');
 	// show list of available distro's
@@ -68,8 +68,25 @@ if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 		'type' => 'select',
 		'select_var' => $distributions_select,
 		'selected' => '',
-		'label' => $question
+		'label' => $question,
+		'prior_infotext' => $description
 	];
+}
+
+if (Update::versionInUpdate($current_db_version, '202301120')) {
+	$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
+	if ($acmesh_challenge_dir != Froxlor::getInstallDir()) {
+		$has_preconfig = true;
+		$description = 'ACME challenge docroot from settings differs from the current installation directory.';
+		$question = '<strong>Validate Let\'s Encrypt challenge path&nbsp;';
+		$return['system_letsencryptchallengepath_upd'] = [
+			'type' => 'text',
+			'value' => $acmesh_challenge_dir,
+			'placeholder' => Froxlor::getInstallDir(),
+			'label' => $question,
+			'prior_infotext' => $description
+		];
+	}
 }
 
 $preconfig['fields'] = $return;

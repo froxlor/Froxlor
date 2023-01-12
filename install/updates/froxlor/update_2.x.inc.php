@@ -38,10 +38,9 @@ if (!defined('_CRON_UPDATE')) {
 
 // last 0.10.x release
 if (Froxlor::isFroxlorVersion('0.10.38.3')) {
-
 	$update_to = '2.0.0-beta1';
 
-	Update::showUpdateStep("Updating from 0.10.38.3 to ".$update_to, false);
+	Update::showUpdateStep("Updating from 0.10.38.3 to " . $update_to, false);
 
 	Update::showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
@@ -146,7 +145,7 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	}
 
 	Update::showUpdateStep("Adding new settings");
-	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int) $_POST['panel_settings_mode'] : 0;
+	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int)$_POST['panel_settings_mode'] : 0;
 	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
 	$system_distribution = isset($_POST['system_distribution']) ? $_POST['system_distribution'] : '';
 	Settings::AddNew("system.distribution", $system_distribution);
@@ -193,7 +192,6 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 }
 
 if (Froxlor::isDatabaseVersion('202112310')) {
-
 	Update::showUpdateStep("Adjusting traffic tool settings");
 	$traffic_tool = Settings::Get('system.awstats_enabled') == 1 ? 'awstats' : 'webalizer';
 	Settings::AddNew("system.traffictool", $traffic_tool);
@@ -204,7 +202,6 @@ if (Froxlor::isDatabaseVersion('202112310')) {
 }
 
 if (Froxlor::isDatabaseVersion('202211030')) {
-
 	Update::showUpdateStep("Creating backward compatibility for cronjob");
 	$disabled = explode(',', ini_get('disable_functions'));
 	$exec_allowed = !in_array('exec', $disabled);
@@ -226,7 +223,7 @@ EOF;
 		Update::lastStepStatus(0);
 	} else {
 		$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHO_EOL;
-		$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli').' froxlor:cron -r 99';
+		$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
 		Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
 	}
 
@@ -268,20 +265,27 @@ if (Froxlor::isFroxlorVersion('2.0.3')) {
 
 	$complete_filedir = Froxlor::getInstallDir() . '/scripts';
 	// check if compat. cronjob still exists (most likely didn't run successfully b/c of error from former 2.0 release)
-	if (@file_exists($complete_filedir.'/froxlor_master_cronjob.php')) {
+	if (@file_exists($complete_filedir . '/froxlor_master_cronjob.php')) {
 		Update::showUpdateStep("Adjusting backward compatibility for cronjob");
-		$newCronBin = Froxlor::getInstallDir() . '/bin/froxlor-cli';
-		$compCron = <<<EOF
+		$disabled = explode(',', ini_get('disable_functions'));
+		$exec_allowed = !in_array('exec', $disabled);
+		if ($exec_allowed) {
+			$newCronBin = Froxlor::getInstallDir() . '/bin/froxlor-cli';
+			$compCron = <<<EOF
 <?php
 chmod('$newCronBin', 0755);
 // re-create cron.d configuration file
 exec('$newCronBin froxlor:cron -r 99');
 exit;
 EOF;
-		file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
-		Update::lastStepStatus(0);
+			file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
+			Update::lastStepStatus(0);
+		} else {
+			$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHO_EOL;
+			$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
+			Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
+		}
 	}
-
 	Froxlor::updateToVersion('2.0.4');
 }
 
@@ -311,4 +315,18 @@ if (Froxlor::isFroxlorVersion('2.0.6')) {
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToVersion('2.0.7');
+}
+
+if (Froxlor::isDatabaseVersion('202212060')) {
+	Update::showUpdateStep("Validating acme.sh challenge path");
+	$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
+	$system_letsencryptchallengepath_upd = isset($_POST['system_letsencryptchallengepath_upd']) ? $_POST['system_letsencryptchallengepath_upd'] : $acmesh_challenge_dir;
+	if ($acmesh_challenge_dir != $system_letsencryptchallengepath_upd) {
+		Settings::Set('system.letsencryptchallengepath', $system_letsencryptchallengepath_upd);
+		Update::lastStepStatus(1, 'manual commands needed', 'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services</pre> or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>');
+	} else {
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToDbVersion('202301120');
 }
