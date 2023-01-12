@@ -18,14 +18,14 @@
 	<!-- TODO: set url on change. e.g.: ?param=days:7 -->
 	<div class="d-flex justify-content-center justify-content-md-end">
 		<select class="form-select mb-3 mb-md-4 w-auto mt-md-n4" aria-label="select the traffic range" name="range" data-baseref="{{ linker({'section':'traffic'}) }}">
-			<option value="hours:24" {% if range == 'hours:24' %}selected{% endif %}>last 24 hours</option>
-			<option value="days:7" {% if range == 'days:7' %}selected{% endif %}>last 7 days</option>
-			<option value="days:30" {% if range == 'days:30' %}selected{% endif %}>last 30 days</option>
-			<option value="currentmonth" {% if range == 'currentmonth' %}selected{% endif %}>current month</option>
-			<option value="months:3" {% if range == 'months:3' %}selected{% endif %}>last 3 months</option>
-			<option value="months:6" {% if range == 'months:6' %}selected{% endif %}>last 6 months</option>
-			<option value="months:12" {% if range == 'months:12' %}selected{% endif %}>last 12 months</option>
-			<option value="currentyear" {% if range == 'currentyear' %}selected{% endif %}>current year</option>
+			<option value="hours:24" {% if range == 'hours:24' %}selected{% endif %}>{{ lng('traffic.ranges.last24h') }}</option>
+			<option value="days:7" {% if range == 'days:7' %}selected{% endif %}>{{ lng('traffic.ranges.last7d') }}</option>
+			<option value="days:30" {% if range == 'days:30' %}selected{% endif %}>{{ lng('traffic.ranges.last30d') }}</option>
+			<option value="currentmonth" {% if range == 'currentmonth' %}selected{% endif %}>{{ lng('traffic.ranges.cm') }}</option>
+			<option value="months:3" {% if range == 'months:3' %}selected{% endif %}>{{ lng('traffic.ranges.last3m') }}</option>
+			<option value="months:6" {% if range == 'months:6' %}selected{% endif %}>{{ lng('traffic.ranges.last6m') }}</option>
+			<option value="months:12" {% if range == 'months:12' %}selected{% endif %}>{{ lng('traffic.ranges.last12m') }}</option>
+			<option value="currentyear" {% if range == 'currentyear' %}selected{% endif %}>{{ lng('traffic.ranges.cy') }}</option>
 			{% for yd in years_avail %}
 				{% if yd.year != "now"|date('Y') %}
 					<option value="year:{{ yd.year }}" {% if range == 'year:' ~ yd.year %}selected{% endif %}>{{ yd.year }}</option>
@@ -50,37 +50,36 @@
 		<div class="row row-cols-2 row-cols-md-4 g-0">
 			<div class="col p-3 border-end">
 				<h3>{{ metrics.total|formatBytes }}</h3>
-				<span>Total</span>
+				<span>{{ lng('traffic.months.total') }}</span>
 			</div>
 			<div class="col p-3 border-end">
 				<h3>{{ metrics.http|formatBytes }}</h3>
-				<span>HTTP</span>
+				<span>{{ lng('traffic.http') }}</span>
 			</div>
 			<div class="col p-3 border-end">
 				<h3>{{ metrics.ftp|formatBytes }}</h3>
-				<span>FTP</span>
+				<span>{{ lng('traffic.ftp') }}</span>
 			</div>
 			<div class="col p-3 border-end">
 				<h3>{{ metrics.mail|formatBytes }}</h3>
-				<span>Mail</span>
+				<span>{{ lng('traffic.mail') }}</span>
 			</div>
 		</div>
 	</div>
 
 	{% if userinfo.adminsession == 1 %}
 		<!-- Overview for given range by user -->
-		<h4 class="page-header">Traffic by customers</h4>
+		<h4 class="page-header">{{ lng('traffic.bycustomers') }}</h4>
 		{% if users is not empty %}
 			<div class="card table-responsive">
 				<table class="table table-borderless table-striped align-middle mb-0 px-3">
 					<thead>
 						<tr>
 							<th scope="col">{{ lng('login.username') }}</th>
-							<th scope="col">Total</th>
-							<th scope="col">HTTP</th>
-							<th scope="col">FTP</th>
-							<th scope="col">Mail
-							</th>
+							<th scope="col">{{ lng('traffic.months.total') }}</th>
+							<th scope="col">{{ lng('traffic.http') }}</th>
+							<th scope="col">{{ lng('traffic.ftp') }}</th>
+							<th scope="col">{{ lng('traffic.mail') }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -101,19 +100,19 @@
 		{% else %}
 			<div class="card">
 				<div class="card-body">
-					<p>No data for given range found.</p>
+					<p>{{ lng('traffic.nodata') }}</p>
 				</div>
 			</div>
 		{% endif %}
 	{% endif %}
 
 	<script>
-		const labelsS = ['HTTP', 'FTP', 'Mail'];
+		const labelsS = ['{{ lng('traffic.http') }}', '{{ lng('traffic.ftp') }}', '{{ lng('traffic.mail') }}'];
 
 		const dataS = {
 			labels: labelsS,
 			datasets: [{
-				label: 'Traffic summary',
+				label: '{{ lng('traffic.trafficoverview') }}',
 				backgroundColor: ['rgb(255, 99, 132)', 'rgb(200, 199, 132)', 'rgb(255, 99, 0)'],
 				data: [{value: '{{ metrics.http|default(0) }}', formatted: '{{ metrics.http|formatBytes }}'}, {value: '{{ metrics.ftp|default(0) }}', formatted: '{{ metrics.ftp|formatBytes }}'}, {value: '{{ metrics.mail|default(0) }}', formatted: '{{ metrics.mail|formatBytes }}'}]
 			}]
@@ -130,7 +129,7 @@
 				plugins: {
 					title: {
 						display: true,
-						text: 'Total traffic'
+						text: '{{ lng('traffic.sumtotal') }}'
 					},
 					legend: {
 						position: 'right'
@@ -161,7 +160,7 @@
 			const dataC = {
 				labels: labelsC,
 				datasets: [{
-					label: 'Top 5 customers',
+					label: '{{ lng('traffic.top5customers') }}',
 					backgroundColor: ['rgb(255, 99, 132)', 'rgb(200, 199, 132)', 'rgb(255, 99, 0)', 'rgb(100, 100, 132)', 'rgb(240, 150, 232)'],
 					data: dataValues
 				}]
@@ -178,7 +177,7 @@
 					plugins: {
 						title: {
 							display: true,
-							text: 'Top 5 customers'
+							text: '{{ lng('traffic.top5customers') }}'
 						},
 						legend: {
 							position: 'right'
@@ -220,7 +219,7 @@
 				labels: labelsC,
 				datasets: [
 					{
-					label: 'HTTP traffic',
+					label: '{{ lng('traffic.sumhttp') }}',
 					backgroundColor: 'rgb(255, 99, 132)',
 					{% if range starts with 'days' or range == 'currentmonth' %}
 						data: [{% for d,dd in days %}{value: '{{ dd.http|default(0) }}', formatted: '{{ dd.http|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
@@ -234,7 +233,7 @@
 					}
 				},
 				{
-					label: 'FTP traffic',
+					label: '{{ lng('traffic.sumftp') }}',
 					backgroundColor: 'rgb(200, 199, 132)',
 					{% if range starts with 'days' or range == 'currentmonth' %}
 						data: [{% for d,dd in days %}{value: '{{ dd.ftp|default(0) }}', formatted: '{{ dd.ftp|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
@@ -248,7 +247,7 @@
 					}
 				},
 				{
-					label: 'Mail traffic',
+					label: '{{ lng('traffic.summail') }}',
 					backgroundColor: 'rgb(255, 99, 0)',
 					{% if range starts with 'days' or range == 'currentmonth' %}
 						data: [{% for d,dd in days %}{value: '{{ dd.mail|default(0) }}', formatted: '{{ dd.mail|formatBytes }}', axisv: '{{ d }}'},{% endfor %}],
@@ -283,7 +282,7 @@
 					plugins: {
 						title: {
 							display: true,
-							text: 'Specified by range'
+							text: '{{ lng('traffic.byrange') }}'
 						},
 						tooltip: {
 							enabled: true,
