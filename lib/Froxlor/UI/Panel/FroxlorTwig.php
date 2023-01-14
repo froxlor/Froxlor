@@ -87,6 +87,10 @@ class FroxlorTwig extends AbstractExtension
 			new TwigFunction('linker', [
 				$this,
 				'getLink'
+			]),
+			new TwigFunction('mix', [
+				$this,
+				'getMix'
 			])
 		];
 	}
@@ -157,5 +161,10 @@ class FroxlorTwig extends AbstractExtension
 	public function getName()
 	{
 		return 'froxlortwig';
+	}
+
+	public function getMix($mix = '')
+	{
+		return mix($mix);
 	}
 }
