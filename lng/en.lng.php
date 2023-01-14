@@ -1613,7 +1613,10 @@ Yours sincerely, your administrator',
 				'title' => 'Log-type(s)',
 				'description' => 'Specify logtypes. To select multiple types, hold down CTRL while selecting.<br />Available logtypes are: syslog, file, mysql',
 			],
-			'logfile' => 'Logfile path including filename',
+			'logfile' => [
+				'title' => 'Filename for log',
+				'description' => 'Only used if log-type includes "file". This file will be created in froxlor/logs/. This folder is protected against public access.',
+			],
 			'logcron' => 'Log cronjobs',
 			'logcronoption' => [
 				'never' => 'Never',

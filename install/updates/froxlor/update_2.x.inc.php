@@ -330,3 +330,17 @@ if (Froxlor::isDatabaseVersion('202212060')) {
 
 	Froxlor::updateToDbVersion('202301120');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.7')) {
+	Update::showUpdateStep("Updating from 2.0.7 to 2.0.8", false);
+
+	// adjust file-logging to be set to froxlor/logs/
+	$logtypes = explode(',', Settings::Get('logger.logtypes'));
+	if (in_array('file', $logtypes)) {
+		Update::showUpdateStep("Adjusting froxlor logfile for system-logging to be stored in logs/froxlor.log");
+		Settings::Set('logger.logfile', 'froxlor.log');
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToVersion('2.0.8');
+}

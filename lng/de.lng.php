@@ -1494,7 +1494,10 @@ Vielen Dank, Ihr Administrator',
 				'title' => 'Log-Art(en)',
 				'description' => 'Wählen Sie hier die gewünschten Logtypen. Für Mehrfachauswahl, halten Sie während der Auswahl STRG gedrückt<br />Mögliche Logtypen sind: syslog, file, mysql',
 			],
-			'logfile' => 'Log-Datei Pfad inklusive Dateinamen',
+			'logfile' => [
+				'title' => 'Dateiname der Logdatei',
+				'description' => 'Wird nur verwendet, wenn die Log-Art "file" ausgewählt ist. Diese Datei wird unter froxlor/logs/ geschrieben. Dieser Ordner ist vor Webzugriff geschützt.',
+			],
 			'logcron' => 'Logge Cronjobs',
 			'logcronoption' => [
 				'never' => 'Nie',
