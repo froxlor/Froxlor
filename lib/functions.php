@@ -26,6 +26,14 @@
 use Froxlor\Language;
 use Froxlor\UI\Request;
 
+/**
+ * Render a template with the given data.
+ * Mostly used if we have no template-engine (twig).
+ *
+ * @param $template
+ * @param $attributes
+ * @return array|false|string|string[]
+ */
 function view($template, $attributes)
 {
 	$view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
@@ -33,15 +41,53 @@ function view($template, $attributes)
 	return str_replace(array_keys($attributes), array_values($attributes), $view);
 }
 
+/**
+ * Get the current translation for a given string.
+ *
+ * @param string $identifier
+ * @param array $arguments
+ * @return array|string
+ */
 function lng(string $identifier, array $arguments = [])
 {
 	return Language::getTranslation($identifier, $arguments);
 }
 
+/**
+ * Get the value of a request variable.
+ *
+ * @param string $identifier
+ * @param string|null $default
+ * @param string|null $session
+ * @return mixed|string|null
+ */
 function old(string $identifier, string $default = null, string $session = null)
 {
 	if ($session && isset($_SESSION[$session])) {
 		return $_SESSION[$session][$identifier] ?? $default;
 	}
 	return Request::any($identifier, $default);
+}
+
+/**
+ * Loading the mix manifest file from given theme.
+ * This file contains the hashed filenames of the assets.
+ * It must be always placed in the theme assets folder.
+ *
+ * @param $filename
+ * @return mixed|string
+ */
+function mix($filename)
+{
+	if (preg_match('/templates\/(.+)\/assets\/(.+)\/(.+)/', $filename, $matches)) {
+		$mixManifest = dirname(__DIR__) . '/templates/' . $matches[1] . '/assets/mix-manifest.json';
+		if (file_exists($mixManifest)) {
+			$manifest = json_decode(file_get_contents($mixManifest), true);
+			$key = '/' . $matches[2] . '/' . $matches[3];
+			if ($manifest && !empty($manifest[$key])) {
+				$filename = 'templates/' . $matches[1] . '/assets' . $manifest[$key];
+			}
+		}
+	}
+	return $filename;
 }
