@@ -92,6 +92,7 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	if ($distribution != "" && isset($_POST['finish'])) {
 		unset($_POST['finish']);
+		unset($_POST['csrf_token']);
 		$params = $_POST;
 		$params['distro'] = $distribution;
 		$params['system'] = [];
@@ -121,8 +122,6 @@ if ($userinfo['change_serversettings'] == '1') {
 				'distribution' => $distribution
 			]);
 		} else {
-			// @fixme check set distribution from settings
-
 			$cfg_formfield = [
 				'config' => [
 					'title' => lng('admin.configfiles.serverconfiguration'),

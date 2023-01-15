@@ -222,7 +222,7 @@ EOF;
 		file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
 		Update::lastStepStatus(0);
 	} else {
-		$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHO_EOL;
+		$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHP_EOL;
 		$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
 		Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
 	}
@@ -323,7 +323,17 @@ if (Froxlor::isDatabaseVersion('202212060')) {
 	$system_letsencryptchallengepath_upd = isset($_POST['system_letsencryptchallengepath_upd']) ? $_POST['system_letsencryptchallengepath_upd'] : $acmesh_challenge_dir;
 	if ($acmesh_challenge_dir != $system_letsencryptchallengepath_upd) {
 		Settings::Set('system.letsencryptchallengepath', $system_letsencryptchallengepath_upd);
-		Update::lastStepStatus(1, 'manual commands needed', 'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services</pre> or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>');
+		// create JSON string for --apply
+		$dist = Settings::Get('system.distribution');
+		$webserver = Settings::Get('system.webserver');
+		if ($webserver == 'apache2') {
+			$webserver = 'apache22';
+			if (Settings::Get('system.apache24')) {
+				$webserver = 'apache24';
+			}
+		}
+		$apply_json = '{"http":"' . $webserver .'","dns":"x","smtp":"x","mail":"x","ftp":"x","distro":"' . $dist . '","system":[]}';
+		Update::lastStepStatus(1, 'manual commands needed', 'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services --apply=' . $apply_json . '</pre><br> or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>');
 	} else {
 		Update::lastStepStatus(0);
 	}

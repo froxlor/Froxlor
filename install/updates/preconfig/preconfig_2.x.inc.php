@@ -74,15 +74,16 @@ if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 }
 
 if (Update::versionInUpdate($current_db_version, '202301120')) {
-	$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
-	if ($acmesh_challenge_dir != Froxlor::getInstallDir()) {
+	$acmesh_challenge_dir = rtrim(FileDir::makeCorrectDir(Settings::Get('system.letsencryptchallengepath')), "/");
+	$recommended = rtrim(FileDir::makeCorrectDir(Froxlor::getInstallDir()), "/");
+	if ($acmesh_challenge_dir != $recommended) {
 		$has_preconfig = true;
 		$description = 'ACME challenge docroot from settings differs from the current installation directory.';
-		$question = '<strong>Validate Let\'s Encrypt challenge path&nbsp;';
+		$question = '<strong>Validate Let\'s Encrypt challenge path (recommended value: ' . $recommended . ')&nbsp;';
 		$return['system_letsencryptchallengepath_upd'] = [
 			'type' => 'text',
-			'value' => $acmesh_challenge_dir,
-			'placeholder' => Froxlor::getInstallDir(),
+			'value' => $recommended,
+			'placeholder' => $acmesh_challenge_dir,
 			'label' => $question,
 			'prior_infotext' => $description
 		];

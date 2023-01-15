@@ -44,7 +44,7 @@ final class ValidateAcmeWebroot extends CliCommand
 	protected function configure()
 	{
 		$this->setName('froxlor:validate-acme-webroot');
-		$this->setDescription('Validates the Le_Webroot value is correct for froxlor managed domains with Let\s Encrypt certificate.');
+		$this->setDescription('Validates the Le_Webroot value is correct for froxlor managed domains with Let\'s Encrypt certificate.');
 		$this->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Do not ask for confirmation, update files if necessary');
 	}
 
@@ -71,19 +71,20 @@ final class ValidateAcmeWebroot extends CliCommand
 			$domains = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
 			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
 			$acmesh_dir = dirname(Settings::Get('system.acmeshpath'));
-			$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
+			$acmesh_challenge_dir = rtrim(FileDir::makeCorrectDir(Settings::Get('system.letsencryptchallengepath')), "/");
+			$recommended = rtrim(FileDir::makeCorrectDir(Froxlor::getInstallDir()), "/");
 
-			if ($acmesh_challenge_dir != Froxlor::getInstallDir()) {
+			if ($acmesh_challenge_dir != $recommended) {
 				$io->warning([
 					"ACME challenge docroot from settings differs from the current installation directory.",
 					"Settings: '" . $acmesh_challenge_dir . "'",
-					"Default/recommended value: '" . Froxlor::getInstallDir() . "'",
+					"Default/recommended value: '" . $recommended . "'",
 				]);
 				$question = new ConfirmationQuestion('Fix ACME challenge docroot setting? [yes] ', true, '/^(y|j)/i');
 				if ($yestoall || $helper->ask($input, $output, $question)) {
-					Settings::Set('system.letsencryptchallengepath', Froxlor::getInstallDir());
+					Settings::Set('system.letsencryptchallengepath', $recommended);
 					$former_value = $acmesh_challenge_dir;
-					$acmesh_challenge_dir = Froxlor::getInstallDir();
+					$acmesh_challenge_dir = $recommended;
 					// need to update the corresponding acme-alias config-file
 					$acme_alias_file = Settings::Get('system.letsencryptacmeconf');
 					$sed_params = "s@".$former_value."@" . $acmesh_challenge_dir . "@";
