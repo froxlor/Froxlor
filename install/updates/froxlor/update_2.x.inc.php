@@ -281,7 +281,7 @@ EOF;
 			file_put_contents($complete_filedir . '/froxlor_master_cronjob.php', $compCron);
 			Update::lastStepStatus(0);
 		} else {
-			$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHO_EOL;
+			$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHP_EOL;
 			$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
 			Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
 		}
