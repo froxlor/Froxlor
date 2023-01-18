@@ -269,7 +269,8 @@ return [
 						'traffic' => lng('menue.traffic.traffic'),
 						'traffic.http' => lng('menue.traffic.traffic') . " / HTTP",
 						'traffic.ftp' => lng('menue.traffic.traffic') . " / FTP",
-						'traffic.mail' => lng('menue.traffic.traffic') . " / Mail"
+						'traffic.mail' => lng('menue.traffic.traffic') . " / Mail",
+						'misc.documentation' => lng('admin.documentation'),
 					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true

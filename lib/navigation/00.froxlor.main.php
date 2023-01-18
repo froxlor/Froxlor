@@ -158,6 +158,7 @@ return [
 		'docs' => [
 			'label' => lng('admin.documentation'),
 			'icon' => 'fa-solid fa-circle-info',
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'misc.documentation')),
 			'elements' => [
 				[
 					'url' => 'https://docs.froxlor.org/v2/user-guide/',

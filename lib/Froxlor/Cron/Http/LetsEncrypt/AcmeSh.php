@@ -557,7 +557,7 @@ EOC;
 			if (Settings::Get('system.letsencryptreuseold') != '1') {
 				$acmesh_cmd .= " --always-force-new-domain-key";
 			}
-			if (Settings::Get('system.letsencryptca') == 'letsencrypt_test') {
+			if (substr(Settings::Get('system.letsencryptca'), -5) == '_test') {
 				$acmesh_cmd .= " --staging";
 			}
 			if ($force) {
