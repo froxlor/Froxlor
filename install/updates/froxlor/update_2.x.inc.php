@@ -323,17 +323,26 @@ if (Froxlor::isDatabaseVersion('202212060')) {
 	$system_letsencryptchallengepath_upd = isset($_POST['system_letsencryptchallengepath_upd']) ? $_POST['system_letsencryptchallengepath_upd'] : $acmesh_challenge_dir;
 	if ($acmesh_challenge_dir != $system_letsencryptchallengepath_upd) {
 		Settings::Set('system.letsencryptchallengepath', $system_letsencryptchallengepath_upd);
-		// create JSON string for --apply
-		$dist = Settings::Get('system.distribution');
-		$webserver = Settings::Get('system.webserver');
-		if ($webserver == 'apache2') {
-			$webserver = 'apache22';
-			if (Settings::Get('system.apache24')) {
-				$webserver = 'apache24';
+		if ((int) Settings::Get('system.leenabled') == 1) {
+			// create JSON string for --apply
+			$dist = Settings::Get('system.distribution');
+			$webserver = Settings::Get('system.webserver');
+			if ($webserver == 'apache2') {
+				$webserver = 'apache22';
+				if (Settings::Get('system.apache24')) {
+					$webserver = 'apache24';
+				}
 			}
+			$apply_json = '{"http":"' . $webserver . '","dns":"x","smtp":"x","mail":"x","ftp":"x","distro":"' . $dist . '","system":[]}';
+			Update::lastStepStatus(1, 'manual commands needed',
+				'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services --apply=' . $apply_json . '</pre>' .
+				'<br>or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>' .
+				'<br><br>In case you already have certificates issued, run the following command to validate and correct the webroot used for renewal:<br>' .
+				'<pre>bin/froxlor-cli froxlor:validate-acme-webroot</pre><br>'
+			);
+		} else {
+			Update::lastStepStatus(0);
 		}
-		$apply_json = '{"http":"' . $webserver .'","dns":"x","smtp":"x","mail":"x","ftp":"x","distro":"' . $dist . '","system":[]}';
-		Update::lastStepStatus(1, 'manual commands needed', 'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services --apply=' . $apply_json . '</pre><br> or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>');
 	} else {
 		Update::lastStepStatus(0);
 	}
