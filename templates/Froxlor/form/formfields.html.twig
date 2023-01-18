@@ -54,6 +54,8 @@
 					{{ _self.input_ul(id, field) }}
 				{% elseif field.type == 'checkbox' %}
 					{{ _self.bool(id, field) }}
+				{% elseif field.type == 'checkrequired' %}
+					{{ _self.chk_required(id, field) }}
 				{% elseif field.type == 'select' %}
 					{{ _self.select(id, field) }}
 				{% elseif field.type == 'textarea' %}
@@ -119,6 +121,12 @@
 	{% endif %}
 {% endmacro %}
 
+{% macro chk_required(id, field) %}
+	<div class="form-check form-switch">
+		<input type="checkbox" value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input" {% if field.mandatory is defined and field.mandatory == 1 %} required {% endif %} />
+	</div>
+{% endmacro %}
+
 {% macro infotext(id, field) %}
 	{% if field.next_to is defined %}
 		<div class="input-group">
@@ -151,7 +159,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<input type="{{ field.type }}" {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value|raw }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %} {% if field.type == 'file' and field.accept is defined %} accept="{{ field.accept }}" {% endif %}/>
+		<input type="{{ field.type }}" {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value|raw }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %} {% if field.type == 'file' and field.accept is defined %} accept="{{ field.accept }}" {% endif %} {% if field.pattern is defined %} pattern="{{ field.pattern }}" {% endif %}/>
 		{% if field.type == 'hidden' and field.display is defined %}
 			<input type="text" readonly class="form-control-plaintext" value="{{ field.display|raw }}">
 		{% endif %}

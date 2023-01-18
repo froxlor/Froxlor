@@ -2084,6 +2084,10 @@ Yours sincerely, your administrator',
 			'title' => 'Validate DNS of domains when using Let\'s Encrypt',
 			'description' => 'If activated, froxlor will validate whether the domain which requests a Let\'s Encrypt certificate resolves to at least one of the system ip addresses.',
 		],
+		'le_domain_dnscheck_resolver' => [
+			'title' => 'Use a external nameserver for DNS validation',
+			'description' => 'If set, froxlor will use this DNS to validate the DNS of domains when using Let\'s Encrypt. If empty, the system\'s default DNS resolver will be used.',
+		],
 		'phpsettingsforsubdomains' => [
 			'description' => 'If yes the chosen php-config will be updated to all subdomains',
 		],

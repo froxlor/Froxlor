@@ -559,7 +559,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 				// validate dns if lets encrypt is enabled to check whether we can use it at all
 				if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
-					$domain_ips = PhpHelper::gethostbynamel6($domain);
+					$domain_ips = PhpHelper::gethostbynamel6($domain, true, Settings::Get('system.le_domain_dnscheck_resolver'));
 					$selected_ips = $this->getIpsFromIdArray($ssl_ipandports);
 					if ($domain_ips == false || count(array_intersect($selected_ips, $domain_ips)) <= 0) {
 						Response::standardError('invaliddnsforletsencrypt', '', true);
@@ -1523,7 +1523,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// validate dns if lets encrypt is enabled to check whether we can use it at all
 			if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
-				$domain_ips = PhpHelper::gethostbynamel6($result['domain']);
+				$domain_ips = PhpHelper::gethostbynamel6($domain, true, Settings::Get('system.le_domain_dnscheck_resolver'));
 				$selected_ips = $this->getIpsFromIdArray($ssl_ipandports);
 				if ($domain_ips == false || count(array_intersect($selected_ips, $domain_ips)) <= 0) {
 					Response::standardError('invaliddnsforletsencrypt', '', true);

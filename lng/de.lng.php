@@ -1965,6 +1965,10 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Validiere DNS der Domains wenn Let\'s Encrypt genutzt wird',
 			'description' => 'Wenn aktiviert wird froxlor überprüfen ob die DNS Einträge der Domains, welche ein Let\'s Encrypt Zertifikat beantragt, mindestens auf eine der System IP Adressen auflöst.',
 		],
+		'le_domain_dnscheck_resolver' => [
+			'title' => 'DNS Resolver für die DNS Überprüfung',
+			'description' => 'IP Adresse des DNS Servers, welcher für die DNS Überprüfung genutzt werden soll. Wenn leer, wird der Standard DNS Resolver des Systems genutzt.',
+		],
 		'phpsettingsforsubdomains' => [
 			'description' => 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen',
 		],

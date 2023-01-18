@@ -79,7 +79,7 @@ if (Update::versionInUpdate($current_db_version, '202301120')) {
 	if ((int) Settings::Get('system.leenabled') == 1 && $acmesh_challenge_dir != $recommended) {
 		$has_preconfig = true;
 		$description = 'ACME challenge docroot from settings differs from the current installation directory.';
-		$question = '<strong>Validate Let\'s Encrypt challenge path (recommended value: ' . $recommended . ')&nbsp;';
+		$question = '<strong>Validate Let\'s Encrypt challenge path (recommended value: ' . $recommended . ')</strong>';
 		$return['system_letsencryptchallengepath_upd'] = [
 			'type' => 'text',
 			'value' => $recommended,
@@ -89,6 +89,22 @@ if (Update::versionInUpdate($current_db_version, '202301120')) {
 			'mandatory' => true,
 		];
 	}
+}
+
+if (Update::versionInUpdate($current_db_version, '202301180')) {
+	//if ((int) Settings::Get('system.leenabled') == 1) {
+		$has_preconfig = true;
+		$description = 'Froxlor now supports to set a external DNS resolver for the Let\'s Encrypt pre-check.';
+		$question = '<strong>Specify a DNS resolver IP (recommended value: 1.1.1.1 or similar)</strong>';
+		$return['system_le_domain_dnscheck_resolver'] = [
+			'type' => 'text',
+			'pattern' => '^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$|^\s*$',
+			'value' => '1.1.1.1',
+			'placeholder' => '1.1.1.1',
+			'label' => $question,
+			'prior_infotext' => $description,
+		];
+	//}
 }
 
 $preconfig['fields'] = $return;

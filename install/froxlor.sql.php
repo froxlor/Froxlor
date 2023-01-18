@@ -670,6 +670,7 @@ opcache.validate_timestamps'),
 	('system', 'leaccount', ''),
 	('system', 'nssextrausers', '1'),
 	('system', 'le_domain_dnscheck', '1'),
+	('system', 'le_domain_dnscheck_resolver', '1.1.1.1'),
 	('system', 'ssl_protocols', 'TLSv1.2'),
 	('system', 'tlsv13_cipher_list', ''),
 	('system', 'honorcipherorder', '0'),
@@ -741,7 +742,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.8'),
-	('panel', 'db_version', '202301120');
+	('panel', 'db_version', '202301180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

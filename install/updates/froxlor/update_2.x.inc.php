@@ -363,3 +363,12 @@ if (Froxlor::isFroxlorVersion('2.0.7')) {
 
 	Froxlor::updateToVersion('2.0.8');
 }
+
+if (Froxlor::isDatabaseVersion('202301120')) {
+	Update::showUpdateStep("Adding new setting for DNS resolver when using Let's Encrypt");
+	$system_le_domain_dnscheck_resolver = isset($_POST['system_le_domain_dnscheck_resolver']) ? $_POST['system_le_domain_dnscheck_resolver'] : '1.1.1.1';
+	Settings::AddNew("system.le_domain_dnscheck_resolver", $system_le_domain_dnscheck_resolver);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202301180');
+}

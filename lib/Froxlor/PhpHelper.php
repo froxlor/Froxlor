@@ -27,6 +27,8 @@ namespace Froxlor;
 
 use Exception;
 use Froxlor\UI\Panel\UI;
+use Net_DNS2_Exception;
+use Net_DNS2_Resolver;
 use Throwable;
 use voku\helper\AntiXSS;
 
@@ -244,45 +246,60 @@ class PhpHelper
 	 * ipv6 aware gethostbynamel function
 	 *
 	 * @param string $host
-	 * @param boolean $try_a
-	 *            default true
+	 * @param boolean $try_a default true
+	 * @param string|null $nameserver set additional resolver nameserver to use (e.g. 1.1.1.1)
 	 * @return boolean|array
 	 */
-	public static function gethostbynamel6($host, $try_a = true)
+	public static function gethostbynamel6(string $host, bool $try_a = true, string $nameserver = null)
 	{
-		$dns6 = @dns_get_record($host, DNS_AAAA);
-		if (!is_array($dns6)) {
-			// no record or failed to check
-			$dns6 = [];
-		}
-		if ($try_a == true) {
-			$dns4 = @dns_get_record($host, DNS_A);
-			if (!is_array($dns4)) {
-				// no record or failed to check
-				$dns4 = [];
-			}
-			$dns = array_merge($dns4, $dns6);
-		} else {
-			$dns = $dns6;
-		}
 		$ips = [];
-		foreach ($dns as $record) {
-			if ($record["type"] == "A") {
-				// always use compressed ipv6 format
-				$ip = inet_ntop(inet_pton($record["ip"]));
-				$ips[] = $ip;
+
+		try {
+			// set the default nameservers to use, use the system default if none are provided
+			$resolver = new Net_DNS2_Resolver($nameserver ? ['nameservers' => [$nameserver]] : []);
+
+			// get all ip addresses from the A record
+			if ($try_a) {
+				try {
+					$answer = $resolver->query($host, 'A')->answer;
+					foreach ($answer as $rr) {
+						$ips[] = $rr->address;
+					}
+				} catch (Net_DNS2_Exception $e) {
+					// we can't do anything here, just continue
+				}
 			}
-			if ($record["type"] == "AAAA") {
-				// always use compressed ipv6 format
-				$ip = inet_ntop(inet_pton($record["ipv6"]));
-				$ips[] = $ip;
+
+			// get all ip addresses from the AAAA record
+			try {
+				$answer = $resolver->query($host, 'AAAA')->answer;
+				foreach ($answer as $rr) {
+					$ips[] = $rr->address;
+				}
+			} catch (Net_DNS2_Exception $e) {
+				// we can't do anything here, just continue
+			}
+		} catch (Net_DNS2_Exception $e) {
+			// fallback to php's dns_get_record if Net_DNS2 has no resolver available, but this may cause
+			// problems if the system's dns is not configured correctly; for example, the acme pre-check
+			// will fail because some providers put a local ip in /etc/hosts
+
+			// get all ip addresses from the A record
+			if ($try_a) {
+				$answer = @dns_get_record($host, DNS_A);
+				foreach ($answer as $rr) {
+					$ips[] = $rr['ip'];
+				}
+			}
+
+			// get all ip addresses from the AAAA record
+			$answer = @dns_get_record($host, DNS_AAAA);
+			foreach ($answer as $rr) {
+				$ips[] = $rr['ipv6'];
 			}
 		}
-		if (count($ips) < 1) {
-			return false;
-		} else {
-			return $ips;
-		}
+
+		return count($ips) > 0 ? $ips : false;
 	}
 
 	/**

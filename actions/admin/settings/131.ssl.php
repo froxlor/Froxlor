@@ -241,6 +241,16 @@ return [
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
+				],
+				'system_le_domain_dnscheck_resolver' => [
+					'label' => lng('serversettings.le_domain_dnscheck_resolver'),
+					'settinggroup' => 'system',
+					'varname' => 'le_domain_dnscheck_resolver',
+					'type' => 'text',
+					'string_regexp' => '/^(([0-9]+ [a-z0-9\-\._]+, ?)*[0-9]+ [a-z0-9\-\._]+)?$/i',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField'
 				]
 			]
 		]
