@@ -335,7 +335,7 @@ if (Froxlor::isDatabaseVersion('202212060')) {
 			}
 			$apply_json = '{"http":"' . $webserver . '","dns":"x","smtp":"x","mail":"x","ftp":"x","distro":"' . $dist . '","system":[]}';
 			Update::lastStepStatus(1, 'manual commands needed',
-				'Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services --apply=' . $apply_json . '</pre>' .
+				"Please reconfigure webserver service using <pre>bin/froxlor-cli froxlor:config-services --apply='" . $apply_json . "'</pre>" .
 				'<br>or adjust the path manually in <pre>' . Settings::Get('system.letsencryptacmeconf') . '</pre>' .
 				'<br><br>In case you already have certificates issued, run the following command to validate and correct the webroot used for renewal:<br>' .
 				'<pre>bin/froxlor-cli froxlor:validate-acme-webroot</pre><br>'
