@@ -92,9 +92,9 @@ if (Update::versionInUpdate($current_db_version, '202301120')) {
 }
 
 if (Update::versionInUpdate($current_db_version, '202301180')) {
-	//if ((int) Settings::Get('system.leenabled') == 1) {
+	if ((int) Settings::Get('system.leenabled') == 1) {
 		$has_preconfig = true;
-		$description = 'Froxlor now supports to set a external DNS resolver for the Let\'s Encrypt pre-check.';
+		$description = 'Froxlor now supports to set an external DNS resolver for the Let\'s Encrypt pre-check.';
 		$question = '<strong>Specify a DNS resolver IP (recommended value: 1.1.1.1 or similar)</strong>';
 		$return['system_le_domain_dnscheck_resolver'] = [
 			'type' => 'text',
@@ -104,7 +104,7 @@ if (Update::versionInUpdate($current_db_version, '202301180')) {
 			'label' => $question,
 			'prior_infotext' => $description,
 		];
-	//}
+	}
 }
 
 $preconfig['fields'] = $return;
