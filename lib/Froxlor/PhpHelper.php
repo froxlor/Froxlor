@@ -258,23 +258,23 @@ class PhpHelper
 			// set the default nameservers to use, use the system default if none are provided
 			$resolver = new Net_DNS2_Resolver($nameserver ? ['nameservers' => [$nameserver]] : []);
 
-			// get all ip addresses from the A record
+			// get all ip addresses from the A record and normalize them
 			if ($try_a) {
 				try {
 					$answer = $resolver->query($host, 'A')->answer;
 					foreach ($answer as $rr) {
-						$ips[] = $rr->address;
+						$ips[] = inet_ntop(inet_pton($rr->address));
 					}
 				} catch (Net_DNS2_Exception $e) {
 					// we can't do anything here, just continue
 				}
 			}
 
-			// get all ip addresses from the AAAA record
+			// get all ip addresses from the AAAA record and normalize them
 			try {
 				$answer = $resolver->query($host, 'AAAA')->answer;
 				foreach ($answer as $rr) {
-					$ips[] = $rr->address;
+					$ips[] = inet_ntop(inet_pton($rr->address));
 				}
 			} catch (Net_DNS2_Exception $e) {
 				// we can't do anything here, just continue
@@ -284,18 +284,18 @@ class PhpHelper
 			// problems if the system's dns is not configured correctly; for example, the acme pre-check
 			// will fail because some providers put a local ip in /etc/hosts
 
-			// get all ip addresses from the A record
+			// get all ip addresses from the A record and normalize them
 			if ($try_a) {
 				$answer = @dns_get_record($host, DNS_A);
 				foreach ($answer as $rr) {
-					$ips[] = $rr['ip'];
+					$ips[] = inet_ntop(inet_pton($rr['ip']));
 				}
 			}
 
-			// get all ip addresses from the AAAA record
+			// get all ip addresses from the AAAA record and normalize them
 			$answer = @dns_get_record($host, DNS_AAAA);
 			foreach ($answer as $rr) {
-				$ips[] = $rr['ipv6'];
+				$ips[] = inet_ntop(inet_pton($rr['ipv6']));
 			}
 		}
 
