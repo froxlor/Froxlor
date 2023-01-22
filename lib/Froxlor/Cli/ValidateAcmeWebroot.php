@@ -69,6 +69,13 @@ final class ValidateAcmeWebroot extends CliCommand
 			$sel_stmt = Database::prepare("SELECT id, domain FROM panel_domains WHERE `letsencrypt` = '1' AND aliasdomain IS NULL ORDER BY id ASC");
 			Database::pexecute($sel_stmt);
 			$domains = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+			// check for froxlor-vhost
+			if (Settings::Get('system.le_froxlor_enabled') == '1') {
+				$domains[] = [
+					'id' => 0,
+					'domain' => Settings::Get('system.hostname')
+				];
+			}
 			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
 			$acmesh_dir = dirname(Settings::Get('system.acmeshpath'));
 			$acmesh_challenge_dir = rtrim(FileDir::makeCorrectDir(Settings::Get('system.letsencryptchallengepath')), "/");
@@ -139,6 +146,7 @@ final class ValidateAcmeWebroot extends CliCommand
 			}
 			if ($count_changes > 0) {
 				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
+					$io->info("Changes detected but froxlor has been updated. Inserting task to rebuild vhosts after update.");
 					Cronjob::inserttask(TaskId::REBUILD_VHOST);
 				} else {
 					$question = new ConfirmationQuestion('Changes detected. Force cronjob to refresh certificates? [yes] ', true, '/^(y|j)/i');
@@ -146,6 +154,8 @@ final class ValidateAcmeWebroot extends CliCommand
 						passthru(FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -f -d');
 					}
 				}
+			} else {
+				$io->success("No changes necessary.");
 			}
 		}
 
