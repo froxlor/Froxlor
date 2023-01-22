@@ -45,7 +45,7 @@
 									{% if stype == 'system' %}
 										<div class="form-check">
 											{% set recommended = false %}
-											{% if 
+											{% if
 												(dtype == get_setting('system.traffictool')) or
 												(dtype == 'libnssextrausers' and (get_setting('system.mod_fcgid') == '1' or get_setting('phpfpm.enabled') == '1' or get_setting('system.apacheitksupport') == '1')) or
 												(dtype == 'logrotate') or
@@ -72,7 +72,7 @@
 										<div class="form-check">
 											{% set recommended = false %}
 											{% if
-												(dtype == 'apache22' and get_setting('system.webserver') == 'apache2' and get_setting('system.apache24') == '0') or 
+												(dtype == 'apache22' and get_setting('system.webserver') == 'apache2' and get_setting('system.apache24') == '0') or
 												(dtype == 'apache24' and get_setting('system.webserver') == 'apache2' and get_setting('system.apache24') == '1') or
 												(dtype == 'lighttpd' and get_setting('system.webserver') == 'lighttpd') or
 												(dtype == 'nginx' and get_setting('system.webserver') == 'nginx') or
@@ -112,7 +112,6 @@
 				{{ lng('admin.configfiles.recommendednote') }}
 			</div>
 			<div class="col-12 col-md-6 text-end">
-				<input type="hidden" name="dist" value="{{ distribution }}"/>
 				<button type="button" class="btn btn-outline-secondary" id="selectRecommendedConfig">{{ lng('admin.configfiles.selectrecommended') }}</button>
 				<button type="button" class="btn btn-outline-secondary" id="downloadSelectionAsJson">
 					<i class="fa-solid fa-download"></i>

@@ -31,10 +31,10 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '2.0.7';
+	const VERSION = '2.0.9';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202212060';
+	const DBVERSION = '202301180';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';

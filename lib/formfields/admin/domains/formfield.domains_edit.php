@@ -30,6 +30,7 @@ return [
 		'title' => lng('admin.domain_edit'),
 		'image' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
+		'id' => 'domain_edit',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domainsettings'),

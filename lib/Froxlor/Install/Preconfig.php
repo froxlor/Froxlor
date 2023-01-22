@@ -101,7 +101,7 @@ class Preconfig
 			$agree = [
 				'title' => 'Check',
 				'fields' => [
-					'update_changesagreed' => ['type' => 'checkbox', 'value' => 1, 'label' => '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>'],
+					'update_changesagreed' => ['mandatory' => true, 'type' => 'checkrequired', 'value' => 1, 'label' => '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>'],
 					'update_preconfig' => ['type' => 'hidden', 'value' => 1]
 				]
 			];

@@ -521,7 +521,7 @@ EOC;
 			foreach ($loop_domains as $idx => $domain) {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Validating DNS of " . $domain);
 				// ips according to NS
-				$domain_ips = PhpHelper::gethostbynamel6($domain);
+				$domain_ips = PhpHelper::gethostbynamel6($domain, true, Settings::Get('system.le_domain_dnscheck_resolver'));
 				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
 					// no common ips...
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $domain . " due to no system known IP address via DNS check");
@@ -557,7 +557,7 @@ EOC;
 			if (Settings::Get('system.letsencryptreuseold') != '1') {
 				$acmesh_cmd .= " --always-force-new-domain-key";
 			}
-			if (Settings::Get('system.letsencryptca') == 'letsencrypt_test') {
+			if (substr(Settings::Get('system.letsencryptca'), -5) == '_test') {
 				$acmesh_cmd .= " --staging";
 			}
 			if ($force) {

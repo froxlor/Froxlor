@@ -44,7 +44,7 @@ final class ValidateAcmeWebroot extends CliCommand
 	protected function configure()
 	{
 		$this->setName('froxlor:validate-acme-webroot');
-		$this->setDescription('Validates the Le_Webroot value is correct for froxlor managed domains with Let\s Encrypt certificate.');
+		$this->setDescription('Validates the Le_Webroot value is correct for froxlor managed domains with Let\'s Encrypt certificate.');
 		$this->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Do not ask for confirmation, update files if necessary');
 	}
 
@@ -56,6 +56,11 @@ final class ValidateAcmeWebroot extends CliCommand
 
 		$io = new SymfonyStyle($input, $output);
 
+		if ((int) Settings::Get('system.leenabled') == 0) {
+			$io->info("Let's Encrypt not activated in froxlor settings.");
+			$result = self::INVALID;
+		}
+
 		if ($result == self::SUCCESS) {
 			$yestoall = $input->getOption('yes-to-all') !== false;
 			$helper = $this->getHelper('question');
@@ -64,9 +69,37 @@ final class ValidateAcmeWebroot extends CliCommand
 			$sel_stmt = Database::prepare("SELECT id, domain FROM panel_domains WHERE `letsencrypt` = '1' AND aliasdomain IS NULL ORDER BY id ASC");
 			Database::pexecute($sel_stmt);
 			$domains = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+			// check for froxlor-vhost
+			if (Settings::Get('system.le_froxlor_enabled') == '1') {
+				$domains[] = [
+					'id' => 0,
+					'domain' => Settings::Get('system.hostname')
+				];
+			}
 			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
 			$acmesh_dir = dirname(Settings::Get('system.acmeshpath'));
-			$acmesh_challenge_dir = Settings::Get('system.letsencryptchallengepath');
+			$acmesh_challenge_dir = rtrim(FileDir::makeCorrectDir(Settings::Get('system.letsencryptchallengepath')), "/");
+			$recommended = rtrim(FileDir::makeCorrectDir(Froxlor::getInstallDir()), "/");
+
+			if ($acmesh_challenge_dir != $recommended) {
+				$io->warning([
+					"ACME challenge docroot from settings differs from the current installation directory.",
+					"Settings: '" . $acmesh_challenge_dir . "'",
+					"Default/recommended value: '" . $recommended . "'",
+				]);
+				$question = new ConfirmationQuestion('Fix ACME challenge docroot setting? [yes] ', true, '/^(y|j)/i');
+				if ($yestoall || $helper->ask($input, $output, $question)) {
+					Settings::Set('system.letsencryptchallengepath', $recommended);
+					$former_value = $acmesh_challenge_dir;
+					$acmesh_challenge_dir = $recommended;
+					// need to update the corresponding acme-alias config-file
+					$acme_alias_file = Settings::Get('system.letsencryptacmeconf');
+					$sed_params = "s@".$former_value."@" . $acmesh_challenge_dir . "@";
+					FileDir::safe_exec('sed -i -e "' . $sed_params . '" ' . escapeshellarg($acme_alias_file));
+					$count_changes++;
+				}
+			}
+
 			foreach ($domains as $domain_arr) {
 				$domain = $domain_arr['domain'];
 				$acme_domain_conf = FileDir::makeCorrectFile($acmesh_dir . '/' . $domain . '/' . $domain . '.conf');
@@ -113,6 +146,7 @@ final class ValidateAcmeWebroot extends CliCommand
 			}
 			if ($count_changes > 0) {
 				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
+					$io->info("Changes detected but froxlor has been updated. Inserting task to rebuild vhosts after update.");
 					Cronjob::inserttask(TaskId::REBUILD_VHOST);
 				} else {
 					$question = new ConfirmationQuestion('Changes detected. Force cronjob to refresh certificates? [yes] ', true, '/^(y|j)/i');
@@ -120,6 +154,8 @@ final class ValidateAcmeWebroot extends CliCommand
 						passthru(FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -f -d');
 					}
 				}
+			} else {
+				$io->success("No changes necessary.");
 			}
 		}
 

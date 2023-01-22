@@ -115,10 +115,14 @@ if ($page == 'overview') {
 
 	if ($usages) {
 		$userinfo['diskspace_bytes_used'] = $usages['webspace'] * 1024;
+		$userinfo['mailspace_used']  = $usages['mail'] * 1024;
+		$userinfo['dbspace_used'] = $usages['mysql'] * 1024;
 		$userinfo['total_bytes_used'] = ($usages['webspace'] + $usages['mail'] + $usages['mysql']) * 1024;
 	} else {
 		$userinfo['diskspace_bytes_used'] = 0;
 		$userinfo['total_bytes_used'] = 0;
+		$userinfo['mailspace_used']  = 0;
+		$userinfo['dbspace_used'] = 0;
 	}
 
 	UI::twig()->addGlobal('userinfo', $userinfo);

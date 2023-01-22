@@ -11,7 +11,7 @@
 
 	<!-- CSS -->
 	{% if theme_css is empty %}
-		<link href="{{ basehref|default('') }}templates/Froxlor/assets/css/main.css" rel="stylesheet" type="text/css" />
+		<link href="{{ basehref|default('') }}{{ mix('templates/Froxlor/assets/css/main.css') }}" rel="stylesheet" type="text/css" />
 	{% else %}
 		{{ theme_css|raw }}
 	{% endif %}
@@ -19,7 +19,7 @@
 
 	<!-- Scripts -->
 	{% if theme_js is empty %}
-		<script type="text/javascript" src="{{ basehref|default('') }}templates/Froxlor/assets/js/main.js"></script>
+		<script type="text/javascript" src="{{ basehref|default('') }}{{ mix('templates/Froxlor/assets/js/main.js') }}"></script>
 	{% else %}
 		{{ theme_js|raw }}
 	{% endif %}

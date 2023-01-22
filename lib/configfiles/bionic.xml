@@ -3458,11 +3458,7 @@ ssl_key = <<SSL_KEY_FILE>
 # auth_ssl_username_from_cert=yes.
 #ssl_cert_username_field = commonName
 
-# SSL DH parameters
-# Generate new params with `openssl dhparam -out /etc/dovecot/dh.pem 4096`
-# Or migrate from old ssl-parameters.dat file with the command dovecot
-# gives on startup when ssl_dh is unset.
-ssl_dh = </usr/share/dovecot/dh.pem
+ssl_dh_parameters_length = 2048
 
 # SSL protocols to use
 #ssl_protocols = !SSLv3

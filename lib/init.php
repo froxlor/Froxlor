@@ -277,14 +277,14 @@ if (is_array($_themeoptions) && array_key_exists('js', $_themeoptions['variants'
 	if (is_array($_themeoptions['variants'][$themevariant]['js'])) {
 		foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
 			if (file_exists('templates/' . $theme . '/assets/js/' . $jsfile)) {
-				$js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
+				$js .= '<script type="text/javascript" src="' . mix('templates/' . $theme . '/assets/js/' . $jsfile) . '"></script>' . "\n";
 			}
 		}
 	}
 	if (is_array($_themeoptions['variants'][$themevariant]['css'])) {
 		foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
 			if (file_exists('templates/' . $theme . '/assets/css/' . $cssfile)) {
-				$css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";
+				$css .= '<link href="' . mix('templates/' . $theme . '/assets/css/' . $cssfile) . '" rel="stylesheet" type="text/css" />' . "\n";
 			}
 		}
 	}
