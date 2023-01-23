@@ -110,6 +110,11 @@ return [
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
 			],
+			'c.lastlogin_succ' => [
+				'label' => lng('admin.lastlogin_succ'),
+				'field' => 'lastlogin_succ',
+				'callback' => [Text::class, 'timestamp'],
+			],
 			'c.phpenabled' => [
 				'label' => lng('admin.phpenabled'),
 				'field' => 'phpenabled',
@@ -138,7 +143,7 @@ return [
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
 			],
-			'api_allowed' => [
+			'c.api_allowed' => [
 				'label' => lng('usersettings.api_allowed.title'),
 				'field' => 'api_allowed',
 				'class' => 'text-center',
