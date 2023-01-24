@@ -57,7 +57,7 @@ May be found in [COPYING](COPYING)
 ### Tarball
 https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.froxlor.org/releases/froxlor-latest.tar.gz.md5) [SHA1](https://files.froxlor.org/releases/froxlor-latest.tar.gz.sha1)
 
-### Debian / Ubutnu repository
+### Debian / Ubuntu repository
 
 [HowTo](https://docs.froxlor.org/latest/general/installation/apt-package.html)
 
