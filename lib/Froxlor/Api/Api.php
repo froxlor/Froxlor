@@ -117,6 +117,6 @@ class Api
 
 	private function stripcslashesDeep($value)
 	{
-		return is_array($value) ? array_map([$this, 'stripcslashesDeep'], $value) : stripcslashes($value);
+		return is_array($value) ? array_map([$this, 'stripcslashesDeep'], $value) : (!empty($value) ? stripcslashes($value) : null);
 	}
 }
