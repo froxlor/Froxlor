@@ -148,7 +148,7 @@ class ConfigDisplay
 			if ($lasttype != '' && $lasttype != $_action['type']) {
 				$commands = trim($commands);
 				$numbrows = count(explode("\n", $commands));
-				$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+				$configpage .= UI::twig()->render(UI::validateThemeTemplate('/settings/conf/command.html.twig', self::$theme), [
 					'commands' => $commands,
 					'numbrows' => $numbrows
 				]);
@@ -182,7 +182,7 @@ class ConfigDisplay
 					$commands = trim($commands_pre);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						$commands_pre = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+						$commands_pre = UI::twig()->render(UI::validateThemeTemplate('/settings/conf/command.html.twig', self::$theme), [
 							'commands' => $commands,
 							'numbrows' => $numbrows
 						]);
@@ -190,12 +190,12 @@ class ConfigDisplay
 					$commands = trim($commands_post);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						$commands_post = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+						$commands_post = UI::twig()->render(UI::validateThemeTemplate('/settings/conf/command.html.twig', self::$theme), [
 							'commands' => $commands,
 							'numbrows' => $numbrows
 						]);
 					}
-					$configpage .= UI::twig()->render(self::$theme . '/settings/conf/fileblock.html.twig', [
+					$configpage .= UI::twig()->render(UI::validateThemeTemplate('/settings/conf/fileblock.html.twig', self::$theme), [
 						'realname' => $realname,
 						'commands_pre' => $commands_pre,
 						'commands_file' => $commands_file,
@@ -210,7 +210,7 @@ class ConfigDisplay
 		$commands = trim($commands);
 		if ($commands != '') {
 			$numbrows = count(explode("\n", $commands));
-			$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+			$configpage .= UI::twig()->render(UI::validateThemeTemplate('/settings/conf/command.html.twig', self::$theme), [
 				'commands' => $commands,
 				'numbrows' => $numbrows
 			]);
@@ -233,7 +233,7 @@ class ConfigDisplay
 			$file_content = htmlspecialchars($file_content);
 			$numbrows = count(explode("\n", $file_content));
 			//eval("\$files=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_file") . "\";");
-			$files = UI::twig()->render(self::$theme . '/settings/conf/file.html.twig', [
+			$files = UI::twig()->render(UI::validateThemeTemplate('/settings/conf/file.html.twig', self::$theme), [
 				'distro_editor' => self::$editor,
 				'realname' => $realname,
 				'numbrows' => $numbrows,
