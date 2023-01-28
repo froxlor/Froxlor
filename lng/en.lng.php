@@ -989,6 +989,7 @@ return [
 		'pathmustberelative' => 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).',
 		'mysqlserverstillhasdbs' => 'Cannot remove database server from customers allow-list as there are still databases on it.',
 		'domaincannotbeedited' => 'You are not permitted to edit the domain %s',
+		'invalidcronjobintervalvalue' => 'Cronjob interval must be one of: %s',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

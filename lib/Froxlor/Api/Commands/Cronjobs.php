@@ -32,6 +32,7 @@ use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\System\Cronjob;
+use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use PDO;
 
@@ -40,6 +41,14 @@ use PDO;
  */
 class Cronjobs extends ApiCommand implements ResourceEntity
 {
+
+	private array $allowed_intervals = [
+		'MINUTE',
+		'HOUR',
+		'DAY',
+		'WEEK',
+		'MONTH'
+	];
 
 	/**
 	 * You cannot add new cronjobs yet.
@@ -117,6 +126,10 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 			}
 			$interval_value = Validate::validate($interval_value, 'interval_value', '/^([0-9]+)$/Di', 'stringisempty', [], true);
 			$interval_interval = Validate::validate($interval_interval, 'interval_interval', '', '', [], true);
+
+			if (!in_array(strtoupper($interval_interval), $this->allowed_intervals)) {
+				Response::standardError('invalidcronjobintervalvalue', implode(", ", $this->allowed_intervals), true);
+			}
 
 			// put together interval value
 			$interval = $interval_value . ' ' . strtoupper($interval_interval);

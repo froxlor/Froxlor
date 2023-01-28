@@ -920,6 +920,7 @@ return [
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
 		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
 		'domaincannotbeedited' => 'Keine Berechtigung, um die Domain %s zu bearbeiten',
+		'invalidcronjobintervalvalue' => 'Cronjob Intervall muss einer der folgenden Werte sein: %s',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
