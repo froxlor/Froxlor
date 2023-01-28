@@ -157,16 +157,15 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 * this functions validates a given value as ErrorDocument
 	 * refs #267
 	 *
-	 * @param
-	 *            string error-document-string
+	 * @param string $errdoc
 	 * @param bool $throw_exception
 	 *
 	 * @return string error-document-string
 	 *
 	 */
-	private function correctErrorDocument($errdoc = null, $throw_exception = false)
+	private function correctErrorDocument(string $errdoc, $throw_exception = false)
 	{
-		if ($errdoc !== null && $errdoc != '') {
+		if (trim($errdoc) != '') {
 			// not a URL
 			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || !Validate::validateUrl($errdoc)) {
 				// a file
@@ -176,14 +175,14 @@ class DirOptions extends ApiCommand implements ResourceEntity
 					if (!substr($errdoc, 0, 1) == '/') {
 						$errdoc = '/' . $errdoc;
 					}
-				} else {
+				} elseif (preg_match('/^"([^\r\n\t\f\0"]+)"$/', $errdoc)) {
 					// a string (check for ending ")
 					// string won't work for lighty
 					if (Settings::Get('system.webserver') == 'lighttpd') {
 						Response::standardError('stringerrordocumentnotvalidforlighty', '', $throw_exception);
-					} elseif (substr($errdoc, -1) != '"') {
-						$errdoc .= '"';
 					}
+				} else {
+					Response::standardError('invaliderrordocumentvalue', '', $throw_exception);
 				}
 			} else {
 				if (Settings::Get('system.webserver') == 'lighttpd') {
@@ -191,7 +190,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 				}
 			}
 		}
-		return $errdoc;
+		return trim($errdoc);
 	}
 
 	/**

@@ -837,6 +837,7 @@ return [
 		'notrequiredpasswordcomplexity' => 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.',
 		'stringerrordocumentnotvalidforlighty' => 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
 		'urlerrordocumentnotvalidforlighty' => 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
+		'invaliderrordocumentvalue' => 'Der angegebene Wert für das Fehlederdokument ist keine gültige Datei, URL oder Text-Zeile.',
 		'intvaluetoolow' => 'Die angegebene Zahl ist zu klein (Feld "%s")',
 		'intvaluetoohigh' => 'Die angegebene Zahl ist zu groß (Feld "%s")',
 		'phpfpmstillenabled' => 'PHP-FPM ist derzeit aktiviert. Bitte deaktivieren Sie es, um FCGID zu aktivieren',

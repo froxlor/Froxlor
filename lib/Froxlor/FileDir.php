@@ -147,9 +147,9 @@ class FileDir
 	 */
 	public static function makeSecurePath($path)
 	{
-		// check for bad characters, some are allowed with escaping
+		// check for bad characters, some are allowed with escaping,
 		// but we generally don't want them in our directory-names,
-		// thx to aaronmueller for this snipped
+		// thx to aaronmueller for this snippet
 		$badchars = [
 			':',
 			';',
@@ -161,7 +161,11 @@ class FileDir
 			'$',
 			'~',
 			'?',
-			"\0"
+			"\0",
+			"\n",
+			"\r",
+			"\t",
+			"\f"
 		];
 		foreach ($badchars as $bc) {
 			$path = str_replace($bc, "", $path);
@@ -606,7 +610,7 @@ class FileDir
 	}
 
 	/**
-	 * 
+	 *
 	 * @return array|false
 	 */
 	public static function getFilesystemQuota()

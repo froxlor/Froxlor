@@ -191,4 +191,49 @@ class DirOptionsTest extends TestCase
 		$this->expectExceptionMessage("Directory option with id #1 could not be found");
 		DirOptions::getLocal($admin_userdata, $data)->get();
 	}
+
+	public function testCustomerDirOptionsAddMalformed()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'path' => '/testmalformed',
+			'error404path' => '/"'.PHP_EOL.'something/../../../../weird 404.html'.PHP_EOL.'#'
+		];
+		$json_result = DirOptions::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$expected = '/"something/././././weird\ 404.html#';
+		$this->assertEquals($expected, $result['error404path']);
+	}
+
+	public function testCustomerDirOptionsAddMalformedInvalid()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'path' => '/testmalformed',
+			'error404path' => '"'.PHP_EOL.'IncludeOptional /something/else/'.PHP_EOL.'#'
+		];
+		$this->expectExceptionMessage("The value given as ErrorDocument does not seem to be a valid file, URL or string.");
+		DirOptions::getLocal($customer_userdata, $data)->add();
+
+		$data = [
+			'path' => '/testmalformed',
+			'error404path' => '"something"oh no a quote within the string"'
+		];
+		$this->expectExceptionMessage("The value given as ErrorDocument does not seem to be a valid file, URL or string.");
+		DirOptions::getLocal($customer_userdata, $data)->add();
+	}
 }

@@ -905,6 +905,7 @@ return [
 		'notrequiredpasswordcomplexity' => 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification',
 		'stringerrordocumentnotvalidforlighty' => 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file',
 		'urlerrordocumentnotvalidforlighty' => 'An URL as ErrorDocument does not work in lighttpd, please specify a path to a file',
+		'invaliderrordocumentvalue' => 'The value given as ErrorDocument does not seem to be a valid file, URL or string.',
 		'intvaluetoolow' => 'The given number is too low (field %s)',
 		'intvaluetoohigh' => 'The given number is too high (field %s)',
 		'phpfpmstillenabled' => 'PHP-FPM is currently active. Please deactivate it before activating FCGID',
