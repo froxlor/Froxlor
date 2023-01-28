@@ -839,6 +839,7 @@ return [
 		'destinationiswrong' => 'The forwarder %s contains invalid character(s) or is incomplete.',
 		'backupfoldercannotbedocroot' => 'The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups',
 		'templatelanguagecombodefined' => 'The selected language/template combination has already been defined.',
+		'templatelanguageinvalid' => 'The selected language does not exist',
 		'ipstillhasdomains' => 'The IP/Port combination you want to delete still has domains assigned to it, please reassign those to other IP/Port combinations before deleting this IP/Port combination.',
 		'cantdeletedefaultip' => 'You cannot delete the default IP/Port combination, please make another IP/Port combination default for before deleting this IP/Port combination.',
 		'cantdeletesystemip' => 'You cannot delete the last system IP, either create a new IP/Port combination for the system IP or change the system IP.',

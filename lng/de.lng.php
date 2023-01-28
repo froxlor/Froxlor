@@ -773,6 +773,7 @@ return [
 		'destinationiswrong' => 'Die Weiterleitungsadresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.',
 		'backupfoldercannotbedocroot' => 'Der Ordner für Backups darf nicht das Heimatverzeichnis sein, wählen Sie einen Ordner unterhalb des Heimatverzeichnisses, z.B. /backups',
 		'templatelanguagecombodefined' => 'Die gewählte Kombination aus Sprache und Vorlage ist bereits definiert.',
+		'templatelanguageinvalid' => 'Die gewählte Sprache existiert nicht',
 		'ipstillhasdomains' => 'Die IP/Port-Kombination, die Sie löschen wollen, ist noch bei einer oder mehreren Domains eingetragen. Bitte ändern Sie die Domains vorher auf eine andere IP/Port-Kombination, um diese löschen zu können.',
 		'cantdeletedefaultip' => 'Sie können die Standard-IP/Port-Kombination für Reseller nicht löschen. Bitte setzen Sie eine andere IP/Port-Kombination als Standard, um diese löschen zu können.',
 		'cantdeletesystemip' => 'Sie können die letzte System-IP-Adresse nicht löschen. Entweder legen Sie eine neue IP/Port-Kombination an oder Sie ändern die System-IP-Adresse.',
