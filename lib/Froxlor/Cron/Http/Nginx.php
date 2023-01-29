@@ -1120,6 +1120,10 @@ class Nginx extends HttpConfigBase
 
 		$statTool = Settings::Get('system.traffictool');
 		$statDomain = "";
+		if ($statTool == 'awstats') {
+			// awstats generates for each domain regardless of speciallogfile
+			$statDomain = "/" . $domain['domain'];
+		}
 		if ($domain['speciallogfile'] == '1') {
 			$statDomain = "/" . (($domain['parentdomainid'] == '0') ? $domain['domain'] : $domain['parentdomain']);
 		}
