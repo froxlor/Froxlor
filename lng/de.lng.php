@@ -916,7 +916,7 @@ return [
 		'no_wwwcnamae_ifwwwalias' => 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"',
 		'local_group_exists' => 'Die angegebene Gruppe existiert bereits auf dem System',
 		'local_group_invalid' => 'Der angegebene Gruppen-Name ist nicht gültig',
-		'invaliddnsforletsencrypt' => 'Die DNS-Einträge der Domain enhalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.',
+		'invaliddnsforletsencrypt' => 'Die DNS-Einträge der Domain enthalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.',
 		'notallowedphpconfigused' => 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist',
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
 		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
@@ -1869,7 +1869,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'panel_password_numeric' => [
 			'title' => 'Zahlen',
-			'description' => 'Das Passwort muss mindestens eine Zahl (0-9) enhalten.',
+			'description' => 'Das Passwort muss mindestens eine Zahl (0-9) enthalten.',
 		],
 		'panel_password_special_char_required' => [
 			'title' => 'Sonderzeichen',
