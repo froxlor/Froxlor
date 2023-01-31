@@ -92,7 +92,7 @@ class Text
 		$result = $attributes['fields'];
 		$apikey_data = include Froxlor::getInstallDir() . '/lib/formfields/formfield.api_key.php';
 
-		$body = UI::twig()->render(UI::getTheme() . '/user/inline-form.html.twig', [
+		$body = UI::twig()->render(UI::validateThemeTemplate('/user/inline-form.html.twig'), [
 			'formaction' => $linker->getLink(['section' => 'index', 'page' => 'apikeys']),
 			'formdata' => $apikey_data['apikey'],
 			'editid' => $attributes['fields']['id']

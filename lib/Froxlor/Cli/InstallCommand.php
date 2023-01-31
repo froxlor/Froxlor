@@ -246,7 +246,10 @@ final class InstallCommand extends Command
 					}
 				} catch (Exception $e) {
 					$this->io->error($e->getMessage());
-					return $this->showStep($step, $extended, $decoded_input);
+					if ($this->io->confirm('Retry?', empty($decoded_input))) {
+						return $this->showStep($step, $extended, $decoded_input);
+					}
+					return self::FAILURE;
 				}
 				if ($step == 3) {
 					// do actual install with data from $this->formfielddata
@@ -297,7 +300,7 @@ final class InstallCommand extends Command
 		$json_output = [];
 		foreach ($fields['install']['sections'] as $section => $section_fields) {
 			foreach ($section_fields['fields'] as $name => $field) {
-				if ($name == 'system' || $name == 'manual_config') {
+				if ($name == 'system' || $name == 'manual_config' || $name == 'target_servername') {
 					continue;
 				}
 				if ($field['type'] == 'text' || $field['type'] == 'email') {

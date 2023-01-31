@@ -33,6 +33,7 @@ use Froxlor\Froxlor;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\Database\Database;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php

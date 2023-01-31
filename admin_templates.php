@@ -253,6 +253,9 @@ if ($action == '') {
 	if (isset($_POST['prepare']) && $_POST['prepare'] == 'prepare') {
 		// email templates
 		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		if (!array_key_exists($language, $languages)) {
+			Response::standardError('templatelanguageinvalid');
+		}
 		$template = Validate::validate($_POST['template'], 'template');
 
 		$result_stmt = Database::prepare("
@@ -288,6 +291,9 @@ if ($action == '') {
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && !isset($_POST['filesend'])) {
 		// email templates
 		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		if (!array_key_exists($language, $languages)) {
+			Response::standardError('templatelanguageinvalid');
+		}
 		$template = Validate::validate($_POST['template'], 'template');
 		$subject = Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
 		$mailbody = Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');

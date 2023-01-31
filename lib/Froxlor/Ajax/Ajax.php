@@ -162,7 +162,7 @@ class Ajax
 				$content = preg_replace("/[\r\n]+/", " ", strip_tags($item->description));
 				$content = substr($content, 0, 150) . "...";
 
-				$items .= UI::twig()->render($this->theme . '/user/newsfeeditem.html.twig', [
+				$items .= UI::twig()->render(UI::validateThemeTemplate('/user/newsfeeditem.html.twig', $this->theme), [
 					'link' => $link,
 					'title' => $title,
 					'date' => $date,
@@ -201,7 +201,7 @@ class Ajax
 			$result['last_update_check'] = $uc_data['ts'];
 			$result['channel'] = Settings::Get('system.update_channel');
 
-			$result_rendered = UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
+			$result_rendered = UI::twig()->render(UI::validateThemeTemplate('/misc/version_top.html.twig', $this->theme), $result);
 			return $this->jsonResponse($result_rendered);
 		} catch (Exception $e) {
 			// don't display anything if just not allowed due to permissions

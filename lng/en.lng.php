@@ -839,6 +839,7 @@ return [
 		'destinationiswrong' => 'The forwarder %s contains invalid character(s) or is incomplete.',
 		'backupfoldercannotbedocroot' => 'The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups',
 		'templatelanguagecombodefined' => 'The selected language/template combination has already been defined.',
+		'templatelanguageinvalid' => 'The selected language does not exist',
 		'ipstillhasdomains' => 'The IP/Port combination you want to delete still has domains assigned to it, please reassign those to other IP/Port combinations before deleting this IP/Port combination.',
 		'cantdeletedefaultip' => 'You cannot delete the default IP/Port combination, please make another IP/Port combination default for before deleting this IP/Port combination.',
 		'cantdeletesystemip' => 'You cannot delete the last system IP, either create a new IP/Port combination for the system IP or change the system IP.',
@@ -904,6 +905,7 @@ return [
 		'notrequiredpasswordcomplexity' => 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification',
 		'stringerrordocumentnotvalidforlighty' => 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file',
 		'urlerrordocumentnotvalidforlighty' => 'An URL as ErrorDocument does not work in lighttpd, please specify a path to a file',
+		'invaliderrordocumentvalue' => 'The value given as ErrorDocument does not seem to be a valid file, URL or string.',
 		'intvaluetoolow' => 'The given number is too low (field %s)',
 		'intvaluetoohigh' => 'The given number is too high (field %s)',
 		'phpfpmstillenabled' => 'PHP-FPM is currently active. Please deactivate it before activating FCGID',
@@ -988,6 +990,7 @@ return [
 		'pathmustberelative' => 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).',
 		'mysqlserverstillhasdbs' => 'Cannot remove database server from customers allow-list as there are still databases on it.',
 		'domaincannotbeedited' => 'You are not permitted to edit the domain %s',
+		'invalidcronjobintervalvalue' => 'Cronjob interval must be one of: %s',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

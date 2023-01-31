@@ -773,6 +773,7 @@ return [
 		'destinationiswrong' => 'Die Weiterleitungsadresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.',
 		'backupfoldercannotbedocroot' => 'Der Ordner für Backups darf nicht das Heimatverzeichnis sein, wählen Sie einen Ordner unterhalb des Heimatverzeichnisses, z.B. /backups',
 		'templatelanguagecombodefined' => 'Die gewählte Kombination aus Sprache und Vorlage ist bereits definiert.',
+		'templatelanguageinvalid' => 'Die gewählte Sprache existiert nicht',
 		'ipstillhasdomains' => 'Die IP/Port-Kombination, die Sie löschen wollen, ist noch bei einer oder mehreren Domains eingetragen. Bitte ändern Sie die Domains vorher auf eine andere IP/Port-Kombination, um diese löschen zu können.',
 		'cantdeletedefaultip' => 'Sie können die Standard-IP/Port-Kombination für Reseller nicht löschen. Bitte setzen Sie eine andere IP/Port-Kombination als Standard, um diese löschen zu können.',
 		'cantdeletesystemip' => 'Sie können die letzte System-IP-Adresse nicht löschen. Entweder legen Sie eine neue IP/Port-Kombination an oder Sie ändern die System-IP-Adresse.',
@@ -836,6 +837,7 @@ return [
 		'notrequiredpasswordcomplexity' => 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.',
 		'stringerrordocumentnotvalidforlighty' => 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
 		'urlerrordocumentnotvalidforlighty' => 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
+		'invaliderrordocumentvalue' => 'Der angegebene Wert für das Fehlederdokument ist keine gültige Datei, URL oder Text-Zeile.',
 		'intvaluetoolow' => 'Die angegebene Zahl ist zu klein (Feld "%s")',
 		'intvaluetoohigh' => 'Die angegebene Zahl ist zu groß (Feld "%s")',
 		'phpfpmstillenabled' => 'PHP-FPM ist derzeit aktiviert. Bitte deaktivieren Sie es, um FCGID zu aktivieren',
@@ -919,6 +921,7 @@ return [
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
 		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
 		'domaincannotbeedited' => 'Keine Berechtigung, um die Domain %s zu bearbeiten',
+		'invalidcronjobintervalvalue' => 'Cronjob Intervall muss einer der folgenden Werte sein: %s',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',

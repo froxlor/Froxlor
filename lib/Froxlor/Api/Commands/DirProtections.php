@@ -87,7 +87,8 @@ class DirProtections extends ApiCommand implements ResourceEntity
 		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 		$username = Validate::validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', [], true);
 		$authname = Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', [], true);
-		Validate::validate($password, 'password', '', '', [], true);
+		$password = Validate::validate($password, 'password', '', '', [], true);
+		$password = Crypt::validatePassword($password, true);
 
 		// check for duplicate usernames for the path
 		$username_path_check_stmt = Database::prepare("
@@ -244,7 +245,8 @@ class DirProtections extends ApiCommand implements ResourceEntity
 
 		// validation
 		$authname = Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', [], true);
-		Validate::validate($password, 'password', '', '', [], true);
+		$password = Validate::validate($password, 'password', '', '', [], true);
+		$password = Crypt::validatePassword($password, true);
 
 		$upd_query = "";
 		$upd_params = [
