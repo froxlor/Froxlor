@@ -1142,6 +1142,7 @@ Yours sincerely, your administrator',
 			'email' => 'Email',
 			'emails' => 'Addresses',
 			'webmail' => 'Webmail',
+			'emailsoverview' => 'Email domains overview',
 		],
 		'mysql' => [
 			'mysql' => 'MySQL',

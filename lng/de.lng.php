@@ -1073,6 +1073,7 @@ Vielen Dank, Ihr Administrator',
 			'email' => 'E-Mail',
 			'emails' => 'Adressen',
 			'webmail' => 'Webmail',
+			'emailsoverview' => 'E-Mail Domain Übersicht',
 		],
 		'mysql' => [
 			'mysql' => 'MySQL',

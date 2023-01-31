@@ -27,7 +27,7 @@ return [
 	'emails_add' => [
 		'title' => lng('emails.emails_add'),
 		'image' => 'fa-solid fa-plus',
-		'self_overview' => ['section' => 'email', 'page' => 'emails'],
+		'self_overview' => ['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid ?: 0],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.emails_add'),

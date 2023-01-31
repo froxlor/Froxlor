@@ -32,7 +32,7 @@ return [
 	'email_list' => [
 		'title' => lng('menue.email.emails'),
 		'icon' => 'fa-solid fa-envelope',
-		'self_overview' => ['section' => 'email', 'page' => 'emails'],
+		'self_overview' => ['section' => 'email', 'page' => 'email_domain'],
 		'default_sorting' => ['m.email_full' => 'asc'],
 		'columns' => [
 			'm.email_full' => [
@@ -74,7 +74,8 @@ return [
 				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'email',
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => ':domainid',
 					'action' => 'edit',
 					'id' => ':id'
 				],
@@ -85,7 +86,8 @@ return [
 				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'email',
-					'page' => 'emails',
+					'page' => 'email_domain',
+					'domainid' => ':domainid',
 					'action' => 'delete',
 					'id' => ':id'
 				],

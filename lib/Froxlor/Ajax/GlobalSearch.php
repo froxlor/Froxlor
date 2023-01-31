@@ -28,6 +28,7 @@ namespace Froxlor\Ajax;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Domains;
+use Froxlor\Api\Commands\EmailDomains;
 use Froxlor\Api\Commands\Emails;
 use Froxlor\Api\Commands\FpmDaemons;
 use Froxlor\Api\Commands\Ftps;
@@ -267,7 +268,20 @@ class GlobalSearch
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'email',
-								'href' => 'customer_email.php?page=emails&searchfield=m.email&searchtext='
+								'href' => 'customer_email.php?page=email_domain&domainid={domainid}&searchfield=m.email&searchtext='
+							]
+						],
+						// email-domains
+						'email_domains' => [
+							'class' => EmailDomains::class,
+							'searchfields' => [
+								'd.domain',
+							],
+							'result_key' => 'domain',
+							'result_format' => [
+								'title' => ['self', 'getFieldFromResult'],
+								'title_args' => 'domain',
+								'href' => 'customer_email.php?page=emails&searchfield=d.domain&searchtext='
 							]
 						],
 						// databases
@@ -326,6 +340,14 @@ class GlobalSearch
 								if (!isset($result[$entity])) {
 									$result[$entity] = [];
 								}
+								// replacer from result in href
+								$href_replacer = [];
+								if (preg_match_all('/\{([a-z]+)\}/', $edata['result_format']['href'], $href_replacer) !== false) {
+									foreach ($href_replacer[1] as $href_field) {
+										$href_field_value = self::getFieldFromResult($cresult, $href_field);
+										$edata['result_format']['href'] = str_replace('{'.$href_field.'}', $href_field_value, $edata['result_format']['href']);
+									}
+								}
 								$result[$entity][] = [
 									'title' => call_user_func($edata['result_format']['title'], $cresult, ($edata['result_format']['title_args'] ?? null)),
 									'href' => $edata['result_format']['href'] . $cresult[$edata['result_key']]
@@ -335,7 +357,7 @@ class GlobalSearch
 					}
 				} // foreach entity
 
-			} // foreach splitted search-term
+			} // foreach split search-term
 		}
 		return $result;
 	}
