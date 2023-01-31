@@ -26,9 +26,10 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
-use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;
-use Froxlor\Api\Commands\Emails as Emails;
+use Froxlor\Api\Commands\EmailAccounts;
+use Froxlor\Api\Commands\EmailForwarders;
+use Froxlor\Api\Commands\Emails;
+use Froxlor\Api\Commands\EmailDomains;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\PhpHelper;
@@ -56,50 +57,17 @@ if ($page == 'overview' || $page == 'emails') {
 	$domain_count = Database::pexecute_first($result_stmt, [
 		"cid" => $userinfo['customerid']
 	]);
-	if (true /* $domain_count['maildomains'] && $domain_count['maildomains'] > 1 */) {
-		$searchfield = Request::get('searchfield', '');
-		$searchtext = Request::get('searchtext', '');
-		$sql_search = '';
-		if (!empty($searchfield) && !empty($searchtext)) {
-			// d.domain is a fixed searchfield for now
-			$sql_search = ' AND `d`.`domain` LIKE :domain';
+	if ($domain_count['maildomains'] && $domain_count['maildomains'] > 1) {
+		try {
+			$emaildomain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails_overview.php';
+			$collection = (new Collection(EmailDomains::class, $userinfo))
+				->withPagination($emaildomain_list_data['emaildomain_list']['columns'], $emaildomain_list_data['emaildomain_list']['default_sorting']);
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
 		}
-		$email_domain_stmt = Database::prepare("
-		SELECT DISTINCT d.domain, e.domainid,
-		COUNT(e.email) as addresses,
-		IFNULL(SUM(CASE WHEN e.popaccountid > 0 THEN 1 ELSE 0 END), 0) as accounts,
-		IFNULL(SUM(
-			CASE
-			WHEN LENGTH(REPLACE(e.destination, CONCAT(e.email_full, ' '), '')) - LENGTH(REPLACE(REPLACE(e.destination, CONCAT(e.email_full, ' '), ''), ' ', '')) > 0
-			THEN LENGTH(REPLACE(e.destination, CONCAT(e.email_full, ' '), '')) - LENGTH(REPLACE(REPLACE(e.destination, CONCAT(e.email_full, ' '), ''), ' ', ''))
-			WHEN e.destination <> e.email_full THEN 1
-			ELSE 0
-			END
-		), 0) as forwarder
-		FROM `mail_virtual` e
-		LEFT JOIN `panel_domains` d ON d.id = e.domainid
-		WHERE e.customerid = :cid AND d.domain IS NOT NULL " . $sql_search
-		);
-		$params = ["cid" => $userinfo['customerid']];
-		if (!empty($sql_search)) {
-			$params["domain"] = '%' . $searchtext . '%';
-		}
-		Database::pexecute($email_domain_stmt, $params);
-		$domains = [];
-		while ($row = $email_domain_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if (!empty($row['domain'])) {
-				$domains[] = $row;
-			}
-		}
-		$emaildomain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails_overview.php';
-		$collection = [
-			'data' => $domains,
-			'pagination' => []
-		];
 
 		UI::view('user/table.html.twig', [
-			'listing' => Listing::formatFromArray($collection, $emaildomain_list_data['emaildomain_list'],
-				'emaildomain_list'),
+			'listing' => Listing::format($collection, $emaildomain_list_data, 'emaildomain_list'),
 			'actions_links' => CurrentUser::canAddResource('emails') ? [
 				[
 					'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),

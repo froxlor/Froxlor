@@ -30,9 +30,10 @@ use Froxlor\UI\Listing;
 
 return [
 	'emaildomain_list' => [
-		'title' => lng('menue.main.emailsoverview'),
-		'icon' => 'fa-solid fa-key',
+		'title' => lng('menue.email.emailsoverview'),
+		'icon' => 'fa-solid fa-envelope',
 		'self_overview' => ['section' => 'email', 'page' => 'overview'],
+		'default_sorting' => ['d.domain' => 'asc'],
 		'columns' => [
 			'd.domain' => [
 				'label' => 'Domain',
@@ -54,7 +55,7 @@ return [
 				'searchable' => false,
 			],
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('apikeys_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('emaildomain_list', [
 			'd.domain',
 			'addresses',
 			'accounts',
