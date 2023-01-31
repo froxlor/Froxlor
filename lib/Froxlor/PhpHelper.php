@@ -263,7 +263,7 @@ class PhpHelper
 				try {
 					$answer = $resolver->query($host, 'A')->answer;
 					foreach ($answer as $rr) {
-						if ($rr instanceof Net_DNS2_RR_A) {
+						if ($rr instanceof \Net_DNS2_RR_A) {
 							$ips[] = inet_ntop(inet_pton($rr->address));
 						}
 					}
@@ -276,7 +276,7 @@ class PhpHelper
 			try {
 				$answer = $resolver->query($host, 'AAAA')->answer;
 				foreach ($answer as $rr) {
-					if ($rr instanceof Net_DNS2_RR_AAAA) {
+					if ($rr instanceof \Net_DNS2_RR_AAAA) {
 						$ips[] = inet_ntop(inet_pton($rr->address));
 					}
 				}
