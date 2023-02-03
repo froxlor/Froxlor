@@ -298,7 +298,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$fax = $this->getParam('fax', true, '');
 				$customernumber = $this->getParam('customernumber', true, '');
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
-				$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
+				$api_allowed = $this->getBoolParam('api_allowed', true, (Settings::Get('api.enabled') && Settings::Get('api.customer_default')));
 				$gender = (int)$this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);

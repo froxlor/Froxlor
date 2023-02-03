@@ -700,6 +700,7 @@ opcache.validate_timestamps'),
 	('system', 'update_notify_last', '2.0.10'),
 	('system', 'traffictool', 'goaccess'),
 	('api', 'enabled', '0'),
+	('api', 'customer_default', '1'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
@@ -742,7 +743,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.10'),
-	('panel', 'db_version', '202301180');
+	('panel', 'db_version', '202302030');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

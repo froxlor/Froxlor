@@ -2103,6 +2103,7 @@ Yours sincerely, your administrator',
 			'title' => 'Enable external API usage',
 			'description' => 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://docs.froxlor.org/latest/api-guide/" target="_new">https://docs.froxlor.org/</a>',
 		],
+		'api_customer_default' => '"Allow API access" default value for new customers',
 		'dhparams_file' => [
 			'title' => 'DHParams file (Diffie–Hellman key exchange)',
 			'description' => 'If a dhparams.pem file is specified here it will be included in the webserver configuration. Leave empty to disable.<br>Example: /etc/ssl/webserver/dhparams.pem<br><br>If the file does not exist, it will be created automatically with the following command: <code>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096</code>. It is recommended to create the file prior to specifying it here as the creation takes quite a while and blocks the cronjob.',

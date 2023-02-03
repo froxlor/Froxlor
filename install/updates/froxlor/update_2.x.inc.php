@@ -382,3 +382,11 @@ if (Froxlor::isFroxlorVersion('2.0.9')) {
 	Update::showUpdateStep("Updating from 2.0.9 to 2.0.10", false);
 	Froxlor::updateToVersion('2.0.10');
 }
+
+if (Froxlor::isDatabaseVersion('202301180')) {
+	Update::showUpdateStep("Adding new setting for 'Allow API access' default value for new customers");
+	Settings::AddNew("api.customer_default", "1");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202302030');
+}

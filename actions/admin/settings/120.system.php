@@ -109,6 +109,18 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				],
+				'api_customer_default' => [
+					'label' => lng('serversettings.api_customer_default'),
+					'settinggroup' => 'api',
+					'varname' => 'customer_default',
+					'type' => 'select',
+					'default' => 1,
+					'select_var' => [
+						1 => lng('panel.yes'),
+						0 => lng('panel.no')
+					],
+					'save_method' => 'storeSettingField'
+				],
 				'update_channel' => [
 					'label' => lng('serversettings.update_channel'),
 					'settinggroup' => 'system',

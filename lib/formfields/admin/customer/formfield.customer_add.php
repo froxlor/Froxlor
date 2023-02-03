@@ -87,7 +87,7 @@ return [
 						'desc' => lng('usersettings.api_allowed.description'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => Settings::Get('api.enabled') == '1',
+						'checked' => Settings::Get('api.enabled') == '1' && Settings::Get('api.customer_default'),
 						'visible' => Settings::Get('api.enabled') == '1'
 					]
 				]
