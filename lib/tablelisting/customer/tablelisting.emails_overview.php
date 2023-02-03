@@ -40,17 +40,17 @@ return [
 				'field' => 'domain',
 			],
 			'addresses' => [
-				'label' => '# Adresses',
+				'label' => '# ' . lng('emails.emails'),
 				'field' => 'addresses',
 				'searchable' => false,
 			],
 			'accounts' => [
-				'label' => '# Accounts',
+				'label' => '# ' . lng('emails.accounts'),
 				'field' => 'accounts',
 				'searchable' => false,
 			],
 			'forwarder' => [
-				'label' => '# Forwarders',
+				'label' => '# ' . lng('emails.forwarders'),
 				'field' => 'forwarder',
 				'searchable' => false,
 			],

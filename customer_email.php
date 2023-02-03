@@ -115,7 +115,7 @@ if ($page == 'email_domain') {
 					'section' => 'email',
 					'page' => 'emails',
 				]),
-				'label' => 'back to domain overview',
+				'label' => lng('emails.back_to_overview'),
 				'icon' => 'fa-solid fa-reply'
 			],
 			CurrentUser::canAddResource('emails') ? [

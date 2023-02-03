@@ -720,7 +720,7 @@ return [
 		'updatequota' => 'Update Kontingent',
 		'quota_edit' => 'E-Mail-Kontingent ändern',
 		'noemaildomainaddedyet' => 'Sie haben bisher noch keine (E-Mail-)Domain in Ihrem Konto.',
-		'back_to_overview' => 'Zurück zur Übersicht',
+		'back_to_overview' => 'Zurück zur Domain-Übersicht',
 	],
 	'error' => [
 		'error' => 'Fehlermeldung',
