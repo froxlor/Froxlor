@@ -29,7 +29,7 @@ return [
 	'emails_edit' => [
 		'title' => lng('emails.emails_edit'),
 		'image' => 'fa-solid fa-pen',
-		'self_overview' => ['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid ?: 1],
+		'self_overview' => ['section' => 'email', 'page' => 'email_domain', 'domainid' => $result['domainid']],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.emails_edit'),

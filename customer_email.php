@@ -61,7 +61,8 @@ if ($page == 'overview' || $page == 'emails') {
 		try {
 			$emaildomain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails_overview.php';
 			$collection = (new Collection(EmailDomains::class, $userinfo))
-				->withPagination($emaildomain_list_data['emaildomain_list']['columns'], $emaildomain_list_data['emaildomain_list']['default_sorting']);
+				->withPagination($emaildomain_list_data['emaildomain_list']['columns'],
+					$emaildomain_list_data['emaildomain_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
@@ -108,8 +109,9 @@ if ($page == 'email_domain') {
 		]);
 		$emaildomains_count = $result2['emaildomains'];
 
-		$actions_links = [
-			[
+		$actions_links = [];
+		if ($email_domainid > 0) {
+			$actions_links[] = [
 				'class' => 'btn-outline-primary',
 				'href' => $linker->getLink([
 					'section' => 'email',
@@ -117,12 +119,14 @@ if ($page == 'email_domain') {
 				]),
 				'label' => lng('emails.back_to_overview'),
 				'icon' => 'fa-solid fa-reply'
-			],
-			CurrentUser::canAddResource('emails') ? [
+			];
+		}
+		if (CurrentUser::canAddResource('emails')) {
+			$actions_links[] = [
 				'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
 				'label' => lng('emails.emails_add')
-			] : null
-		];
+			];
+		}
 
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $email_list_data, 'email_list'),
@@ -287,8 +291,9 @@ if ($page == 'email_domain') {
 		}
 		Response::redirectTo($filename, [
 			'page' => $page,
+			'domainid' => $email_domainid,
 			'action' => 'edit',
-			'id' => $id
+			'id' => $id,
 		]);
 	}
 } elseif ($page == 'accounts') {
@@ -347,7 +352,11 @@ if ($page == 'email_domain') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid
+							]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -407,7 +416,11 @@ if ($page == 'email_domain') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid
+							]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -462,7 +475,11 @@ if ($page == 'email_domain') {
 						],
 						[
 							'class' => 'btn-secondary',
-							'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
+							'href' => $linker->getLink([
+								'section' => 'email',
+								'page' => 'email_domain',
+								'domainid' => $email_domainid
+							]),
 							'label' => lng('menue.email.emails'),
 							'icon' => 'fa-solid fa-envelope'
 						]
@@ -553,7 +570,11 @@ if ($page == 'email_domain') {
 							],
 							[
 								'class' => 'btn-secondary',
-								'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid]),
+								'href' => $linker->getLink([
+									'section' => 'email',
+									'page' => 'email_domain',
+									'domainid' => $email_domainid
+								]),
 								'label' => lng('menue.email.emails'),
 								'icon' => 'fa-solid fa-envelope'
 							]
