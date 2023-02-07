@@ -63,9 +63,10 @@ class CurrentUser
 	/**
 	 * re-read in the user data if a valid session exists
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function reReadUserData()
+	public static function reReadUserData(): bool
 	{
 		$table = self::isAdmin() ? TABLE_PANEL_ADMINS : TABLE_PANEL_CUSTOMERS;
 		$userinfo_stmt = Database::prepare("
@@ -75,7 +76,7 @@ class CurrentUser
 			"loginname" => self::getField('loginname')
 		]);
 		if ($userinfo) {
-			// dont just set the data, we need to merge with current data
+			// don't just set the data, we need to merge with current data
 			// array_merge is a right-reduction - value existing in getData() will be overwritten with $userinfo,
 			// other than the union-operator (+) which would keep the values already existing from getData()
 			$newuserinfo = array_merge(self::getData(), $userinfo);
@@ -107,7 +108,7 @@ class CurrentUser
 	 */
 	public static function getField(string $index)
 	{
-		return isset($_SESSION['userinfo'][$index]) ? $_SESSION['userinfo'][$index] : "";
+		return $_SESSION['userinfo'][$index] ?? "";
 	}
 
 	/**
@@ -130,6 +131,11 @@ class CurrentUser
 		$_SESSION['userinfo'] = $data;
 	}
 
+	/**
+	 * @param string $resource
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public static function canAddResource(string $resource): bool
 	{
 		$addition = true;
@@ -145,14 +151,15 @@ class CurrentUser
 			]);
 			$addition = $result['emaildomains'] != 0;
 		} elseif ($resource == 'subdomains') {
-			$parentDomainCollection = (new Collection(SubDomains::class, $_SESSION['userinfo'], ['sql_search' => ['d.parentdomainid' => 0]]));
+			$parentDomainCollection = (new Collection(SubDomains::class, $_SESSION['userinfo'],
+				['sql_search' => ['d.parentdomainid' => 0]]));
 			$addition = $parentDomainCollection != 0;
 		} elseif ($resource == 'domains') {
 			$customerCollection = (new Collection(Customers::class, $_SESSION['userinfo']));
 			$addition = $customerCollection != 0;
 		}
 
-		return ($_SESSION['userinfo'][$resource.'_used'] < $_SESSION['userinfo'][$resource] || $_SESSION['userinfo'][$resource] == '-1') && $addition;
+		return ($_SESSION['userinfo'][$resource . '_used'] < $_SESSION['userinfo'][$resource] || $_SESSION['userinfo'][$resource] == '-1') && $addition;
 	}
 
 }

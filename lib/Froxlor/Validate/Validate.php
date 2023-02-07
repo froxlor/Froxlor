@@ -57,9 +57,16 @@ class Validate
 	 * @param bool $throw_exception whether to display error or throw an exception, default false
 	 *
 	 * @return string|void the clean string or error
+	 * @throws Exception
 	 */
-	public static function validate($str, string $fieldname, string $pattern = '', $lng = '', $emptydefault = [], bool $throw_exception = false)
-	{
+	public static function validate(
+		string $str,
+		string $fieldname,
+		string $pattern = '',
+		$lng = '',
+		$emptydefault = [],
+		bool $throw_exception = false
+	) {
 		if (!is_array($emptydefault)) {
 			$emptydefault_array = [
 				$emptydefault
@@ -101,27 +108,28 @@ class Validate
 	/**
 	 * Checks whether it is a valid ip
 	 *
-	 * @param string $ip
-	 *            ip-address to check
-	 * @param bool $return_bool
-	 *            whether to return bool or call \Froxlor\UI\Response::standard_error()
-	 * @param string $lng
-	 *            index for error-message (if $return_bool is false)
-	 * @param bool $allow_localhost
-	 *            whether to allow 127.0.0.1
-	 * @param bool $allow_priv
-	 *            whether to allow private network addresses
-	 * @param bool $allow_cidr
-	 *            whether to allow CIDR values e.g. 10.10.10.10/16
-	 * @param bool $cidr_as_netmask
-	 *            whether to format CIDR nodation to netmask notation
-	 * @param bool $throw_exception
-	 *            whether to throw an exception on failure
+	 * @param string $ip ip-address to check
+	 * @param bool $return_bool whether to return bool or call \Froxlor\UI\Response::standard_error()
+	 * @param string $lng index for error-message (if $return_bool is false)
+	 * @param bool $allow_localhost whether to allow 127.0.0.1
+	 * @param bool $allow_priv whether to allow private network addresses
+	 * @param bool $allow_cidr whether to allow CIDR values e.g. 10.10.10.10/16
+	 * @param bool $cidr_as_netmask whether to format CIDR notation to netmask notation
+	 * @param bool $throw_exception whether to throw an exception on failure
 	 *
 	 * @return string|bool|void ip address on success, false on failure (or nothing if error is displayed)
+	 * @throws Exception
 	 */
-	public static function validate_ip2($ip, bool $return_bool = false, string $lng = 'invalidip', bool $allow_localhost = false, bool $allow_priv = false, bool $allow_cidr = false, bool $cidr_as_netmask = false, bool $throw_exception = false)
-	{
+	public static function validate_ip2(
+		string $ip,
+		bool $return_bool = false,
+		string $lng = 'invalidip',
+		bool $allow_localhost = false,
+		bool $allow_priv = false,
+		bool $allow_cidr = false,
+		bool $cidr_as_netmask = false,
+		bool $throw_exception = false
+	) {
 		$cidr = "";
 		if ($allow_cidr) {
 			$org_ip = $ip;
@@ -131,7 +139,8 @@ class Validate
 				if (IPTools::is_ipv6($ip_cidr[0])) {
 					$cidr_range_max = 128;
 				}
-				if (strlen($ip_cidr[1]) <= 3 && in_array((int)$ip_cidr[1], array_values(range(1, $cidr_range_max)), true) === false) {
+				if (strlen($ip_cidr[1]) <= 3 && in_array((int)$ip_cidr[1], array_values(range(1, $cidr_range_max)),
+						true) === false) {
 					if ($return_bool) {
 						return false;
 					}
@@ -161,7 +170,8 @@ class Validate
 
 		$filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
 
-		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)) {
+		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP,
+					FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)) {
 			return $ip . $cidr;
 		}
 
@@ -179,14 +189,12 @@ class Validate
 	/**
 	 * Returns whether a URL is in a correct format or not
 	 *
-	 * @param string $url
-	 *            URL to be tested
-	 * @param bool $allow_private_ip
-	 *          optional, default is false
+	 * @param string $url URL to be tested
+	 * @param bool $allow_private_ip optional, default is false
 	 *
 	 * @return bool
 	 */
-	public static function validateUrl(string $url, bool $allow_private_ip = false)
+	public static function validateUrl(string $url, bool $allow_private_ip = false): bool
 	{
 		if (strtolower(substr($url, 0, 7)) != "http://" && strtolower(substr($url, 0, 8)) != "https://") {
 			$url = 'http://' . $url;
@@ -215,25 +223,22 @@ class Validate
 	/**
 	 * Check if the submitted string is a valid domainname
 	 *
-	 * @param string $domainname
-	 *            The domainname which should be checked.
-	 * @param bool $allow_underscore
-	 *            optional if true, allowes the underscore character in a domain label (DKIM etc.)
+	 * @param string $domainname The domainname which should be checked.
+	 * @param bool $allow_underscore optional if true, allowes the underscore character in a domain label (DKIM etc.)
 	 *
 	 * @return string|boolean the domain-name if the domain is valid, false otherwise
 	 */
-	public static function validateDomain($domainname, $allow_underscore = false)
+	public static function validateDomain(string $domainname, bool $allow_underscore = false)
 	{
-		if (is_string($domainname)) {
-			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.(xn\-\-)?([a-z\d])+';
-			if ($allow_underscore) {
-				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.(xn\-\-)?([a-z\d])+';
-			}
+		$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.(xn\-\-)?([a-z\d])+';
+		if ($allow_underscore) {
+			$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.(xn\-\-)?([a-z\d])+';
+		}
 
-			// valid chars check && overall length check && length of each label
-			if (preg_match("/^" . $char_validation . "$/i", $domainname) && preg_match("/^.{1,253}$/", $domainname) && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)) {
-				return $domainname;
-			}
+		// valid chars check && overall length check && length of each label
+		if (preg_match("/^" . $char_validation . "$/i", $domainname) && preg_match("/^.{1,253}$/",
+				$domainname) && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)) {
+			return $domainname;
 		}
 		return false;
 	}
@@ -245,7 +250,7 @@ class Validate
 	 *
 	 * @return string|boolean hostname on success, else false
 	 */
-	public static function validateLocalHostname($hostname)
+	public static function validateLocalHostname(string $hostname)
 	{
 		$pattern = '/^[a-z0-9][a-z0-9\-]{0,62}$/i';
 		if (preg_match($pattern, $hostname)) {
@@ -257,11 +262,11 @@ class Validate
 	/**
 	 * Returns if an emailaddress is in correct format or not
 	 *
-	 * @param string $email
-	 *            The email address to check
-	 * @return bool Correct or not
+	 * @param string $email The email address to check
+	 *
+	 * @return mixed
 	 */
-	public static function validateEmail($email)
+	public static function validateEmail(string $email)
 	{
 		$email = strtolower($email);
 		// as of php-7.1
@@ -272,25 +277,22 @@ class Validate
 	}
 
 	/**
-	 * Returns if an username is in correct format or not.
+	 * Returns if a username is in correct format or not.
 	 *
-	 * @param string $username
-	 *            The username to check
-	 * @param bool $unix_names
-	 *            optional, default true, checks whether it must be UNIX compatible
-	 * @param int $mysql_max
-	 *            optional, number of max mysql username characters, default empty
+	 * @param string $username The username to check
+	 * @param bool $unix_names optional, default true, checks whether it must be UNIX compatible
+	 * @param int $mysql_max optional, number of max mysql username characters, default empty
 	 *
 	 * @return bool
 	 */
-	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
+	public static function validateUsername(string $username, bool $unix_names = true, int $mysql_max = 0): bool
 	{
-		if (empty($mysql_max) || !is_numeric($mysql_max) || $mysql_max <= 0) {
+		if (empty($mysql_max) || $mysql_max <= 0) {
 			$mysql_max = Database::getSqlUsernameLength() - 1;
 		} else {
 			$mysql_max--;
 		}
-		if ($unix_names == 0) {
+		if (!$unix_names) {
 			if (strpos($username, '--') === false) {
 				return (preg_match('/^[a-z][a-z0-9\-_]{0,' . $mysql_max . '}[a-z0-9]{1}$/Di', $username) != false);
 			}
@@ -304,9 +306,9 @@ class Validate
 	 *
 	 * @param string $interval
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public static function validateSqlInterval($interval = null)
+	public static function validateSqlInterval(string $interval): bool
 	{
 		if (!empty($interval) && strstr($interval, ' ') !== false) {
 			/*
@@ -325,7 +327,8 @@ class Validate
 
 			$interval_parts = explode(' ', $interval);
 
-			if (count($interval_parts) == 2 && preg_match('/[0-9]+/', $interval_parts[0]) && in_array(strtoupper($interval_parts[1]), $valid_expr)) {
+			if (count($interval_parts) == 2 && preg_match('/[0-9]+/',
+					$interval_parts[0]) && in_array(strtoupper($interval_parts[1]), $valid_expr)) {
 				return true;
 			}
 		}

@@ -36,7 +36,7 @@ class IPTools
 	 *
 	 * @return string
 	 */
-	public static function cidr2NetmaskAddr($cidr)
+	public static function cidr2NetmaskAddr(string $cidr): string
 	{
 		$ta = substr($cidr, strpos($cidr, '/') + 1) * 1;
 		$netmask = str_split(str_pad(str_pad('', $ta, '1'), 32, '0'), 8);
@@ -52,7 +52,7 @@ class IPTools
 	 * Checks whether the given $ip is in range of given ip/cidr range
 	 *
 	 * @param array $ip_cidr 0 => ip, 1 => netmask in decimal, e.g. [0 => '123.123.123.123', 1 => 24]
-	 * @param string $ip     ip-address to check
+	 * @param string $ip ip-address to check
 	 *
 	 * @return bool
 	 */
@@ -77,7 +77,7 @@ class IPTools
 	 *
 	 * @return string|bool ip address on success, false on failure
 	 */
-	public static function is_ipv6($address)
+	public static function is_ipv6(string $address)
 	{
 		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 	}
@@ -86,7 +86,7 @@ class IPTools
 	 * Checks whether the given ipv6 $ip is in range of given ip/cidr range
 	 *
 	 * @param array $ip_cidr 0 => ip, 1 => netmask in decimal, e.g. [0 => '123:123::1', 1 => 64]
-	 * @param string $ip     ip-address to check
+	 * @param string $ip ip-address to check
 	 *
 	 * @return bool
 	 */
@@ -130,6 +130,10 @@ class IPTools
 		return $in_range;
 	}
 
+	/**
+	 * @param string $addr
+	 * @return false|string
+	 */
 	private static function inet6_expand(string $addr)
 	{
 		// Check if there are segments missing, insert if necessary
@@ -139,7 +143,7 @@ class IPTools
 			$part[1] = explode(':', $part[1]);
 			$missing = [];
 			for ($i = 0; $i < (8 - (count($part[0]) + count($part[1]))); $i++) {
-				array_push($missing, '0000');
+				$missing[] = '0000';
 			}
 			$missing = array_merge($part[0], $missing);
 			$part = array_merge($missing, $part[1]);
@@ -163,17 +167,18 @@ class IPTools
 		}
 	}
 
-	private static function inet6_prefix_to_mask($prefix)
+	/**
+	 * @param int $prefix
+	 * @return false|string
+	 */
+	private static function inet6_prefix_to_mask(int $prefix)
 	{
 		/* Make sure the prefix is a number between 1 and 127 (inclusive) */
-		$prefix = intval($prefix);
 		if ($prefix < 0 || $prefix > 128) {
 			return false;
 		}
 		$mask = '0b';
-		for ($i = 0; $i < $prefix; $i++) {
-			$mask .= '1';
-		}
+		$mask .= str_repeat('1', $prefix);
 		for ($i = strlen($mask) - 2; $i < 128; $i++) {
 			$mask .= '0';
 		}
@@ -188,7 +193,11 @@ class IPTools
 		return inet_ntop(inet_pton($result));
 	}
 
-	private static function ip2long6($ip)
+	/**
+	 * @param string $ip
+	 * @return string
+	 */
+	private static function ip2long6(string $ip): string
 	{
 		$ip_n = inet_pton($ip);
 		$bits = 15; // 16 x 8 bit = 128bit

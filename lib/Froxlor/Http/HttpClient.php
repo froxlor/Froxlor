@@ -33,6 +33,10 @@ class HttpClient
 	/**
 	 * Executes simple GET request
 	 *
+	 * @param string $url
+	 * @param bool $follow_location
+	 * @param int $timeout
+	 *
 	 * @return bool|string
 	 * @throws Exception
 	 */
@@ -59,6 +63,10 @@ class HttpClient
 	/**
 	 * Downloads and stores a file from an url
 	 *
+	 * @param string $url
+	 * @param string $target
+	 *
+	 * @return bool|string
 	 * @throws Exception
 	 */
 	public static function fileGet(string $url, string $target)

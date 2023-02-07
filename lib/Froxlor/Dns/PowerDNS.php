@@ -37,9 +37,9 @@ class PowerDNS
 	/**
 	 * remove all records and entries of a given domain
 	 *
-	 * @param array $domain
+	 * @param array|null $domain
 	 */
-	public static function cleanDomainZone($domain = null)
+	public static function cleanDomainZone(array $domain = null)
 	{
 		if (is_array($domain) && isset($domain['domain'])) {
 			$pdns_domains_stmt = self::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
@@ -67,16 +67,19 @@ class PowerDNS
 	/**
 	 * get pdo database connection to powerdns database
 	 *
-	 * @return PDO
+	 * @return \PDO
 	 */
-	public static function getDB()
+	public static function getDB(): \PDO
 	{
-		if (!isset(self::$pdns_db) || (self::$pdns_db instanceof PDO) == false) {
+		if (!isset(self::$pdns_db) || !(self::$pdns_db instanceof PDO)) {
 			self::connectToPdnsDb();
 		}
 		return self::$pdns_db;
 	}
 
+	/**
+	 * @return void
+	 */
 	private static function connectToPdnsDb()
 	{
 		// get froxlor pdns config

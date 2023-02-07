@@ -37,7 +37,7 @@ class PhpConfig
 	 *
 	 * @return array
 	 */
-	public static function getPhpConfigs()
+	public static function getPhpConfigs(): array
 	{
 		$configs_array = [];
 

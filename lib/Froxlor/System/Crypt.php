@@ -41,7 +41,7 @@ class Crypt
 	 *
 	 * @return string
 	 */
-	public static function generatePassword(int $length = 0, bool $isSalt = false)
+	public static function generatePassword(int $length = 0, bool $isSalt = false): string
 	{
 		$alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
 		$alpha_upper = strtoupper($alpha_lower);
@@ -78,7 +78,7 @@ class Crypt
 	 *
 	 * @return string
 	 */
-	private static function specialShuffle($str = null)
+	private static function specialShuffle(string $str): string
 	{
 		$len = mb_strlen($str);
 		$sploded = [];
@@ -94,7 +94,7 @@ class Crypt
 	 *
 	 * @return array
 	 */
-	public static function getAvailablePasswordHashes()
+	public static function getAvailablePasswordHashes(): array
 	{
 		// get available pwd-hases
 		$available_pwdhashes = [
@@ -120,31 +120,40 @@ class Crypt
 	 * we check against the length, if not matched
 	 * an error message will be output and 'exit' is called
 	 *
-	 * @param string $password
-	 *            the password to validate
+	 * @param string $password the password to validate
+	 * @param bool $json_response
 	 *
 	 * @return string either the password or an errormessage+exit
 	 */
-	public static function validatePassword($password = null, $json_response = false)
+	public static function validatePassword(string $password, bool $json_response = false): string
 	{
 		if (Settings::Get('panel.password_min_length') > 0) {
-			$password = Validate::validate($password, Settings::Get('panel.password_min_length'), '/^.{' . (int)Settings::Get('panel.password_min_length') . ',}$/D', 'notrequiredpasswordlength', [], $json_response);
+			$password = Validate::validate($password, Settings::Get('panel.password_min_length'),
+				'/^.{' . (int)Settings::Get('panel.password_min_length') . ',}$/D', 'notrequiredpasswordlength', [],
+				$json_response);
 		}
 
 		if (Settings::Get('panel.password_regex') != '') {
-			$password = Validate::validate($password, Settings::Get('panel.password_regex'), Settings::Get('panel.password_regex'), 'notrequiredpasswordcomplexity', [], $json_response);
+			$password = Validate::validate($password, Settings::Get('panel.password_regex'),
+				Settings::Get('panel.password_regex'), 'notrequiredpasswordcomplexity', [], $json_response);
 		} else {
 			if (Settings::Get('panel.password_alpha_lower')) {
-				$password = Validate::validate($password, '/.*[a-z]+.*/', '/.*[a-z]+.*/', 'notrequiredpasswordcomplexity', [], $json_response);
+				$password = Validate::validate($password, '/.*[a-z]+.*/', '/.*[a-z]+.*/',
+					'notrequiredpasswordcomplexity', [], $json_response);
 			}
 			if (Settings::Get('panel.password_alpha_upper')) {
-				$password = Validate::validate($password, '/.*[A-Z]+.*/', '/.*[A-Z]+.*/', 'notrequiredpasswordcomplexity', [], $json_response);
+				$password = Validate::validate($password, '/.*[A-Z]+.*/', '/.*[A-Z]+.*/',
+					'notrequiredpasswordcomplexity', [], $json_response);
 			}
 			if (Settings::Get('panel.password_numeric')) {
-				$password = Validate::validate($password, '/.*[0-9]+.*/', '/.*[0-9]+.*/', 'notrequiredpasswordcomplexity', [], $json_response);
+				$password = Validate::validate($password, '/.*[0-9]+.*/', '/.*[0-9]+.*/',
+					'notrequiredpasswordcomplexity', [], $json_response);
 			}
 			if (Settings::Get('panel.password_special_char_required')) {
-				$password = Validate::validate($password, '/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/', '/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/', 'notrequiredpasswordcomplexity', [], $json_response);
+				$password = Validate::validate($password,
+					'/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/',
+					'/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/',
+					'notrequiredpasswordcomplexity', [], $json_response);
 			}
 		}
 
@@ -159,19 +168,20 @@ class Crypt
 	 * additionally it updates the hash if the system settings changed
 	 * or if the very old md5() sum is used
 	 *
-	 * @param array $userinfo
-	 *            user-data from table
-	 * @param string $password
-	 *            the password to validate
-	 * @param string $table
-	 *            either panel_customers or panel_admins
-	 * @param string $uid
-	 *            user-id-field in $table
+	 * @param array $userinfo user-data from table
+	 * @param string $password the password to validate
+	 * @param string $table either panel_customers or panel_admins
+	 * @param string $uid user-id-field in $table
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function validatePasswordLogin($userinfo = null, $password = null, $table = 'panel_customers', $uid = 'customerid')
-	{
+	public static function validatePasswordLogin(
+		array $userinfo,
+		string $password,
+		string $table = 'panel_customers',
+		string $uid = 'customerid'
+	): bool {
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
 		if (is_numeric($algo)) {
 			// old setting format
@@ -209,16 +219,13 @@ class Crypt
 	/**
 	 * Make encrypted password from clear text password
 	 *
-	 * @param string $password
-	 *            Password to be encrypted
-	 * @param bool $htpasswd
-	 *            optional whether to generate a SHA1 password for directory protection
-	 * @param bool $ftpd
-	 *            optional generates sha256 password strings for proftpd/pureftpd
+	 * @param string $password Password to be encrypted
+	 * @param bool $htpasswd optional whether to generate a SHA1 password for directory protection
+	 * @param bool $ftpd optional generates sha256 password strings for proftpd/pureftpd
 	 *
 	 * @return string encrypted password
 	 */
-	public static function makeCryptPassword(string $password, bool $htpasswd = false, bool $ftpd = false)
+	public static function makeCryptPassword(string $password, bool $htpasswd = false, bool $ftpd = false): string
 	{
 		if ($htpasswd || $ftpd) {
 			if ($ftpd) {

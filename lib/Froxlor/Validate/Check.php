@@ -38,6 +38,13 @@ class Check
 
 	const FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION = 2;
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 */
 	public static function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		$returnvalue = [
@@ -76,7 +83,8 @@ class Check
 				} else {
 					// fcgid is being validated before fpm -> "ask" fpm about its state
 					if ($fieldname == 'system_mod_fcgid_enabled') {
-						$returnvalue = self::checkFcgidPhpFpm('system_phpfpm_enabled', null, $check_array[$fieldname]['other_post_field'], null);
+						$returnvalue = self::checkFcgidPhpFpm('system_phpfpm_enabled', null,
+							$check_array[$fieldname]['other_post_field'], null);
 					} else {
 						// not, bot are nogo
 						$returnvalue = $returnvalue = [
@@ -109,7 +117,8 @@ class Check
 		$mysql_access_host_array = array_unique(array_map('trim', explode(',', $newfieldvalue)));
 
 		foreach ($mysql_access_host_array as $host_entry) {
-			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true, true, true, false) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
+			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true, true, true,
+					false) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
 				return [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'invalidmysqlhost',
@@ -123,6 +132,13 @@ class Check
 		];
 	}
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 */
 	public static function checkHostname($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		if (0 == strlen(trim($newfieldvalue)) || Validate::validateDomain($newfieldvalue) === false) {
@@ -141,10 +157,12 @@ class Check
 	 * check whether an email account is to be deleted
 	 * reference: #1519
 	 *
-	 * @return bool true if the domain is to be deleted, false otherwise
+	 * @param string $email_addr
 	 *
+	 * @return bool true if the domain is to be deleted, false otherwise
+	 * @throws \Exception
 	 */
-	public static function checkMailAccDeletionState($email_addr = null)
+	public static function checkMailAccDeletionState(string $email_addr): bool
 	{
 		// example data of task 7: a:2:{s:9:"loginname";s:4:"webX";s:5:"email";s:20:"deleteme@example.tld";}
 
@@ -164,6 +182,14 @@ class Check
 		return false;
 	}
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 * @throws \Exception
+	 */
 	public static function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		if ((int)Settings::Get('system.mod_fcgid') == 1) {
@@ -178,7 +204,8 @@ class Check
 			}
 
 			// neither dir can be within the other nor can they be equal
-			if (substr($newdir, 0, strlen($cdir)) == $cdir || substr($cdir, 0, strlen($newdir)) == $newdir || $newdir == $cdir) {
+			if (substr($newdir, 0, strlen($cdir)) == $cdir || substr($cdir, 0,
+					strlen($newdir)) == $newdir || $newdir == $cdir) {
 				$returnvalue = [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidpathcannotbeincustomerdoc'
@@ -197,6 +224,13 @@ class Check
 		return $returnvalue;
 	}
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 */
 	public static function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		$returnvalue = [
@@ -216,6 +250,13 @@ class Check
 		return $returnvalue;
 	}
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 */
 	public static function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
@@ -223,7 +264,8 @@ class Check
 		}
 
 		$returnvalue = [];
-		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), Database::getSqlUsernameLength() - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
+		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'),
+				Database::getSqlUsernameLength() - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
 			$returnvalue = [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			];
@@ -240,6 +282,13 @@ class Check
 		return $returnvalue;
 	}
 
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 */
 	public static function checkLocalGroup($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		if (empty($newfieldvalue) || $fielddata == $newfieldvalue) {

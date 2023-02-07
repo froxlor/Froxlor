@@ -45,7 +45,7 @@ final class Froxlor
 	 *
 	 * @return string
 	 */
-	public static function getInstallDir()
+	public static function getInstallDir(): string
 	{
 		return dirname(__DIR__, 2) . '/';
 	}
@@ -55,7 +55,7 @@ final class Froxlor
 	 *
 	 * @return string
 	 */
-	public static function getVersion()
+	public static function getVersion(): string
 	{
 		return self::VERSION;
 	}
@@ -65,7 +65,7 @@ final class Froxlor
 	 *
 	 * @return string
 	 */
-	public static function getVersionString()
+	public static function getVersionString(): string
 	{
 		return self::getFullVersion() . ' (' . self::DBVERSION . ')';
 	}
@@ -75,7 +75,7 @@ final class Froxlor
 	 *
 	 * @return string
 	 */
-	public static function getFullVersion()
+	public static function getFullVersion(): string
 	{
 		return self::VERSION . self::BRANDING;
 	}
@@ -85,12 +85,11 @@ final class Froxlor
 	 *
 	 * checks if a given version is not equal the current one
 	 *
-	 * @param string $to_check
-	 *            version to check, if empty current version is used
+	 * @param string $to_check version to check, if empty current version is used
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
-	public static function hasUpdates($to_check = null)
+	public static function hasUpdates(string $to_check): bool
 	{
 		if (empty($to_check)) {
 			$to_check = self::VERSION;
@@ -102,16 +101,15 @@ final class Froxlor
 	}
 
 	/**
-	 * Function hasUpdates
+	 * Function hasDbUpdates
 	 *
 	 * checks if a given database-version is not equal the current one
 	 *
-	 * @param int $to_check
-	 *            version to check, if empty current dbversion is used
+	 * @param string $to_check version to check, if empty current dbversion is used
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
-	public static function hasDbUpdates($to_check = null)
+	public static function hasDbUpdates(string $to_check): bool
 	{
 		if (empty($to_check)) {
 			$to_check = self::DBVERSION;
@@ -127,12 +125,11 @@ final class Froxlor
 	 *
 	 * checks if a given database-version is the current one
 	 *
-	 * @param int $to_check
-	 *            version to check
+	 * @param string $to_check version to check
 	 *
 	 * @return bool true if version to check matches, else false
 	 */
-	public static function isDatabaseVersion($to_check = null)
+	public static function isDatabaseVersion(string $to_check): bool
 	{
 		if (Settings::Get('panel.frontend') == 'froxlor' && Settings::Get('panel.db_version') == $to_check) {
 			return true;
@@ -146,14 +143,14 @@ final class Froxlor
 	 * updates the panel.version field
 	 * to the given value (no checks here!)
 	 *
-	 * @param string $new_version
-	 *            new-version
+	 * @param string $new_version new-version
 	 *
 	 * @return bool true on success, else false
+	 * @throws \Exception
 	 */
-	public static function updateToDbVersion($new_version = null)
+	public static function updateToDbVersion(string $new_version): bool
 	{
-		if ($new_version !== null && $new_version != '') {
+		if ($new_version != '') {
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'db_version'");
@@ -172,14 +169,14 @@ final class Froxlor
 	 * updates the panel.version field
 	 * to the given value (no checks here!)
 	 *
-	 * @param string $new_version
-	 *            new-version
+	 * @param string $new_version new-version
 	 *
 	 * @return bool true on success, else false
+	 * @throws \Exception
 	 */
-	public static function updateToVersion($new_version = null)
+	public static function updateToVersion(string $new_version): bool
 	{
-		if ($new_version !== null && $new_version != '') {
+		if ($new_version != '') {
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'version'");
@@ -199,7 +196,7 @@ final class Froxlor
 	 *
 	 * @return bool true if panel is froxlor, else false
 	 */
-	public static function isFroxlor()
+	public static function isFroxlor(): bool
 	{
 		if (Settings::Get('panel.frontend') !== null && Settings::Get('panel.frontend') == 'froxlor') {
 			return true;
@@ -213,12 +210,11 @@ final class Froxlor
 	 * checks if a given version is the
 	 * current one (and panel is froxlor)
 	 *
-	 * @param string $to_check
-	 *            version to check
+	 * @param string $to_check version to check
 	 *
 	 * @return bool true if version to check matches, else false
 	 */
-	public static function isFroxlorVersion($to_check = null)
+	public static function isFroxlorVersion(string $to_check): bool
 	{
 		if (Settings::Get('panel.frontend') == 'froxlor' && Settings::Get('panel.version') == $to_check) {
 			return true;
@@ -231,10 +227,11 @@ final class Froxlor
 	 *
 	 * @param int $length
 	 * @return string
+	 * @throws \Exception
 	 */
-	public static function genSessionId(int $length = 16)
+	public static function genSessionId(int $length = 16): string
 	{
-		if (intval($length) <= 8) {
+		if ($length <= 8) {
 			$length = 16;
 		}
 		if (function_exists('random_bytes')) {
@@ -256,9 +253,9 @@ final class Froxlor
 	 * @param string $a
 	 * @param string $b
 	 *
-	 * @return integer 0 if equal, 1 if a>b and -1 if b>a
+	 * @return int 0 if equal, 1 if a>b and -1 if b>a
 	 */
-	public static function versionCompare2($a, $b)
+	public static function versionCompare2(string $a, string $b): int
 	{
 		// split version into pieces and remove trailing .0
 		$a = explode(".", $a);
@@ -295,7 +292,11 @@ final class Froxlor
 		return (count($a) < count($b)) ? -1 : 0;
 	}
 
-	private static function parseVersionArray(&$arr = null)
+	/**
+	 * @param array|null $arr
+	 * @return void
+	 */
+	private static function parseVersionArray(array &$arr = null)
 	{
 		// -dev or -beta or -rc ?
 		if (stripos($arr[count($arr) - 1], '-') !== false) {
@@ -306,16 +307,20 @@ final class Froxlor
 				$arr[] = '2'; // dev < beta < rc
 				// number of rc
 				$arr[] = substr($x[1], 2);
-			} else if (stripos($x[1], 'beta') !== false) {
-				$arr[] = '-1';
-				$arr[] = '1'; // dev < beta < rc
-				// number of beta
-				$arr[] = substr($x[1], 3);
-			} else if (stripos($x[1], 'dev') !== false) {
-				$arr[] = '-1';
-				$arr[] = '0'; // dev < beta < rc
-				// number of dev
-				$arr[] = substr($x[1], 3);
+			} else {
+				if (stripos($x[1], 'beta') !== false) {
+					$arr[] = '-1';
+					$arr[] = '1'; // dev < beta < rc
+					// number of beta
+					$arr[] = substr($x[1], 3);
+				} else {
+					if (stripos($x[1], 'dev') !== false) {
+						$arr[] = '-1';
+						$arr[] = '0'; // dev < beta < rc
+						// number of dev
+						$arr[] = substr($x[1], 3);
+					}
+				}
 			}
 		}
 	}

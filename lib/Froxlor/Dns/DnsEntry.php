@@ -29,14 +29,22 @@ use Froxlor\Settings;
 
 class DnsEntry
 {
-	public $record;
-	public $ttl;
-	public $class = 'IN';
-	public $type;
-	public $priority;
-	public $content;
+	public string $record;
+	public int $ttl;
+	public string $class = 'IN';
+	public string $type;
+	public int $priority;
+	public ?string $content;
 
-	public function __construct($record = '', $type = 'A', $content = null, $prio = 0, $ttl = 0, $class = 'IN')
+	/**
+	 * @param string $record
+	 * @param string $type
+	 * @param string|null $content
+	 * @param int $prio
+	 * @param int $ttl
+	 * @param string $class
+	 */
+	public function __construct(string $record = '', string $type = 'A', string $content = null, int $prio = 0, int $ttl = 0, string $class = 'IN')
 	{
 		$this->record = $record;
 		$this->type = $type;
@@ -72,7 +80,6 @@ class DnsEntry
 			// last line
 			$_content .= "\t\t\t\t" . '"' . $_l . '")';
 		}
-		$result = $this->record . "\t" . $this->ttl . "\t" . $this->class . "\t" . $this->type . "\t" . (($this->priority >= 0 && ($this->type == 'MX' || $this->type == 'SRV')) ? $this->priority . "\t" : "") . $_content . PHP_EOL;
-		return $result;
+		return $this->record . "\t" . $this->ttl . "\t" . $this->class . "\t" . $this->type . "\t" . (($this->priority >= 0 && ($this->type == 'MX' || $this->type == 'SRV')) ? $this->priority . "\t" : "") . $_content . PHP_EOL;
 	}
 }

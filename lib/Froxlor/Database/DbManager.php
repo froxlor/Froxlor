@@ -77,7 +77,15 @@ class DbManager
 		$this->manager = new DbManagerMySQL($this->log);
 	}
 
-	public static function correctMysqlUsers($mysql_access_host_array)
+	/**
+	 * function called when the mysql-access-host setting changes
+	 *
+	 * @param array $mysql_access_host_array
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public static function correctMysqlUsers(array $mysql_access_host_array)
 	{
 		// get all databases for all dbservers
 		$databases = [];
@@ -136,13 +144,14 @@ class DbManager
 	 * DB-name and user-name are being generated and
 	 * the password for the user will be set
 	 *
-	 * @param string $loginname
-	 * @param string $password
+	 * @param ?string $loginname
+	 * @param ?string $password
+	 * @param int $dbserver
 	 * @param int $last_accnumber
 	 *
 	 * @return string|bool $username if successful or false of username is equal to the password
 	 */
-	public function createDatabase($loginname = null, $password = null, int $dbserver = 0, $last_accnumber = 0)
+	public function createDatabase(string $loginname = null, string $password = null, int $dbserver = 0, int $last_accnumber = 0)
 	{
 		Database::needRoot(true, $dbserver, false);
 

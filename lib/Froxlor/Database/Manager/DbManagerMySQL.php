@@ -48,7 +48,7 @@ class DbManagerMySQL
 	/**
 	 * main constructor
 	 *
-	 * @param FroxlorLogger $log
+	 * @param FroxlorLogger|null $log
 	 */
 	public function __construct(&$log = null)
 	{
@@ -58,9 +58,9 @@ class DbManagerMySQL
 	/**
 	 * creates a database
 	 *
-	 * @param string $dbname
+	 * @param string|null $dbname
 	 */
-	public function createDatabase($dbname = null)
+	public function createDatabase(string $dbname = null)
 	{
 		Database::query("CREATE DATABASE `" . $dbname . "`");
 	}
@@ -71,13 +71,14 @@ class DbManagerMySQL
 	 *
 	 * @param string $username
 	 * @param string|array $password
-	 * @param string $access_host
+	 * @param ?string $access_host
 	 * @param bool $p_encrypted
 	 *            optional, whether the password is encrypted or not, default false
 	 * @param bool $update
 	 *            optional, whether to update the password only (not create user)
+	 * @throws \Exception
 	 */
-	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false, $update = false)
+	public function grantPrivilegesTo(string $username, $password, string $access_host = null, bool $p_encrypted = false, bool $update = false)
 	{
 		$pwd_plugin = 'mysql_native_password';
 		if (is_array($password) && count($password) == 2) {
@@ -141,8 +142,9 @@ class DbManagerMySQL
 	 * takes away any privileges from a user to that db
 	 *
 	 * @param string $dbname
+	 * @throws \Exception
 	 */
-	public function deleteDatabase($dbname = null)
+	public function deleteDatabase(string $dbname)
 	{
 		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
 			// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
@@ -178,8 +180,9 @@ class DbManagerMySQL
 	 *
 	 * @param string $username
 	 * @param string $host
+	 * @throws \Exception
 	 */
-	public function deleteUser($username = null, $host = null)
+	public function deleteUser(string $username, string $host)
 	{
 		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
 			// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
@@ -203,9 +206,9 @@ class DbManagerMySQL
 	 *
 	 * @param string $username
 	 * @param string $host
-	 *            (unused in mysql)
+	 * @throws \Exception
 	 */
-	public function disableUser($username = null, $host = null)
+	public function disableUser(string $username, string $host)
 	{
 		$stmt = Database::prepare('REVOKE ALL PRIVILEGES, GRANT OPTION FROM `' . $username . '`@`' . $host . '`');
 		Database::pexecute($stmt, [], false);
@@ -216,8 +219,9 @@ class DbManagerMySQL
 	 *
 	 * @param string $username
 	 * @param string $host
+	 * @throws \Exception
 	 */
-	public function enableUser($username = null, $host = null)
+	public function enableUser(string $username, string $host)
 	{
 		// check whether user exists to avoid errors
 		$exist_check_stmt = Database::prepare("SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $username . "' AND host = '" . $host . "')");
@@ -239,14 +243,14 @@ class DbManagerMySQL
 	/**
 	 * return an array of all usernames used in that DBMS
 	 *
-	 * @param bool $user_only
-	 *            if false, * will be selected from mysql.user and slightly different array will be generated
+	 * @param bool $user_only if false, will be selected from mysql.user and slightly different array will be generated
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
-	public function getAllSqlUsers($user_only = true)
+	public function getAllSqlUsers(bool $user_only = true): array
 	{
-		if ($user_only == false) {
+		if (!$user_only) {
 			$result_stmt = Database::prepare('SELECT * FROM mysql.user');
 		} else {
 			$result_stmt = Database::prepare('SELECT `User` FROM mysql.user');

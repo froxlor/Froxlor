@@ -54,16 +54,15 @@ class IdnaWrapper
 	}
 
 	/**
-	 * Encode a domain name, a email address or a list of one of both.
+	 * Encode a domain name, an email address or a list of one of both.
 	 *
-	 * @param
-	 *            string May be either a single domain name, e single email address or a list of one
+	 * @param string $to_encode May be either a single domain name, e single email address or a list of one
 	 *            separated either by ',', ';' or ' '.
 	 *
 	 * @return string Returns either a single domain name, a single email address or a list of one of
 	 *         both separated by the same string as the input.
 	 */
-	public function encode($to_encode)
+	public function encode(string $to_encode): string
 	{
 		$to_encode = $this->isUtf8($to_encode) ? $to_encode : utf8_encode($to_encode);
 		try {
@@ -83,7 +82,7 @@ class IdnaWrapper
 	 *
 	 * @return boolean
 	 */
-	private function isUtf8($string = null)
+	private function isUtf8(string $string)
 	{
 		if (function_exists("mb_detect_encoding")) {
 			if (mb_detect_encoding($string, 'UTF-8, ISO-8859-1') === 'UTF-8') {
@@ -119,16 +118,15 @@ class IdnaWrapper
 	}
 
 	/**
-	 * Decode a domain name, a email address or a list of one of both.
+	 * Decode a domain name, an email address or a list of one of both.
 	 *
-	 * @param
-	 *            string May be either a single domain name, e single email address or a list of one
+	 * @param string $to_decode May be either a single domain name, e single email address or a list of one
 	 *            separated either by ',', ';' or ' '.
 	 *
 	 * @return string Returns either a single domain name, a single email address or a list of one of
 	 *         both separated by the same string as the input.
 	 */
-	public function decode($to_decode)
+	public function decode(string $to_decode): string
 	{
 		return $this->idna_converter->decode($to_decode);
 	}

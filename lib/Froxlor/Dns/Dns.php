@@ -33,7 +33,15 @@ use PDO;
 
 class Dns
 {
-	public static function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo = [])
+	/**
+	 * @param int $domain_id
+	 * @param string $area
+	 * @param array $userinfo
+	 *
+	 * @return string|void
+	 * @throws \Exception
+	 */
+	public static function getAllowedDomainEntry(int $domain_id, string $area = 'customer', array $userinfo = [])
 	{
 		$dom_data = [
 			'did' => $domain_id
@@ -67,7 +75,15 @@ class Dns
 		Response::standardError('dns_notfoundorallowed');
 	}
 
-	public static function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo = false)
+	/**
+	 * @param int|array $domain_id id of domain or in case of froxlorhostname, a domain-array with the needed data
+	 * @param bool $froxlorhostname
+	 * @param bool $isMainButSubTo
+	 *
+	 * @return DnsZone|void
+	 * @throws \Exception
+	 */
+	public static function createDomainZone($domain_id, bool $froxlorhostname = false, bool $isMainButSubTo = false)
 	{
 		if (!$froxlorhostname) {
 			// get domain-name
@@ -146,16 +162,22 @@ class Dns
 			while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
 				// Listing domains is enough as there currently is no support for choosing
 				// different ips for a subdomain => use same IPs as toplevel
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
+					$required_entries);
+				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA',
+					$required_entries);
 
 				// Check whether to add a www.-prefix
 				if ($subdomain['iswildcarddomain'] == '1') {
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
+						$required_entries);
+					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']),
+						'AAAA', $required_entries);
 				} elseif ($subdomain['wwwserveralias'] == '1') {
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A', $required_entries);
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA', $required_entries);
+					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
+						$required_entries);
+					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']),
+						'AAAA', $required_entries);
 				}
 			}
 		}
@@ -200,14 +222,17 @@ class Dns
 
 		// now generate all records and unset the required entries we have
 		foreach ($dom_entries as $entry) {
-			if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
+			if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']),
+					$required_entries[$entry['type']])) {
 				unset($required_entries[$entry['type']][md5($entry['record'])]);
 			}
-			if (Settings::Get('system.dns_createcaaentry') == '1' && $entry['type'] == 'CAA' && strtolower(substr($entry['content'], 0, 7)) == '"v=caa1') {
+			if (Settings::Get('system.dns_createcaaentry') == '1' && $entry['type'] == 'CAA' && strtolower(substr($entry['content'],
+					0, 7)) == '"v=caa1') {
 				// unset special CAA required-entry
 				unset($required_entries[$entry['type']][md5("@CAA@")]);
 			}
-			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')) {
+			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'],
+						0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')) {
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
 			}
@@ -223,7 +248,8 @@ class Dns
 					'*'
 				] as $crecord
 			) {
-				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crecord),
+							$required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
 					unset($required_entries['A'][md5($crecord)]);
 					unset($required_entries['AAAA'][md5($crecord)]);
 				}
@@ -238,13 +264,16 @@ class Dns
 						'smtp'
 					] as $crecord
 				) {
-					if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+					if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(md5($crecord),
+								$required_entries['A']) || array_key_exists(md5($crecord),
+								$required_entries['AAAA']))) {
 						unset($required_entries['A'][md5($crecord)]);
 						unset($required_entries['AAAA'][md5($crecord)]);
 					}
 				}
 			}
-			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
+			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'],
+				$entry['ttl']);
 		}
 
 		// add missing required entries
@@ -275,7 +304,8 @@ class Dns
 						foreach ($records as $record) {
 							if ($type == 'A' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
 								$zonerecords[] = new DnsEntry($record, 'A', $ip['ip']);
-							} elseif ($type == 'AAAA' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+							} elseif ($type == 'AAAA' && filter_var($ip['ip'], FILTER_VALIDATE_IP,
+									FILTER_FLAG_IPV6) !== false) {
 								$zonerecords[] = new DnsEntry($record, 'AAAA', $ip['ip']);
 							}
 						}
@@ -356,7 +386,8 @@ class Dns
 								if (substr($dkim_entries[0], 0, 1) == '(') {
 									$multiline = true;
 								}
-								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
+								$zonerecords[] = new DnsEntry($record, 'TXT',
+									self::encloseTXTContent($dkim_entries[0], $multiline));
 							}
 						}
 					}
@@ -416,7 +447,8 @@ class Dns
 
 		if (!$isMainButSubTo) {
 			$date = date('Ymd');
-			$domain['bindserial'] = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
+			$domain['bindserial'] = (preg_match('/^' . $date . '/',
+				$domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
 			if (!$froxlorhostname) {
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -443,12 +475,19 @@ class Dns
 			array_unshift($zonerecords, $soa_record);
 		}
 
-		$zone = new DnsZone((int)Settings::Get('system.defaultttl'), $domain['domain'], $domain['bindserial'], $zonerecords);
+		$zone = new DnsZone((int)Settings::Get('system.defaultttl'), $domain['domain'], $domain['bindserial'],
+			$zonerecords);
 
 		return $zone;
 	}
 
-	private static function addRequiredEntry($record = '@', $type = 'A', &$required = [])
+	/**
+	 * @param string $record
+	 * @param string $type
+	 * @param array $required
+	 * @return void
+	 */
+	private static function addRequiredEntry(string $record = '@', string $type = 'A', array &$required = [])
 	{
 		if (!isset($required[$type])) {
 			$required[$type] = [];
@@ -456,7 +495,11 @@ class Dns
 		$required[$type][md5($record)] = $record;
 	}
 
-	private static function generateDkimEntries($domain)
+	/**
+	 * @param array $domain
+	 * @return array
+	 */
+	private static function generateDkimEntries(array $domain): array
 	{
 		$zone_dkim = [];
 
@@ -486,7 +529,8 @@ class Dns
 			}
 
 			// key
-			$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
+			$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s',
+					'$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
 
 			// service-type
 			if (Settings::Get('dkim.dkim_servicetype') == '1') {
@@ -503,10 +547,15 @@ class Dns
 		return $zone_dkim;
 	}
 
-	public static function encloseTXTContent($txt_content, $isMultiLine = false)
+	/**
+	 * @param string $txt_content
+	 * @param bool $isMultiLine
+	 * @return string
+	 */
+	public static function encloseTXTContent(string $txt_content, bool $isMultiLine = false): string
 	{
 		// check that TXT content is enclosed in " "
-		if ($isMultiLine == false && Settings::Get('system.dns_server') != 'PowerDNS') {
+		if (!$isMultiLine && Settings::Get('system.dns_server') != 'PowerDNS') {
 			if (substr($txt_content, 0, 1) != '"') {
 				$txt_content = '"' . $txt_content;
 			}
@@ -526,10 +575,13 @@ class Dns
 		return $txt_content;
 	}
 
-	private static function escapeSoaAdminMail($email)
+	/**
+	 * @param string $email
+	 * @return string
+	 */
+	private static function escapeSoaAdminMail(string $email): string
 	{
 		$mail_parts = explode("@", $email);
-		$escpd_mail = str_replace(".", "\.", $mail_parts[0]) . "." . $mail_parts[1] . ".";
-		return $escpd_mail;
+		return str_replace(".", "\.", $mail_parts[0]) . "." . $mail_parts[1] . ".";
 	}
 }

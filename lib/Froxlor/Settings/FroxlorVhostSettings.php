@@ -30,10 +30,19 @@ use Froxlor\Database\Database;
 class FroxlorVhostSettings
 {
 
-	public static function hasVhostContainerEnabled($need_ssl = false)
+	/**
+	 * @param bool $need_ssl
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public static function hasVhostContainerEnabled(bool $need_ssl = false): bool
 	{
 		$sel_stmt = Database::prepare("SELECT COUNT(*) as vcentries FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `vhostcontainer`= '1'" . ($need_ssl ? " AND `ssl` = '1'" : ""));
 		$result = Database::pexecute_first($sel_stmt);
-		return $result['vcentries'] > 0;
+		if ($result) {
+			return $result['vcentries'] > 0;
+		}
+		return false;
 	}
 }

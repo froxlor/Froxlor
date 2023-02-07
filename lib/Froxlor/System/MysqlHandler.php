@@ -32,7 +32,7 @@ use Monolog\Logger;
 class MysqlHandler extends AbstractProcessingHandler
 {
 
-	protected static $froxlorLevels = [
+	protected static array $froxlorLevels = [
 		Logger::DEBUG => LOG_DEBUG,
 		Logger::INFO => LOG_INFO,
 		Logger::NOTICE => LOG_NOTICE,
@@ -47,11 +47,10 @@ class MysqlHandler extends AbstractProcessingHandler
 	/**
 	 * Constructor
 	 *
-	 * @param bool|int $level
-	 *            Debug level which this handler should store
+	 * @param bool|int $level Debug level which this handler should store
 	 * @param bool $bubble
 	 */
-	public function __construct($level = Logger::DEBUG, $bubble = true)
+	public function __construct($level = Logger::DEBUG, bool $bubble = true)
 	{
 		parent::__construct($level, $bubble);
 	}
@@ -66,8 +65,8 @@ class MysqlHandler extends AbstractProcessingHandler
 	{
 		$this->insert([
 			':message' => $record['message'],
-			':contextUser' => (isset($record['context']['user']) ? $record['context']['user'] : 'unknown'),
-			':contextAction' => (isset($record['context']['action']) ? $record['context']['action'] : '0'),
+			':contextUser' => ($record['context']['user'] ?? 'unknown'),
+			':contextAction' => ($record['context']['action'] ?? '0'),
 			':level' => self::$froxlorLevels[$record['level']],
 			':datetime' => $record['datetime']->format('U')
 		]);
@@ -79,7 +78,7 @@ class MysqlHandler extends AbstractProcessingHandler
 	 * @param array $data
 	 * @return bool
 	 */
-	protected function insert(array $data)
+	protected function insert(array $data): bool
 	{
 		if ($this->pdoStatement === null) {
 			$sql = "INSERT INTO `panel_syslog` SET `text` = :message, `user` = :contextUser, `action` = :contextAction, `type` = :level, `date` = :datetime";

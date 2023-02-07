@@ -26,6 +26,7 @@
 namespace Froxlor\System;
 
 use Froxlor\Settings;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer extends PHPMailer
@@ -34,9 +35,9 @@ class Mailer extends PHPMailer
 	/**
 	 * class constructor
 	 *
-	 * @param bool $exceptions
-	 *            whether to throw exceptions or not
+	 * @param bool $exceptions whether to throw exceptions or not
 	 *
+	 * @throws Exception
 	 */
 	public function __construct(bool $exceptions = false)
 	{

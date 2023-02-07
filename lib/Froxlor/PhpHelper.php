@@ -43,9 +43,9 @@ class PhpHelper
 	 * @param array $list
 	 * @param string $key
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public static function sortListBy(&$list, $key = 'id')
+	public static function sortListBy(array &$list, string $key = 'id'): bool
 	{
 		self::$sort_type = Settings::Get('panel.natsorting') == 1 ? SORT_NATURAL : SORT_STRING;
 		self::$sort_key = $key;
@@ -59,14 +59,10 @@ class PhpHelper
 	 * Wrapper around htmlentities to handle arrays, with the advantage that you
 	 * can select which fields should be handled by htmlentities
 	 *
-	 * @param array|string $subject
-	 *            The subject array
-	 * @param string $fields
-	 *            The fields which should be checked for, separated by spaces
-	 * @param int $quote_style
-	 *            See php documentation about this
-	 * @param string $charset
-	 *            See php documentation about this
+	 * @param array|string $subject The subject array
+	 * @param array|string $fields The fields which should be checked for, separated by spaces
+	 * @param int $quote_style See php documentation about this
+	 * @param string $charset See php documentation about this
 	 *
 	 * @return array|string The string or an array with htmlentities converted strings
 	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
@@ -79,7 +75,7 @@ class PhpHelper
 			}
 
 			foreach ($subject as $field => $value) {
-				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+				if ((!is_array($fields) || empty($fields)) || (in_array($field, $fields))) {
 					// Just call ourselve to manage multi-dimensional arrays
 					$subject[$field] = self::htmlentitiesArray($value, $fields, $quote_style, $charset);
 				}
@@ -94,45 +90,36 @@ class PhpHelper
 	/**
 	 * Returns array with all empty-values removed
 	 *
-	 * @param array $source
-	 *            The array to trim
+	 * @param array $source The array to trim
 	 * @return array The trim'med array
 	 */
-	public static function arrayTrim($source)
+	public static function arrayTrim(array $source): array
 	{
-		$returnval = [];
-		if (is_array($source)) {
-			$source = array_map('trim', $source);
-			$returnval = array_filter($source, function ($value) {
-				return $value !== '';
-			});
-		} else {
-			$returnval = $source;
-		}
-		return $returnval;
+		$source = array_map('trim', $source);
+		return array_filter($source, function ($value) {
+			return $value !== '';
+		});
 	}
 
 	/**
 	 * Replaces Strings in an array, with the advantage that you
 	 * can select which fields should be str_replace'd
 	 *
-	 * @param string|array $search
-	 *                String or array of strings to search for
-	 * @param string|array $reaplce
-	 *                String or array to replace with
-	 * @param string|array $subject
-	 *                String or array The subject array
-	 * @param string $fields
-	 *                string The fields which should be checked for, separated by spaces
+	 * @param string|array $search String or array of strings to search for
+	 * @param string|array $replace String or array to replace with
+	 * @param string|array $subject String or array The subject array
+	 * @param string|array $fields string The fields which should be checked for, separated by spaces
+	 *
 	 * @return string|array The str_replace'd array
-	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
 	public static function strReplaceArray($search, $replace, $subject, $fields = '')
 	{
 		if (is_array($subject)) {
-			$fields = self::arrayTrim(explode(' ', $fields));
+			if (!is_array($fields)) {
+				$fields = self::arrayTrim(explode(' ', $fields));
+			}
 			foreach ($subject as $field => $value) {
-				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+				if ((!is_array($fields) || empty($fields)) || (in_array($field, $fields))) {
 					$subject[$field] = str_replace($search, $replace, $value);
 				}
 			}
@@ -177,7 +164,8 @@ class PhpHelper
 			$err_display .= '<br><p><pre>';
 			$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			foreach ($debug as $dline) {
-				$err_display .= $dline['function'] . '() called at [' . str_replace(Froxlor::getInstallDir(), '', ($dline['file'] ?? 'unknown')) . ':' . ($dline['line'] ?? 0) . ']<br>';
+				$err_display .= $dline['function'] . '() called at [' . str_replace(Froxlor::getInstallDir(), '',
+						($dline['file'] ?? 'unknown')) . ':' . ($dline['line'] ?? 0) . ']<br>';
 			}
 			$err_display .= '</pre></p>';
 			// end later
@@ -193,9 +181,13 @@ class PhpHelper
 		return false;
 	}
 
+	/**
+	 * @param Throwable $exception
+	 * @return void
+	 */
 	public static function phpExceptionHandler(Throwable $exception)
 	{
-		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+		if (!isset($_SERVER['SHELL']) || $_SERVER['SHELL'] == '') {
 			// show
 			UI::initTwig(true);
 			UI::twig()->addGlobal('install_mode', '1');
@@ -210,6 +202,10 @@ class PhpHelper
 		}
 	}
 
+	/**
+	 * @param ...$configdirs
+	 * @return array|null
+	 */
 	public static function loadConfigArrayDir(...$configdirs)
 	{
 		if (count($configdirs) <= 0) {
@@ -224,7 +220,8 @@ class PhpHelper
 			if (is_dir($data_dirname)) {
 				$data_dirhandle = opendir($data_dirname);
 				while (false !== ($data_filename = readdir($data_dirhandle))) {
-					if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, -4) == '.php') {
+					if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename,
+							-4) == '.php') {
 						$data_files[] = $data_dirname . $data_filename;
 					}
 				}
@@ -248,7 +245,7 @@ class PhpHelper
 	 * @param string $host
 	 * @param boolean $try_a default true
 	 * @param string|null $nameserver set additional resolver nameserver to use (e.g. 1.1.1.1)
-	 * @return boolean|array
+	 * @return bool|array
 	 */
 	public static function gethostbynamel6(string $host, bool $try_a = true, string $nameserver = null)
 	{
@@ -315,7 +312,7 @@ class PhpHelper
 	 * @return string
 	 * @throws Exception
 	 */
-	public static function randomStr($length)
+	public static function randomStr(int $length): string
 	{
 		if (function_exists('openssl_random_pseudo_bytes')) {
 			return openssl_random_pseudo_bytes($length);
@@ -324,20 +321,21 @@ class PhpHelper
 	}
 
 	/**
-	 * Return human readable sizes
+	 * Return human-readable sizes
 	 *
-	 * @param int $size
-	 *            size in bytes
-	 * @param string $max
-	 *            maximum unit
-	 * @param string $system
-	 *            'si' for SI, 'bi' for binary prefixes
+	 * @param int $size size in bytes
+	 * @param string $max maximum unit
+	 * @param string $system 'si' for SI, 'bi' for binary prefixes
+	 * @param string $retstring string-format
 	 *
-	 * @param string $retstring
-	 *            string
+	 * @return string
 	 */
-	public static function sizeReadable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
-	{
+	public static function sizeReadable(
+		int $size,
+		string $max = '',
+		string $system = 'si',
+		string $retstring = '%01.2f %s'
+	): string {
 		// Pick units
 		$systems = [
 			'si' => [
@@ -363,7 +361,7 @@ class PhpHelper
 				'size' => 1024
 			]
 		];
-		$sys = isset($systems[$system]) ? $systems[$system] : $systems['si'];
+		$sys = $systems[$system] ?? $systems['si'];
 
 		// Max unit to display
 		$depth = count($sys['prefix']) - 1;
@@ -384,14 +382,12 @@ class PhpHelper
 	 * Replaces all occurrences of variables defined in the second argument
 	 * in the first argument with their values.
 	 *
-	 * @param string $text
-	 *            The string that should be searched for variables
-	 * @param array $vars
-	 *            The array containing the variables with their values
+	 * @param string $text The string that should be searched for variables
+	 * @param array $vars The array containing the variables with their values
 	 *
 	 * @return string The submitted string with the variables replaced.
 	 */
-	public static function replaceVariables($text, $vars)
+	public static function replaceVariables(string $text, array $vars): string
 	{
 		$pattern = "/\{([a-zA-Z0-9\-_]+)\}/";
 		$matches = [];
@@ -407,12 +403,22 @@ class PhpHelper
 			}
 		}
 
-		$text = str_replace('\n', "\n", $text);
-		return $text;
+		return str_replace('\n', "\n", $text);
 	}
 
-	public static function recursive_array_search($needle, $haystack, &$keys = [], $currentKey = '')
-	{
+	/**
+	 * @param string $needle
+	 * @param array $haystack
+	 * @param array $keys
+	 * @param string $currentKey
+	 * @return true
+	 */
+	public static function recursive_array_search(
+		string $needle,
+		array $haystack,
+		array &$keys = [],
+		string $currentKey = ''
+	): bool {
 		foreach ($haystack as $key => $value) {
 			$pathkey = empty($currentKey) ? $key : $currentKey . '.' . $key;
 			if (is_array($value)) {
@@ -427,13 +433,13 @@ class PhpHelper
 	}
 
 	/**
-	 * function to check a super-global passed by reference
+	 * function to check a super-global passed by reference,
 	 * so it gets automatically updated
 	 *
 	 * @param array $global
 	 * @param AntiXSS $antiXss
 	 */
-	public static function cleanGlobal(&$global, &$antiXss)
+	public static function cleanGlobal(array &$global, AntiXSS &$antiXss)
 	{
 		$ignored_fields = [
 			'system_default_vhostconf',
@@ -455,7 +461,12 @@ class PhpHelper
 		}
 	}
 
-	private static function sortListByGivenKey($a, $b): int
+	/**
+	 * @param array $a
+	 * @param array $b
+	 * @return int
+	 */
+	private static function sortListByGivenKey(array $a, array $b): int
 	{
 		if (self::$sort_type == SORT_NATURAL) {
 			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
@@ -488,35 +499,33 @@ class PhpHelper
 	/**
 	 * Parse array to array string.
 	 *
-	 * @param $array
-	 * @param $key
+	 * @param array $array
+	 * @param ?string $key
 	 * @param int $depth
 	 * @return string
 	 */
-	public static function parseArrayToString($array, $key = null, int $depth = 1): string
+	public static function parseArrayToString(array $array, string $key = null, int $depth = 1): string
 	{
 		$str = '';
-		if (is_array($array)) {
-			if (!is_null($key)) {
-				$str .= self::tabPrefix(($depth-1), "'{$key}' => [\n");
-			} else {
-				$str .= self::tabPrefix(($depth-1), "[\n");
-			}
-			foreach ($array as $key => $value) {
-				if (!is_array($value)) {
-					if (is_bool($value)) {
-						$str .= self::tabPrefix($depth, sprintf("'%s' => %s,\n", $key, $value ? 'true' : 'false'));
-					} elseif (is_int($value)) {
-						$str .= self::tabPrefix($depth, "'{$key}' => $value,\n");
-					} else {
-						$str .= self::tabPrefix($depth, "'{$key}' => '{$value}',\n");
-					}
-				} elseif (is_array($value)) {
-					$str .= self::parseArrayToString($value, $key, ($depth + 1));
-				}
-			}
-			$str .= self::tabPrefix(($depth-1), "],\n");
+		if (!is_null($key)) {
+			$str .= self::tabPrefix(($depth - 1), "'{$key}' => [\n");
+		} else {
+			$str .= self::tabPrefix(($depth - 1), "[\n");
 		}
+		foreach ($array as $key => $value) {
+			if (!is_array($value)) {
+				if (is_bool($value)) {
+					$str .= self::tabPrefix($depth, sprintf("'%s' => %s,\n", $key, $value ? 'true' : 'false'));
+				} elseif (is_int($value)) {
+					$str .= self::tabPrefix($depth, "'{$key}' => $value,\n");
+				} else {
+					$str .= self::tabPrefix($depth, "'{$key}' => '{$value}',\n");
+				}
+			} else {
+				$str .= self::parseArrayToString($value, $key, ($depth + 1));
+			}
+		}
+		$str .= self::tabPrefix(($depth - 1), "],\n");
 		return $str;
 	}
 

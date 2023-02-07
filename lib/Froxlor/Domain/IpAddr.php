@@ -30,8 +30,10 @@ use PDO;
 
 class IpAddr
 {
-
-	public static function getIpAddresses()
+	/**
+	 * @return array
+	 */
+	public static function getIpAddresses(): array
 	{
 		$result_stmt = Database::query("
 			SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
@@ -51,14 +53,22 @@ class IpAddr
 		return $system_ipaddress_array;
 	}
 
-	public static function getSslIpPortCombinations()
+	/**
+	 * @return array
+	 */
+	public static function getSslIpPortCombinations(): array
 	{
 		return [
 				'' => lng('panel.none_value')
 			] + self::getIpPortCombinations(true);
 	}
 
-	public static function getIpPortCombinations($ssl = false)
+	/**
+	 * @param bool $ssl
+	 * @return array
+	 * @throws \Exception
+	 */
+	public static function getIpPortCombinations(bool $ssl = false): array
 	{
 		global $userinfo;
 

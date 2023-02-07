@@ -41,8 +41,9 @@ class Domain
 	 *
 	 * @param int $domain_id
 	 * @return array
+	 * @throws \Exception
 	 */
-	public static function getIpsOfDomain($domain_id)
+	public static function getIpsOfDomain(int $domain_id = 0): array
 	{
 		if ($domain_id > 0) {
 			$sel_stmt = Database::prepare("
@@ -75,7 +76,7 @@ class Domain
 	 *
 	 * @return array array of enabled redirect-codes
 	 */
-	public static function getRedirectCodesArray()
+	public static function getRedirectCodesArray(): array
 	{
 		$sql = "SELECT * FROM `" . TABLE_PANEL_REDIRECTCODES . "` WHERE `enabled` = '1' ORDER BY `id` ASC";
 		$result_stmt = Database::query($sql);
@@ -92,12 +93,12 @@ class Domain
 	 * returns the redirect-code for a given
 	 * domain-id
 	 *
-	 * @param integer $domainid
-	 *            id of the domain
+	 * @param int $domainid id of the domain
 	 *
 	 * @return string redirect-code
+	 * @throws \Exception
 	 */
-	public static function getDomainRedirectCode($domainid = 0)
+	public static function getDomainRedirectCode(int $domainid = 0): string
 	{
 		// get system default
 		$default = '301';
@@ -128,12 +129,11 @@ class Domain
 	 * return an array of all enabled redirect-codes
 	 * for the settings form
 	 *
-	 * @param bool $add_desc
-	 *            optional, default true, add the code-description
+	 * @param bool $add_desc optional, default true, add the code-description
 	 *
 	 * @return array array of enabled redirect-codes
 	 */
-	public static function getRedirectCodes($add_desc = true)
+	public static function getRedirectCodes(bool $add_desc = true): array
 	{
 		$sql = "SELECT * FROM `" . TABLE_PANEL_REDIRECTCODES . "` WHERE `enabled` = '1' ORDER BY `id` ASC";
 		$result_stmt = Database::query($sql);
@@ -153,12 +153,12 @@ class Domain
 	 * returns the redirect-id for a given
 	 * domain-id
 	 *
-	 * @param integer $domainid
-	 *            id of the domain
+	 * @param int $domainid id of the domain
 	 *
-	 * @return integer redirect-code-id
+	 * @return int redirect-code-id
+	 * @throws \Exception
 	 */
-	public static function getDomainRedirectId($domainid = 0)
+	public static function getDomainRedirectId(int $domainid = 0): int
 	{
 		$code = 1;
 		if ($domainid > 0) {
@@ -171,7 +171,7 @@ class Domain
 				'domainid' => $domainid
 			]);
 
-			if (is_array($result) && isset($result['redirect'])) {
+			if ($result && isset($result['redirect'])) {
 				$code = (int)$result['redirect'];
 			}
 		}
@@ -179,16 +179,15 @@ class Domain
 	}
 
 	/**
-	 * adds a redirectcode for a domain
+	 * adds a redirect-code for a domain
 	 *
-	 * @param integer $domainid
-	 *            id of the domain to add the code for
-	 * @param integer $redirect
-	 *            selected redirect-id
+	 * @param int $domainid id of the domain to add the code for
+	 * @param int $redirect selected redirect-id
 	 *
 	 * @return null
+	 * @throws \Exception
 	 */
-	public static function addRedirectToDomain($domainid = 0, $redirect = 1)
+	public static function addRedirectToDomain(int $domainid = 0, int $redirect = 1)
 	{
 		if ($domainid > 0) {
 			$ins_stmt = Database::prepare("
@@ -202,19 +201,18 @@ class Domain
 	}
 
 	/**
-	 * updates the redirectcode of a domain
+	 * updates the redirect-code of a domain
 	 * if redirect-code is false, nothing happens
 	 *
-	 * @param integer $domainid
-	 *            id of the domain to update
-	 * @param integer $redirect
-	 *            selected redirect-id or false
+	 * @param int $domainid id of the domain to update
+	 * @param int $redirect selected redirect-id
 	 *
 	 * @return null
+	 * @throws \Exception
 	 */
-	public static function updateRedirectOfDomain($domainid = 0, $redirect = false)
+	public static function updateRedirectOfDomain(int $domainid = 0, int $redirect = 0)
 	{
-		if ($redirect == false) {
+		if (!$redirect) {
 			return;
 		}
 
@@ -240,12 +238,12 @@ class Domain
 	 * check whether a domain has subdomains added as full-domains
 	 * #329
 	 *
-	 * @param int $id
-	 *            domain-id
+	 * @param int $id domain-id
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function domainHasMainSubDomains($id = 0)
+	public static function domainHasMainSubDomains(int $id): bool
 	{
 		$result_stmt = Database::prepare("
 		SELECT COUNT(`id`) as `mainsubs` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -254,8 +252,8 @@ class Domain
 			'id' => $id
 		]);
 
-		if (isset($result['mainsubs']) && $result['mainsubs'] > 0) {
-			return true;
+		if ($result && isset($result['mainsubs'])) {
+			return $result['mainsubs'] > 0;
 		}
 		return false;
 	}
@@ -264,12 +262,12 @@ class Domain
 	 * check whether a subof-domain exists
 	 * #329
 	 *
-	 * @param int $id
-	 *            subof-domain-id
+	 * @param int $id subof-domain-id
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function domainMainToSubExists($id = 0)
+	public static function domainMainToSubExists(int $id): bool
 	{
 		$result_stmt = Database::prepare("
 		SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :id");
@@ -278,8 +276,8 @@ class Domain
 		]);
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (isset($result['id']) && $result['id'] > 0) {
-			return true;
+		if ($result && isset($result['id'])) {
+			return $result['id'] > 0;
 		}
 		return false;
 	}
@@ -289,9 +287,10 @@ class Domain
 	 *
 	 * @param int $domainid
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function domainHasSslIpPort($domainid = 0)
+	public static function domainHasSslIpPort(int $domainid): bool
 	{
 		$result_stmt = Database::prepare("
 			SELECT `dt`.* FROM `" . TABLE_DOMAINTOIP . "` `dt`, `" . TABLE_PANEL_IPSANDPORTS . "` `iap`
@@ -301,7 +300,7 @@ class Domain
 		]);
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (is_array($result) && isset($result['id_ipandports'])) {
+		if ($result && isset($result['id_ipandports'])) {
 			return true;
 		}
 		return false;
@@ -311,12 +310,12 @@ class Domain
 	 * returns true or false whether a given domain id
 	 * is the std-subdomain of a customer
 	 *
-	 * @param
-	 *            int domain-id
+	 * @param int $did domain-id
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function isCustomerStdSubdomain($did = 0)
+	public static function isCustomerStdSubdomain(int $did): bool
 	{
 		if ($did > 0) {
 			$result_stmt = Database::prepare("
@@ -327,17 +326,27 @@ class Domain
 				'did' => $did
 			]);
 
-			if (is_array($result) && isset($result['customerid']) && $result['customerid'] > 0) {
-				return true;
+			if ($result && isset($result['customerid'])) {
+				return $result['customerid'] > 0;
 			}
 		}
 		return false;
 	}
 
-	public static function triggerLetsEncryptCSRForAliasDestinationDomain($aliasDestinationDomainID, $log)
-	{
-		if (isset($aliasDestinationDomainID) && $aliasDestinationDomainID > 0) {
-			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
+	/**
+	 * @param int $aliasDestinationDomainID
+	 * @param FroxlorLogger $log
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public static function triggerLetsEncryptCSRForAliasDestinationDomain(
+		int $aliasDestinationDomainID,
+		FroxlorLogger $log
+	) {
+		if ($aliasDestinationDomainID > 0) {
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO,
+				"LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
 			$upd_stmt = Database::prepare("UPDATE
 					`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 				SET
@@ -351,7 +360,11 @@ class Domain
 		}
 	}
 
-	public static function doLetsEncryptCleanUp($domainname = null)
+	/**
+	 * @param string $domainname
+	 * @return true
+	 */
+	public static function doLetsEncryptCleanUp(string $domainname): bool
 	{
 		// @ see \Froxlor\Cron\Http\LetsEncrypt\AcmeSh.php
 		$acmesh = AcmeSh::getAcmeSh();
@@ -374,18 +387,19 @@ class Domain
 	/**
 	 * checks give path for security issues
 	 * and returns a string that can be appended
-	 * to a line for a open_basedir directive
+	 * to a line for an open_basedir directive
 	 *
-	 * @param string $path
-	 *            the path to check and append
-	 * @param boolean $first
-	 *            if true, no ':' will be prefixed to the path
+	 * @param string $path the path to check and append
+	 * @param bool $first if true, no ':' will be prefixed to the path
 	 *
 	 * @return string
+	 * @throws \Exception
 	 */
-	public static function appendOpenBasedirPath($path = '', $first = false)
+	public static function appendOpenBasedirPath(string $path = '', bool $first = false): string
 	{
-		if ($path != '' && $path != '/' && (!preg_match("#^/dev#i", $path) || preg_match("#^/dev/urandom#i", $path)) && !preg_match("#^/proc#i", $path) && !preg_match("#^/etc#i", $path) && !preg_match("#^/sys#i", $path) && !preg_match("#:#", $path)) {
+		if ($path != '' && $path != '/' && (!preg_match("#^/dev#i", $path) || preg_match("#^/dev/urandom#i",
+					$path)) && !preg_match("#^/proc#i", $path) && !preg_match("#^/etc#i",
+				$path) && !preg_match("#^/sys#i", $path) && !preg_match("#:#", $path)) {
 			if (preg_match("#^/dev/urandom#i", $path)) {
 				$path = FileDir::makeCorrectFile($path);
 			} else {
@@ -394,7 +408,7 @@ class Domain
 
 			// check for php-version that requires the trailing
 			// slash to be removed as it does not allow the usage
-			// of the subfolders within the given folder, fixes #797
+			// of the sub-folders within the given folder, fixes #797
 			if ((PHP_MINOR_VERSION == 2 && PHP_VERSION_ID >= 50216) || PHP_VERSION_ID >= 50304) {
 				// check trailing slash
 				if (substr($path, -1, 1) == '/') {

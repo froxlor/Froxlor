@@ -28,32 +28,40 @@ namespace Froxlor\Validate;
 class Form
 {
 
-	public static function validateFormDefinition($form)
+	/**
+	 * @param array $form
+	 * @return bool
+	 */
+	public static function validateFormDefinition(array $form): bool
 	{
-		$returnvalue = false;
-
-		if (is_array($form) && !empty($form) && isset($form['groups']) && is_array($form['groups']) && !empty($form['groups'])) {
-			$returnvalue = true;
+		if (!empty($form) && isset($form['groups']) && is_array($form['groups']) && !empty($form['groups'])) {
+			return true;
 		}
-
-		return $returnvalue;
+		return false;
 	}
 
-	public static function validateFieldDefinition($field)
+	/**
+	 * @param array $field
+	 * @return bool
+	 */
+	public static function validateFieldDefinition(array $field): bool
 	{
-		$returnvalue = false;
-
-		if (is_array($field) && !empty($field) && isset($field['fields']) && is_array($field['fields']) && !empty($field['fields'])) {
-			$returnvalue = true;
+		if (!empty($field) && isset($field['fields']) && is_array($field['fields']) && !empty($field['fields'])) {
+			return true;
 		}
-
-		return $returnvalue;
+		return false;
 	}
 
-	public static function validateFormField($fieldname, $fielddata, $newfieldvalue)
+	/**
+	 * @param $fieldname
+	 * @param array $fielddata
+	 * @param $newfieldvalue
+	 * @return mixed|string
+	 */
+	public static function validateFormField($fieldname, array $fielddata, $newfieldvalue)
 	{
 		$returnvalue = '';
-		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && method_exists('\\Froxlor\\Validate\\Form\\Data', 'validateFormField' . ucfirst($fielddata['type']))) {
+		if (isset($fielddata['type']) && $fielddata['type'] != '' && method_exists('\\Froxlor\\Validate\\Form\\Data', 'validateFormField' . ucfirst($fielddata['type']))) {
 			$returnvalue = call_user_func([
 				'\\Froxlor\\Validate\\Form\\Data',
 				'validateFormField' . ucfirst($fielddata['type'])

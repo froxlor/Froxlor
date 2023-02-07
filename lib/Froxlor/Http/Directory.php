@@ -47,15 +47,17 @@ class Directory
 	 *
 	 * @param string $dir
 	 */
-	public function __construct($dir = null)
+	public function __construct(string $dir = null)
 	{
 		$this->dir = $dir;
 	}
 
 	/**
 	 * check whether the directory has options set in panel_htaccess
+	 *
+	 * @return bool
 	 */
-	public function hasUserOptions()
+	public function hasUserOptions(): bool
 	{
 		$uo_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usropts` FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `path` = :dir
@@ -63,7 +65,7 @@ class Directory
 		$uo_res = Database::pexecute_first($uo_stmt, [
 			'dir' => FileDir::makeCorrectDir($this->dir)
 		]);
-		if ($uo_res != false && isset($uo_res['usropts'])) {
+		if ($uo_res && isset($uo_res['usropts'])) {
 			return $uo_res['usropts'] > 0;
 		}
 		return false;
@@ -71,8 +73,10 @@ class Directory
 
 	/**
 	 * check whether the directory is protected using panel_htpasswd
+	 *
+	 * @return bool
 	 */
-	public function isUserProtected()
+	public function isUserProtected(): bool
 	{
 		$up_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usrprot` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `path` = :dir
@@ -80,7 +84,7 @@ class Directory
 		$up_res = Database::pexecute_first($up_stmt, [
 			'dir' => FileDir::makeCorrectDir($this->dir)
 		]);
-		if ($up_res != false && isset($up_res['usrprot'])) {
+		if ($up_res && isset($up_res['usrprot'])) {
 			return $up_res['usrprot'] > 0;
 		}
 		return false;
@@ -90,12 +94,11 @@ class Directory
 	 * Checks if a given directory is valid for multiple configurations
 	 * or should rather be used as a single file
 	 *
-	 * @param bool $ifexists
-	 *            also check whether file/dir exists
+	 * @param bool $ifexists also check whether file/dir exists
 	 *
 	 * @return bool true if usable as dir, false otherwise
 	 */
-	public function isConfigDir($ifexists = false)
+	public function isConfigDir(bool $ifexists = false): bool
 	{
 		if (is_null($this->dir)) {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' has been called with a null value', E_USER_WARNING);

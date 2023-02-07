@@ -31,7 +31,15 @@ use PDO;
 class Customer
 {
 
-	public static function getCustomerDetail($customerid, $varname)
+	/**
+	 * Get value of a a specific field from a given customer
+	 *
+	 * @param int $customerid
+	 * @param string $varname
+	 * @return false|mixed
+	 * @throws \Exception
+	 */
+	public static function getCustomerDetail(int $customerid, string $varname)
 	{
 		$customer_stmt = Database::prepare("
 			SELECT `" . $varname . "` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid
@@ -42,20 +50,19 @@ class Customer
 
 		if (isset($customer[$varname])) {
 			return $customer[$varname];
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
 	 * returns the loginname of a customer by given uid
 	 *
-	 * @param int $uid
-	 *            uid of customer
+	 * @param int $uid uid of customer
 	 *
 	 * @return string customers loginname
+	 * @throws \Exception
 	 */
-	public static function getLoginNameByUid($uid = null)
+	public static function getLoginNameByUid(int $uid)
 	{
 		$result_stmt = Database::prepare("
 			SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = :guid
@@ -64,7 +71,7 @@ class Customer
 			'guid' => $uid
 		]);
 
-		if (is_array($result) && isset($result['loginname'])) {
+		if ($result && isset($result['loginname'])) {
 			return $result['loginname'];
 		}
 		return false;
@@ -76,23 +83,22 @@ class Customer
 	 * returns true or false whether perl is
 	 * enabled for the given customer
 	 *
-	 * @param
-	 *            int customer-id
+	 * @param int $cid customer-id
 	 *
-	 * @return boolean
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public static function customerHasPerlEnabled($cid = 0)
+	public static function customerHasPerlEnabled(int $cid = 0)
 	{
 		if ($cid > 0) {
 			$result_stmt = Database::prepare("
 				SELECT `perlenabled` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
-			Database::pexecute($result_stmt, [
+			$result = Database::pexecute_first($result_stmt, [
 				'cid' => $cid
 			]);
-			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-			if (is_array($result) && isset($result['perlenabled'])) {
-				return $result['perlenabled'] == '1';
+			if ($result && isset($result['perlenabled'])) {
+				return (bool)$result['perlenabled'];
 			}
 		}
 		return false;

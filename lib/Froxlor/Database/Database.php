@@ -83,19 +83,21 @@ class Database
 	private static $need_dbname = true;
 
 	/**
-	 * Wrapper for PDOStatement::execute so we can catch the PDOException
+	 * Wrapper for PDOStatement::execute, so we can catch the PDOException
 	 * and display the error nicely on the panel - also fetches the
 	 * result from the statement and returns the resulting array
 	 *
 	 * @param PDOStatement $stmt
-	 * @param array $params
+	 * @param array|null $params
 	 *            (optional)
 	 * @param bool $showerror
-	 *            suppress errordisplay (default true)
+	 *            suppress error display (default true)
+	 * @param bool $json_response
 	 *
 	 * @return array
+	 * @throws Exception
 	 */
-	public static function pexecute_first(&$stmt, $params = null, $showerror = true, $json_response = false)
+	public static function pexecute_first(PDOStatement &$stmt, $params = null, bool $showerror = true, bool $json_response = false): array
 	{
 		self::pexecute($stmt, $params, $showerror, $json_response);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -106,12 +108,15 @@ class Database
 	 * and display the error nicely on the panel
 	 *
 	 * @param PDOStatement $stmt
-	 * @param array $params
+	 * @param array|null $params
 	 *            (optional)
 	 * @param bool $showerror
-	 *            suppress errordisplay (default true)
+	 *            suppress error display (default true)
+	 * @param bool $json_response
+	 *
+	 * @throws Exception
 	 */
-	public static function pexecute(&$stmt, $params = null, $showerror = true, $json_response = false)
+	public static function pexecute(PDOStatement &$stmt, $params = null, bool $showerror = true, bool $json_response = false)
 	{
 		try {
 			$stmt->execute($params);
@@ -125,9 +130,10 @@ class Database
 	 *
 	 * @param PDOException $error
 	 * @param bool $showerror
-	 *            if set to false, the error will be logged but we go on
+	 *            if set to false, the error will be logged, but we go on
+	 * @throws Exception
 	 */
-	private static function showerror($error, $showerror = true, $json_response = false, PDOStatement $stmt = null)
+	private static function showerror(Exception $error, bool $showerror = true, bool $json_response = false, PDOStatement $stmt = null)
 	{
 		global $userinfo, $theme, $linker;
 
@@ -143,7 +149,7 @@ class Database
 				0 => [
 					'caption' => 'Default',
 					'host' => $sql['host'],
-					'socket' => (isset($sql['socket']) ? $sql['socket'] : null),
+					'socket' => ($sql['socket'] ?? null),
 					'user' => $sql['root_user'],
 					'password' => $sql['root_password']
 				]
@@ -159,8 +165,8 @@ class Database
 		$substitutions = [
 			$sql['password'] => 'DB_UNPRIV_PWD',
 		];
-		foreach ($sql_root as $dbserver => $sql_root_data) {
-			$substitutions[$sql_root_data[$dbserver]]['password'] = 'DB_ROOT_PWD';
+		foreach ($sql_root as $sql_root_data) {
+			$substitutions[$sql_root_data['password']] = 'DB_ROOT_PWD';
 		}
 
 		// hide username/password in messages
@@ -254,7 +260,7 @@ class Database
 	 * @param int $minLength
 	 * @return string
 	 */
-	private static function substitute($content, array $substitutions, $minLength = 6)
+	private static function substitute(string $content, array $substitutions, int $minLength = 6): string
 	{
 		$replacements = [];
 
@@ -262,9 +268,7 @@ class Database
 			$replacements += self::createShiftedSubstitutions($search, $replace, $minLength);
 		}
 
-		$content = str_replace(array_keys($replacements), array_values($replacements), $content);
-
-		return $content;
+		return str_replace(array_keys($replacements), array_values($replacements), $content);
 	}
 
 	/**
@@ -284,7 +288,7 @@ class Database
 	 * @param int $minLength
 	 * @return array
 	 */
-	private static function createShiftedSubstitutions($search, $replace, $minLength)
+	private static function createShiftedSubstitutions(string $search, string $replace, int $minLength): array
 	{
 		$substitutions = [];
 		$length = strlen($search);
@@ -303,8 +307,9 @@ class Database
 	 *
 	 * @param int $length
 	 * @return string
+	 * @throws Exception
 	 */
-	private static function genUniqueToken(int $length = 16)
+	private static function genUniqueToken(int $length = 16): string
 	{
 		if (intval($length) <= 8) {
 			$length = 16;
@@ -327,7 +332,7 @@ class Database
 	 *
 	 * @return int
 	 */
-	public static function num_rows()
+	public static function num_rows(): int
 	{
 		return Database::query("SELECT FOUND_ROWS()")->fetchColumn();
 	}
@@ -337,7 +342,7 @@ class Database
 	 *
 	 * @return string
 	 */
-	public static function getDbName()
+	public static function getDbName(): ?string
 	{
 		return self::$dbname;
 	}
@@ -349,8 +354,8 @@ class Database
 	 * the 'normal' database-connection
 	 *
 	 * @param bool $needroot
-	 * @param int $dbserver
-	 *            optional
+	 * @param int $dbserver optional
+	 * @param bool $need_db
 	 */
 	public static function needRoot(bool $needroot = false, int $dbserver = 0, bool $need_db = true)
 	{
@@ -366,7 +371,7 @@ class Database
 	 *
 	 * @param int $dbserver
 	 */
-	private static function setServer($dbserver = 0)
+	private static function setServer(int $dbserver = 0)
 	{
 		self::$dbserver = $dbserver;
 		self::$link = null;
@@ -397,17 +402,16 @@ class Database
 	 * function that will be called on every static call
 	 * which connects to the database if necessary
 	 *
-	 * @param bool $root
-	 *
 	 * @return object
+	 * @throws Exception
 	 */
 	private static function getDB()
 	{
-		if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
+		if (!extension_loaded('pdo') || !in_array("mysql", PDO::getAvailableDrivers())) {
 			self::showerror(new Exception("The php PDO extension or PDO-MySQL driver is not available"));
 		}
 
-		// do we got a connection already?
+		// do we have a connection already?
 		if (self::$link) {
 			// return it
 			return self::$link;
@@ -422,7 +426,7 @@ class Database
 				0 => [
 					'caption' => 'Default',
 					'host' => $sql['host'],
-					'socket' => (isset($sql['socket']) ? $sql['socket'] : null),
+					'socket' => ($sql['socket'] ?? null),
 					'user' => $sql['root_user'],
 					'password' => $sql['root_password']
 				]
@@ -441,8 +445,8 @@ class Database
 			$user = $sql_root[self::$dbserver]['user'];
 			$password = $sql_root[self::$dbserver]['password'];
 			$host = $sql_root[self::$dbserver]['host'];
-			$socket = isset($sql_root[self::$dbserver]['socket']) ? $sql_root[self::$dbserver]['socket'] : null;
-			$port = isset($sql_root[self::$dbserver]['port']) ? $sql_root[self::$dbserver]['port'] : '3306';
+			$socket = $sql_root[self::$dbserver]['socket'] ?? null;
+			$port = $sql_root[self::$dbserver]['port'] ?? '3306';
 			$sslCAFile = $sql_root[self::$dbserver]['ssl']['caFile'] ?? "";
 			$sslVerifyServerCertificate = $sql_root[self::$dbserver]['ssl']['verifyServerCertificate'] ?? false;
 		} else {
@@ -450,8 +454,8 @@ class Database
 			$user = $sql["user"];
 			$password = $sql["password"];
 			$host = $sql["host"];
-			$socket = isset($sql['socket']) ? $sql['socket'] : null;
-			$port = isset($sql['port']) ? $sql['port'] : '3306';
+			$socket = $sql['socket'] ?? null;
+			$port = $sql['port'] ?? '3306';
 			$sslCAFile = $sql['ssl']['caFile'] ?? "";
 			$sslVerifyServerCertificate = $sql['ssl']['verifyServerCertificate'] ?? false;
 		}
@@ -556,14 +560,14 @@ class Database
 	 *
 	 * @return int
 	 */
-	public static function getSqlUsernameLength()
+	public static function getSqlUsernameLength(): int
 	{
-		// MariaDB supports up to 80 characters but only 64 for databases and as we use the loginname also for
+		// MariaDB supports up to 80 characters but only 64 for databases and as we use the login-name also for
 		// database names, we set the limit to 64 here
 		if (strpos(strtolower(Database::getAttribute(\PDO::ATTR_SERVER_VERSION)), "mariadb") !== false) {
 			$mysql_max = 64;
 		} else {
-			// MySQL user names can be up to 32 characters long (16 characters before MySQL 5.7.8).
+			// MySQL user-names can be up to 32 characters long (16 characters before MySQL 5.7.8).
 			$mysql_max = 32;
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.8', '<')) {
 				$mysql_max = 16;
@@ -573,15 +577,16 @@ class Database
 	}
 
 	/**
-	 * let's us interact with the PDO-Object by using static
+	 * Lets us interact with the PDO-Object by using static
 	 * call like "Database::function()"
 	 *
 	 * @param string $name
 	 * @param mixed $args
 	 *
 	 * @return mixed
+	 * @throws Exception
 	 */
-	public static function __callStatic($name, $args)
+	public static function __callStatic(string $name, $args)
 	{
 		$callback = [
 			self::getDB(),

@@ -45,38 +45,42 @@ class FroxlorLogger
 	/**
 	 * current \Monolog\Logger object
 	 *
-	 * @var Logger
+	 * @var ?Logger
 	 */
-	private static $ml = null;
+	private static ?Logger $ml = null;
 	/**
 	 * LogTypes Array
 	 *
-	 * @var array
+	 * @var ?array
 	 */
-	private static $logtypes = null;
+	private static ?array $logtypes = null;
 	/**
 	 * whether to output log-messages to STDOUT (cron)
 	 *
 	 * @var bool
 	 */
-	private static $crondebug_flag = false;
+	private static bool $crondebug_flag = false;
 	/**
-	 * user info of logged in user
+	 * user info of logged-in user
 	 *
 	 * @var array
 	 */
-	private static $userinfo = [];
+	private static array $userinfo = [];
 	/**
 	 * whether the logger object has already been initialized
 	 *
 	 * @var bool
 	 */
-	private static $is_initialized = false;
+	private static bool $is_initialized = false;
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $userinfo
+	 *
+	 * @throws \Exception
 	 */
-	protected function __construct($userinfo = [])
+	protected function __construct(array $userinfo = [])
 	{
 		$this->initMonolog();
 		self::$userinfo = $userinfo;
@@ -143,8 +147,9 @@ class FroxlorLogger
 	 * @param array $userinfo
 	 *
 	 * @return FroxlorLogger
+	 * @throws \Exception
 	 */
-	public static function getInstanceOf($userinfo = [])
+	public static function getInstanceOf(array $userinfo = [])
 	{
 		if (empty($userinfo)) {
 			$userinfo = [
@@ -159,9 +164,9 @@ class FroxlorLogger
 	 *
 	 * @param int $action
 	 * @param int $type
-	 * @param string $text
+	 * @param ?string $text
 	 */
-	public function logAction($action = FroxlorLogger::USR_ACTION, $type = LOG_NOTICE, $text = null)
+	public function logAction($action = FroxlorLogger::USR_ACTION, int $type = LOG_NOTICE, string $text = null)
 	{
 		// not logging normal stuff if not set to "paranoid" logging
 		if (!self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {
@@ -208,7 +213,11 @@ class FroxlorLogger
 		}
 	}
 
-	public function getLogLevelDesc($type)
+	/**
+	 * @param int $type
+	 * @return string
+	 */
+	public function getLogLevelDesc(int $type): string
 	{
 		switch ($type) {
 			case LOG_INFO:
@@ -236,7 +245,11 @@ class FroxlorLogger
 		return $_type;
 	}
 
-	private function getActionTypeDesc($action)
+	/**
+	 * @param $action
+	 * @return string
+	 */
+	private function getActionTypeDesc($action): string
 	{
 		switch ($action) {
 			case FroxlorLogger::USR_ACTION:
@@ -268,7 +281,7 @@ class FroxlorLogger
 	 *
 	 * @return int
 	 */
-	public function setCronLog(int $cronlog = 0)
+	public function setCronLog(int $cronlog = 0): int
 	{
 		if ($cronlog < 0 || $cronlog > 2) {
 			$cronlog = 0;

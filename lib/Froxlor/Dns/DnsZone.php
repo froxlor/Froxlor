@@ -29,12 +29,18 @@ use Froxlor\Settings;
 
 class DnsZone
 {
-	public $ttl;
-	public $origin;
-	public $serial;
-	public $records;
+	public int $ttl;
+	public string $origin;
+	public string $serial;
+	public ?array $records;
 
-	public function __construct($ttl = 0, $origin = '', $serial = '', $records = null)
+	/**
+	 * @param int $ttl
+	 * @param string $origin
+	 * @param string $serial
+	 * @param array|null $records
+	 */
+	public function __construct(int $ttl = 0, string $origin = '', string $serial = '', array $records = null)
 	{
 		$this->ttl = ($ttl <= 0 ? Settings::Get('system.defaultttl') : $ttl);
 		$this->origin = $origin;
@@ -44,13 +50,13 @@ class DnsZone
 
 	public function __toString()
 	{
-		$_zonefile = "\$TTL " . $this->ttl . PHP_EOL;
-		$_zonefile .= "\$ORIGIN " . $this->origin . "." . PHP_EOL;
+		$zone_file = "\$TTL " . $this->ttl . PHP_EOL;
+		$zone_file .= "\$ORIGIN " . $this->origin . "." . PHP_EOL;
 		if (!empty($this->records)) {
 			foreach ($this->records as $record) {
-				$_zonefile .= (string)$record;
+				$zone_file .= (string)$record;
 			}
 		}
-		return $_zonefile;
+		return $zone_file;
 	}
 }

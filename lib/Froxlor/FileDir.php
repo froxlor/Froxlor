@@ -38,30 +38,24 @@ class FileDir
 	 * which had to be created below with correct Owner/Group
 	 * (Copied from cron_tasks.php:rev1189 as we'll need this more often in future)
 	 *
-	 * @param string $homeDir
-	 *            The homedir of the user
-	 * @param string $dirToCreate
-	 *            The dir which should be created
-	 * @param int $uid
-	 *            The uid of the user
-	 * @param int $gid
-	 *            The gid of the user
-	 * @param bool $placeindex
-	 *            Place standard-index.html into the new folder
-	 * @param bool $allow_notwithinhomedir
-	 *            Allow creating a directory out of the customers docroot
+	 * @param string $homeDir The homedir of the user
+	 * @param string $dirToCreate The dir which should be created
+	 * @param int $uid The uid of the user
+	 * @param int $gid The gid of the user
+	 * @param bool $placeindex Place standard-index.html into the new folder
+	 * @param bool $allow_notwithinhomedir Allow creating a directory out of the customers docroot
 	 *
 	 * @return bool true if everything went okay, false if something went wrong
 	 * @throws Exception
 	 */
 	public static function mkDirWithCorrectOwnership(
-		$homeDir,
-		$dirToCreate,
-		$uid,
-		$gid,
-		$placeindex = false,
-		$allow_notwithinhomedir = false
-	) {
+		string $homeDir,
+		string $dirToCreate,
+		int $uid,
+		int $gid,
+		bool $placeindex = false,
+		bool $allow_notwithinhomedir = false
+	): bool {
 		if ($homeDir != '' && $dirToCreate != '') {
 			$homeDir = self::makeCorrectDir($homeDir);
 			$dirToCreate = self::makeCorrectDir($dirToCreate);
@@ -116,15 +110,14 @@ class FileDir
 	 * Function which returns a correct dirname, means to add slashes at the beginning and at the end if there weren't
 	 * some
 	 *
-	 * @param string $path
-	 *            the path to correct
+	 * @param string $dir the path to correct
 	 *
 	 * @return string the corrected path
 	 * @throws Exception
 	 */
-	public static function makeCorrectDir($dir)
+	public static function makeCorrectDir(string $dir): string
 	{
-		if (is_string($dir) && strlen($dir) > 0) {
+		if (strlen($dir) > 0) {
 			$dir = trim($dir);
 			if (substr($dir, -1, 1) != '/') {
 				$dir .= '/';
@@ -140,12 +133,11 @@ class FileDir
 	/**
 	 * Function which returns a secure path, means to remove all multiple dots and slashes
 	 *
-	 * @param string $path
-	 *            the path to secure
+	 * @param string $path the path to secure
 	 *
 	 * @return string the corrected path
 	 */
-	public static function makeSecurePath($path)
+	public static function makeSecurePath(string $path): string
 	{
 		// check for bad characters, some are allowed with escaping,
 		// but we generally don't want them in our directory-names,
@@ -191,16 +183,13 @@ class FileDir
 	/**
 	 * Wrapper around the exec command.
 	 *
-	 * @param string $exec_string
-	 *            command to be executed
-	 * @param string $return_value
-	 *            referenced variable where the output is stored
-	 * @param array $allowedChars
-	 *            optional array of allowed characters in path/command
+	 * @param string $exec_string command to be executed
+	 * @param mixed $return_value referenced variable where the output is stored
+	 * @param ?array $allowedChars optional array of allowed characters in path/command
 	 *
 	 * @return array result of exec()
 	 */
-	public static function safe_exec($exec_string, &$return_value = false, $allowedChars = null)
+	public static function safe_exec(string $exec_string, &$return_value = false, $allowedChars = null)
 	{
 		$disallowed = [
 			';',
@@ -245,19 +234,20 @@ class FileDir
 	/**
 	 * store the default index-file in a given destination folder
 	 *
-	 * @param string $loginname
-	 *            customers loginname
-	 * @param string $destination
-	 *            path where to create the file
-	 * @param object $logger
-	 *            FroxlorLogger object
-	 * @param boolean $force
-	 *            force creation whatever the settings say (needed for task #2, create new user)
+	 * @param string $loginname customers loginname
+	 * @param string $destination path where to create the file
+	 * @param object $logger FroxlorLogger object
+	 * @param bool $force force creation whatever the settings say (needed for task #2, create new user)
 	 *
-	 * @return null
+	 * @return void
+	 * @throws Exception
 	 */
-	public static function storeDefaultIndex($loginname = null, $destination = null, $logger = null, $force = false)
-	{
+	public static function storeDefaultIndex(
+		string $loginname,
+		string $destination,
+		$logger = null,
+		bool $force = false
+	) {
 		if ($force || (int)Settings::Get('system.store_index_file_subs') == 1) {
 			$result_stmt = Database::prepare("
 			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
@@ -306,18 +296,16 @@ class FileDir
 				self::safe_exec('cp -a ' . Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}
 		}
-		return;
 	}
 
 	/**
 	 * Function which returns a correct filename, means to add a slash at the beginning if there wasn't one
 	 *
-	 * @param string $filename
-	 *            the filename
+	 * @param string $filename the filename
 	 *
 	 * @return string the corrected filename
 	 */
-	public static function makeCorrectFile(string $filename)
+	public static function makeCorrectFile(string $filename): string
 	{
 		if (trim($filename) == '') {
 			$error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
@@ -333,21 +321,19 @@ class FileDir
 			$filename = '/' . $filename;
 		}
 
-		$filename = self::makeSecurePath($filename);
-		return $filename;
+		return self::makeSecurePath($filename);
 	}
 
 	/**
 	 * checks a directory against disallowed paths which could
 	 * lead to a damaged system if you use them
 	 *
-	 * @param string $fieldname
-	 * @param array $fielddata
-	 * @param mixed $newfieldvalue
+	 * @param string|null $path
 	 *
-	 * @return boolean|array
+	 * @return bool
+	 * @throws Exception
 	 */
-	public static function checkDisallowedPaths($path = null)
+	public static function checkDisallowedPaths(string $path): bool
 	{
 		/*
 		 * disallow base-directories and /
@@ -385,12 +371,11 @@ class FileDir
 	/**
 	 * Function which returns a correct destination for Postfix Virtual Table
 	 *
-	 * @param
-	 *            string The destinations
+	 * @param string $destination The destinations
+	 *
 	 * @return string the corrected destinations
-	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
-	public static function makeCorrectDestination($destination)
+	public static function makeCorrectDestination(string $destination): string
 	{
 		$search = '/ +/';
 		$replace = ' ';
@@ -410,27 +395,25 @@ class FileDir
 	/**
 	 * Returns a valid html tag for the chosen $fieldType for paths
 	 *
-	 * @param
-	 *            string path The path to start searching in
-	 * @param
-	 *            integer uid The uid which must match the found directories
-	 * @param
-	 *            integer gid The gid which must match the found directories
-	 * @param
-	 *            string value the value for the input-field
+	 * @param string $path The path to start searching in
+	 * @param int $uid The uid which must match the found directories
+	 * @param int $gid The gid which must match the found directories
+	 * @param string $value the value for the input-field
+	 * @param bool $dom
 	 *
-	 * @return string The html tag for the chosen $fieldType
+	 * @return array
 	 *
-	 * @author Martin Burchert <martin.burchert@syscp.de>
+	 * @throws Exception
 	 * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
+	 * @author Martin Burchert <martin.burchert@syscp.de>
 	 */
-	public static function makePathfield($path, $uid, $gid, $value = '', $dom = false)
+	public static function makePathfield(string $path, int $uid, int $gid, string $value = '', bool $dom = false): array
 	{
 		$value = str_replace($path, '', $value);
 		$field = [];
 
 		// path is given without starting slash
-		// but dirList holds the paths with starting slash
+		// but dirList holds the paths with starting slash,
 		// so we just add one here to get the correct
 		// default path selected, #225
 		if (substr($value, 0, 1) != '/' && !$dom) {
@@ -484,16 +467,14 @@ class FileDir
 	 * This function checks every found directory if they match either $uid or $gid, if they do
 	 * the found directory is valid. It uses recursive-iterators to find subdirectories.
 	 *
-	 * @param string $path
-	 *            the path to start searching in
-	 * @param int $uid
-	 *            the uid which must match the found directories
-	 * @param int $gid
-	 *            the gid which must match the found directories
+	 * @param string $path the path to start searching in
+	 * @param int $uid the uid which must match the found directories
+	 * @param int $gid the gid which must match the found directories
 	 *
 	 * @return array Array of found valid paths
+	 * @throws Exception
 	 */
-	private static function findDirs($path, $uid, $gid)
+	private static function findDirs(string $path, int $uid, int $gid): array
 	{
 		$_fileList = [];
 		$path = self::makeCorrectDir($path);
@@ -503,7 +484,8 @@ class FileDir
 			// Will exclude everything under these directories
 			$exclude = [
 				'awstats',
-				'webalizer'
+				'webalizer',
+				'goaccess'
 			];
 
 			/**
@@ -569,7 +551,7 @@ class FileDir
 	 *
 	 * @return string functionname + parameter (not the file)
 	 */
-	private static function getImmutableFunction(bool $remove = false)
+	private static function getImmutableFunction(bool $remove = false): string
 	{
 		if (self::isFreeBSD()) {
 			// FreeBSD style
@@ -589,7 +571,7 @@ class FileDir
 	 *
 	 * @return bool
 	 */
-	public static function isFreeBSD(bool $exact = false)
+	public static function isFreeBSD(bool $exact = false): bool
 	{
 		if (($exact && PHP_OS == 'FreeBSD') || (!$exact && stristr(PHP_OS, 'BSD'))) {
 			return true;

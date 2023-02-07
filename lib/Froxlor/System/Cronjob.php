@@ -100,32 +100,34 @@ class Cronjob
 
 					// now check if it differs from our settings
 					if ($update_to_guid != Settings::Get('system.lastguid')) {
-						$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to ' . $update_to_guid);
+						$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+							'Updating froxlor last guid to ' . $update_to_guid);
 						Settings::Set('system.lastguid', $update_to_guid);
 					}
 				} else {
-					$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
+					$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+						'File /etc/group not readable; cannot check for latest guid');
 				}
 			} else {
-				$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
+				$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+					'File /etc/group not readable; cannot check for latest guid');
 			}
 		} else {
-			$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group does not exist; cannot check for latest guid');
+			$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+				'File /etc/group does not exist; cannot check for latest guid');
 		}
 	}
 
 	/**
 	 * Inserts a task into the PANEL_TASKS-Table
 	 *
-	 * @param
-	 *            int Type of task
-	 * @param
-	 *            string Parameter (possible to pass multiple times)
+	 * @param int $type Type of task
+	 * @param string $params Parameter (possible to pass multiple times)
 	 *
-	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
+	 * @throws Exception
 	 * @author Froxlor team <team@froxlor.org> (2010-)
 	 */
-	public static function inserttask($type, ...$params)
+	public static function inserttask(int $type, ...$params)
 	{
 		// prepare the insert-statement
 		$ins_stmt = Database::prepare("
@@ -223,7 +225,7 @@ class Cronjob
 	 *
 	 * @return array
 	 */
-	public static function getCronjobsLastRun()
+	public static function getCronjobsLastRun(): array
 	{
 		$query = "SELECT `lastrun`, `desc_lng_key` FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 		$result = Database::query($query);
@@ -238,14 +240,21 @@ class Cronjob
 		return $cronjobs_last_run;
 	}
 
-	public static function toggleCronStatus($module = null, $isactive = 0)
+	/**
+	 * @param string $module
+	 * @param int $isactive
+	 * @return void
+	 * @throws Exception
+	 */
+	public static function toggleCronStatus(string $module, int $isactive = 0)
 	{
 		if ($isactive != 1) {
 			$isactive = 0;
 		}
 
 		$upd_stmt = Database::prepare("
-		UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `isactive` = :active WHERE `module` = :module");
+			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `isactive` = :active WHERE `module` = :module
+		");
 		Database::pexecute($upd_stmt, [
 			'active' => $isactive,
 			'module' => $module
@@ -257,7 +266,7 @@ class Cronjob
 	 *
 	 * @return array
 	 */
-	public static function getOutstandingTasks()
+	public static function getOutstandingTasks(): array
 	{
 		$query = "SELECT * FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `type` ASC";
 		$result = Database::query($query);
@@ -309,7 +318,7 @@ class Cronjob
 	 *
 	 * @return void
 	 */
-	public static function dieWithMail($message, $subject = "[froxlor] Cronjob error")
+	public static function dieWithMail(string $message, string $subject = "[froxlor] Cronjob error")
 	{
 		if (Settings::Get('system.send_cron_errors') == '1') {
 			$_mail = new Mailer(true);
@@ -339,7 +348,12 @@ class Cronjob
 		die($message);
 	}
 
-	public static function updateLastRunOfCron($cronname)
+	/**
+	 * @param string $cronname
+	 * @return void
+	 * @throws Exception
+	 */
+	public static function updateLastRunOfCron(string $cronname)
 	{
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;

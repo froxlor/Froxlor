@@ -32,9 +32,16 @@ use Froxlor\Api\Commands\Traffic as TrafficAPI;
 
 class Traffic
 {
-	public static function getCustomerStats($userinfo, $range = null): array
+	/**
+	 * @param array $userinfo
+	 * @param ?string $range
+	 * @return array
+	 * @throws \Exception
+	 */
+	public static function getCustomerStats(array $userinfo, string $range = null): array
 	{
-		$trafficCollectionObj = (new Collection(TrafficAPI::class, $userinfo, self::getParamsByRange($range, ['customer_traffic' => true,])));
+		$trafficCollectionObj = (new Collection(TrafficAPI::class, $userinfo,
+			self::getParamsByRange($range, ['customer_traffic' => true,])));
 		if ($userinfo['adminsession'] == 1) {
 			$trafficCollectionObj->has('customer', Customers::class, 'customerid', 'customerid');
 		}
@@ -58,15 +65,15 @@ class Traffic
 			$years[$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
 			$years[$item['year']]['mail'] += $item['mail'];
 			// per month
-			$months[$item['month'].'/'.$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$months[$item['month'].'/'.$item['year']]['http'] += $item['http'];
-			$months[$item['month'].'/'.$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$months[$item['month'].'/'.$item['year']]['mail'] += $item['mail'];
+			$months[$item['month'] . '/' . $item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$months[$item['month'] . '/' . $item['year']]['http'] += $item['http'];
+			$months[$item['month'] . '/' . $item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$months[$item['month'] . '/' . $item['year']]['mail'] += $item['mail'];
 			// per day
-			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['http'] += $item['http'];
-			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$days[$item['day'].'.'.$item['month'].'.'.$item['year']]['mail'] += $item['mail'];
+			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['http'] += $item['http'];
+			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['mail'] += $item['mail'];
 		}
 
 		// calculate overview for given range from users
@@ -94,7 +101,13 @@ class Traffic
 		];
 	}
 
-	private static function getParamsByRange($range = null, array $params = [])
+	/**
+	 * @param ?string $range
+	 * @param array $params
+	 * @return array
+	 * @throws \Exception
+	 */
+	private static function getParamsByRange(string $range = null, array $params = []): array
 	{
 		$dateParams = [];
 
