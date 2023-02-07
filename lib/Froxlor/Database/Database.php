@@ -71,7 +71,7 @@ class Database
 	/**
 	 * used database-name
 	 */
-	private static string $dbname = null;
+	private static ?string $dbname = null;
 
 	/**
 	 * sql-access data
