@@ -31,7 +31,7 @@ return [
 			'title' => lng('admin.nameserversettings'),
 			'icon' => 'fa-solid fa-globe',
 			'fields' => [
-				'nameserver_enable' => [
+				'system_bind_enable' => [
 					'label' => lng('serversettings.bindenable'),
 					'settinggroup' => 'system',
 					'varname' => 'bind_enable',

@@ -29,7 +29,7 @@ return [
 			'title' => lng('admin.perl_settings'),
 			'icon' => 'fa-solid fa-code',
 			'fields' => [
-				'perl_path' => [
+				'system_perl_path' => [
 					'label' => lng('serversettings.perl_path'),
 					'settinggroup' => 'system',
 					'varname' => 'perl_path',
@@ -40,7 +40,7 @@ return [
 						'lighttpd'
 					]
 				],
-				'system_perl_suexecworkaround' => [
+				'perl_suexecworkaround' => [
 					'label' => lng('serversettings.perl.suexecworkaround'),
 					'settinggroup' => 'perl',
 					'varname' => 'suexecworkaround',
@@ -51,7 +51,7 @@ return [
 						'apache2'
 					]
 				],
-				'system_perl_suexeccgipath' => [
+				'perl_suexecpath' => [
 					'label' => lng('serversettings.perl.suexeccgipath'),
 					'settinggroup' => 'perl',
 					'varname' => 'suexecpath',
@@ -63,7 +63,7 @@ return [
 						'apache2'
 					]
 				],
-				'perl_server' => [
+				'serversettings_perl_server' => [
 					'label' => lng('serversettings.perl_server'),
 					'settinggroup' => 'serversettings',
 					'varname' => 'perl_server',

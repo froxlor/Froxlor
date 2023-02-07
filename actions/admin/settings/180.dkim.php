@@ -31,7 +31,7 @@ return [
 			'title' => lng('admin.dkimsettings'),
 			'icon' => 'fa-solid fa-fingerprint',
 			'fields' => [
-				'dkim_enabled' => [
+				'dkim_use_dkim' => [
 					'label' => lng('dkim.use_dkim'),
 					'settinggroup' => 'dkim',
 					'varname' => 'use_dkim',
@@ -40,7 +40,7 @@ return [
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'overview_option' => true
 				],
-				'dkim_prefix' => [
+				'dkim_dkim_prefix' => [
 					'label' => lng('dkim.dkim_prefix'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_prefix',
@@ -59,7 +59,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'dkim_domains' => [
+				'dkim_dkim_domains' => [
 					'label' => lng('dkim.dkim_domains'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_domains',
@@ -68,7 +68,7 @@ return [
 					'default' => 'domains',
 					'save_method' => 'storeSettingField'
 				],
-				'dkim_dkimkeys' => [
+				'dkim_dkim_dkimkeys' => [
 					'label' => lng('dkim.dkim_dkimkeys'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_dkimkeys',
@@ -77,7 +77,7 @@ return [
 					'default' => 'dkim-keys.conf',
 					'save_method' => 'storeSettingField'
 				],
-				'dkim_algorithm' => [
+				'dkim_dkim_algorithm' => [
 					'label' => lng('dkim.dkim_algorithm'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_algorithm',
@@ -92,7 +92,7 @@ return [
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'advanced_mode' => true
 				],
-				'dkim_servicetype' => [
+				'dkim_dkim_servicetype' => [
 					'label' => lng('dkim.dkim_servicetype'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_servicetype',
@@ -105,7 +105,7 @@ return [
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'advanced_mode' => true
 				],
-				'dkim_keylength' => [
+				'dkim_dkim_keylength' => [
 					'label' => [
 						'title' => lng('dkim.dkim_keylength.title'),
 						'description' => lng('dkim.dkim_keylength.description', [Settings::Get('dkim.dkim_prefix')])
@@ -120,7 +120,7 @@ return [
 					],
 					'save_method' => 'storeSettingFieldInsertBindTask'
 				],
-				'dkim_notes' => [
+				'dkim_dkim_notes' => [
 					'label' => lng('dkim.dkim_notes'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_notes',
@@ -130,7 +130,7 @@ return [
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'advanced_mode' => true
 				],
-				'dkimrestart_command' => [
+				'dkim_dkimrestart_command' => [
 					'label' => lng('dkim.dkimrestart_command'),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkimrestart_command',

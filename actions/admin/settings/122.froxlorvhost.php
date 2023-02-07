@@ -154,7 +154,7 @@ return [
 				/**
 				 * FCGID
 				 */
-				'system_mod_fcgid_enabled_ownvhost' => [
+				'system_mod_fcgid_ownvhost' => [
 					'label' => lng('serversettings.mod_fcgid_ownvhost'),
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_ownvhost',
@@ -224,7 +224,7 @@ return [
 				/**
 				 * php-fpm
 				 */
-				'system_phpfpm_enabled_ownvhost' => [
+				'phpfpm_enabled_ownvhost' => [
 					'label' => lng('phpfpm.ownvhost'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled_ownvhost',
@@ -237,7 +237,7 @@ return [
 					]),
 					'requires_reconf' => ['system:php-fpm']
 				],
-				'system_phpfpm_httpuser' => [
+				'phpfpm_vhost_httpuser' => [
 					'label' => lng('phpfpm.vhost_httpuser'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpuser',
@@ -250,7 +250,7 @@ return [
 					]),
 					'requires_reconf' => ['system:php-fpm']
 				],
-				'system_phpfpm_httpgroup' => [
+				'phpfpm_vhost_httpgroup' => [
 					'label' => lng('phpfpm.vhost_httpgroup'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpgroup',
@@ -263,7 +263,7 @@ return [
 					]),
 					'requires_reconf' => ['system:php-fpm']
 				],
-				'system_phpfpm_defaultini_ownvhost' => [
+				'phpfpm_vhost_defaultini' => [
 					'label' => lng('serversettings.mod_fcgid.defaultini_ownvhost'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_defaultini',

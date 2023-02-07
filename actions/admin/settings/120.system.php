@@ -121,7 +121,7 @@ return [
 					],
 					'save_method' => 'storeSettingField'
 				],
-				'update_channel' => [
+				'system_update_channel' => [
 					'label' => lng('serversettings.update_channel'),
 					'settinggroup' => 'system',
 					'varname' => 'update_channel',
@@ -134,7 +134,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_validatedomain' => [
+				'system_validate_domain' => [
 					'label' => lng('serversettings.validate_domain'),
 					'settinggroup' => 'system',
 					'varname' => 'validate_domain',
@@ -319,7 +319,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'hide_incompatible_settings' => [
+				'system_hide_incompatible_settings' => [
 					'label' => lng('serversettings.hide_incompatible_settings'),
 					'settinggroup' => 'system',
 					'varname' => 'hide_incompatible_settings',

@@ -29,7 +29,7 @@ return [
 			'title' => lng('admin.ftpserversettings'),
 			'icon' => 'fa-solid fa-arrow-right-arrow-left',
 			'fields' => [
-				'ftpserver' => [
+				'system_ftpserver' => [
 					'label' => lng('admin.ftpserver'),
 					'settinggroup' => 'system',
 					'varname' => 'ftpserver',

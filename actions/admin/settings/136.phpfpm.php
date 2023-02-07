@@ -31,7 +31,7 @@ return [
 			'title' => lng('admin.phpfpm_settings'),
 			'icon' => 'fa-brands fa-php',
 			'fields' => [
-				'system_phpfpm_enabled' => [
+				'phpfpm_enabled' => [
 					'label' => lng('serversettings.phpfpm'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled',
@@ -45,7 +45,7 @@ return [
 					'overview_option' => true,
 					'requires_reconf' => ['http', 'system:php-fpm']
 				],
-				'system_phpfpm_defaultini' => [
+				'phpfpm_defaultini' => [
 					'label' => lng('serversettings.mod_fcgid.defaultini'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'defaultini',
@@ -57,7 +57,7 @@ return [
 					],
 					'save_method' => 'storeSettingField'
 				],
-				'system_phpfpm_aliasconfigdir' => [
+				'phpfpm_aliasconfigdir' => [
 					'label' => lng('serversettings.phpfpm_settings.aliasconfigdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'aliasconfigdir',
@@ -67,7 +67,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_tmpdir' => [
+				'phpfpm_tmpdir' => [
 					'label' => lng('serversettings.mod_fcgid.tmpdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'tmpdir',
@@ -76,7 +76,7 @@ return [
 					'default' => '/var/customers/tmp/',
 					'save_method' => 'storeSettingField'
 				],
-				'system_phpfpm_peardir' => [
+				'phpfpm_peardir' => [
 					'label' => lng('serversettings.mod_fcgid.peardir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'peardir',
@@ -88,7 +88,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_envpath' => [
+				'phpfpm_envpath' => [
 					'label' => lng('serversettings.phpfpm_settings.envpath'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'envpath',
@@ -100,7 +100,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_fastcgi_ipcdir' => [
+				'phpfpm_fastcgi_ipcdir' => [
 					'label' => lng('serversettings.phpfpm_settings.ipcdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'fastcgi_ipcdir',
@@ -110,7 +110,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_use_mod_proxy' => [
+				'phpfpm_use_mod_proxy' => [
 					'label' => lng('phpfpm.use_mod_proxy'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
@@ -119,7 +119,7 @@ return [
 					'visible' => Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
 				],
-				'system_phpfpm_ini_flags' => [
+				'phpfpm_ini_flags' => [
 					'label' => lng('phpfpm.ini_flags'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_flags',
@@ -128,7 +128,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_ini_values' => [
+				'phpfpm_ini_values' => [
 					'label' => lng('phpfpm.ini_values'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_values',
@@ -137,7 +137,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_ini_admin_flags' => [
+				'phpfpm_ini_admin_flags' => [
 					'label' => lng('phpfpm.ini_admin_flags'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_flags',
@@ -146,7 +146,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_phpfpm_ini_admin_values' => [
+				'phpfpm_ini_admin_values' => [
 					'label' => lng('phpfpm.ini_admin_values'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_values',

@@ -33,7 +33,7 @@ return [
 				'lighttpd'
 			],
 			'fields' => [
-				'system_mod_fcgid_enabled' => [
+				'system_mod_fcgid' => [
 					'label' => lng('serversettings.mod_fcgid'),
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid',

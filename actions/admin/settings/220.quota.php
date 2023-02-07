@@ -30,7 +30,7 @@ return [
 			'icon' => 'fa-solid fa-sliders',
 			'advanced_mode' => true,
 			'fields' => [
-				'diskquota_enabled' => [
+				'system_diskquota_enabled' => [
 					'label' => lng('serversettings.diskquota_enabled'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_enabled',
@@ -39,7 +39,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
 				],
-				'diskquota_repquota_path' => [
+				'system_diskquota_repquota_path' => [
 					'label' => lng('serversettings.diskquota_repquota_path.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_repquota_path',
@@ -47,7 +47,7 @@ return [
 					'default' => '/usr/sbin/repquota',
 					'save_method' => 'storeSettingField'
 				],
-				'diskquota_quotatool_path' => [
+				'system_diskquota_quotatool_path' => [
 					'label' => lng('serversettings.diskquota_quotatool_path.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_quotatool_path',
@@ -55,7 +55,7 @@ return [
 					'default' => '/usr/bin/quotatool',
 					'save_method' => 'storeSettingField'
 				],
-				'diskquota_customer_partition' => [
+				'system_diskquota_customer_partition' => [
 					'label' => lng('serversettings.diskquota_customer_partition.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_customer_partition',

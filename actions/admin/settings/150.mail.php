@@ -98,7 +98,7 @@ return [
 					'default' => 100,
 					'save_method' => 'storeSettingField'
 				],
-				'system_catchall_enabled' => [
+				'catchall_catchall_enabled' => [
 					'label' => lng('serversettings.catchall_enabled'),
 					'settinggroup' => 'catchall',
 					'varname' => 'catchall_enabled',

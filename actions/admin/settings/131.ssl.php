@@ -32,7 +32,7 @@ return [
 			'title' => lng('admin.sslsettings'),
 			'icon' => 'fa-solid fa-shield',
 			'fields' => [
-				'system_ssl_enabled' => [
+				'system_use_ssl' => [
 					'label' => lng('serversettings.ssl.use_ssl'),
 					'settinggroup' => 'system',
 					'varname' => 'use_ssl',

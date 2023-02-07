@@ -60,7 +60,7 @@ return [
 						'apache2'
 					]
 				],
-				'system_apache_itksupport' => [
+				'system_apacheitksupport' => [
 					'label' => lng('serversettings.apache_itksupport'),
 					'settinggroup' => 'system',
 					'varname' => 'apacheitksupport',
@@ -229,7 +229,7 @@ return [
 						'nginx'
 					]
 				],
-				'system_customersslpath' => [
+				'system_customer_ssl_path' => [
 					'label' => lng('serversettings.customerssl_directory'),
 					'settinggroup' => 'system',
 					'varname' => 'customer_ssl_path',
@@ -287,7 +287,7 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
-				'system_apache_globaldiropt' => [
+				'system_apacheglobaldiropt' => [
 					'label' => lng('serversettings.apache_globaldiropt'),
 					'settinggroup' => 'system',
 					'varname' => 'apacheglobaldiropt',

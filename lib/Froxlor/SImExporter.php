@@ -150,7 +150,7 @@ class SImExporter
 			foreach ($current_settings as $setting_group => $setting) {
 				foreach ($setting as $varname => $value) {
 					// set all group/varname:values which are not in the import file
-					if (!isset($_data[$setting_group.'.'.$varname])) {
+					if (!array_key_exists($setting_group.'.'.$varname, $_data)) {
 						$_data[$setting_group.'.'.$varname] = $value;
 					}
 				}
