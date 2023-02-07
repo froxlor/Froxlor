@@ -61,26 +61,26 @@ class Database
 	/**
 	 * indicator whether to use root-connection or not
 	 */
-	private static $needroot = false;
+	private static bool $needroot = false;
 
 	/**
 	 * indicator which database-server we're on (not really used)
 	 */
-	private static $dbserver = 0;
+	private static int $dbserver = 0;
 
 	/**
 	 * used database-name
 	 */
-	private static $dbname = null;
+	private static string $dbname = null;
 
 	/**
 	 * sql-access data
 	 */
-	private static $needsqldata = false;
+	private static bool $needsqldata = false;
 
 	private static $sqldata = null;
 
-	private static $need_dbname = true;
+	private static bool $need_dbname = true;
 
 	/**
 	 * Wrapper for PDOStatement::execute, so we can catch the PDOException
@@ -94,10 +94,10 @@ class Database
 	 *            suppress error display (default true)
 	 * @param bool $json_response
 	 *
-	 * @return array
+	 * @return mixed
 	 * @throws Exception
 	 */
-	public static function pexecute_first(PDOStatement &$stmt, $params = null, bool $showerror = true, bool $json_response = false): array
+	public static function pexecute_first(PDOStatement &$stmt, $params = null, bool $showerror = true, bool $json_response = false)
 	{
 		self::pexecute($stmt, $params, $showerror, $json_response);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
