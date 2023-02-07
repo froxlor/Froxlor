@@ -27,6 +27,7 @@ namespace Froxlor;
 
 use Exception;
 use Froxlor\Database\Database;
+use Froxlor\UI\Form;
 use PDO;
 
 /**
@@ -79,14 +80,16 @@ class SImExporter
 				$_data[$index] = $row['value'];
 			}
 
-			if (array_key_exists($row['settinggroup'], $settings_definitions) && array_key_exists($row['varname'], $settings_definitions[$row['settinggroup']])) {
+			if (array_key_exists($row['settinggroup'], $settings_definitions) && array_key_exists($row['varname'],
+					$settings_definitions[$row['settinggroup']])) {
 				// Export image file
 				if ($settings_definitions[$row['settinggroup']][$row['varname']]['type'] === "image") {
 					if ($row['value'] === "") {
 						continue;
 					}
 
-					$_data[$index . '.image_data'] = base64_encode(file_get_contents(explode('?', $row['value'], 2)[0]));
+					$_data[$index . '.image_data'] = base64_encode(file_get_contents(explode('?', $row['value'],
+						2)[0]));
 				}
 			}
 		}
@@ -140,66 +143,35 @@ class SImExporter
 					$_data['system.le_froxlor_redirect'] = 0;
 				}
 			}
-			// store new data
-			foreach ($_data as $index => $value) {
-				$index_split = explode('.', $index, 3);
 
-				// Catch image_data and save it
-				if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0] . '.' . $index_split[1]])) {
-					$path = Froxlor::getInstallDir() . '/img/';
-					if (!is_dir($path) && !mkdir($path, 0775)) {
-						throw new Exception("img directory does not exist and cannot be created");
+			$form_data = [];
+			// read in all current settings
+			$current_settings = Settings::getAll();
+			foreach ($current_settings as $setting_group => $setting) {
+				foreach ($setting as $varname => $value) {
+					// set all group/varname:values which are not in the import file
+					if (!isset($_data[$setting_group.'.'.$varname])) {
+						$_data[$setting_group.'.'.$varname] = $value;
 					}
-
-					// Make sure we can write to the upload directory
-					if (!is_writable($path)) {
-						if (!chmod($path, 0775)) {
-							throw new Exception("Cannot write to img directory");
-						}
-					}
-
-					$img_data = base64_decode($value);
-					$img_filename = Froxlor::getInstallDir() . '/' . str_replace('../', '', explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0]);
-
-					file_put_contents($img_filename, $img_data);
-
-					if (function_exists('finfo_open')) {
-						$finfo = finfo_open(FILEINFO_MIME_TYPE);
-						$mimetype = finfo_file($finfo, $img_filename);
-						finfo_close($finfo);
-					} else {
-						$mimetype = mime_content_type($img_filename);
-					}
-					if (empty($mimetype)) {
-						$mimetype = 'application/octet-stream';
-					}
-					if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
-						@unlink($img_filename);
-						throw new Exception("Uploaded file is not a valid image");
-					}
-
-					$spl = explode('.', $img_filename);
-					$file_extension = strtolower(array_pop($spl));
-					unset($spl);
-
-					if (!in_array($file_extension, [
-						'jpeg',
-						'jpg',
-						'png',
-						'gif'
-					])) {
-						@unlink($img_filename);
-						throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
-					}
-					continue;
 				}
-
-				Settings::Set($index, $value);
 			}
-			// save to DB
-			Settings::Flush();
-			// all good
-			return true;
+			// re-format the array-key for Form::processForm
+			foreach ($_data as $key => $value) {
+				$form_data[str_replace(".", "_", $key)] = $value;
+			}
+
+			// store new data
+			$settings_data = PhpHelper::loadConfigArrayDir(Froxlor::getInstallDir() . '/actions/admin/settings/');
+			Settings::loadSettingsInto($settings_data);
+
+			if (Form::processForm($settings_data, $form_data, [], null, true)) {
+				// save to DB
+				Settings::Flush();
+				// all good
+				return true;
+			} else {
+				throw new Exception("Importing settings failed");
+			}
 		}
 		throw new Exception("Invalid JSON data: " . json_last_error_msg());
 	}

@@ -329,6 +329,12 @@ class Settings
 		}
 	}
 
+	public static function getAll() : array
+	{
+		self::init();
+		return self::$data;
+	}
+
 	/**
 	 * get value from config by identifier
 	 */

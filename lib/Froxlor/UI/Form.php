@@ -203,7 +203,7 @@ class Form
 		return $returnvalue;
 	}
 
-	public static function processForm(&$form, &$input, $url_params = [], $part = null, $settings_all = [], $settings_part = null, $only_enabledisable = false)
+	public static function processForm(&$form, &$input, $url_params = [], $part = null, bool $settings_all = false, $settings_part = null, bool $only_enabledisable = false)
 	{
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			$submitted_fields = [];

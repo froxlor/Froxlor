@@ -89,7 +89,7 @@ final class Froxlor
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
-	public static function hasUpdates(string $to_check): bool
+	public static function hasUpdates(string $to_check = ''): bool
 	{
 		if (empty($to_check)) {
 			$to_check = self::VERSION;
@@ -109,7 +109,7 @@ final class Froxlor
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
-	public static function hasDbUpdates(string $to_check): bool
+	public static function hasDbUpdates(string $to_check = ''): bool
 	{
 		if (empty($to_check)) {
 			$to_check = self::DBVERSION;
