@@ -145,19 +145,25 @@ class SImExporter
 			}
 
 			$form_data = [];
+			$image_data = [];
 			// read in all current settings
 			$current_settings = Settings::getAll();
 			foreach ($current_settings as $setting_group => $setting) {
 				foreach ($setting as $varname => $value) {
 					// set all group/varname:values which are not in the import file
-					if (!array_key_exists($setting_group.'.'.$varname, $_data)) {
-						$_data[$setting_group.'.'.$varname] = $value;
+					if (!array_key_exists($setting_group . '.' . $varname, $_data)) {
+						$_data[$setting_group . '.' . $varname] = $value;
 					}
 				}
 			}
 			// re-format the array-key for Form::processForm
 			foreach ($_data as $key => $value) {
-				$form_data[str_replace(".", "_", $key)] = $value;
+				$index_split = explode('.', $key, 3);
+				if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0] . '.' . $index_split[1]])) {
+					$image_data[$key] = $value;
+				} else {
+					$form_data[str_replace(".", "_", $key)] = $value;
+				}
 			}
 
 			// store new data
@@ -167,6 +173,61 @@ class SImExporter
 			if (Form::processForm($settings_data, $form_data, [], null, true)) {
 				// save to DB
 				Settings::Flush();
+
+				// Process image_data and save it
+				if (count($image_data) > 0) {
+					foreach ($image_data as $index => $value) {
+						$index_split = explode('.', $index, 3);
+						$path = Froxlor::getInstallDir() . '/img/';
+						if (!is_dir($path) && !mkdir($path, 0775)) {
+							throw new Exception("img directory does not exist and cannot be created");
+						}
+
+						// Make sure we can write to the upload directory
+						if (!is_writable($path)) {
+							if (!chmod($path, 0775)) {
+								throw new Exception("Cannot write to img directory");
+							}
+						}
+
+						$img_data = base64_decode($value);
+						$img_filename = Froxlor::getInstallDir() . '/' . str_replace('../', '',
+								explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0]);
+
+						file_put_contents($img_filename, $img_data);
+
+						if (function_exists('finfo_open')) {
+							$finfo = finfo_open(FILEINFO_MIME_TYPE);
+							$mimetype = finfo_file($finfo, $img_filename);
+							finfo_close($finfo);
+						} else {
+							$mimetype = mime_content_type($img_filename);
+						}
+						if (empty($mimetype)) {
+							$mimetype = 'application/octet-stream';
+						}
+						if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
+							@unlink($img_filename);
+							throw new Exception("Uploaded file is not a valid image");
+						}
+
+						$spl = explode('.', $img_filename);
+						$file_extension = strtolower(array_pop($spl));
+						unset($spl);
+
+						if (!in_array($file_extension, [
+							'jpeg',
+							'jpg',
+							'png',
+							'gif'
+						])) {
+							@unlink($img_filename);
+							throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+						}
+
+						Settings::Set($index, $value);
+					}
+				}
 				// all good
 				return true;
 			} else {
