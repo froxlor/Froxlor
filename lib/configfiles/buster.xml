@@ -163,7 +163,7 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 						</visibility>
 						<content><![CDATA[apt-get install php-cgi]]></content>
 					</install>
-					<file name="/etc/nginx/nginx.conf">
+					<file name="/etc/nginx/nginx.conf" backup="true">
 						<content><![CDATA[
 user www-data;
 worker_processes 4;
@@ -263,7 +263,7 @@ http {
 ]]>
 						</content>
 					</file>
-					<file name="/etc/nginx/fastcgi_params">
+					<file name="/etc/nginx/fastcgi_params" backup="true">
 						<content><![CDATA[
 fastcgi_connect_timeout 65;
 fastcgi_send_timeout    180;
@@ -309,7 +309,7 @@ location /.well-known/acme-challenge {
 ]]>
 						</content>
 					</file>
-					<file name="/etc/init.d/php-fcgi" chmod="u+x">
+					<file name="/etc/init.d/php-fcgi" backup="true" chmod="u+x">
 						<visibility mode="false">{{settings.phpfpm.enabled}}
 						</visibility>
 						<visibility mode="false">{{settings.system.mod_fcgid}}
