@@ -613,7 +613,10 @@ class Apache extends HttpConfigBase
 			// Apply header
 			$this->virtualhosts_data[$vhosts_filename] = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 
-			if ($domain['deactivated'] != '1' || Settings::Get('system.deactivateddocroot') != '') {
+			$ddr = Settings::Get('system.deactivateddocroot');
+			if (($domain['deactivated'] == '1' || $domain['customer_deactivated'] == '1') && empty($ddr)) {
+				$this->virtualhosts_data[$vhosts_filename] .= '# Customer/domain deactivated and a docroot for deactivated users hasn\'t been set.' . "\n";
+			} else {
 				// Create vhost without ssl
 				$this->virtualhosts_data[$vhosts_filename] .= $this->getVhostContent($domain, false);
 
@@ -623,8 +626,6 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename_ssl] = '# Domain ID: ' . $domain['id'] . ' (SSL) - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 					$this->virtualhosts_data[$vhosts_filename_ssl] .= $this->getVhostContent($domain, true);
 				}
-			} else {
-				$this->virtualhosts_data[$vhosts_filename] .= '# Customer deactivated and a docroot for deactivated users hasn\'t been set.' . "\n";
 			}
 		}
 	}
@@ -840,29 +841,34 @@ class Apache extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$corrected_docroot = $domain['documentroot'];
+			$possible_deactivated_webroot = $this->getWebroot($domain);
+			if ($this->deactivated == false) {
+				$corrected_docroot = $domain['documentroot'];
 
-			// Get domain's redirect code
-			$code = Domain::getDomainRedirectCode($domain['id']);
-			$modrew_red = '';
-			if ($code != '') {
-				$modrew_red = ' [R=' . $code . ';L,NE]';
-			}
+				// Get domain's redirect code
+				$code = Domain::getDomainRedirectCode($domain['id']);
+				$modrew_red = '';
+				if ($code != '') {
+					$modrew_red = ' [R=' . $code . ';L,NE]';
+				}
 
-			// redirect everything, not only root-directory, #541
-			$vhost_content .= '  <IfModule mod_rewrite.c>' . "\n";
-			$vhost_content .= '    RewriteEngine On' . "\n";
-			if (!$ssl_vhost) {
-				$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
+				// redirect everything, not only root-directory, #541
+				$vhost_content .= '  <IfModule mod_rewrite.c>' . "\n";
+				$vhost_content .= '    RewriteEngine On' . "\n";
+				if (!$ssl_vhost) {
+					$vhost_content .= '    RewriteCond %{HTTPS} off' . "\n";
+				}
+				if ($domain['letsencrypt'] == '1') {
+					$vhost_content .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge' . "\n";
+				}
+				$vhost_content .= '    RewriteRule ^/(.*) ' . $corrected_docroot . '$1' . $modrew_red . "\n";
+				$vhost_content .= '  </IfModule>' . "\n";
+				$vhost_content .= '  <IfModule !mod_rewrite.c>' . "\n";
+				$vhost_content .= '    Redirect ' . $code . ' / ' . $domain['documentroot_norewrite'] . "\n";
+				$vhost_content .= '  </IfModule>' . "\n";
+			} elseif (Settings::Get('system.deactivateddocroot') != '') {
+				$vhost_content .= $possible_deactivated_webroot;
 			}
-			if ($domain['letsencrypt'] == '1') {
-				$vhost_content .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge' . "\n";
-			}
-			$vhost_content .= '    RewriteRule ^/(.*) ' . $corrected_docroot . '$1' . $modrew_red . "\n";
-			$vhost_content .= '  </IfModule>' . "\n";
-			$vhost_content .= '  <IfModule !mod_rewrite.c>' . "\n";
-			$vhost_content .= '    Redirect ' . $code . ' / ' . $domain['documentroot_norewrite'] . "\n";
-			$vhost_content .= '  </IfModule>' . "\n";
 		} else {
 			FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content .= $this->getWebroot($domain);
@@ -952,8 +958,8 @@ class Apache extends HttpConfigBase
 		$domain['customerroot'] = FileDir::makeCorrectDir($domain['customerroot']);
 		$domain['documentroot'] = FileDir::makeCorrectDir($domain['documentroot']);
 
-		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
-			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
+		if (($domain['deactivated'] == '1' || $domain['customer_deactivated'] == '1') && Settings::Get('system.deactivateddocroot') != '') {
+			$webroot_text .= '  # Using docroot for deactivated users/domains...' . "\n";
 			$webroot_text .= '  DocumentRoot "' . rtrim(FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')), "/") . "\"\n";
 			$webroot_text .= '  <Directory "' . FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . '">' . "\n";
 			// >=apache-2.4 enabled?

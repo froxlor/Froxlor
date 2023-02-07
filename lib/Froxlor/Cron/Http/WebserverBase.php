@@ -43,7 +43,7 @@ class WebserverBase
 	{
 		$query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
 				`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
-				`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
+				`c`.`documentroot` AS `customerroot`, `c`.`deactivated` as `customer_deactivated`,
 				`c`.`phpenabled` AS `phpenabled_customer`,
 				`d`.`phpenabled` AS `phpenabled_vhost`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`

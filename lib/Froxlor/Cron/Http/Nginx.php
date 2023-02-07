@@ -493,10 +493,10 @@ class Nginx extends HttpConfigBase
 			return '';
 		}
 
-		// check whether the customer is deactivated and NO docroot for deactivated users has been set#
+		// check whether the customer/domain is deactivated and NO docroot for deactivated users has been set#
 		$ddr = Settings::Get('system.deactivateddocroot');
-		if ($domain['deactivated'] == '1' && empty($ddr)) {
-			return '# Customer deactivated and a docroot for deactivated users hasn\'t been set.' . "\n";
+		if (($domain['deactivated'] == '1' || $domain['customer_deactivated'] == '1') && empty($ddr)) {
+			return '# Customer deactivated and a docroot for deactivated users/domains hasn\'t been set.' . "\n";
 		}
 
 		$vhost_content = '';
@@ -596,17 +596,22 @@ class Nginx extends HttpConfigBase
 
 		// if the documentroot is an URL we just redirect
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$uri = $domain['documentroot'];
-			if (substr($uri, -1) == '/') {
-				$uri = substr($uri, 0, -1);
+			$possible_deactivated_webroot = $this->getWebroot($domain);
+			if ($this->deactivated == false) {
+				$uri = $domain['documentroot'];
+				if (substr($uri, -1) == '/') {
+					$uri = substr($uri, 0, -1);
+				}
+
+				// Get domain's redirect code
+				$code = Domain::getDomainRedirectCode($domain['id']);
+
+				$vhost_content .= "\t" . 'location / {' . "\n";
+				$vhost_content .= "\t\t" . 'return ' . $code . ' ' . $uri . '$request_uri;' . "\n";
+				$vhost_content .= "\t" . '}' . "\n";
+			} elseif (Settings::Get('system.deactivateddocroot') != '') {
+				$vhost_content .= $possible_deactivated_webroot;
 			}
-
-			// Get domain's redirect code
-			$code = Domain::getDomainRedirectCode($domain['id']);
-
-			$vhost_content .= "\t" . 'location / {' . "\n";
-			$vhost_content .= "\t\t" . 'return ' . $code . ' ' . $uri . '$request_uri;' . "\n";
-			$vhost_content .= "\t" . '}' . "\n";
 		} else {
 			FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
@@ -774,8 +779,8 @@ class Nginx extends HttpConfigBase
 	{
 		$webroot_text = '';
 
-		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
-			$webroot_text .= "\t" . '# Using docroot for deactivated users...' . "\n";
+		if (($domain['deactivated'] == '1' || $domain['customer_deactivated'] == '1' ) && Settings::Get('system.deactivateddocroot') != '') {
+			$webroot_text .= "\t" . '# Using docroot for deactivated users/domains...' . "\n";
 			$webroot_text .= "\t" . 'root     ' . FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
 			$this->deactivated = true;
 		} else {

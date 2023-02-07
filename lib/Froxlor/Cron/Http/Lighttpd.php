@@ -414,15 +414,20 @@ class Lighttpd extends HttpConfigBase
 		$domain['documentroot'] = trim($domain['documentroot']);
 
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
-			$uri = $domain['documentroot'];
+			$possible_deactivated_webroot = $this->getWebroot($domain);
+			if ($this->deactivated == false) {
+				$uri = $domain['documentroot'];
 
-			// Get domain's redirect code
-			$code = Domain::getDomainRedirectCode($domain['id']);
+				// Get domain's redirect code
+				$code = Domain::getDomainRedirectCode($domain['id']);
 
-			$vhost_content .= '  url.redirect-code = ' . $code . "\n";
-			$vhost_content .= '  url.redirect = (' . "\n";
-			$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";
-			$vhost_content .= '  )' . "\n";
+				$vhost_content .= '  url.redirect-code = ' . $code . "\n";
+				$vhost_content .= '  url.redirect = (' . "\n";
+				$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";
+				$vhost_content .= '  )' . "\n";
+			} elseif (Settings::Get('system.deactivateddocroot') != '') {
+				$vhost_content .= $possible_deactivated_webroot;
+			}
 		} else {
 			FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
@@ -566,8 +571,8 @@ class Lighttpd extends HttpConfigBase
 	{
 		$webroot_text = '';
 
-		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
-			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
+		if (($domain['deactivated'] == '1' || $domain['customer_deactivated'] == '1') && Settings::Get('system.deactivateddocroot') != '') {
+			$webroot_text .= '  # Using docroot for deactivated users/domains...' . "\n";
 			$webroot_text .= '  server.document-root = "' . FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
 			$this->deactivated = true;
 		} else {
