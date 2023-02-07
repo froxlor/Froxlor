@@ -404,20 +404,25 @@ class Domains extends ApiCommand implements ResourceEntity
 					$documentroot = $_documentroot;
 				}
 
-				$registration_date = Validate::validate($registration_date, 'registration_date', Validate::REGEX_YYYY_MM_DD, '', [
-					'0000-00-00',
-					'0',
-					''
-				], true);
+				if (!is_null($registration_date)) {
+					$registration_date = Validate::validate($registration_date, 'registration_date',
+						Validate::REGEX_YYYY_MM_DD, '', [
+							'0000-00-00',
+							'0',
+							''
+						], true);
+				}
 				if ($registration_date == '0000-00-00' || empty($registration_date)) {
 					$registration_date = null;
 				}
-
-				$termination_date = Validate::validate($termination_date, 'termination_date', Validate::REGEX_YYYY_MM_DD, '', [
-					'0000-00-00',
-					'0',
-					''
-				], true);
+				if (!is_null($termination_date)) {
+					$termination_date = Validate::validate($termination_date, 'termination_date',
+						Validate::REGEX_YYYY_MM_DD, '', [
+							'0000-00-00',
+							'0',
+							''
+						], true);
+				}
 				if ($termination_date == '0000-00-00' || empty($termination_date)) {
 					$termination_date = null;
 				}
@@ -1322,19 +1327,25 @@ class Domains extends ApiCommand implements ResourceEntity
 				$adminid = $result['adminid'];
 			}
 
-			$registration_date = Validate::validate($registration_date, 'registration_date', Validate::REGEX_YYYY_MM_DD, '', [
-				'0000-00-00',
-				'0',
-				''
-			], true);
+			if (!is_null($registration_date)) {
+				$registration_date = Validate::validate($registration_date, 'registration_date',
+					Validate::REGEX_YYYY_MM_DD, '', [
+						'0000-00-00',
+						'0',
+						''
+					], true);
+			}
 			if ($registration_date == '0000-00-00' || empty($registration_date)) {
 				$registration_date = null;
 			}
-			$termination_date = Validate::validate($termination_date, 'termination_date', Validate::REGEX_YYYY_MM_DD, '', [
-				'0000-00-00',
-				'0',
-				''
-			], true);
+			if (!is_null($termination_date)) {
+				$termination_date = Validate::validate($termination_date, 'termination_date',
+					Validate::REGEX_YYYY_MM_DD, '', [
+						'0000-00-00',
+						'0',
+						''
+					], true);
+			}
 			if ($termination_date == '0000-00-00' || empty($termination_date)) {
 				$termination_date = null;
 			}
@@ -1974,12 +1985,11 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
-				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 				if ((int)$aliasdomain === 0) {
 					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
-					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
-					// is a noop...let's repeat it with the domain id of the main domain
 					Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+				} else {
+					Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 				}
 			}
 
@@ -2138,7 +2148,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				'domainid' => $id
 			], true, true);
 
-			Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+			if ((int)$result['aliasdomain'] !== 0) {
+				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+			}
 
 			// remove domains DNS from powerDNS if used, #581
 			Cronjob::inserttask(TaskId::DELETE_DOMAIN_PDNS, $result['domain']);

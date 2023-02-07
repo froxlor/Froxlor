@@ -1133,7 +1133,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 		}
 
-		Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+		if ((int)$result['aliasdomain'] !== 0) {
+			Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+		}
 
 		// delete domain from table
 		$stmt = Database::prepare("
