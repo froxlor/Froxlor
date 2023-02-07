@@ -308,7 +308,7 @@ class Validate
 	 *
 	 * @return bool
 	 */
-	public static function validateSqlInterval(string $interval): bool
+	public static function validateSqlInterval(string $interval = ''): bool
 	{
 		if (!empty($interval) && strstr($interval, ' ') !== false) {
 			/*
