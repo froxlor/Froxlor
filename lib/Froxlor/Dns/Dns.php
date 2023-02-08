@@ -152,7 +152,7 @@ class Dns
 		if (!$froxlorhostname) {
 			// additional required records for subdomains
 			$subdomains_stmt = Database::prepare("
-			SELECT `domain`, `iswildcarddomain`, `wwwserveralias` FROM `" . TABLE_PANEL_DOMAINS . "`
+			SELECT `domain`, `iswildcarddomain`, `wwwserveralias`, `isemaildomain` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `parentdomainid` = :domainid
 		");
 			Database::pexecute($subdomains_stmt, [
@@ -160,24 +160,31 @@ class Dns
 			]);
 
 			while ($subdomain = $subdomains_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$sub_record = str_replace('.' . $domain['domain'], '', $subdomain['domain']);
 				// Listing domains is enough as there currently is no support for choosing
 				// different ips for a subdomain => use same IPs as toplevel
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
-					$required_entries);
-				self::addRequiredEntry(str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'AAAA',
-					$required_entries);
+				self::addRequiredEntry($sub_record, 'A',$required_entries);
+				self::addRequiredEntry($sub_record, 'AAAA', $required_entries);
 
 				// Check whether to add a www.-prefix
 				if ($subdomain['iswildcarddomain'] == '1') {
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
-						$required_entries);
-					self::addRequiredEntry('*.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']),
-						'AAAA', $required_entries);
+					self::addRequiredEntry('*.' . $sub_record, 'A', $required_entries);
+					self::addRequiredEntry('*.' . $sub_record, 'AAAA', $required_entries);
 				} elseif ($subdomain['wwwserveralias'] == '1') {
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']), 'A',
-						$required_entries);
-					self::addRequiredEntry('www.' . str_replace('.' . $domain['domain'], '', $subdomain['domain']),
-						'AAAA', $required_entries);
+					self::addRequiredEntry('www.' . $sub_record, 'A', $required_entries);
+					self::addRequiredEntry('www.' . $sub_record, 'AAAA', $required_entries);
+				}
+
+				// check for email ability
+				if ($subdomain['isemaildomain'] == '1') {
+					if (Settings::Get('spf.use_spf') == '1') {
+						// check for SPF content later
+						self::addRequiredEntry('@SPF@.' . $sub_record, 'TXT', $required_entries);
+					}
+					if (Settings::Get('dkim.use_dkim') == '1') {
+						// check for DKIM content later
+						self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey.' . $sub_record, 'TXT', $required_entries);
+					}
 				}
 			}
 		}
@@ -378,16 +385,34 @@ class Dns
 					if ($type == 'TXT') {
 						foreach ($records as $record) {
 							if ($record == '@SPF@') {
+								// spf for main-domain
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim' . $domain['dkim_id'] . '._domainkey' && !empty($dkim_entries)) {
-								// check for multiline entry
-								$multiline = false;
-								if (substr($dkim_entries[0], 0, 1) == '(') {
-									$multiline = true;
+							} elseif (strlen($record) > 6 && substr($record, 0, 6) == '@SPF@.') {
+								// spf for subdomain
+								$txt_content = Settings::Get('spf.spf_entry');
+								$sub_record = substr($record, 6);
+								$zonerecords[] = new DnsEntry($sub_record, 'TXT', self::encloseTXTContent($txt_content));
+							} elseif (!empty($dkim_entries)) {
+								// DKIM entries
+								$dkim_record = 'dkim' . $domain['dkim_id'] . '._domainkey';
+								if ($record == $dkim_record) {
+									// dkim for main-domain
+									// check for multiline entry
+									$multiline = false;
+									if (substr($dkim_entries[0], 0, 1) == '(') {
+										$multiline = true;
+									}
+									$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
+								} elseif (strlen($record) > strlen($dkim_record) && substr($record, 0, strlen($dkim_record)+1) == $dkim_record . '.') {
+									// dkim for subdomain-domain
+									// check for multiline entry
+									$multiline = false;
+									if (substr($dkim_entries[0], 0, 1) == '(') {
+										$multiline = true;
+									}
+									$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
 								}
-								$zonerecords[] = new DnsEntry($record, 'TXT',
-									self::encloseTXTContent($dkim_entries[0], $multiline));
 							}
 						}
 					}
