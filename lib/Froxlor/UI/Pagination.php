@@ -48,6 +48,8 @@ class Pagination
 
 	private int $perPage;
 
+	private string $paginationAdditional = "";
+
 	/**
 	 * Create new pagination object to search/filter, limit and sort Api-listing() calls
 	 *
@@ -55,9 +57,15 @@ class Pagination
 	 * @param int $total_entries
 	 * @param int $perPage
 	 * @param array $default_sorting array of key=sortfield,value=sortorder for default sorting
+	 * @param array $pagination_additional_params
 	 */
-	public function __construct(array $fields = [], int $total_entries = 0, int $perPage = 20, array $default_sorting = [])
-	{
+	public function __construct(
+		array $fields = [],
+		int $total_entries = 0,
+		int $perPage = 20,
+		array $default_sorting = [],
+		array $pagination_additional_params = []
+	) {
 		$this->fields = $fields;
 		$this->entries = $total_entries;
 		$this->perPage = $perPage;
@@ -72,7 +80,8 @@ class Pagination
 			$orderfields = array_keys($fields);
 			$this->searchfield = $orderfields[0];
 		}
-		if (isset($_REQUEST['searchtext']) && (preg_match('/[-_@\p{L}\p{N}*.]+$/u', $_REQUEST['searchtext']) || $_REQUEST['searchtext'] === '')) {
+		if (isset($_REQUEST['searchtext']) && (preg_match('/[-_@\p{L}\p{N}*.]+$/u',
+					$_REQUEST['searchtext']) || $_REQUEST['searchtext'] === '')) {
 			$this->searchtext = trim($_REQUEST['searchtext']);
 		}
 		if (isset($_REQUEST['searchfield']) && isset($fields[$_REQUEST['searchfield']])) {
@@ -114,6 +123,13 @@ class Pagination
 			$this->pageno = 1;
 		}
 		$this->addOffset(($this->pageno - 1) * Settings::Get('panel.paging'));
+
+		// pagination additional parameters for url
+		if (!empty($pagination_additional_params)) {
+			foreach ($pagination_additional_params as $pap) {
+				$this->paginationAdditional .= "&" . $pap;
+			}
+		}
 	}
 
 	/**
@@ -210,7 +226,8 @@ class Pagination
 				"last_page" => (Settings::Get('panel.paging') > 0) ? ceil($this->entries / $this->perPage) : -1,
 				"from" => $this->data['sql_offset'] ?? null,
 				"to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
-				'sortfields' => array_keys($this->fields),
+				"sortfields" => array_keys($this->fields),
+				"link_additions" => $this->paginationAdditional,
 			]
 		];
 	}

@@ -104,7 +104,7 @@ if ($action == 'add_record' && !empty($_POST)) {
 try {
 	$dns_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.dns.php';
 	$collection = (new Collection(DomainZones::class, $userinfo, ['id' => $domain_id]))
-		->withPagination($dns_list_data['dns_list']['columns'], $dns_list_data['dns_list']['default_sorting']);
+		->withPagination($dns_list_data['dns_list']['columns'], $dns_list_data['dns_list']['default_sorting'], ['domain_id='.$domain_id]);
 } catch (Exception $e) {
 	Response::dynamicError($e->getMessage());
 }

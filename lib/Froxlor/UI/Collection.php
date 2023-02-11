@@ -110,7 +110,7 @@ class Collection
 		return $this;
 	}
 
-	public function withPagination(array $columns, array $default_sorting = []): Collection
+	public function withPagination(array $columns, array $default_sorting = [], array $pagination_additional_params = []): Collection
 	{
 		// Get only searchable columns
 		$sortableColumns = [];
@@ -121,7 +121,7 @@ class Collection
 		}
 
 		// Prepare pagination
-		$this->pagination = new Pagination($sortableColumns, $this->count(), (int)Settings::Get('panel.paging'), $default_sorting);
+		$this->pagination = new Pagination($sortableColumns, $this->count(), (int)Settings::Get('panel.paging'), $default_sorting, $pagination_additional_params);
 		$this->params = array_merge($this->params, $this->pagination->getApiCommandParams());
 
 		return $this;
