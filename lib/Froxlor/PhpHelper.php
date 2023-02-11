@@ -324,7 +324,7 @@ class PhpHelper
 	 * Return human-readable sizes
 	 *
 	 * @param int $size size in bytes
-	 * @param string $max maximum unit
+	 * @param ?string $max maximum unit
 	 * @param string $system 'si' for SI, 'bi' for binary prefixes
 	 * @param string $retstring string-format
 	 *
@@ -332,7 +332,7 @@ class PhpHelper
 	 */
 	public static function sizeReadable(
 		int $size,
-		string $max = '',
+		?string $max = '',
 		string $system = 'si',
 		string $retstring = '%01.2f %s'
 	): string {

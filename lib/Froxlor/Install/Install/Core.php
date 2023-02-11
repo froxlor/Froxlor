@@ -420,7 +420,7 @@ class Core
 		}
 
 		$this->updateSetting($upd_stmt, $this->validatedData['activate_newsfeed'], 'admin', 'show_news_feed');
-		$this->updateSetting($upd_stmt, dirname(__FILE__, 3), 'system', 'letsencryptchallengepath');
+		$this->updateSetting($upd_stmt, dirname(__FILE__, 5), 'system', 'letsencryptchallengepath');
 
 		// insert the lastcronrun to be the installation date
 		$this->updateSetting($upd_stmt, time(), 'system', 'lastcronrun');
