@@ -55,7 +55,7 @@ return [
 				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('catchall.catchall_enabled') == '1'
 			],
-			'm.quota' => [
+			'u.quota' => [
 				'label' => lng('emails.quota'),
 				'field' => 'quota',
 				'visible' => Settings::Get('system.mail_quota_enabled') == '1'
@@ -66,7 +66,7 @@ return [
 			'm.destination',
 			'm.popaccountid',
 			'm.iscatchall',
-			'm.quota'
+			'u.quota'
 		]),
 		'actions' => [
 			'edit' => [
