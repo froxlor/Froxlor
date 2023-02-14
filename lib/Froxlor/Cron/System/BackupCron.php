@@ -146,29 +146,37 @@ class BackupCron extends FroxlorCron
 			FileDir::safe_exec('mkdir -p ' . escapeshellarg(FileDir::makeCorrectDir($tmpdir . '/mysql')));
 
 			// get all customer database-names
-			// @fixme respect multiple dbservers
-			$sel_stmt = Database::prepare("SELECT `databasename` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
+			$sel_stmt = Database::prepare("SELECT `databasename`, `dbserver` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid ORDER BY `dbserver`");
 			Database::pexecute($sel_stmt, [
 				'cid' => $data['customerid']
 			]);
 
-			Database::needRoot(true);
-			Database::needSqlData();
-			$sql_root = Database::getSqlData();
-			Database::needRoot(false);
-
-			$mysqlcnf_file = tempnam("/tmp", "frx");
-			$mysqlcnf = "[mysqldump]\npassword=".$sql_root['passwd']."\n";
-			file_put_contents($mysqlcnf_file, $mysqlcnf);
-
 			$has_dbs = false;
+			$current_dbserver = null;
 			while ($row = $sel_stmt->fetch()) {
+				// Get sql_root data for the specific database-server the database resides on
+				if ($current_dbserver != $row['dbserver']) {
+					Database::needRoot(true, $row['dbserver']);
+					Database::needSqlData();
+					$sql_root = Database::getSqlData();
+					Database::needRoot(false);
+					// create temporary mysql-defaults file for the connection-credentials/details
+					$mysqlcnf_file = tempnam("/tmp", "frx");
+					$mysqlcnf = "[mysqldump]\npassword=" . $sql_root['passwd'] . "\nhost=" . $sql_root['host'] . "\n";
+					if (!empty($sql_root['port'])) {
+						$mysqlcnf .= "port=" . $sql_root['port'] . "\n";
+					} elseif (!empty($sql_root['socket'])) {
+						$mysqlcnf .= "socket=" . $sql_root['socket'] . "\n";
+					}
+					file_put_contents($mysqlcnf_file, $mysqlcnf);
+				}
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
 				$bool_false = false;
-				FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) .' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
+				FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) . ' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
 					'>'
 				]);
 				$has_dbs = true;
+				$current_dbserver = $row['dbserver'];
 			}
 
 			if ($has_dbs) {
