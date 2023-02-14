@@ -237,11 +237,11 @@ class Ajax
 	private function updateTablelisting()
 	{
 		$columns = [];
-		foreach ((Request::any('columns') ?? []) as $value) {
+		foreach ((Request::post('columns') ?? []) as $value) {
 			$columns[] = $value;
 		}
 		if (!empty($columns)) {
-			Listing::storeColumnListingForUser([Request::any('listing') => $columns]);
+			$columns = Listing::storeColumnListingForUser([Request::post('listing') => $columns]);
 			return $this->jsonResponse($columns);
 		}
 		return $this->errorResponse('At least one column must be selected', 406);
@@ -249,7 +249,7 @@ class Ajax
 
 	private function resetTablelisting()
 	{
-		Listing::deleteColumnListingForUser([Request::any('listing') => []]);
+		Listing::deleteColumnListingForUser([Request::post('listing') => []]);
 		return $this->jsonResponse([]);
 	}
 

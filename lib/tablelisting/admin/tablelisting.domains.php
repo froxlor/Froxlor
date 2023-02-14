@@ -29,11 +29,14 @@ use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
+// used outside scope variables
+$customerCollectionCount = !is_null($customerCollection ?? null) ? $customerCollection->count() : 0;
+
 return [
 	'domain_list' => [
 		'title' => lng('admin.domains'),
 		'icon' => 'fa-solid fa-globe',
-		'empty_msg' => $customerCollection->count() == 0 ? lng('admin.domain_nocustomeraddingavailable') : '',
+		'empty_msg' => $customerCollectionCount == 0 ? lng('admin.domain_nocustomeraddingavailable') : '',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'default_sorting' => ['d.domain_ace' => 'asc'],
 		'columns' => [

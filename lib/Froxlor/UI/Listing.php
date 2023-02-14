@@ -27,6 +27,7 @@ namespace Froxlor\UI;
 
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
+use Froxlor\Froxlor;
 use Froxlor\UI\Panel\UI;
 use InvalidArgumentException;
 
@@ -247,9 +248,9 @@ class Listing
 	 * ]
 	 *
 	 * @param array $tabellisting
-	 * @return bool
+	 * @return array
 	 */
-	public static function storeColumnListingForUser(array $tabellisting): bool
+	public static function storeColumnListingForUser(array $tabellisting): array
 	{
 		$section = array_key_first($tabellisting);
 		if (empty($section) || !is_array($tabellisting[$section]) || empty($tabellisting[$section])) {
@@ -258,6 +259,22 @@ class Listing
 		$userid = 'customerid';
 		if (CurrentUser::isAdmin()) {
 			$userid = 'adminid';
+		}
+		// include all possible tablelisting-definitions to check for the right section
+		foreach(glob(Froxlor::getInstallDir().'lib/tablelisting/{,*/}*.php', GLOB_BRACE) as $tbl_file) {
+			$table_listings = include $tbl_file;
+			if (!isset($table_listings[$section])) {
+				continue;
+			} else {
+				break;
+			}
+		}
+		$columns_available = array_keys($table_listings[$section]['columns']);
+		// filter out unknown columns
+		foreach ($tabellisting[$section] as $index => $column_changed) {
+			if (!in_array($column_changed, $columns_available)) {
+				unset($tabellisting[$section][$index]);
+			}
 		}
 		// delete possible existing entry
 		self::deleteColumnListingForUser($tabellisting);
@@ -273,7 +290,7 @@ class Listing
 			'section' => $section,
 			'cols' => json_encode($tabellisting[$section])
 		]);
-		return true;
+		return $tabellisting[$section];
 	}
 
 	/**

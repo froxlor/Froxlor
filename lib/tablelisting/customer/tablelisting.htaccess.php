@@ -27,6 +27,9 @@ use Froxlor\UI\Callbacks\Ftp;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
+// used outside scope variables
+$cperlenabled = $cperlenabled ?? false;
+
 return [
 	'htaccess_list' => [
 		'title' => lng('menue.extras.pathoptions'),

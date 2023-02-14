@@ -27,6 +27,9 @@ use Froxlor\UI\Callbacks\Mysql;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
+// used outside scope variables
+$multiple_mysqlservers = $multiple_mysqlservers ?? false;
+
 return [
 	'mysql_list' => [
 		'title' => lng('menue.mysql.databases'),

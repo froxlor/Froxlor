@@ -27,6 +27,10 @@ use Froxlor\UI\Callbacks\Dns;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
+// used outside scope variables
+$domain = $domain ?? '';
+$domain_id = $domain_id ?? '';
+
 return [
 	'dns_list' => [
 		'title' => 'DNS Entries',
