@@ -56,7 +56,7 @@ return [
 				'field' => 'config_dir'
 			],
 			'pm' => [
-				'label' => lng('serversettings.phpfpm_settings.configdir'),
+				'label' => lng('serversettings.phpfpm_settings.pm'),
 				'field' => 'pm',
 			],
 		],
