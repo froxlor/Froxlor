@@ -567,7 +567,7 @@ class Lighttpd extends HttpConfigBase
 		return $servernames_text;
 	}
 
-	protected function getWebroot($domain, $ssl)
+	protected function getWebroot($domain, bool $ssl = false)
 	{
 		$webroot_text = '';
 

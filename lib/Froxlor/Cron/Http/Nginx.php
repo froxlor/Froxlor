@@ -616,7 +616,7 @@ class Nginx extends HttpConfigBase
 			FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
 			$vhost_content .= $this->getLogFiles($domain);
-			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
+			$vhost_content .= $this->getWebroot($domain);
 
 			if ($this->deactivated == false) {
 				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->createPathOptions($domain)) . "\n";
@@ -775,7 +775,7 @@ class Nginx extends HttpConfigBase
 		return $logfiles_text;
 	}
 
-	protected function getWebroot($domain, $ssl)
+	protected function getWebroot($domain)
 	{
 		$webroot_text = '';
 
