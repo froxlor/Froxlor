@@ -697,7 +697,7 @@ opcache.validate_timestamps'),
 	('system', 'distribution', ''),
 	('system', 'update_channel', 'stable'),
 	('system', 'updatecheck_data', ''),
-	('system', 'update_notify_last', '2.0.11'),
+	('system', 'update_notify_last', '2.0.12'),
 	('system', 'traffictool', 'goaccess'),
 	('api', 'enabled', '0'),
 	('api', 'customer_default', '1'),
@@ -742,7 +742,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
-	('panel', 'version', '2.0.11'),
+	('panel', 'version', '2.0.12'),
 	('panel', 'db_version', '202302030');
 
 
