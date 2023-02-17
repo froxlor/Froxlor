@@ -220,7 +220,7 @@ class Crypt
 	 * Make encrypted password from clear text password
 	 *
 	 * @param string $password Password to be encrypted
-	 * @param bool $htpasswd optional whether to generate a SHA1 password for directory protection
+	 * @param bool $htpasswd optional whether to generate a bcrypt password for directory protection
 	 * @param bool $ftpd optional generates sha256 password strings for proftpd/pureftpd
 	 *
 	 * @return string encrypted password
@@ -232,8 +232,8 @@ class Crypt
 				// sha256 compatible for proftpd and pure-ftpd
 				return crypt($password, '$5$' . self::generatePassword(16, true) . '$');
 			}
-			// sha1 hash for dir-protection
-			return '{SHA}' . base64_encode(sha1($password, true));
+			// bcrypt hash for dir-protection
+			return password_hash($password, PASSWORD_BCRYPT);
 		}
 		// crypt using the specified crypt-algorithm or system default
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
