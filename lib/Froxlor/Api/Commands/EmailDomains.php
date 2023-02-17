@@ -30,10 +30,7 @@ use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
-use Froxlor\Idna\IdnaWrapper;
 use Froxlor\Settings;
-use Froxlor\UI\Response;
-use Froxlor\Validate\Validate;
 use PDO;
 
 /**
@@ -86,12 +83,14 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 		FROM `" . TABLE_MAIL_VIRTUAL . "` e
 		LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON d.id = e.domainid
 		WHERE e.customerid IN (" . implode(", ", $customer_ids) . ") AND d.domain IS NOT NULL " .
-		$this->getSearchWhere($query_fields, true) . " GROUP BY e.domainid  " . $this->getOrderBy() . $this->getLimit());
+			$this->getSearchWhere($query_fields,
+				true) . " GROUP BY e.domainid  " . $this->getOrderBy() . $this->getLimit());
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-domains");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE,
+			"[API] list email-domains");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result
@@ -127,6 +126,8 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
+	 * You cannot directly access email-domains
+	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
 	 * @throws Exception
@@ -140,6 +141,8 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
+	 * You cannot directly add email-domains
+	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
 	 * @throws Exception
@@ -154,6 +157,7 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 
 	/**
 	 * toggle catchall flag of given email address either by id or email-address
+	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
 	 * @throws Exception
@@ -167,6 +171,8 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
+	 * You cannot directly delete email-domains
+	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
 	 * @throws Exception
