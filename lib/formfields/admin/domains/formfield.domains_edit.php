@@ -277,7 +277,7 @@ return [
 					'ssl_protocols' => [
 						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') != 'lighttpd',
 						'label' => lng('serversettings.ssl.ssl_protocols.title'),
-						'desc' => lng('serversettings.ssl.ssl_protocols.description'),
+						'desc' => lng('serversettings.ssl.ssl_protocols.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'checkbox',
 						'value' => !empty($result['ssl_protocols']) ? explode(",", $result['ssl_protocols']) : explode(",", Settings::Get('system.ssl_protocols')),
 						'values' => [
@@ -303,14 +303,14 @@ return [
 					'ssl_cipher_list' => [
 						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => lng('serversettings.ssl.ssl_cipher_list.title'),
-						'desc' => lng('serversettings.ssl.ssl_cipher_list.description'),
+						'desc' => lng('serversettings.ssl.ssl_cipher_list.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'text',
 						'value' => !empty($result['ssl_cipher_list']) ? $result['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list')
 					],
 					'tlsv13_cipher_list' => [
 						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
 						'label' => lng('serversettings.ssl.tlsv13_cipher_list.title'),
-						'desc' => lng('serversettings.ssl.tlsv13_cipher_list.description'),
+						'desc' => lng('serversettings.ssl.tlsv13_cipher_list.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'text',
 						'value' => !empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : Settings::Get('system.tlsv13_cipher_list')
 					],
