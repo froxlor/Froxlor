@@ -89,6 +89,8 @@ class Pagination
 		}
 		if (!empty($this->searchtext) && !empty($this->searchfield)) {
 			$this->addSearch($this->searchtext, $this->searchfield);
+			$pagination_additional_params[] = 'searchfield=' . $this->searchfield;
+			$pagination_additional_params[] = 'searchtext=' . $this->searchtext;
 		}
 
 		// check other ordering requests
