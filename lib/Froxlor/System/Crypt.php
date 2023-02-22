@@ -198,7 +198,7 @@ class Crypt
 			$update_hash = true;
 		}
 
-		if ($pwd_hash == $pwd_check || password_verify($password, $pwd_hash)) {
+		if ($pwd_hash === $pwd_check || password_verify($password, $pwd_hash)) {
 			// check for update of hash (only if our database is ready to handle the bigger string)
 			$is_ready = Froxlor::versionCompare2("0.9.33", Froxlor::getVersion()) <= 0;
 			if ((password_needs_rehash($pwd_hash, $algo) || $update_hash) && $is_ready) {
