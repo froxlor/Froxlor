@@ -78,7 +78,7 @@ class TrafficCron extends FroxlorCron
 				// Fork failed
 				return 1;
 			}
-		} else if (!defined('CRON_NOFORK_FLAG')) {
+		} elseif (!defined('CRON_NOFORK_FLAG')) {
 			if (extension_loaded('pcntl')) {
 				$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
 			} else {
@@ -406,7 +406,7 @@ class TrafficCron extends FroxlorCron
 			} else {
 				// Use the old fashioned way with "du"
 				if (file_exists($row['documentroot']) && is_dir($row['documentroot'])) {
-					$back = FileDir::safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
+					$back = FileDir::safe_exec('du -sk ' . escapeshellarg($row['documentroot']));
 					foreach ($back as $backrow) {
 						$webspaceusage = explode(' ', $backrow);
 					}
@@ -426,7 +426,7 @@ class TrafficCron extends FroxlorCron
 
 			$maildir = FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
 			if (file_exists($maildir) && is_dir($maildir)) {
-				$back = FileDir::safe_exec('du -sk ' . escapeshellarg($maildir) . '');
+				$back = FileDir::safe_exec('du -sk ' . escapeshellarg($maildir));
 				foreach ($back as $backrow) {
 					$emailusage = explode(' ', $backrow);
 				}
@@ -627,7 +627,7 @@ class TrafficCron extends FroxlorCron
 	 * @param string $caption Caption for webalizer output
 	 * @param array $monthyear_arr
 	 * @param int $current_stamp
-	 * 
+	 *
 	 * @return int Used traffic
 	 */
 	private static function callGoaccessGetTraffic($customerid, $logfile, $outputdir, $caption, array $monthyear_arr = [], int $current_stamp = 0)
@@ -705,7 +705,7 @@ class TrafficCron extends FroxlorCron
 	 * @param string $outputdir Place where stats should be build
 	 * @param string $caption Caption for webalizer output
 	 * @param array $usersdomainlist
-	 * 
+	 *
 	 * @return float Used traffic
 	 */
 	private static function callWebalizerGetTraffic($logfile, $outputdir, $caption, array $usersdomainlist = [])
