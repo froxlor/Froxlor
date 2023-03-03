@@ -787,6 +787,8 @@ return [
 		'quota_edit' => 'Change E-Mail Quota',
 		'noemaildomainaddedyet' => 'You do not have a (email-)domain in your account yet.',
 		'back_to_overview' => 'Back to domain overview',
+		'accounts' => 'Accounts',
+		'emails' => 'Addresses',
 	],
 	'error' => [
 		'error' => 'Error',

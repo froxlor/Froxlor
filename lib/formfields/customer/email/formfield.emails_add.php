@@ -23,11 +23,13 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+$email_domainid ?: 0;
+
 return [
 	'emails_add' => [
 		'title' => lng('emails.emails_add'),
 		'image' => 'fa-solid fa-plus',
-		'self_overview' => ['section' => 'email', 'page' => 'email_domain', 'domainid' => $email_domainid ?: 0],
+		'self_overview' => ['section' => 'email', 'page' => $email_domainid != 0 ? 'email_domain' : 'emails', 'domainid' => $email_domainid],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.emails_add'),
@@ -40,7 +42,8 @@ return [
 							'domain' => [
 								'next_to_prefix' => '@',
 								'type' => 'select',
-								'select_var' => $domains
+								'select_var' => $domains,
+								'selected' => $selected_domain
 							]
 						]
 					],

@@ -71,7 +71,7 @@ if ($page == 'overview' || $page == 'emails') {
 			'listing' => Listing::format($collection, $emaildomain_list_data, 'emaildomain_list'),
 			'actions_links' => CurrentUser::canAddResource('emails') ? [
 				[
-					'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
+					'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
 					'label' => lng('emails.emails_add')
 				]
 			] : null,
@@ -123,7 +123,7 @@ if ($page == 'email_domain') {
 		}
 		if (CurrentUser::canAddResource('emails')) {
 			$actions_links[] = [
-				'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
+				'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add', 'domainid' => $email_domainid]),
 				'label' => lng('emails.emails_add')
 			];
 		}
@@ -192,7 +192,11 @@ if ($page == 'email_domain') {
 					"cid" => $userinfo['customerid']
 				]);
 				$domains = [];
+				$selected_domain = "";
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+					if ($email_domainid == $row['id']) {
+						$selected_domain = $row['domain'];
+					}
 					$domains[$row['domain']] = $idna_convert->decode($row['domain']);
 				}
 
