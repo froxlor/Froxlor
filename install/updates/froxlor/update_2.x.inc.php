@@ -400,3 +400,8 @@ if (Froxlor::isFroxlorVersion('2.0.11')) {
 	Update::showUpdateStep("Updating from 2.0.11 to 2.0.12", false);
 	Froxlor::updateToVersion('2.0.12');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.12')) {
+	Update::showUpdateStep("Updating from 2.0.12 to 2.0.13", false);
+	Froxlor::updateToVersion('2.0.13');
+}
