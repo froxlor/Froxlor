@@ -37,18 +37,18 @@ class PowerDNS
 	/**
 	 * remove all records and entries of a given domain
 	 *
-	 * @param array|null $domain
+	 * @param string|null $domain
 	 */
-	public static function cleanDomainZone(array $domain = null)
+	public static function cleanDomainZone(string $domain = null)
 	{
-		if (is_array($domain) && isset($domain['domain'])) {
+		if (!empty($domain)) {
 			$pdns_domains_stmt = self::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
 			$del_rec_stmt = self::getDB()->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
 			$del_meta_stmt = self::getDB()->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
 			$del_dom_stmt = self::getDB()->prepare("DELETE FROM `domains` WHERE `id` = :did");
 
 			$pdns_domains_stmt->execute([
-				'domain' => $domain['domain']
+				'domain' => $domain
 			]);
 			$pdns_domain = $pdns_domains_stmt->fetch(PDO::FETCH_ASSOC);
 
