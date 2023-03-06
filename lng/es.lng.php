@@ -76,7 +76,7 @@ return [
 		'customers_see_all' => '¿Puede acceder a los recursos de otros administradores/revendedores?',
 		'change_serversettings' => '¿Puede cambiar la configuración del servidor?',
 		'server' => 'Sistema',
-		'serversettings' => 'Configuración',
+		'serversettings' => 'Ajustes',
 		'serversettings_desc' => 'Administrar su sistema froxlor',
 		'rebuildconf' => 'Reconstruir archivos de configuración',
 		'stdsubdomain' => 'Subdominio estándar',
