@@ -28,6 +28,7 @@ namespace Froxlor;
 use Exception;
 use Froxlor\Database\Database;
 use Froxlor\UI\Form;
+use Froxlor\Validate\Validate;
 use PDO;
 
 /**
@@ -159,6 +160,9 @@ class SImExporter
 			// re-format the array-key for Form::processForm
 			foreach ($_data as $key => $value) {
 				$index_split = explode('.', $key, 3);
+				if (!isset($current_settings[$index_split[0]][$index_split[1]])) {
+					continue;
+				}
 				if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0] . '.' . $index_split[1]])) {
 					$image_data[$key] = $value;
 				} else {
@@ -190,42 +194,27 @@ class SImExporter
 							}
 						}
 
-						$img_data = base64_decode($value);
-						$img_filename = Froxlor::getInstallDir() . '/' . str_replace('../', '',
-								explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0]);
+						if (Validate::validateBase64Image($value)) {
+							$img_data = base64_decode($value);
+							$img_filename = explode('?', $_data[$index_split[0] . '.' . $index_split[1]], 2)[0];
 
-						file_put_contents($img_filename, $img_data);
+							$spl = explode('.', $img_filename);
+							$file_extension = strtolower(array_pop($spl));
+							unset($spl);
 
-						if (function_exists('finfo_open')) {
-							$finfo = finfo_open(FILEINFO_MIME_TYPE);
-							$mimetype = finfo_file($finfo, $img_filename);
-							finfo_close($finfo);
-						} else {
-							$mimetype = mime_content_type($img_filename);
+							if (!in_array($file_extension, [
+								'jpeg',
+								'jpg',
+								'png',
+								'gif'
+							])) {
+								throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+							}
+							$img_filename = 'img/' . bin2hex(random_bytes(16)) . '.' . $file_extension;
+							file_put_contents(Froxlor::getInstallDir() . '/' . $img_filename, $img_data);
+							$img_index = $index_split[0].'.'.$index_split[1];
+							Settings::Set($img_index, $img_filename . '?v=' . time());
 						}
-						if (empty($mimetype)) {
-							$mimetype = 'application/octet-stream';
-						}
-						if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
-							@unlink($img_filename);
-							throw new Exception("Uploaded file is not a valid image");
-						}
-
-						$spl = explode('.', $img_filename);
-						$file_extension = strtolower(array_pop($spl));
-						unset($spl);
-
-						if (!in_array($file_extension, [
-							'jpeg',
-							'jpg',
-							'png',
-							'gif'
-						])) {
-							@unlink($img_filename);
-							throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
-						}
-
-						Settings::Set($index, $value);
 					}
 				}
 				// all good

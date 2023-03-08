@@ -36,6 +36,7 @@ use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\System\IPTools;
+use Froxlor\Validate\Validate;
 use PDO;
 
 class Store
@@ -415,40 +416,30 @@ class Store
 				}
 
 				// Make sure mime-type matches an image
-				if (function_exists('finfo_open')) {
-					$finfo = finfo_open(FILEINFO_MIME_TYPE);
-					$mimetype = finfo_file($finfo, $_FILES[$fieldname]['tmp_name']);
-					finfo_close($finfo);
-				} else {
-					$mimetype = mime_content_type($_FILES[$fieldname]['tmp_name']);
-				}
-				if (empty($mimetype)) {
-					$mimetype = 'application/octet-stream';
-				}
-				if (!in_array($mimetype, ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'])) {
-					throw new \Exception("Uploaded file is not a valid image");
-				}
+				$image_content = file_get_contents($_FILES[$fieldname]['tmp_name']);
+				$value = base64_encode($image_content);
+				if (Validate::validateBase64Image($value)) {
+					$img_filename = $_FILES[$fieldname]['name'];
 
-				// Determine file extension
-				$spl = explode('.', $_FILES[$fieldname]['name']);
-				$file_extension = strtolower(array_pop($spl));
-				unset($spl);
+					$spl = explode('.', $img_filename);
+					$file_extension = strtolower(array_pop($spl));
+					unset($spl);
 
-				if (!in_array($file_extension, [
-					'jpeg',
-					'jpg',
-					'png',
-					'gif'
-				])) {
-					throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+					if (!in_array($file_extension, [
+						'jpeg',
+						'jpg',
+						'png',
+						'gif'
+					])) {
+						throw new Exception("Invalid file-extension, use one of: jpeg, jpg, png, gif");
+					}
+					$filename = bin2hex(random_bytes(16)) . '.' . $file_extension;
+					// Move file
+					if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path . $filename)) {
+						throw new Exception("Unable to save image to img folder");
+					}
+					$save_to = 'img/' . $filename . '?v=' . time();
 				}
-
-				// Move file
-				if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path . $fielddata['image_name'] . '.' . $file_extension)) {
-					throw new Exception("Unable to save image to img folder");
-				}
-
-				$save_to = 'img/' . $fielddata['image_name'] . '.' . $file_extension . '?v=' . time();
 			}
 
 			// Delete file?
