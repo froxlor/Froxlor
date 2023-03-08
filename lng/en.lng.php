@@ -33,6 +33,7 @@ return [
 		'nl' => 'Dutch',
 		'pt' => 'Portuguese',
 		'se' => 'Swedish',
+		'es' => 'Spanish',
 	],
 	'2fa' => [
 		'2fa' => '2FA options',
