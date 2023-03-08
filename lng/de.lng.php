@@ -297,7 +297,7 @@ return [
 			'request_terminate_timeout' => 'request_terminate_timeout',
 			'request_slowlog_timeout' => 'request_slowlog_timeout',
 			'activephpconfigs' => 'In Verwendung für PHP-Konfiguration(en)',
-			'pass_authorizationheader' => 'Füge "-pass-header Authorization" / "CGIPassAuth On" in Vhosts ein',
+			'pass_authorizationheader' => 'Übergeben von HTTP AUTH BASIC/DIGEST-Headern von Apache an PHP',
 		],
 		'misc' => 'Sonstiges',
 		'fpmsettings' => [
@@ -924,6 +924,7 @@ return [
 		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
 		'domaincannotbeedited' => 'Keine Berechtigung, um die Domain %s zu bearbeiten',
 		'invalidcronjobintervalvalue' => 'Cronjob Intervall muss einer der folgenden Werte sein: %s',
+		'phpgdextensionnotavailable' => 'Die PHP GD Extension ist nicht verfügbar. Bild-Daten können nicht validiert werden.',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',

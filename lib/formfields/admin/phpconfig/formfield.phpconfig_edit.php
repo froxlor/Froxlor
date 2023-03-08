@@ -105,7 +105,7 @@ return [
 						'value' => $result['fpm_reqslow']
 					],
 					'phpfpm_pass_authorizationheader' => [
-						'visible' => Settings::Get('phpfpm.enabled') == 1 && Settings::Get('system.webserver') == "apache2",
+						'visible' => Settings::Get('system.webserver') == "apache2",
 						'label' => lng('admin.phpsettings.pass_authorizationheader'),
 						'type' => 'checkbox',
 						'value' => '1',

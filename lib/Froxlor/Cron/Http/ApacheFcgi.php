@@ -196,6 +196,9 @@ class ApacheFcgi extends Apache
 				}
 			} else {
 				$php_options_text .= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
+				if ($phpconfig['pass_authorizationheader'] == '1') {
+					$php_options_text .= '  FcgidPassHeader     Authorization' . "\n";
+				}
 				if ((int)Settings::Get('system.mod_fcgid_wrapper') == 0) {
 					$php_options_text .= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 					$php_options_text .= '  ScriptAlias /php/ ' . $php->getInterface()->getConfigDir() . "\n";

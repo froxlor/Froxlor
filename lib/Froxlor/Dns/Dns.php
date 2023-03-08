@@ -279,8 +279,7 @@ class Dns
 					}
 				}
 			}
-			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'],
-				$entry['ttl']);
+			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'] ?? 0, $entry['ttl']);
 		}
 
 		// add missing required entries

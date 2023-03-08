@@ -92,21 +92,11 @@ class UI
 	 */
 	public static function sendHeaders()
 	{
-		if (empty($_SERVER['HTTP_HOST'])) {
-			if (!self::$install_mode) {
-				// fallback to set hostname in settings
-				$_SERVER['HTTP_HOST'] = Settings::Get('system.hostname');
-			} else {
-				// bad request
-				http_response_code(400);
-				exit();
-			}
-		}
-
+		$cookie_host = empty($_SERVER['HTTP_HOST']) ? null : explode (':', $_SERVER['HTTP_HOST'])[0];
 		session_set_cookie_params([
 			'lifetime' => self::$install_mode ? 7200 : 600, // will be renewed based on settings in lib/init.php
 			'path' => '/',
-			'domain' => explode(':', $_SERVER['HTTP_HOST'])[0],
+			'domain' => $cookie_host,
 			'secure' => self::requestIsHttps(),
 			'httponly' => true,
 			'samesite' => 'Strict'

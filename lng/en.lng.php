@@ -302,7 +302,7 @@ return [
 			'request_terminate_timeout' => 'Request terminate-timeout',
 			'request_slowlog_timeout' => 'Request slowlog-timeout',
 			'activephpconfigs' => 'In use for php-config(s)',
-			'pass_authorizationheader' => 'Add "-pass-header Authorization" / "CGIPassAuth On" to vhosts',
+			'pass_authorizationheader' => 'Passing HTTP AUTH BASIC/DIGEST headers from Apache to PHP',
 		],
 		'misc' => 'Miscellaneous',
 		'fpmsettings' => [
@@ -993,6 +993,7 @@ return [
 		'mysqlserverstillhasdbs' => 'Cannot remove database server from customers allow-list as there are still databases on it.',
 		'domaincannotbeedited' => 'You are not permitted to edit the domain %s',
 		'invalidcronjobintervalvalue' => 'Cronjob interval must be one of: %s',
+		'phpgdextensionnotavailable' => 'The PHP GD extension is not available. Unable to validate image-data',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',
