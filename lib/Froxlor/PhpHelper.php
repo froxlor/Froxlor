@@ -331,7 +331,7 @@ class PhpHelper
 	 * @return string
 	 */
 	public static function sizeReadable(
-		int $size,
+		$size,
 		?string $max = '',
 		string $system = 'si',
 		string $retstring = '%01.2f %s'

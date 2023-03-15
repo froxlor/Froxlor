@@ -25,6 +25,13 @@
 
 use Froxlor\Froxlor;
 
+$httpuser = '';
+$httpgroup = '';
+if (extension_loaded('posix')) {
+	$httpuser = posix_getpwuid(posix_getuid())['name'] ?? '';
+	$httpgroup = posix_getgrgid(posix_getgid())['name'] ?? '';
+}
+
 return [
 	'install' => [
 		'title' => 'install',
@@ -194,7 +201,7 @@ return [
 						'placeholder' => lng('admin.webserver_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpuser', posix_getpwuid(posix_getuid())['name'] ?? '', 'installation'),
+						'value' => old('httpuser', $httpuser, 'installation'),
 						'advanced' => true,
 					],
 					'httpgroup' => [
@@ -202,7 +209,7 @@ return [
 						'placeholder' => lng('admin.webserver_group'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpgroup', posix_getgrgid(posix_getgid())['name'] ?? '', 'installation'),
+						'value' => old('httpgroup', $httpgroup, 'installation'),
 						'advanced' => true,
 					],
 					'activate_newsfeed' => [
