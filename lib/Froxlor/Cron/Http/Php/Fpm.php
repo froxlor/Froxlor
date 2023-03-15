@@ -342,8 +342,17 @@ pm.max_children = 1
 	public function getSocketFile($createifnotexists = true)
 	{
 		$socketdir = FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
-		// add fpm-config-id to filename so it's unique for the fpm-daemon and doesn't interfere with running configs when reuilding
-		$socket = strtolower(FileDir::makeCorrectFile($socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['loginname'] . '-' . $this->domain['domain'] . '-php-fpm.socket'));
+		// add fpm-config-id to filename, so it's unique for the fpm-daemon and doesn't interfere with running configs when reuilding
+		$socket_filename = $socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['loginname'] . '-' . $this->domain['domain'] . '-php-fpm.socket';
+		if (strlen($socket_filename) > 100) {
+			// respect the unix socket-length limitation
+			$socket_filename = $socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['loginname'] . '-' . $this->domain['id'] . '-php-fpm.socket';
+			if (strlen($socket_filename) > 100) {
+				// even a long loginname it seems
+				$socket_filename = $socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['guid'] . '-' . $this->domain['id'] . '-php-fpm.socket';
+			}
+		}
+		$socket = strtolower(FileDir::makeCorrectFile($socket_filename));
 
 		if (!is_dir($socketdir) && $createifnotexists) {
 			FileDir::safe_exec('mkdir -p ' . escapeshellarg($socketdir));
