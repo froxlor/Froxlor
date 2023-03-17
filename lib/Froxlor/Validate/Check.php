@@ -291,7 +291,7 @@ class Check
 	 */
 	public static function checkLocalGroup($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
-		if (empty($newfieldvalue) || $fielddata == $newfieldvalue) {
+		if (empty($newfieldvalue) || $fielddata['value'] == $newfieldvalue) {
 			$returnvalue = [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			];
