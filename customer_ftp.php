@@ -119,7 +119,7 @@ if ($page == 'overview' || $page == 'accounts') {
 				if (Settings::Get('customer.ftpatdomain') == '1') {
 					$domainlist = [];
 					$result_domains_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
-						WHERE `customerid`= :customerid");
+						WHERE `customerid`= :customerid ORDER BY `domain` ASC");
 					Database::pexecute($result_domains_stmt, [
 						"customerid" => $userinfo['customerid']
 					]);
@@ -127,7 +127,6 @@ if ($page == 'overview' || $page == 'accounts') {
 					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$domainlist[$row_domain['domain']] = $idna_convert->decode($row_domain['domain']);
 					}
-					sort($domainlist);
 				}
 
 				if (Settings::Get('system.allow_customer_shell') == '1') {
