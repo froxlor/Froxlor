@@ -49,6 +49,7 @@ return [
 				'label' => lng('ssl_certificates.issuer'),
 				'field' => 'issuer',
 				'searchable' => false,
+				'sortable' => false,
 			],
 			'c.validfromdate' => [
 				'label' => lng('ssl_certificates.valid_from'),
