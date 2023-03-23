@@ -76,7 +76,7 @@ final class ValidateAcmeWebroot extends CliCommand
 					'domain' => Settings::Get('system.hostname')
 				];
 			}
-			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET expirationdate=NULL WHERE `domainid` = :did");
+			$upd_stmt = Database::prepare("UPDATE domain_ssl_settings SET `validtodate`=NULL WHERE `domainid` = :did");
 			$acmesh_dir = dirname(Settings::Get('system.acmeshpath'));
 			$acmesh_challenge_dir = rtrim(FileDir::makeCorrectDir(Settings::Get('system.letsencryptchallengepath')), "/");
 			$recommended = rtrim(FileDir::makeCorrectDir(Froxlor::getInstallDir()), "/");

@@ -127,7 +127,9 @@ class Certificates extends ApiCommand implements ResourceEntity
 		}
 
 		$do_verify = true;
-		$expirationdate = null;
+		$validtodate = null;
+		$validtodate = null;
+		$issuer = "";
 		// no cert-file given -> forget everything
 		if ($ssl_cert_file == '') {
 			$ssl_key_file = '';
@@ -168,7 +170,10 @@ class Certificates extends ApiCommand implements ResourceEntity
 			} else {
 				Response::standardError('sslcertificateinvalidcert', '', true);
 			}
-			$expirationdate = empty($cert_content['validTo_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validTo_time_t']);
+			// get data from certificate to store in the table
+			$validfromdate = empty($cert_content['validFrom_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validFrom_time_t']);
+			$validtodate = empty($cert_content['validTo_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validTo_time_t']);
+			$issuer = $cert_content['issuer']['O'] ?? "";
 		}
 
 		// Add/Update database entry
@@ -183,7 +188,9 @@ class Certificates extends ApiCommand implements ResourceEntity
 			`ssl_key_file` = :ssl_key_file,
 			`ssl_ca_file` = :ssl_ca_file,
 			`ssl_cert_chainfile` = :ssl_cert_chainfile,
-			`expirationdate` = :expirationdate
+			`validfromdate` = :validfromdate,
+			`validtodate` = :validtodate,
+			`issuer` = :issuer
 			" . $qrywhere . " `domainid`= :domainid
 		");
 		$params = [
@@ -191,7 +198,9 @@ class Certificates extends ApiCommand implements ResourceEntity
 			"ssl_key_file" => $ssl_key_file,
 			"ssl_ca_file" => $ssl_ca_file,
 			"ssl_cert_chainfile" => $ssl_cert_chainfile,
-			"expirationdate" => $expirationdate,
+			"validfromdate" => $validfromdate,
+			"validtodate" => $validtodate,
+			"issuer" => $issuer,
 			"domainid" => $domainid
 		];
 		Database::pexecute($stmt, $params, true, true);
@@ -299,27 +308,23 @@ class Certificates extends ApiCommand implements ResourceEntity
 			}
 
 			// Set data from certificate
+			$cert['isvalid'] = false;
+			$cert['san'] = null;
 			$cert_data = openssl_x509_parse($cert['ssl_cert_file']);
 			if ($cert_data) {
-				$cert['validfromdate'] = date('Y-m-d H:i:s', $cert_data['validFrom_time_t']);
-				$cert['validtodate'] = date('Y-m-d H:i:s', $cert_data['validTo_time_t']);
 				$cert['isvalid'] = (bool)$cert_data['validTo_time_t'] > time();
-				$cert['issuer'] = $cert_data['issuer']['O'] ?? null;
-			}
-
-			// Set subject alt names from certificate
-			$cert['san'] = null;
-			if (isset($cert_data['extensions']['subjectAltName']) && !empty($cert_data['extensions']['subjectAltName'])) {
-				$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
-				$SANs = array_map('trim', $SANs);
-				foreach ($SANs as $san) {
-					$san = str_replace("DNS:", "", $san);
-					if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
-						$cert['san'][] = $san;
+				// Set subject alt names from certificate
+				if (isset($cert_data['extensions']['subjectAltName']) && !empty($cert_data['extensions']['subjectAltName'])) {
+					$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
+					$SANs = array_map('trim', $SANs);
+					foreach ($SANs as $san) {
+						$san = str_replace("DNS:", "", $san);
+						if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
+							$cert['san'][] = $san;
+						}
 					}
 				}
 			}
-
 			$result[] = $cert;
 		}
 		return $this->response([

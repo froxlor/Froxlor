@@ -114,7 +114,9 @@ class AcmeSh extends FroxlorCron
 				`ssl_cert_chainfile` = :chain,
 				`ssl_csr_file` = :csr,
 				`ssl_fullchain_file` = :fullchain,
-				`expirationdate` = :expirationdate
+				`validfromdate` = :validfromdate,
+				`validtodate` = :validtodate,
+				`issuer` = :issuer
 		");
 
 		// prepare domain update sql
@@ -136,7 +138,9 @@ class AcmeSh extends FroxlorCron
 				'lepublickey' => Settings::Get('system.lepublickey'),
 				'leregistered' => Settings::Get('system.leregistered'),
 				'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
-				'expirationdate' => null,
+				'validfromdate' => null,
+				'validtodate' => null,
+				'issuer' => "",
 				'ssl_cert_file' => null,
 				'ssl_key_file' => null,
 				'ssl_ca_file' => null,
@@ -171,7 +175,9 @@ class AcmeSh extends FroxlorCron
 				'lepublickey' => Settings::Get('system.lepublickey'),
 				'leregistered' => Settings::Get('system.leregistered'),
 				'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
-				'expirationdate' => is_array($renew_froxlor) ? $renew_froxlor['expirationdate'] : date('Y-m-d H:i:s', 0),
+				'validfromdate' => is_array($renew_froxlor) ? $renew_froxlor['validfromdate'] : date('Y-m-d H:i:s', 0),
+				'validtodate' => is_array($renew_froxlor) ? $renew_froxlor['validtodate'] : date('Y-m-d H:i:s', 0),
+				'issuer' => is_array($renew_froxlor) ? $renew_froxlor['issuer'] : "",
 				'ssl_cert_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_cert_file'] : null,
 				'ssl_key_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_key_file'] : null,
 				'ssl_ca_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_ca_file'] : null,
@@ -187,7 +193,7 @@ class AcmeSh extends FroxlorCron
 				'loginname' => $domain['loginname'],
 				'adminsession' => 0
 			]);
-			if (defined('CRON_IS_FORCED') || self::checkFsFilesAreNewer($domain['domain'], $domain['expirationdate'])) {
+			if (defined('CRON_IS_FORCED') || self::checkFsFilesAreNewer($domain['domain'], $domain['validtodate'])) {
 				self::certToDb($domain, $cronlog, []);
 				$changedetected = 1;
 			}
@@ -279,7 +285,9 @@ EOC;
 			SELECT
 				domssl.`id`,
 				domssl.`domainid`,
-				domssl.`expirationdate`,
+				domssl.`validfromdate`,
+				domssl.`validtodate`,
+				domssl.`issuer`,
 				domssl.`ssl_cert_file`,
 				domssl.`ssl_key_file`,
 				domssl.`ssl_ca_file`,
@@ -306,7 +314,7 @@ EOC;
 				AND dom.`letsencrypt` = 1
 				AND dom.`aliasdomain` IS NULL
 				AND dom.`iswildcarddomain` = 0
-				AND domssl.`expirationdate` IS NULL
+				AND domssl.`validtodate` IS NULL
 		");
 		$customer_ssl = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
 		if ($customer_ssl) {
@@ -330,7 +338,7 @@ EOC;
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 			// also check for possible existing certificate
-			if ($froxlor_ssl && self::checkFsFilesAreNewer(Settings::Get('system.hostname'), $froxlor_ssl['expirationdate'])) {
+			if ($froxlor_ssl && self::checkFsFilesAreNewer(Settings::Get('system.hostname'), $froxlor_ssl['validtodate'])) {
 				return $froxlor_ssl;
 			}
 		}
@@ -346,7 +354,9 @@ EOC;
 			SELECT
 				domssl.`id`,
 				domssl.`domainid`,
-				domssl.`expirationdate`,
+				domssl.`validfromdate`,
+				domssl.`validtodate`,
+				domssl.`issuer`,
 				domssl.`ssl_cert_file`,
 				domssl.`ssl_key_file`,
 				dom.`domain`,
@@ -370,7 +380,7 @@ EOC;
 		if ($renew_certs) {
 			if ($check) {
 				foreach ($renew_certs as $cert) {
-					if (self::checkFsFilesAreNewer($cert['domain'], $cert['expirationdate'])) {
+					if (self::checkFsFilesAreNewer($cert['domain'], $cert['validtodate'])) {
 						return true;
 					}
 				}
@@ -453,7 +463,7 @@ EOC;
 			// Only issue let's encrypt certificate if no broken ssl_redirect is enabled
 			if ($certrow['ssl_redirect'] != 2) {
 				$do_force = false;
-				if (!empty($certrow['ssl_cert_file']) && empty($certrow['expirationdate'])) {
+				if (!empty($certrow['ssl_cert_file']) && empty($certrow['validtodate'])) {
 					// domain changed (SAN or similar)
 					$do_force = true;
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Re-creating certificate for " . $certrow['domain']);
@@ -594,7 +604,9 @@ EOC;
 					'chain' => $return['chain'],
 					'csr' => $return['csr'],
 					'fullchain' => $return['fullchain'],
-					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
+					'validfromdate' => date('Y-m-d H:i:s', $newcert['validFrom_time_t']),
+					'validtodate' => date('Y-m-d H:i:s', $newcert['validTo_time_t']),
+					'issuer' => $newcert['issuer']['O'] ?? ""
 				]);
 
 				if ($certrow['ssl_redirect'] == 3) {

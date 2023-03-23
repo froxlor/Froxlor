@@ -350,7 +350,7 @@ class Domain
 			$upd_stmt = Database::prepare("UPDATE
 					`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 				SET
-					`expirationdate` = null
+					`validtodate` = null
 				WHERE
 					domainid = :domainid
 			");

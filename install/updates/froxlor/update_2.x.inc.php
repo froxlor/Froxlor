@@ -429,5 +429,27 @@ if (Froxlor::isDatabaseVersion('202302030')) {
 	}
 	Update::lastStepStatus(0);
 
+	Update::showUpdateStep("Enhancing ssl data table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` RENAME COLUMN `expirationdate` TO `validtodate`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `validfromdate` datetime DEFAULT NULL AFTER `ssl_fullchain_file`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `issuer` varchar(255) NOT NULL default '' AFTER `validtodate`;");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Filling new ssl data fields with existing certificate data");
+	$crt_upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` SET `validfromdate` = :validfromdate, `issuer` = :issuer WHERE `id` = :id");
+	$crt_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`");
+	Database::pexecute($crt_stmt);
+	while ($cert = $crt_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$cert_content = openssl_x509_parse($cert['ssl_cert_file']);
+		if (is_array($cert_content)) {
+			$validfromdate = empty($cert_content['validFrom_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validFrom_time_t']);
+			$issuer = $cert_content['issuer']['O'] ?? "";
+			Database::pexecute($crt_upd_stmt, ['validfromdate' => $validfromdate, 'issuer' => $issuer, 'id' => $cert['id']]);
+		}
+	}
+	// clear possible user customized columns
+	Database::query("DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `section` = 'sslcertificates_list'");
+	Update::lastStepStatus(0);
+
 	Froxlor::updateToDbVersion('202303150');
 }

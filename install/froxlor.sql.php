@@ -983,7 +983,9 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_cert_chainfile` mediumtext,
   `ssl_csr_file` mediumtext,
   `ssl_fullchain_file` mediumtext,
-  `expirationdate` datetime DEFAULT NULL,
+  `validfromdate` datetime DEFAULT NULL,
+  `validtodate` datetime DEFAULT NULL,
+  `issuer` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY (`domainid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;

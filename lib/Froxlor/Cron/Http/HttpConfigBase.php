@@ -179,7 +179,7 @@ class HttpConfigBase
 		$froxlor_ssl_settings_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 			WHERE `domainid` = '0' AND
-			(`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY) OR `expirationdate` IS NULL)
+			(`validtodate` < DATE_ADD(NOW(), INTERVAL 30 DAY) OR `validtodate` IS NULL)
 		");
 		$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 		if ($froxlor_ssl && !empty($froxlor_ssl['ssl_cert_file'])) {
