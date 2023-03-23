@@ -1040,6 +1040,9 @@ class Nginx extends HttpConfigBase
 						$path_options .= "\t\t" . 'auth_basic_user_file  ' . FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 						if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 							$path_options .= "\t\t" . 'index    index.php index.html index.htm;' . "\n";
+							$path_options .= "\t\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
+							$path_options .= "\t\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
+							$path_options .= "\t\t" . '}' . "\n\n";
 						} else {
 							$path_options .= "\t\t" . 'index    index.html index.htm;' . "\n";
 						}
