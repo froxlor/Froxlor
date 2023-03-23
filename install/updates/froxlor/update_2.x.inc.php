@@ -23,11 +23,11 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\Froxlor;
-use Froxlor\FileDir;
 use Froxlor\Database\Database;
-use Froxlor\Settings;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\Install\Update;
+use Froxlor\Settings;
 
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -93,7 +93,8 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
 		if (isset($dbserver['allowed_mysqlserver']) && !empty($dbserver['allowed_mysqlserver'])) {
 			$allowed_mysqlserver = json_encode(explode(",", $dbserver['allowed_mysqlserver']));
-			Database::pexecute($upd_stmt, ['allowed_mysql_server' => $allowed_mysqlserver, 'customerid' => $dbserver['customerid']]);
+			Database::pexecute($upd_stmt,
+				['allowed_mysql_server' => $allowed_mysqlserver, 'customerid' => $dbserver['customerid']]);
 		}
 	}
 	Update::lastStepStatus(0);
@@ -140,7 +141,8 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 			// none of the files existed
 			Update::lastStepStatus(0);
 		} else {
-			Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
+			Update::lastStepStatus(1, 'manual commands needed',
+				'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
 		}
 	}
 
@@ -224,7 +226,8 @@ EOF;
 	} else {
 		$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHP_EOL;
 		$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
-		Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
+		Update::lastStepStatus(1, 'manual commands needed',
+			'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
 	}
 
 	Froxlor::updateToDbVersion('202212060');
@@ -283,7 +286,8 @@ EOF;
 		} else {
 			$cron_run_cmd = 'chmod +x ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . PHP_EOL;
 			$cron_run_cmd .= FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/bin/froxlor-cli') . ' froxlor:cron -r 99';
-			Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
+			Update::lastStepStatus(1, 'manual commands needed',
+				'Please run the following commands manually:<br><pre>' . $cron_run_cmd . '</pre>');
 		}
 	}
 	Froxlor::updateToVersion('2.0.4');
@@ -323,7 +327,7 @@ if (Froxlor::isDatabaseVersion('202212060')) {
 	$system_letsencryptchallengepath_upd = isset($_POST['system_letsencryptchallengepath_upd']) ? $_POST['system_letsencryptchallengepath_upd'] : $acmesh_challenge_dir;
 	if ($acmesh_challenge_dir != $system_letsencryptchallengepath_upd) {
 		Settings::Set('system.letsencryptchallengepath', $system_letsencryptchallengepath_upd);
-		if ((int) Settings::Get('system.leenabled') == 1) {
+		if ((int)Settings::Get('system.leenabled') == 1) {
 			// create JSON string for --apply
 			$dist = Settings::Get('system.distribution');
 			$webserver = Settings::Get('system.webserver');
@@ -404,4 +408,26 @@ if (Froxlor::isFroxlorVersion('2.0.11')) {
 if (Froxlor::isFroxlorVersion('2.0.12')) {
 	Update::showUpdateStep("Updating from 2.0.12 to 2.0.13", false);
 	Froxlor::updateToVersion('2.0.13');
+}
+
+if (Froxlor::isDatabaseVersion('202302030')) {
+	Update::showUpdateStep("Correcting language mapping of templates created pre 2.0.x");
+	// languages from 0.10.x
+	$language_mapping_comp = [
+		'de' => 'Deutsch',
+		'en' => 'English',
+		'fr' => 'Fran&ccedil;ais',
+		'pt' => 'Portugu&ecirc;s',
+		'it' => 'Italiano',
+		'nl' => 'Nederlands',
+		'se' => 'Svenska',
+		'cz' => '&#268;esk&aacute; republika'
+	];
+	$upd_tpl_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET `language` = :iso WHERE `language` = :lng");
+	foreach ($language_mapping_comp as $iso => $lang) {
+		Database::pexecute($upd_tpl_stmt, ['iso' => $iso, 'lng' => $lang]);
+	}
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202303150');
 }
