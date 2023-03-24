@@ -46,10 +46,21 @@ class Store
 	{
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'le_froxlor_enabled' && $newfieldvalue == '0') {
-			Database::query("
-				DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'
-			");
+		if ($returnvalue !== false
+			&& is_array($fielddata)
+			&& isset($fielddata['settinggroup'])
+			&& $fielddata['settinggroup'] == 'system'
+			&& isset($fielddata['varname'])
+		) {
+			if ($fielddata['varname'] == 'le_froxlor_enabled' && $newfieldvalue == '0') {
+				Database::query("
+					DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'
+				");
+			} elseif ($fielddata['varname'] == 'froxloraliases' && $newfieldvalue != $fielddata['value']) {
+				Database::query("
+					UPDATE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` SET `validtodate`= NULL WHERE `domainid` = '0'
+				");
+			}
 		}
 
 		return $returnvalue;
