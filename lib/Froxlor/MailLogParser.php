@@ -68,10 +68,10 @@ class MailLogParser
 		// Parse MDA traffic
 		if (Settings::Get("system.mdaserver") == "dovecot") {
 			$this->parseDovecotLog(Settings::Get("system.mdalog"));
-			$this->parsePostfixLog(Settings::Get("system.mdalog") . ".1");
+			$this->parseDovecotLog(Settings::Get("system.mdalog") . ".1");
 		} elseif (Settings::Get("system.mdaserver") == "courier") {
 			$this->parseCourierLog(Settings::Get("system.mdalog"));
-			$this->parsePostfixLog(Settings::Get("system.mdalog") . ".1");
+			$this->parseCourierLog(Settings::Get("system.mdalog") . ".1");
 		}
 	}
 
