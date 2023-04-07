@@ -430,7 +430,7 @@ if (Froxlor::isDatabaseVersion('202302030')) {
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Enhancing ssl data table");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` RENAME COLUMN `expirationdate` TO `validtodate`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` CHANGE `expirationdate` TO `validtodate`;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `validfromdate` datetime DEFAULT NULL AFTER `ssl_fullchain_file`;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `issuer` varchar(255) NOT NULL default '' AFTER `validtodate`;");
 	Update::lastStepStatus(0);
