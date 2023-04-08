@@ -62,6 +62,11 @@ final class MasterCron extends CliCommand
 		$result = self::SUCCESS;
 		$result = $this->validateRequirements($input, $output);
 
+		if ($result != self::SUCCESS) {
+			// requirements failed, exit
+			return $result;
+		}
+
 		$jobs = $input->getArgument('job');
 
 		// handle force option
@@ -111,8 +116,8 @@ final class MasterCron extends CliCommand
 		]);
 		$this->cronLog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 
-		// check whether there are actual tasks to perform by 'tasks'-cron so
-		// we dont regenerate files unnecessarily
+		// check whether there are actual tasks to perform by 'tasks'-cron, so
+		// we don't regenerate files unnecessarily
 		$tasks_cnt_stmt = Database::query("SELECT COUNT(*) as jobcnt FROM `panel_tasks`");
 		$tasks_cnt = $tasks_cnt_stmt->fetch(PDO::FETCH_ASSOC);
 
