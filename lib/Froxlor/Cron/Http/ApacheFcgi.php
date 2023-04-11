@@ -126,6 +126,9 @@ class ApacheFcgi extends Apache
 
 				// mod_proxy stuff for apache-2.4
 				if (Settings::Get('system.apache24') == '1' && Settings::Get('phpfpm.use_mod_proxy') == '1') {
+
+					$php_options_text .= '  <Directory "' . FileDir::makeCorrectDir($domain['documentroot']) . '">' . "\n";
+
 					$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
 					$extensions = explode(" ", $filesmatch);
 					$filesmatch = "";
@@ -141,23 +144,19 @@ class ApacheFcgi extends Apache
 					$php_options_text .= '  </FilesMatch>' . "\n";
 
 					$mypath_dir = new Directory($domain['documentroot']);
-
-					// only create the require all granted if there is not active directory-protection
+					// only create the "require all granted" directive if there is no active directory-protection
 					// for this path, as this would be the first require and therefore grant all access
 					if ($mypath_dir->isUserProtected() == false) {
-						$php_options_text .= '  <Directory "' . FileDir::makeCorrectDir($domain['documentroot']) . '">' . "\n";
 						if ($phpconfig['pass_authorizationheader'] == '1') {
 							$php_options_text .= '    CGIPassAuth On' . "\n";
 						}
 						$php_options_text .= '    Require all granted' . "\n";
 						$php_options_text .= '    AllowOverride All' . "\n";
-						$php_options_text .= '  </Directory>' . "\n";
 					} elseif ($phpconfig['pass_authorizationheader'] == '1') {
 						// allow Pass of Authorization header
-						$php_options_text .= '  <Directory "' . FileDir::makeCorrectDir($domain['documentroot']) . '">' . "\n";
 						$php_options_text .= '    CGIPassAuth On' . "\n";
-						$php_options_text .= '  </Directory>' . "\n";
 					}
+					$php_options_text .= '  </Directory>' . "\n";
 				} else {
 					$addheader = "";
 					if ($phpconfig['pass_authorizationheader'] == '1') {
