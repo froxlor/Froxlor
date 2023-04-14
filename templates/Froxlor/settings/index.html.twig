@@ -4,7 +4,7 @@
 	<h5>
 		<i class="fa-solid fa-gears"></i>
 		{{ lng('admin.serversettings') }}
-		{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title }}
+		{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title|raw }}
 		{% endif %}
 	</h5>
 	<span class="text-muted">{{ lng('admin.serversettings_desc') }}</span>
@@ -39,7 +39,7 @@
 									<i class="{{ field.icon }} fa-2x me-4" style="width: 1em;"></i>
 								</a>
 								<div>
-									{{ field.title }}
+									{{ field.title|raw }}
 									{% if field.info is defined and field.info is not empty %}
 										{{ field.info|raw }}
 									{% endif %}
