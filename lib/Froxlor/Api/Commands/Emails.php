@@ -195,8 +195,8 @@ class Emails extends ApiCommand implements ResourceEntity
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
-			AND (v.`id`= :idea OR (v.`email` = :idea OR v.`email_full` = :idea))
-		");
+			AND " . (is_numeric($params['idea']) ? "v.`id`= :idea" : "(v.`email` = :idea OR v.`email_full` = :idea)")
+		);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
