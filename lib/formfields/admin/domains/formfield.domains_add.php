@@ -365,11 +365,10 @@ return [
 						'checked' => true
 					],
 					'openbasedir_path' => [
-						'visible' => $result['openbasedir'] == '1',
 						'label' => lng('domain.openbasedirpath'),
 						'type' => 'select',
 						'select_var' => $openbasedir,
-						'selected' => $result['openbasedir_path']
+						'selected' => 0
 					],
 					'phpenabled' => [
 						'label' => lng('admin.phpenabled'),
