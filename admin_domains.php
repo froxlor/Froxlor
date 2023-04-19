@@ -282,6 +282,12 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 			}
 
+			$openbasedir = [
+				0 => lng('domain.docroot'),
+				1 => lng('domain.homedir'),
+				2 => lng('domain.docparent')
+			];
+			
 			// create serveralias options
 			$serveraliasoptions = [
 				0 => lng('domains.serveraliasoption_wildcard'),
@@ -545,6 +551,12 @@ if ($page == 'domains' || $page == 'overview') {
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
+				$openbasedir = [
+					0 => lng('domain.docroot'),
+					1 => lng('domain.homedir'),
+					2 => lng('domain.docparent')
+				];
+				
 				$serveraliasoptions = [
 					0 => lng('domains.serveraliasoption_wildcard'),
 					1 => lng('domains.serveraliasoption_www'),
