@@ -364,6 +364,13 @@ return [
 						'value' => '1',
 						'checked' => true
 					],
+					'openbasedir_path' => [
+						'visible' => $result['openbasedir'] == '1',
+						'label' => lng('domain.openbasedirpath'),
+						'type' => 'select',
+						'select_var' => $openbasedir,
+						'selected' => $result['openbasedir_path']
+					],
 					'phpenabled' => [
 						'label' => lng('admin.phpenabled'),
 						'type' => 'checkbox',
