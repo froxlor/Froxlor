@@ -447,7 +447,8 @@ class FileDir
 				$field = [
 					'type' => 'select',
 					'select_var' => $_field,
-					'selected' => $value
+					'selected' => $value,
+					'value' => $value
 				];
 			} else {
 				$field = [

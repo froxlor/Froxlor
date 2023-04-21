@@ -516,7 +516,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			`allowed_mysqlserver` = :am WHERE `customerid` = :cid
 		");
 		while ($customer = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$allowed_mysqls = json_decode(($customer['allowed_mysqlserver'] ?? '[]'), true);
+			$allowed_mysqls = json_decode(($customer['allowed_mysqlserver'] ?: '[]'), true);
 			if (!in_array($dbserver, $allowed_mysqls)) {
 				$allowed_mysqls[] = $dbserver;
 				$allowed_mysqls = json_encode($allowed_mysqls);
