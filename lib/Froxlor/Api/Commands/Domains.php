@@ -314,7 +314,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$documentroot = $this->getParam('documentroot', true, '');
 				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
 				$openbasedir = $this->getBoolParam('openbasedir', true, 0);
-				$openbasedir_path = $this->getBoolParam('openbasedir_path', true, 0);
+				$openbasedir_path = $this->getParam('openbasedir_path', true, 0);
 				$phpsettingid = $this->getParam('phpsettingid', true, 1);
 				$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, -1);
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, -1);
