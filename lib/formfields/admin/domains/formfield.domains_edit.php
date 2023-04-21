@@ -391,7 +391,6 @@ return [
 						'checked' => $result['openbasedir']
 					],
 					'openbasedir_path' => [
-						'visible' => $result['openbasedir'] == '1',
 						'label' => lng('domain.openbasedirpath'),
 						'type' => 'select',
 						'select_var' => $openbasedir,
