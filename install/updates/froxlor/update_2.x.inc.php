@@ -82,7 +82,7 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` DROP COLUMN `domains_see_all`;");
 	Update::lastStepStatus(0);
 
-	Update::showUpdateStep("Checking for multiple mysql-servers to allow acccess to customers for existing databases");
+	Update::showUpdateStep("Checking for multiple mysql-servers to allow access to customers for existing databases");
 	$dbservers_stmt = Database::query("
 		SELECT `customerid`,
 		GROUP_CONCAT(DISTINCT `dbserver` SEPARATOR ',') as allowed_mysqlserver

@@ -2179,6 +2179,7 @@ Vielen Dank, Ihr Administrator',
 		'description' => 'Aktualisierung der froxlor Datenbank',
 		'uc_newinfo' => 'Eine neuere %sVersion ist verfügbar: "%s" (Aktuell installierte Version: %s)',
 		'notify_subject' => 'Neues Update verfügbar',
+		'dbupdate_required' => 'Froxlor-Dateien wurden aktualisiert, Datenbank-Aktualisierung notwendig',
 	],
 	'usersettings' => [
 		'custom_notes' => [
@@ -2233,8 +2234,8 @@ Vielen Dank, Ihr Administrator',
 		'install' => [
 			'top' => 'Abschluss',
 			'title' => 'Ein letzter Schritt...',
-			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.',
-			'runcmd' => 'Folgenden Befehl als root-Benutzer in der Shell auf dem Server ausführen:',
+			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.<br><br><span class="text-danger">Führe die gezeigten Befehle als <b>root</b> in der Shell/Konsole des Servers aus.</span>',
+			'runcmd' => 'Folgende Befehle ausführen, um die Installation abzuschließen:',
 			'manual_config' => 'Ich werden die Dienste manuell konfigurieren, direkt zum Login umleiten',
 			'waitforconfig' => 'Warte auf Abschluss der Dienstkonfiguration...',
 		],

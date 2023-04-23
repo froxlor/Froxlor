@@ -42,7 +42,7 @@
 								<label class="form-check-label" for="switchInstallMode">{% if extended is defined and extended %}{{ lng('install.switchmode_basic') }}{% else %}{{ lng('install.switchmode_advanced') }}{% endif %}</label>
 							</div>
 						</div>
-						<p class="lead">{{ section.description }}</p>
+						<p class="lead">{{ section.description|raw }}</p>
 						<hr />
 
 						{% import "Froxlor/form/formfields.html.twig" as formfields %}
