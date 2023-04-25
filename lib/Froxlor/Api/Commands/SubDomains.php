@@ -62,7 +62,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *            optional, overwrites path value with an URL to generate a redirect, alternatively use the path
 	 *            parameter also for URLs
 	 * @param int $openbasedir_path
-	 *            optional, either 0 for domains-docroot, 1 for customers-homedir or 2 for parent-directory of domains-docroot
+	 *            optional, either 0 for domains-docroot [default], 1 for customers-homedir or 2 for parent-directory of domains-docroot
 	 * @param int $phpsettingid
 	 *            optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
@@ -104,7 +104,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$aliasdomain = $this->getParam('alias', true, 0);
 			$path = $this->getParam('path', true, '');
 			$url = $this->getParam('url', true, '');
-			$openbasedir_path = $this->getParam('openbasedir_path', true, 1);
+			$openbasedir_path = $this->getParam('openbasedir_path', true, 0);
 			$phpsettingid = $this->getParam('phpsettingid', true, 0);
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
