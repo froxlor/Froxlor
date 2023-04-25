@@ -225,6 +225,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            optional, whether php is enabled for this domain, default 0 (false)
 	 * @param bool $openbasedir
 	 *            optional, whether to activate openbasedir restriction for this domain, default 0 (false)
+	 * @param int $openbasedir_path
+	 *            optional, either 0 for domains-docroot, 1 for customers-homedir or 2 for parent-directory of domains-docroot
 	 * @param int $phpsettingid
 	 *            optional, specify php-configuration that is being used by id, default 1 (system-default)
 	 * @param int $mod_fcgid_starter
@@ -312,6 +314,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$documentroot = $this->getParam('documentroot', true, '');
 				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
 				$openbasedir = $this->getBoolParam('openbasedir', true, 0);
+				$openbasedir_path = $this->getParam('openbasedir_path', true, 0);
 				$phpsettingid = $this->getParam('phpsettingid', true, 1);
 				$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, -1);
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, -1);
@@ -529,7 +532,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					$mod_fcgid_starter = '-1';
 					$mod_fcgid_maxrequests = '-1';
 				}
-
+				
+				if ($openbasedir_path > 2 && $openbasedir_path < 0) {
+					$openbasedir_path = 0;
+				}
+				
 				// check non-ssl IP
 				$ipandports = $this->validateIpAddresses($p_ipandports);
 				// check ssl IP
@@ -701,6 +708,7 @@ class Domains extends ApiCommand implements ResourceEntity
 						'caneditdomain' => $caneditdomain,
 						'phpenabled' => $phpenabled,
 						'openbasedir' => $openbasedir,
+						'openbasedir_path' => $openbasedir_path,
 						'speciallogfile' => $speciallogfile,
 						'specialsettings' => $specialsettings,
 						'ssl_specialsettings' => $ssl_specialsettings,
@@ -754,6 +762,7 @@ class Domains extends ApiCommand implements ResourceEntity
 						`caneditdomain` = :caneditdomain,
 						`phpenabled` = :phpenabled,
 						`openbasedir` = :openbasedir,
+						`openbasedir_path` = :openbasedir_path,
 						`speciallogfile` = :speciallogfile,
 						`specialsettings` = :specialsettings,
 						`ssl_specialsettings` = :ssl_specialsettings,
@@ -1101,6 +1110,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            from setting system.apply_phpconfigs_default
 	 * @param bool $openbasedir
 	 *            optional, whether to activate openbasedir restriction for this domain, default 0 (false)
+	 * @param int $openbasedir_path
+	 *            optional, either 0 for domains-docroot, 1 for customers-homedir or 2 for parent-directory of domains-docroot
 	 * @param int $phpsettingid
 	 *            optional, specify php-configuration that is being used by id, default 1 (system-default)
 	 * @param int $mod_fcgid_starter
@@ -1198,6 +1209,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$phpenabled = $this->getBoolParam('phpenabled', true, $result['phpenabled']);
 			$phpfs = $this->getBoolParam('phpsettingsforsubdomains', true, Settings::Get('system.apply_phpconfigs_default'));
 			$openbasedir = $this->getBoolParam('openbasedir', true, $result['openbasedir']);
+			$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 			$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);
 			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, $result['mod_fcgid_maxrequests']);
@@ -1487,6 +1499,11 @@ class Domains extends ApiCommand implements ResourceEntity
 				$phpfs = 1;
 				$mod_fcgid_starter = $result['mod_fcgid_starter'];
 				$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
+			}
+			
+			// check changes of openbasedir-path variable
+			if ($openbasedir_path > 2 && $openbasedir_path < 0) {
+				$openbasedir_path = 0;
 			}
 
 			// check non-ssl IP
@@ -1806,7 +1823,8 @@ class Domains extends ApiCommand implements ResourceEntity
 			$update_data['wwwserveralias'] = $wwwserveralias;
 			$update_data['iswildcarddomain'] = $iswildcarddomain;
 			$update_data['phpenabled'] = $phpenabled;
-			$update_data['openbasedir'] = $openbasedir;
+			$update_data['openbasedir'] = $openbasedir;;
+			$update_data['openbasedir_path'] = $openbasedir_path;
 			$update_data['speciallogfile'] = $speciallogfile;
 			$update_data['phpsettingid'] = $phpsettingid;
 			$update_data['mod_fcgid_starter'] = $mod_fcgid_starter;
@@ -1854,6 +1872,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				`iswildcarddomain` = :iswildcarddomain,
 				`phpenabled` = :phpenabled,
 				`openbasedir` = :openbasedir,
+				`openbasedir_path` = :openbasedir_path,
 				`speciallogfile` = :speciallogfile,
 				`phpsettingid` = :phpsettingid,
 				`mod_fcgid_starter` = :mod_fcgid_starter,
@@ -1889,6 +1908,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$_update_data['adminid'] = $adminid;
 			$_update_data['phpenabled'] = $phpenabled;
 			$_update_data['openbasedir'] = $openbasedir;
+			$_update_data['openbasedir_path'] = $openbasedir_path;
 			$_update_data['mod_fcgid_starter'] = $mod_fcgid_starter;
 			$_update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 			$_update_data['notryfiles'] = $notryfiles;
@@ -1922,6 +1942,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				`adminid` = :adminid,
 				`phpenabled` = :phpenabled,
 				`openbasedir` = :openbasedir,
+				`openbasedir_path` = :openbasedir_path,
 				`mod_fcgid_starter` = :mod_fcgid_starter,
 				`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 				`notryfiles` = :notryfiles,
