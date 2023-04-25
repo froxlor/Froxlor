@@ -532,11 +532,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					$mod_fcgid_starter = '-1';
 					$mod_fcgid_maxrequests = '-1';
 				}
-				
+
 				if ($openbasedir_path > 2 && $openbasedir_path < 0) {
 					$openbasedir_path = 0;
 				}
-				
+
 				// check non-ssl IP
 				$ipandports = $this->validateIpAddresses($p_ipandports);
 				// check ssl IP
@@ -1500,7 +1500,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$mod_fcgid_starter = $result['mod_fcgid_starter'];
 				$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
 			}
-			
+
 			// check changes of openbasedir-path variable
 			if ($openbasedir_path > 2 && $openbasedir_path < 0) {
 				$openbasedir_path = 0;
@@ -1966,7 +1966,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			Database::pexecute($ip_sel_stmt, [
 				'id' => $id
 			], true, true);
-			$current_ips = $ip_sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+			$current_ips = [];
+			while ($cIP = $ip_sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$current_ips[] = $cIP['id_ipandports'];
+			}
 
 			// Cleanup domain <-> ip mapping
 			$del_stmt = Database::prepare("
