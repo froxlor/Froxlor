@@ -1634,7 +1634,31 @@ class Domains extends ApiCommand implements ResourceEntity
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 			$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 
-			if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $phpenabled != $result['phpenabled'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $ssl_specialsettings != $result['ssl_specialsettings'] || $notryfiles != $result['notryfiles'] || $writeaccesslog != $result['writeaccesslog'] || $writeerrorlog != $result['writeerrorlog'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $http2 != $result['http2'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $ocsp_stapling != $result['ocsp_stapling']) {
+			if ($documentroot != $result['documentroot']
+				|| $ssl_redirect != $result['ssl_redirect']
+				|| $wwwserveralias != $result['wwwserveralias']
+				|| $iswildcarddomain != $result['iswildcarddomain']
+				|| $phpenabled != $result['phpenabled']
+				|| $openbasedir != $result['openbasedir']
+				|| $phpsettingid != $result['phpsettingid']
+				|| $mod_fcgid_starter != $result['mod_fcgid_starter']
+				|| $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests']
+				|| $specialsettings != $result['specialsettings']
+				|| $ssl_specialsettings != $result['ssl_specialsettings']
+				|| $notryfiles != $result['notryfiles']
+				|| $writeaccesslog != $result['writeaccesslog']
+				|| $writeerrorlog != $result['writeerrorlog']
+				|| $aliasdomain != $result['aliasdomain']
+				|| $issubof != $result['ismainbutsubto']
+				|| $email_only != $result['email_only']
+				|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
+				|| $letsencrypt != $result['letsencrypt']
+				|| $http2 != $result['http2']
+				|| $hsts_maxage != $result['hsts']
+				|| $hsts_sub != $result['hsts_sub']
+				|| $hsts_preload != $result['hsts_preload']
+				|| $ocsp_stapling != $result['ocsp_stapling']
+			) {
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 
@@ -1914,6 +1938,15 @@ class Domains extends ApiCommand implements ResourceEntity
 			");
 			Database::pexecute($_update_stmt, $_update_data, true, true);
 
+			// get current ip<>domain entries
+			$ip_sel_stmt = Database::prepare("
+				SELECT id_ipandports FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
+			");
+			Database::pexecute($ip_sel_stmt, [
+				'id' => $id
+			], true, true);
+			$current_ips = $ip_sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+
 			// Cleanup domain <-> ip mapping
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
@@ -1939,6 +1972,12 @@ class Domains extends ApiCommand implements ResourceEntity
 						'ipportid' => $ssl_ipportid
 					], true, true);
 				}
+			}
+
+			// check ip changes
+			$all_new_ips = array_merge($ipandports, $ssl_ipandports);
+			if (count(array_diff($current_ips, $all_new_ips)) != 0 || count(array_diff($all_new_ips, $current_ips)) != 0) {
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 
 			// Cleanup domain <-> ip mapping for subdomains

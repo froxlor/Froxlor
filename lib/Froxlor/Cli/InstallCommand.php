@@ -80,7 +80,7 @@ final class InstallCommand extends Command
 		$_SERVER['SERVER_NAME'] = $host[0] ?? '';
 		$ips = [];
 		exec('hostname -I', $ips);
-		$ips = explode(" ", $ips[0]);
+		$ips = explode(" ", $ips[0] ?? "");
 		// ipv4 address?
 		$_SERVER['SERVER_ADDR'] = filter_var($ips[0] ?? "", FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? ($ips[0] ?? '') : '';
 		if (empty($_SERVER['SERVER_ADDR'])) {
