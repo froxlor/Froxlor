@@ -55,6 +55,19 @@
 					<div class="card-header">
 						<i class="fa-solid fa-gears me-1"></i>
 						{{ lng('admin.systemdetails') }}
+						<div class="float-end">
+							<button id="copySysInfo" class="btn btn-outline-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .5rem;" title="Copy to clipboard"><i class="fa-solid fa-copy"></i></button>
+						</div>
+						<div id="ccSysInfo" class="d-none">
+- Froxlor: {{ call_static('\\Froxlor\\Froxlor', 'getVersionString') }}
+- {{ lng('serversettings.update_channel.title') }}: {{ get_setting('system.update_channel') }}
+- {{ lng('admin.serversoftware') }}: {{ sysinfo.webserver }}
+- {{ lng('admin.phpversion') }}: {{ sysinfo.phpversion }}
+- {{ lng('admin.mysqlserverversion') }}: {{ sysinfo.mysqlserverversion }}
+- {{ lng('admin.webserverinterface') }}: {{ sysinfo.phpsapi }}
+- Kernel: {{ sysinfo.kernel }}
+- OS: {{ get_setting('system.distribution') }}
+						</div>
 					</div>
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item d-flex justify-content-between align-items-start">
