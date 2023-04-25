@@ -63,7 +63,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 * @param string $alternative_email
 	 *            optional email address to send account information to, default is the account that is being created
 	 * @param int $email_quota
-	 *            optional quota if enabled in MB, default 0
+	 *            optional quota if enabled in MB, default setting: system.mail_quota
 	 * @param bool $sendinfomail
 	 *            optional, sends the welcome message to the new account (needed for creation, without the user won't
 	 *            be able to login before any mail is received), default 1 (true)
@@ -85,7 +85,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 			$email_password = $this->getParam('email_password');
 			$alternative_email = $this->getParam('alternative_email', true, '');
-			$quota = $this->getParam('email_quota', true, 0);
+			$quota = $this->getParam('email_quota', true, Settings::Get('system.mail_quota') ?? 0);
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 1);
 
 			// validation
