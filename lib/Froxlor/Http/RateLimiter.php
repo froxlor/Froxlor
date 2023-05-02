@@ -2,6 +2,8 @@
 
 namespace Froxlor\Http;
 
+use Froxlor\Settings;
+
 class RateLimiter
 {
 	private static int $limit_per_interval = 60;
