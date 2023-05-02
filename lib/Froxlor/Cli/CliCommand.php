@@ -122,7 +122,7 @@ class CliCommand extends Command
 		include_once Froxlor::getInstallDir() . '/lib/tables.inc.php';
 		define('_CRON_UPDATE', 1);
 		ob_start([
-			'this',
+			$this,
 			'cleanUpdateOutput'
 		]);
 		include_once Froxlor::getInstallDir() . '/install/updatesql.php';

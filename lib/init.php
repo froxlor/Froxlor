@@ -52,6 +52,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use Froxlor\CurrentUser;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
+use Froxlor\Http\RateLimiter;
 use Froxlor\Idna\IdnaWrapper;
 use Froxlor\Language;
 use Froxlor\PhpHelper;
@@ -121,6 +122,7 @@ if (!isset($sql) || !is_array($sql)) {
 
 // send ssl-related headers (later than the others because we need a working database-connection and installation)
 UI::sendSslHeaders();
+RateLimiter::run();
 
 // create a new idna converter
 $idna_convert = new IdnaWrapper();

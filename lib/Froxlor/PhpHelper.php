@@ -519,7 +519,12 @@ class PhpHelper
 				} elseif (is_int($value)) {
 					$str .= self::tabPrefix($depth, "'{$key}' => $value,\n");
 				} else {
-					$str .= self::tabPrefix($depth, "'{$key}' => '{$value}',\n");
+					if ($key == 'password') {
+						// special case for passwords (nowdoc)
+						$str .= self::tabPrefix($depth, "'{$key}' => <<<'EOT'\n{$value}\nEOT,\n");
+					} else {
+						$str .= self::tabPrefix($depth, "'{$key}' => '{$value}',\n");
+					}
 				}
 			} else {
 				$str .= self::parseArrayToString($value, $key, ($depth + 1));

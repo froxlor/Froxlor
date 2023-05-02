@@ -2072,6 +2072,14 @@ Vielen Dank, Ihr Administrator',
 			'toolselect' => 'Traffic Analyzer',
 		],
 		'requires_reconfiguration' => 'Änderungen an dieser Einstellungen benötigen unter Umständen eine erneute Konfiguration der folgenden Dienste:<br><strong>%s</strong>',
+		'req_limit_per_interval' => [
+			'title' => 'Anzahl der HTTP-Anfragen pro Intervall',
+			'description' => 'Erlaubte Anzahl von HTTP-Anfragen pro Intervall (siehe unten) auf froxlor, Standard ist "60"',
+		],
+		'req_limit_interval' => [
+			'title' => 'Rate-Limit-Intervall',
+			'description' => 'Specify the time in seconds for the number of HTTP requests, default is "60"',
+		],
 	],
 	'spf' => [
 		'use_spf' => 'Aktiviere SPF für Domains?',

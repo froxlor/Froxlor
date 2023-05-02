@@ -463,3 +463,12 @@ if (Froxlor::isFroxlorVersion('2.0.14')) {
 	Update::showUpdateStep("Updating from 2.0.14 to 2.0.15", false);
 	Froxlor::updateToVersion('2.0.15');
 }
+
+if (Froxlor::isDatabaseVersion('202303150')) {
+	Update::showUpdateStep("Adding new request rate limit settings");
+	Settings::AddNew("system.req_limit_per_interval", "60");
+	Settings::AddNew("system.req_limit_interval", "60");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202304260');
+}

@@ -138,6 +138,26 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
+				'system_req_limit_per_interval' => [
+					'label' => lng('serversettings.req_limit_per_interval'),
+					'settinggroup' => 'system',
+					'varname' => 'req_limit_per_interval',
+					'type' => 'number',
+					'min' => 30,
+					'default' => 60,
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
+				'system_req_limit_interval' => [
+					'label' => lng('serversettings.req_limit_interval'),
+					'settinggroup' => 'system',
+					'varname' => 'req_limit_interval',
+					'type' => 'number',
+					'min' => 5,
+					'default' => 60,
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
 				'customer_accountprefix' => [
 					'label' => lng('serversettings.accountprefix'),
 					'settinggroup' => 'customer',

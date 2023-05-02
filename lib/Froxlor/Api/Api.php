@@ -26,6 +26,7 @@
 namespace Froxlor\Api;
 
 use Exception;
+use Froxlor\Http\RateLimiter;
 use Froxlor\Settings;
 use voku\helper\AntiXSS;
 
@@ -52,6 +53,8 @@ class Api
 		if (Settings::Get('api.enabled') != 1) {
 			throw new Exception('API is not enabled. Please contact the administrator if you think this is wrong.', 400);
 		}
+
+		RateLimiter::run();
 	}
 
 	/**

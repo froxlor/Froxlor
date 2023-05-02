@@ -23,6 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Http\RateLimiter;
 use Froxlor\UI\Panel\UI;
 use Froxlor\Install\Install;
 
@@ -62,6 +63,7 @@ require dirname(__DIR__) . '/lib/tables.inc.php';
 // init twig
 UI::initTwig(true);
 UI::sendHeaders();
+RateLimiter::run(true);
 
 $installer = new Install();
 $installer->handle();

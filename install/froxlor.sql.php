@@ -699,6 +699,8 @@ opcache.validate_timestamps'),
 	('system', 'updatecheck_data', ''),
 	('system', 'update_notify_last', '2.0.15'),
 	('system', 'traffictool', 'goaccess'),
+	('system', 'req_limit_per_interval', 60),
+	('system', 'req_limit_interval', 60),
 	('api', 'enabled', '0'),
 	('api', 'customer_default', '1'),
 	('2fa', 'enabled', '1'),
@@ -743,7 +745,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.15'),
-	('panel', 'db_version', '202303150');
+	('panel', 'db_version', '202304260');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
