@@ -1,0 +1,17 @@
+{% extends "Froxlor/base.html.twig" %}
+
+{% block content %}
+	<div class="container my-auto">
+		<div class="alert alert-warning fade show" role="alert">
+			<h4 class="alert-heading">
+				Whoops!
+			</h4>
+			<p>It seems like you've hit the rate limit.</p>
+			<p>Please slow down your requests and retry after {{ retry|date('d.m.Y H:i:s') }}</p>
+			<hr>
+			<p class="mt-1 text-center">
+				<a href="" class="btn btn-primary" title="Reload page">Reload</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}

@@ -2,7 +2,9 @@
 
 namespace Froxlor\Http;
 
+use Froxlor\Froxlor;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 
 class RateLimiter
 {
@@ -33,7 +35,12 @@ class RateLimiter
 		if ($remaining <= 0) {
 			header('HTTP/1.1 429 Too Many Requests');
 			header("Retry-After: $reset");
-			exit();
+			UI::twig()->addGlobal('install_mode', '1');
+			echo UI::twig()->render('Froxlor/misc/ratelimithint.html.twig', [
+				'retry' => $reset,
+				'installdir' => Froxlor::getInstallDir()
+			]);
+			die();
 		}
 
 		// Decrement the remaining requests and update the headers
