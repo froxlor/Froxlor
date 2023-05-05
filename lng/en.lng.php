@@ -2202,7 +2202,7 @@ Yours sincerely, your administrator',
 		],
 		'req_limit_interval' => [
 			'title' => 'Rate-limit interval',
-			'description' => 'Zeit in Sekunden für die maximale Anzahl von HTTP-Anfragen, Standard ist "60".',
+			'description' => 'Specify the time in seconds for the number of HTTP requests, default is "60"',
 		],
 	],
 	'spf' => [

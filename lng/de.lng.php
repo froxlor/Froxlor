@@ -2078,7 +2078,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'req_limit_interval' => [
 			'title' => 'Rate-Limit-Intervall',
-			'description' => 'Specify the time in seconds for the number of HTTP requests, default is "60"',
+			'description' => 'Zeit in Sekunden für die maximale Anzahl von HTTP-Anfragen, Standard ist "60".',
 		],
 	],
 	'spf' => [
