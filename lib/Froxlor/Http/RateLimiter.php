@@ -17,8 +17,8 @@ class RateLimiter
 		self::$reset_time = time() + 60;
 
 		if (!$install_mode) {
-			self::$limit_per_interval = Settings::Get('system.req_limit_per_interval');
-			self::$reset_time = time() + Settings::Get('system.req_limit_interval');
+			self::$limit_per_interval = Settings::Get('system.req_limit_per_interval') ?? 60;
+			self::$reset_time = time() + Settings::Get('system.req_limit_interval') ?? 60;
 		}
 
 		// Get the remaining requests and reset time from the headers
