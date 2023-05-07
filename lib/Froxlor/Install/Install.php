@@ -42,7 +42,7 @@ class Install
 	public $phpVersion;
 	public $formfield;
 	public string $requiredVersion = '7.4.0';
-	public array $requiredExtensions = ['session', 'ctype', 'mysql', 'xml', 'filter', 'posix', 'mbstring', 'curl', 'gmp', 'json', 'gd'];
+	public array $requiredExtensions = ['session', 'ctype', 'pdo', 'xml', 'filter', 'posix', 'mbstring', 'curl', 'gmp', 'json', 'gd'];
 	public array $suggestedExtensions = ['bcmath', 'zip'];
 	public array $suggestions = [];
 	public array $criticals = [];
