@@ -1193,7 +1193,7 @@ Yours sincerely, your administrator',
 		'database_edit' => 'Edit database',
 		'size' => 'Size',
 		'privileged_user' => 'Privileged database user',
-		'privileged_passwd' => 'Password for priviliged user',
+		'privileged_passwd' => 'Password for privileged user',
 		'unprivileged_passwd' => 'Password for unprivileged user',
 		'mysql_ssl_ca_file' => 'SSL server certificate',
 		'mysql_ssl_verify_server_certificate' => 'Verify SSL server certificate'
