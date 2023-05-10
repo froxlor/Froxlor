@@ -331,11 +331,10 @@ if (CurrentUser::hasSession()) {
 		}
 	}
 	// update cookie lifetime
-	$cookie_host = empty($_SERVER['HTTP_HOST']) ? null : explode (':', $_SERVER['HTTP_HOST'])[0];
 	$cookie_params = [
 		'expires' => time() + Settings::Get('session.sessiontimeout'),
 		'path' => '/',
-		'domain' => $cookie_host,
+		'domain' => UI::getCookieHost(),
 		'secure' => UI::requestIsHttps(),
 		'httponly' => true,
 		'samesite' => 'Strict'

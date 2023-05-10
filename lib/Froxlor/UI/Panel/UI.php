@@ -87,16 +87,38 @@ class UI
 
 		return $isHttps && (strcasecmp('on', $isHttps) == 0 || strcasecmp('https', $isHttps) == 0);
 	}
+
+	/**
+	 * Extract the cookie host from HTTP_HOST, stripping the port.
+	 */
+	public static function getCookieHost(): ?string
+	{
+		if (empty($_SERVER['HTTP_HOST']))
+			return null;
+
+		$colonPosition = strrpos($_SERVER['HTTP_HOST'], ':');
+		// There's no port in the host
+		if ($colonPosition === false)
+			return $_SERVER['HTTP_HOST'];
+
+		$closingSquareBracketPosition = strrpos($_SERVER['HTTP_HOST'], ']');
+		// The host is an IPv4 address or hostname with port
+		if ($closingSquareBracketPosition === false)
+			return substr($_SERVER['HTTP_HOST'], 0, $colonPosition);
+
+		// The host is an IPv6 address with port
+		return substr($_SERVER['HTTP_HOST'], 0, $closingSquareBracketPosition + 1);
+	}
+
 	/**
 	 * send various security related headers
 	 */
 	public static function sendHeaders()
 	{
-		$cookie_host = empty($_SERVER['HTTP_HOST']) ? null : explode (':', $_SERVER['HTTP_HOST'])[0];
 		session_set_cookie_params([
 			'lifetime' => self::$install_mode ? 7200 : 600, // will be renewed based on settings in lib/init.php
 			'path' => '/',
-			'domain' => $cookie_host,
+			'domain' => self::getCookieHost(),
 			'secure' => self::requestIsHttps(),
 			'httponly' => true,
 			'samesite' => 'Strict'
