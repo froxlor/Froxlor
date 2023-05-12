@@ -53,9 +53,15 @@ if ($action == '2fa_entercode') {
 		Response::redirectTo('index.php');
 		exit();
 	}
+	$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
+	$message = "";
+	if ($smessage > 0) {
+		$message = lng('error.2fa_wrongcode');
+	}
 	// show template to enter code
 	UI::view('login/enter2fa.html.twig', [
-		'pagetitle' => lng('login.2fa')
+		'pagetitle' => lng('login.2fa'),
+		'message' => $message
 	]);
 } elseif ($action == '2fa_verify') {
 	// verify code from 2fa code-enter form
@@ -68,25 +74,25 @@ if ($action == '2fa_entercode') {
 	// verify entered code
 	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 	$result = ($_SESSION['secret_2fa'] == 'email' ? true : $tfa->verifyCode($_SESSION['secret_2fa'], $code, 3));
+	// get user-data
+	$table = $_SESSION['uidtable_2fa'];
+	$field = $_SESSION['uidfield_2fa'];
+	$uid = $_SESSION['uid_2fa'];
+	$isadmin = $_SESSION['unfo_2fa'];
 	// either the code is valid when using authenticator-app, or we will select userdata by id and entered code
 	// which is temporarily stored for the customer when using email-2fa
 	if ($result) {
-		// get user-data
-		$table = $_SESSION['uidtable_2fa'];
-		$field = $_SESSION['uidfield_2fa'];
-		$uid = $_SESSION['uid_2fa'];
-		$isadmin = $_SESSION['unfo_2fa'];
 		$sel_param = [
 			'uid' => $uid
 		];
 		if ($_SESSION['secret_2fa'] == 'email') {
 			// verify code by selecting user by id and the temp. stored code,
 			// so only if it's the correct code, we get the user-data
-			$sel_stmt = Database::prepare("SELECT * FROM $table WHERE `" . $field . "` = :uid AND `data_2fa` = :code");
+			$sel_stmt = Database::prepare("SELECT * FROM " . $table . " WHERE `" . $field . "` = :uid AND `data_2fa` = :code");
 			$sel_param['code'] = $code;
 		} else {
 			// Authenticator-verification has already happened at this point, so just get the user-data
-			$sel_stmt = Database::prepare("SELECT * FROM $table WHERE `" . $field . "` = :uid");
+			$sel_stmt = Database::prepare("SELECT * FROM " . $table . " WHERE `" . $field . "` = :uid");
 		}
 		$userinfo = Database::pexecute_first($sel_stmt, $sel_param);
 		// whoops, no (valid) user? Start again
@@ -108,15 +114,50 @@ if ($action == '2fa_entercode') {
 
 		// when using email-2fa, remove the one-time-code
 		if ($userinfo['type_2fa'] == '1') {
-			$del_stmt = Database::prepare("UPDATE $table SET `data_2fa` = '' WHERE `" . $field . "` = :uid");
+			$del_stmt = Database::prepare("UPDATE " . $table . " SET `data_2fa` = '' WHERE `" . $field . "` = :uid");
 			$userinfo = Database::pexecute_first($del_stmt, [
 				'uid' => $uid
 			]);
 		}
 		exit();
 	}
+	// wrong 2fa code - treat like "wrong password"
+	$stmt = Database::prepare("
+		UPDATE " . $table . "
+		SET `lastlogin_fail`= :lastlogin_fail, `loginfail_count`=`loginfail_count`+1
+		WHERE `" . $field . "`= :uid
+	");
+	Database::pexecute($stmt, [
+		"lastlogin_fail" => time(),
+		"uid" => $uid
+	]);
+
+	// get data for processing further
+	$stmt = Database::prepare("
+		SELECT `loginname`, `loginfail_count`, `lastlogin_fail` FROM " . $table . "
+		WHERE `" . $field . "`= :uid
+	");
+	$fail_user = Database::pexecute_first($stmt, [
+		"uid" => $uid
+	]);
+
+	if ($fail_user['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $fail_user['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
+		// Log failed login
+		$rstlog = FroxlorLogger::getInstanceOf([
+			'loginname' => $_SERVER['REMOTE_ADDR']
+		]);
+		$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User '" . $fail_user['loginname'] . "' entered wrong 2fa code too often.");
+		unset($fail_user);
+		Response::redirectTo('index.php', [
+			'showmessage' => '3'
+		]);
+		exit();
+	}
+	unset($fail_user);
+	// back to form
 	Response::redirectTo('index.php', [
-		'showmessage' => '2'
+		'action' => '2fa_entercode',
+		'showmessage' => '1'
 	]);
 	exit();
 } elseif ($action == 'login') {

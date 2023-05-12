@@ -995,6 +995,7 @@ return [
 		'domaincannotbeedited' => 'You are not permitted to edit the domain %s',
 		'invalidcronjobintervalvalue' => 'Cronjob interval must be one of: %s',
 		'phpgdextensionnotavailable' => 'The PHP GD extension is not available. Unable to validate image-data',
+		'2fa_wrongcode' => 'The code entered is not valid',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

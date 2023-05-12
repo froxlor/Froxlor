@@ -10,6 +10,13 @@
 					<div class="card-body">
 						<h5 class="card-title">{{ pagetitle }}</h5>
 
+						{% if message is not empty %}
+							<div class="alert alert-danger" role="alert">
+								<h4 class="alert-heading">{{ lng('error.error') }}</h4>
+								<p>{{ message|raw }}</p>
+							</div>
+						{% endif %}
+
 						<div class="mb-3">
 							<label for="2fa_code" class="col-form-label">{{ lng('login.2facode') }}</label>
 							<input class="form-control" type="text" name="2fa_code" id="2fa_code" value="" autocomplete="off" autofocus required/>

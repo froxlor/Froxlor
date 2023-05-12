@@ -926,6 +926,7 @@ return [
 		'domaincannotbeedited' => 'Keine Berechtigung, um die Domain %s zu bearbeiten',
 		'invalidcronjobintervalvalue' => 'Cronjob Intervall muss einer der folgenden Werte sein: %s',
 		'phpgdextensionnotavailable' => 'Die PHP GD Extension ist nicht verfügbar. Bild-Daten können nicht validiert werden.',
+		'2fa_wrongcode' => 'Der angegebene Code ist nicht korrekt',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
