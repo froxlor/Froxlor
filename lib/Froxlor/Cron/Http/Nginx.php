@@ -1171,7 +1171,6 @@ class Nginx extends HttpConfigBase
 			$phpopts .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
 			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
-			$phpopts .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 			$phpopts .= "\t\tfastcgi_pass " . Settings::Get('system.nginx_php_backend') . ";\n";
 			$phpopts .= "\t\tfastcgi_index index.php;\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
