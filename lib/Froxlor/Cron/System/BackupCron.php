@@ -36,9 +36,9 @@ class BackupCron extends FroxlorCron
 
 	public static function run()
 	{
-		// Check Traffic-Lock
-		if (function_exists('pcntl_fork')) {
-			$BackupLock = FileDir::makeCorrectFile(dirname(self::getLockfile()) . "/froxlor_cron_backup.lock");
+		// Check Backup-Lock
+		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
+			$BackupLock = FileDir::makeCorrectFile("/var/run/froxlor_cron_backup.lock");
 			if (file_exists($BackupLock) && is_numeric($BackupPid = file_get_contents($BackupLock))) {
 				if (function_exists('posix_kill')) {
 					$BackupPidStatus = @posix_kill($BackupPid, 0);
@@ -69,7 +69,7 @@ class BackupCron extends FroxlorCron
 				// Fork failed
 				return 1;
 			}
-		} else {
+		} elseif (!defined('CRON_NOFORK_FLAG')) {
 			if (extension_loaded('pcntl')) {
 				$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
 			} else {
@@ -114,7 +114,8 @@ class BackupCron extends FroxlorCron
 			]);
 		}
 
-		if (function_exists('pcntl_fork')) {
+
+		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
 			@unlink($BackupLock);
 			die();
 		}
@@ -152,7 +153,7 @@ class BackupCron extends FroxlorCron
 			]);
 
 			$has_dbs = false;
-			$current_dbserver = null;
+			$current_dbserver = -1;
 			while ($row = $sel_stmt->fetch()) {
 				// Get sql_root data for the specific database-server the database resides on
 				if ($current_dbserver != $row['dbserver']) {
@@ -183,7 +184,9 @@ class BackupCron extends FroxlorCron
 				$create_backup_tar_data .= './mysql ';
 			}
 
-			unlink($mysqlcnf_file);
+			if (file_exists($mysqlcnf_file)) {
+				unlink($mysqlcnf_file);
+			}
 
 			unset($sql_root);
 		}
@@ -223,11 +226,24 @@ class BackupCron extends FroxlorCron
 		}
 
 		if (!empty($create_backup_tar_data)) {
-			$backup_file = FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz');
+			// set owner to customer
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> chown -R ' . (int)$data['uid'] . ':' . (int)$data['gid'] . ' ' . escapeshellarg($tmpdir));
+			FileDir::safe_exec('chown -R ' . (int)$data['uid'] . ':' . (int)$data['gid'] . ' ' . escapeshellarg($tmpdir));
+			// create tar-file
+			$backup_file = FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz' . (!empty($data['pgp_public_key']) ? '.gpg' : ''));
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating backup-file "' . $backup_file . '"');
-			// pack all archives in tmp-dir to one
-			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
-			FileDir::safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
+			if (!empty($data['pgp_public_key'])){
+				// pack all archives in tmp-dir to one archive and encrypt it with gpg
+				$recipient_file = FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-recipients.gpg');
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating recipient-file "' . $recipient_file . '"');
+				file_put_contents($recipient_file, $data['pgp_public_key']);
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file '. escapeshellarg($recipient_file) .' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes');
+				FileDir::safe_exec('tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file '. escapeshellarg($recipient_file) .' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes', $return_value, ['|']);
+			} else {
+				// pack all archives in tmp-dir to one archive
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
+				FileDir::safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
+			}
 			// move to destination directory
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
 			FileDir::safe_exec('mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));

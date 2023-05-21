@@ -39,6 +39,11 @@ return [
 				'field' => 'data.destdir',
 				'callback' => [Ftp::class, 'pathRelative']
 			],
+			'pgp_public_key' => [
+				'label' => lng('panel.pgp_public_key'),
+				'field' => 'data.pgp_public_key',
+				'callback' => [Text::class, 'boolean']
+			],
 			'backup_web' => [
 				'label' => lng('extras.backup_web'),
 				'field' => 'data.backup_web',
@@ -57,6 +62,7 @@ return [
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('backup_list', [
 			'destdir',
+			'pgp_public_key',
 			'backup_web',
 			'backup_mail',
 			'backup_dbs'

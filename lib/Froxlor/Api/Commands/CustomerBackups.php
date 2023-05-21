@@ -49,6 +49,8 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *
 	 * @param string $path
 	 *            path to store the backup to
+	 * @param string $pgp_public_key
+	 *            optional pgp public key to encrypt the backup, default is empty
 	 * @param bool $backup_dbs
 	 *            optional whether to backup databases, default is 0 (false)
 	 * @param bool $backup_mail
@@ -72,6 +74,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		$path = $this->getParam('path');
 
 		// parameter
+		$pgp_public_key = $this->getParam('pgp_public_key', true, '');
 		$backup_dbs = $this->getBoolParam('backup_dbs', true, 0);
 		$backup_mail = $this->getBoolParam('backup_mail', true, 0);
 		$backup_web = $this->getBoolParam('backup_web', true, 0);
@@ -87,6 +90,19 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		// path cannot be the customers docroot
 		if ($path == FileDir::makeCorrectDir($customer['documentroot'])) {
 			Response::standardError('backupfoldercannotbedocroot', '', true);
+		}
+
+		// pgp public key validation
+		if (!empty($pgp_public_key)) {
+			// check if gnupg extension is loaded
+			if (!extension_loaded('gnupg')) {
+				Response::standardError('gnupgextensionnotavailable', '', true);
+			}
+			// check if the pgp public key is a valid key
+			putenv('GNUPGHOME='.sys_get_temp_dir());
+			if (gnupg_import(gnupg_init(), $pgp_public_key) === false) {
+				Response::standardError('invalidpgppublickey', '', true);
+			}
 		}
 
 		if ($backup_dbs != '1') {
@@ -107,10 +123,12 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 			'gid' => $customer['guid'],
 			'loginname' => $customer['loginname'],
 			'destdir' => $path,
+			'pgp_public_key' => $pgp_public_key,
 			'backup_dbs' => $backup_dbs,
 			'backup_mail' => $backup_mail,
 			'backup_web' => $backup_web
 		];
+
 		// schedule backup job
 		Cronjob::inserttask(TaskId::CREATE_CUSTOMER_BACKUP, $task_data);
 

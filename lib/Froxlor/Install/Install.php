@@ -43,7 +43,7 @@ class Install
 	public $formfield;
 	public string $requiredVersion = '7.4.0';
 	public array $requiredExtensions = ['session', 'ctype', 'xml', 'filter', 'posix', 'mbstring', 'curl', 'gmp', 'json', 'gd'];
-	public array $suggestedExtensions = ['bcmath', 'zip'];
+	public array $suggestedExtensions = ['bcmath', 'zip', 'gnupg'];
 	public array $suggestions = [];
 	public array $criticals = [];
 	public array $loadedExtensions;

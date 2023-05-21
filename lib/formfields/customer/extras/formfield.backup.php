@@ -35,6 +35,11 @@ return [
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
 					],
+					'pgp_public_key' => [
+						'label' => lng('panel.backup_pgp_public_key.title'),
+						'desc' => lng('panel.backup_pgp_public_key.description'),
+						'type' => 'textarea',
+					],
 					'path_protection_info' => [
 						'label' => lng('extras.path_protection_label'),
 						'type' => 'infotext',
