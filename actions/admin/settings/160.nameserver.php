@@ -115,6 +115,28 @@ return [
 					'save_method' => 'storeSettingField',
 					'required_otp' => true
 				],
+				'system_bindmasterservers' => [
+					'label' => lng('serversettings.bindmasterservers'),
+					'settinggroup' => 'system',
+					'varname' => 'bindmasterservers',
+					'type' => 'text',
+					'string_type' => 'validate_ip_incl_private',
+					'string_delimiter' => ',',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					'visible' => Settings::Get('system.dns_server') == 'Bind'
+				],
+				'system_bindmirrorconf_directory' => [
+					'label' => lng('serversettings.bindmirrorconf_directory'),
+					'settinggroup' => 'system',
+					'varname' => 'bindmirrorconf_directory',
+					'type' => 'text',
+					'string_type' => 'dir',
+					'default' => '/etc/bind/',
+					'save_method' => 'storeSettingField',
+					'visible' => Settings::Get('system.dns_server') == 'Bind'
+				],
 				'system_powerdns_mode' => [
 					'label' => lng('serversettings.powerdns_mode'),
 					'settinggroup' => 'system',

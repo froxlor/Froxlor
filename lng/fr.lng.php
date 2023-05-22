@@ -748,6 +748,14 @@ return [
 			'title' => 'Permettre la réinitialisation des mots de passe par les administrateurs',
 			'description' => 'Les administrateurs / revendeurs peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails',
 		],
+		'bindmasterservers' => [
+			'title' => 'Serveurs principaux Bind9',
+			'description' => 'Une liste d\'adresses IP séparées par des virgules, à partir desquelles les zones DNS sont extraites par les miroirs (slaves) Bind. Utilisé comme paramètre \'master\' dans la configuration miroir (slave).',
+		],
+		'bindmirrorconf_directory' => [
+			'title' => 'Emplacement du dossier de configuration de Bind / Named miroirs',
+			'description' => 'Oû doit être stocké la configuration de Bind / Named miroirs?',
+		],
 	],
 	'success' => [
 		'messages_success' => 'Le message a été envoyé aux destinataires "%s"',

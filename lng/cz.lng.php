@@ -656,6 +656,10 @@ return [
 		'documentroot_prefix' => [
 			'title' => 'Domovský adresář',
 		],
+		'bindconf_directory' => [
+			'title' => 'Složka konfigurace serveru DNS',
+			'description' => 'Kde jsou konfigurační soubory serveru DNS?',
+		],
 		'bindreload_command' => [
 			'title' => 'Příkaz pro znovu načtení DNS serveru',
 			'description' => 'Jaký je příkaz pro znovu načtení dns serveru?',
@@ -798,6 +802,14 @@ return [
 		],
 		'systemdefault' => 'Základní systém. nastavení',
 		'panel_allow_theme_change_admin' => 'Povolit amdinům změnit téma',
+		'bindmasterservers' => [
+			'title' => 'Bind9 hlavní (master) servery',
+			'description' => 'Čárkami oddělený seznam IP adres, ze kterých jsou zóny DNS stahovány podřízenými zařízeními Bind. Používá se jako "master"-parametr v konfiguraci slave.',
+		],
+		'bindmirrorconf_directory' => [
+			'title' => 'Složka konfigurace serveru DNS mirror',
+			'description' => 'Kde jsou konfigurační soubory serveru DNS mirror?',
+		],
 		'mailtraffic_enabled' => [
 			'title' => 'Analyzovat mailový provoz',
 		],

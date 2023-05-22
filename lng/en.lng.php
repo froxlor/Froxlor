@@ -1947,6 +1947,14 @@ Yours sincerely, your administrator',
 			'title' => 'AXFR servers',
 			'description' => 'A comma separated list of IP addresses allowed to transfer (AXFR) dns zones.',
 		],
+		'bindmasterservers' => [
+			'title' => 'Bind9 primary (master) servers',
+			'description' => 'A comma separated list of IP addresses, from which DNS zones are being pulled by Bind mirrors (slaves). Used as master-Parameter in mirror (slave) configuration.',
+		],
+		'bindmirrorconf_directory' => [
+			'title' => 'DNS mirror config directory',
+			'description' => 'Where should DNS mirror config files be saved?',
+		],
 		'powerdns_mode' => [
 			'title' => 'PowerDNS Operation Mode',
 			'description' => 'Select the PoweDNS mode: Native for no replication (Default) / Master if DNS replication is needed.',

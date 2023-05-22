@@ -497,3 +497,11 @@ if (Froxlor::isFroxlorVersion('2.0.19')) {
 	Update::showUpdateStep("Updating from 2.0.19 to 2.0.20", false);
 	Froxlor::updateToVersion('2.0.20');
 }
+
+if (Froxlor::isDatabaseVersion('202304260')) {
+	Update::showUpdateStep("Adding new settings for 'Bind primary/mirror' feature");
+	Settings::AddNew("system.bindmasterservers", '');
+	Settings::AddNew("system.bindmirrorconf_directory", '/etc/bind/');
+	Update::lastStepStatus(0);
+	Froxlor::updateToDbVersion('202305220');
+}

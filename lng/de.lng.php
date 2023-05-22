@@ -1827,6 +1827,14 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'AXFR Server',
 			'description' => 'Eine durch Kommas getrennte Liste von IP Adressen, die DNS-Zonen transferieren dürfen (AXFR).',
 		],
+		'bindmasterservers' => [
+			'title' => 'Bind9 Haupt (master) Server',
+			'description' => 'Eine durch Kommas getrennte Liste von IP Adressen, von denen DNS-Zonen von Bind Mirrors (slaves) transferiert werden. Genutzt als master-Parameter in Mirror (slave) Konfiguration.',
+		],
+		'bindmirrorconf_directory' => [
+			'title' => 'DNS-Mirrorserver Konfigurationsordner',
+			'description' => 'Wo liegen die DNS-Mirrorserver Konfigurationsdateien?',
+		],
 		'powerdns_mode' => [
 			'title' => 'PowerDNS Operation Mode',
 			'description' => 'Wählen Sie den PowerDNS-Modus: Native für keine DNS-Replikation (Standard) / Master wenn eine DNS-Replikation benötigt wird.',

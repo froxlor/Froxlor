@@ -73,6 +73,13 @@ class Bind extends DnsBase
 		fwrite($bindconf_file_handler, $this->bindconf_file);
 		fclose($bindconf_file_handler);
 		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+
+		if (!empty(explode(',', Settings::Get('system.bindmasterservers')))) {
+			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Bind masters set, generating mirror config');
+			$ns_mirror = new Bindmirror(FroxlorLogger::getInstanceOf());
+			$ns_mirror->writeConfigs();
+		}
+
 		$this->reloadDaemon();
 		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
