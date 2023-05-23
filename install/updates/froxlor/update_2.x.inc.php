@@ -498,5 +498,5 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP COLUMN `ismainbutsubto`;");
 	Update::lastStepStatus(0);
 
-	Froxlor::updateToDbVersion('202305231');
+	Froxlor::updateToDbVersion('202305230');
 }
