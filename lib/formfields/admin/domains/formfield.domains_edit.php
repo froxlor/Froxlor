@@ -65,13 +65,6 @@ return [
 						'select_var' => $domains,
 						'selected' => $result['aliasdomain']
 					],
-					'issubof' => [
-						'label' => lng('domains.issubof'),
-						'desc' => lng('domains.issubofinfo'),
-						'type' => 'select',
-						'select_var' => $subtodomains,
-						'selected' => $result['ismainbutsubto']
-					],
 					'associated_info' => [
 						'label' => lng('domains.associated_with_domain'),
 						'type' => 'label',

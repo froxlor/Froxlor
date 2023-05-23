@@ -336,24 +336,9 @@ class Lighttpd extends HttpConfigBase
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos + 1);
 
-				// maindomain
-				if ((int)$domain['parentdomainid'] == 0 && Domain::isCustomerStdSubdomain((int)$domain['id']) == false && ((int)$domain['ismainbutsubto'] == 0 || Domain::domainMainToSubExists($domain['ismainbutsubto']) == false)) {
-					$vhost_no = '50';
-				} elseif ((int)$domain['parentdomainid'] == 0 && Domain::isCustomerStdSubdomain((int)$domain['id']) == false && (int)$domain['ismainbutsubto'] > 0) {
-					// sub-but-main-domain
-					$vhost_no = '51';
-				} else {
-					// subdomains
-					// number of dots in a domain specifies it's position (and depth of subdomain) starting at 89 going downwards on higher depth
-					$vhost_no = (string)(90 - substr_count($domain['domain'], ".") + 1);
-				}
-
-				if ($ssl == '1') {
-					$vhost_no = (int)$vhost_no += 10;
-				}
-
-				$vhost_filename = FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/vhosts/' . $vhost_no . '_' . $domain['domain'] . '.conf');
-				$included_vhosts[] = $_inc_path . '/vhosts/' . $vhost_no . '_' . $domain['domain'] . '.conf';
+				$filename = self::getVhostFilename($domain, ($ssl == '1'), true);
+				$vhost_filename = FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/vhosts/' . $filename);
+				$included_vhosts[] = $_inc_path . '/vhosts/' . $filename;
 			}
 
 			if (!isset($this->lighttpd_data[$vhost_filename])) {

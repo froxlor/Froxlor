@@ -400,9 +400,6 @@ return [
 		'aliasdomains' => 'Alternatieve domeinnamen',
 		'redirectifpathisurl' => 'Doorverwijzingscode (standaard: leegt)',
 		'redirectifpathisurlinfo' => 'U dient deze alleen op te geven indien u een URL als pad hebt opgegeven',
-		'issubof' => 'Dit domein is een subdomein van een ander domein',
-		'issubofinfo' => 'U dient het correcte domein op te geven indien u een subdomein als volledig domein wilt (bijvoorbeeld als u "www.domain.tld" wilt gebruiken, dan geeft u hier "domain.tld")',
-		'nosubtomaindomain' => 'Geen subdomein van volledig domein',
 	],
 	'emails' => [
 		'description' => 'Hier kunt u e-mail adressen maken en wijzigen.<br />Een account is net als een brievenbus voor uw huis. Als iemand u mail stuurt wordt dit op uw account bezorgd.<br /><br />Om uw emails te downloaden moet u het volgende instellen in uw mailprogramma: (De <i>schuingedrukte</i> gegevens moeten gewijzigd worden in wat u ingegeven heeft!)<br />Servernaam: <b><i>Domeinnaam</i></b><br />Gebruikersnaam: <b><i>Account naam / E-mailadres</i></b><br />Wachtwoord: <b><i>het door u ingegeven wachtwoord</i></b>',
@@ -741,7 +738,6 @@ Met vriendelijke groet, uw beheerder',
 		'admin_quotas_reallywipe' => 'Weet u zeker dat u alle quota wilt verwijderen? Dit is niet terug te draaien!',
 		'admin_quotas_reallyenforce' => 'Weet u zeker dat u quota wilt afdwingen? Dit is niet terug te draaien!',
 		'phpsetting_reallydelete' => 'Weet u zeker dat u deze instellingen wilt verwijderen? Alle domeinen die deze configuratie gebruiken zullen terugvallen op de standaardinstellingen.',
-		'remove_subbutmain_domains' => 'Verwijder ook domeinen die als volledige domeinen zijn opgegeven maar een subdomein zijn van dit domein?',
 		'customer_reallyunlock' => 'Weet u zeker dat u klant %s? wilt ontgrendelen',
 	],
 	'serversettings' => [

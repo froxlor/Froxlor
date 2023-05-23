@@ -114,15 +114,11 @@ if ($page == 'domains' || $page == 'overview') {
 			} elseif ($alias_check['count'] > 0) {
 				Response::standardError('domains_cantdeletedomainwithaliases');
 			} else {
-				$showcheck = false;
-				if (Domain::domainHasMainSubDomains($id)) {
-					$showcheck = true;
-				}
-				HTML::askYesNoWithCheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, [
+				HTML::askYesNo('admin_domain_reallydelete', $filename, [
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
-				], $idna_convert->decode($result['domain']), $showcheck);
+				], $idna_convert->decode($result['domain']));
 			}
 		}
 	} elseif ($action == 'add') {
@@ -252,21 +248,6 @@ if ($page == 'domains' || $page == 'overview') {
 				$domains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')';
 			}
 
-			$subtodomains = [
-				0 => lng('domains.nosubtomaindomain')
-			];
-			$result_domains_stmt = Database::prepare("
-					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
-					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
-				");
-			// params from above still valid
-			Database::pexecute($result_domains_stmt, $params);
-
-			while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$subtodomains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')';
-			}
-
 			$phpconfigs = [];
 			$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
@@ -287,7 +268,7 @@ if ($page == 'domains' || $page == 'overview') {
 				1 => lng('domain.homedir'),
 				2 => lng('domain.docparent')
 			];
-			
+
 			// create serveralias options
 			$serveraliasoptions = [
 				0 => lng('domains.serveraliasoption_wildcard'),
@@ -469,27 +450,6 @@ if ($page == 'domains' || $page == 'overview') {
 					$domains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']);
 				}
 
-				$subtodomains = [
-					0 => lng('domains.nosubtomaindomain')
-				];
-				$result_domains_stmt = Database::prepare("
-					SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
-					AND `c`.`standardsubdomain`<>`d`.`id` AND `c`.`customerid`=`d`.`customerid`" . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
-					ORDER BY `d`.`domain` ASC
-				");
-				$params = [
-					'id' => $result['id']
-				];
-				if ($userinfo['customers_see_all'] == '0') {
-					$params['adminid'] = $userinfo['adminid'];
-				}
-				Database::pexecute($result_domains_stmt, $params);
-
-				while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$subtodomains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']);
-				}
-
 				if ($userinfo['ip'] == "-1") {
 					$result_ipsandports_stmt = Database::query("
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='0' ORDER BY `ip`, `port` ASC
@@ -556,7 +516,7 @@ if ($page == 'domains' || $page == 'overview') {
 					1 => lng('domain.homedir'),
 					2 => lng('domain.docparent')
 				];
-				
+
 				$serveraliasoptions = [
 					0 => lng('domains.serveraliasoption_wildcard'),
 					1 => lng('domains.serveraliasoption_www'),

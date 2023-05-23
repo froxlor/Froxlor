@@ -50,8 +50,8 @@ class PowerDNS extends DnsBase
 		}
 
 		foreach ($domains as $domain) {
-			if ($domain['ismainbutsubto'] > 0) {
-				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+			if ($domain['is_child']) {
+				// domains that are subdomains to other main domains are handled by recursion within walkDomainList()
 				continue;
 			}
 			$this->walkDomainList($domain, $domains);
@@ -108,7 +108,7 @@ class PowerDNS extends DnsBase
 				$isFroxlorHostname = true;
 			}
 
-			if ($domain['ismainbutsubto'] == 0) {
+			if (!$domain['is_child']) {
 				$zoneContent = Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				if (count($subzones)) {
 					foreach ($subzones as $subzone) {

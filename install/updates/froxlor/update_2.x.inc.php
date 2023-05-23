@@ -492,3 +492,11 @@ if (Froxlor::isFroxlorVersion('2.0.18')) {
 	Update::showUpdateStep("Updating from 2.0.18 to 2.0.19", false);
 	Froxlor::updateToVersion('2.0.19');
 }
+
+if (Froxlor::isDatabaseVersion('202304260')) {
+	Update::showUpdateStep("Cleaning domains table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP COLUMN `ismainbutsubto`;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202305231');
+}

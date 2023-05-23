@@ -278,7 +278,6 @@ CREATE TABLE `panel_domains` (
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
-  `ismainbutsubto` int(11) unsigned NOT NULL default '0',
   `letsencrypt` tinyint(1) NOT NULL default '0',
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',

@@ -190,9 +190,6 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            optional, whether to create an exclusive web-logfile for this domain, default 0 (false)
 	 * @param int $alias
 	 *            optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param int $issubof
-	 *            optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to
-	 *            generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *            optional, date of domain registration in form of YYYY-MM-DD, default empty (none)
 	 * @param string $termination_date
@@ -298,7 +295,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$serveraliasoption = $this->getParam('selectserveralias', true, Settings::Get('system.domaindefaultalias'));
 				$speciallogfile = $this->getBoolParam('speciallogfile', true, 0);
 				$aliasdomain = intval($this->getParam('alias', true, 0));
-				$issubof = $this->getParam('issubof', true, 0);
 				$registration_date = $this->getParam('registration_date', true, '');
 				$termination_date = $this->getParam('termination_date', true, '');
 				$caneditdomain = $this->getBoolParam('caneditdomain', true, 0);
@@ -665,10 +661,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					$serveraliasoption = '0';
 				}
 
-				if ($issubof <= 0) {
-					$issubof = '0';
-				}
-
 				$idna_convert = new IdnaWrapper();
 				if ($domain == '') {
 					Response::standardError([
@@ -723,7 +715,6 @@ class Domains extends ApiCommand implements ResourceEntity
 						'phpsettingid' => $phpsettingid,
 						'mod_fcgid_starter' => $mod_fcgid_starter,
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
-						'ismainbutsubto' => $issubof,
 						'letsencrypt' => $letsencrypt,
 						'http2' => $http2,
 						'hsts' => $hsts_maxage,
@@ -777,7 +768,6 @@ class Domains extends ApiCommand implements ResourceEntity
 						`phpsettingid` = :phpsettingid,
 						`mod_fcgid_starter` = :mod_fcgid_starter,
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
-						`ismainbutsubto` = :ismainbutsubto,
 						`letsencrypt` = :letsencrypt,
 						`http2` = :http2,
 						`hsts` = :hsts,
@@ -1069,9 +1059,6 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            default 0 (false)
 	 * @param int $alias
 	 *            optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param int $issubof
-	 *            optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to
-	 *            generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *            optional, date of domain registration in form of YYYY-MM-DD, default empty (none)
 	 * @param string $termination_date
@@ -1191,7 +1178,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
 			$speciallogverified = $this->getBoolParam('speciallogverified', true, 0);
 			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
-			$issubof = $this->getParam('issubof', true, $result['ismainbutsubto']);
 			$registration_date = $this->getParam('registration_date', true, $result['registration_date']);
 			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
 			$caneditdomain = $this->getBoolParam('caneditdomain', true, $result['caneditdomain']);
@@ -1640,10 +1626,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				Response::standardError('domainisaliasorothercustomer', '', true);
 			}
 
-			if ($issubof <= 0) {
-				$issubof = '0';
-			}
-
 			if ($serveraliasoption != '1' && $serveraliasoption != '2') {
 				$serveraliasoption = '0';
 			}
@@ -1666,7 +1648,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| $writeaccesslog != $result['writeaccesslog']
 				|| $writeerrorlog != $result['writeerrorlog']
 				|| $aliasdomain != $result['aliasdomain']
-				|| $issubof != $result['ismainbutsubto']
 				|| $email_only != $result['email_only']
 				|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
 				|| $letsencrypt != $result['letsencrypt']
@@ -1837,7 +1818,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			$update_data['writeerrorlog'] = $writeerrorlog;
 			$update_data['registration_date'] = $registration_date;
 			$update_data['termination_date'] = $termination_date;
-			$update_data['ismainbutsubto'] = $issubof;
 			$update_data['letsencrypt'] = $letsencrypt;
 			$update_data['http2'] = $http2;
 			$update_data['hsts'] = $hsts_maxage;
@@ -1885,7 +1865,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				`writeerrorlog` = :writeerrorlog,
 				`registration_date` = :registration_date,
 				`termination_date` = :termination_date,
-				`ismainbutsubto` = :ismainbutsubto,
 				`letsencrypt` = :letsencrypt,
 				`http2` = :http2,
 				`hsts` = :hsts,
@@ -2073,9 +2052,6 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            optional, the domain-id
 	 * @param string $domainname
 	 *            optional, the domainname
-	 * @param bool $delete_mainsubdomains
-	 *            optional, remove also domains that are subdomains of this domain but added as main domains; default
-	 *            false
 	 * @param bool $is_stdsubdomain
 	 *            optional, default false, specify whether it's a std-subdomain you are deleting as it does not count
 	 *            as subdomain-resource
@@ -2091,7 +2067,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			$dn_optional = $id > 0;
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
-			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
 
 			$result = $this->apiCall('Domains.get', [
 				'id' => $id,
@@ -2099,15 +2074,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			]);
 			$id = $result['id'];
 
-			// check for deletion of main-domains which are logically subdomains, #329
-			$rsd_sql = '';
-			if ($remove_subbutmain_domains) {
-				$rsd_sql .= " OR `ismainbutsubto` = :id";
-			}
-
 			$subresult_stmt = Database::prepare("
-					SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE (`id` = :id OR `parentdomainid` = :id " . $rsd_sql . ")");
+				SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE (`id` = :id OR `parentdomainid` = :id)
+			");
 			Database::pexecute($subresult_stmt, [
 				'id' => $id
 			], true, true);
@@ -2129,23 +2099,10 @@ class Domains extends ApiCommand implements ResourceEntity
 				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] deleted domain/s from mail-tables");
 			}
 
-			// if mainbutsubto-domains are not to be deleted, re-assign the (ismainbutsubto value of the main
-			// domain which is being deleted) as their new ismainbutsubto value
-			if ($remove_subbutmain_domains !== 1) {
-				$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-						`ismainbutsubto` = :newIsMainButSubtoValue
-						WHERE `ismainbutsubto` = :deletedMainDomainId
-						");
-				Database::pexecute($upd_stmt, [
-					'newIsMainButSubtoValue' => $result['ismainbutsubto'],
-					'deletedMainDomainId' => $id
-				], true, true);
-			}
-
 			$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `id` = :id OR `parentdomainid` = :id " . $rsd_sql);
+				DELETE FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `id` = :id OR `parentdomainid` = :id
+			");
 			Database::pexecute($del_stmt, [
 				'id' => $id
 			], true, true);

@@ -731,9 +731,6 @@ return [
 		'aliasdomains' => 'Alias dominios',
 		'redirectifpathisurl' => 'Código de redirección (por defecto: vacío)',
 		'redirectifpathisurlinfo' => 'Sólo tiene que seleccionar una de estas opciones si ha introducido una URL como ruta<br/><strong class="text-danger">NOTA:</strong> Los cambios sólo se aplican si la ruta indicada es una URL.',
-		'issubof' => 'Este dominio es un subdominio de otro dominio',
-		'issubofinfo' => 'Si desea añadir un subdominio como dominio completo, deberá establecerlo en el dominio correcto (por ejemplo, si desea añadir "www.domain.tld", deberá seleccionar "dominio.tld").',
-		'nosubtomaindomain' => 'No es subdominio de un dominio completo',
 		'ipandport_multi' => [
 			'title' => 'Direcciones IP',
 			'description' => 'Especifique una o más direcciones IP para el dominio.<br/><br/><div class="text-danger">NOTA: Las direcciones IP no pueden cambiarse cuando el dominio está configurado como <strong>alias-dominio</strong> de otro dominio.</div>'
@@ -1390,7 +1387,6 @@ Atentamente, su administrador'
 		'admin_quotas_reallyenforce' => '¿Realmente desea aplicar la cuota por defecto a todos los usuarios? Esto no se puede revertir.',
 		'phpsetting_reallydelete' => '¿Realmente desea eliminar esta configuración? Todos los dominios que usen esta configuración serán cambiados a la configuración por defecto.',
 		'fpmsetting_reallydelete' => '¿Realmente desea eliminar esta configuración de php-fpm? Todas las configuraciones de php que utilicen estos ajustes se cambiarán a la configuración por defecto.',
-		'remove_subbutmain_domains' => '¿Quitar también los dominios que se añaden como dominios completos pero que son subdominios de este dominio?',
 		'customer_reallyunlock' => '¿Realmente quieres desbloquear al cliente %s?',
 		'admin_integritycheck_reallyfix' => '¿Realmente quieres intentar arreglar todos los problemas de integridad de la base de datos automáticamente?',
 		'plan_reallydelete' => '¿De verdad quieres eliminar el plan de alojamiento %s?',
