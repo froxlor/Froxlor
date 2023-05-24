@@ -385,6 +385,26 @@ class DomainsTest extends TestCase
 	 *
 	 * @depends testAdminDomainsMove
 	 */
+	public function testAdminDomainsDuplicate()
+	{
+		global $admin_userdata;
+		$data = [
+			'domainname' => 'test.local',
+			'domain' => 'test.duplicate.local',
+			'description' => 'duplicated domain'
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->duplicate();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('/var/customers/webs/test3/test.duplicate.local/', $result['documentroot']);
+		$this->assertEquals(1, $result['email_only']);
+		$this->assertEquals('test.duplicate.local', $result['domain']);
+		$this->assertEquals('duplicated domain', $result['description']);
+	}
+
+	/**
+	 *
+	 * @depends testAdminDomainsDuplicate
+	 */
 	public function testAdminDomainsDelete()
 	{
 		global $admin_userdata;
