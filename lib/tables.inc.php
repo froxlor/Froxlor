@@ -56,3 +56,4 @@ const TABLE_PANEL_FPMDAEMONS = 'panel_fpmdaemons';
 const TABLE_PANEL_PLANS = 'panel_plans';
 const TABLE_API_KEYS = 'api_keys';
 const TABLE_PANEL_USERCOLUMNS = 'panel_usercolumns';
+const TABLE_PANEL_LOGINLINKS = 'panel_loginlinks';

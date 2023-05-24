@@ -498,5 +498,17 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP COLUMN `ismainbutsubto`;");
 	Update::lastStepStatus(0);
 
-	Froxlor::updateToDbVersion('202305230');
+	Update::showUpdateStep("Creating new tables and fields");
+	Database::query("DROP TABLE IF EXISTS `panel_loginlinks`;");
+	$sql = "CREATE TABLE `panel_loginlinks` (
+	  `hash` varchar(500) NOT NULL,
+	  `loginname` varchar(50) NOT NULL,
+	  `valid_until` int(15) NOT NULL,
+	  `allowed_from` text NOT NULL,
+	  UNIQUE KEY `loginname` (`loginname`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202305240');
 }

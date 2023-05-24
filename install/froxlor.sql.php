@@ -744,7 +744,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'version', '2.0.19'),
-	('panel', 'db_version', '202305230');
+	('panel', 'db_version', '202305240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1051,4 +1051,13 @@ CREATE TABLE `panel_usercolumns` (
   KEY adminid (adminid),
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+
+DROP TABLE IF EXISTS `panel_loginlinks`;
+CREATE TABLE `panel_loginlinks` (
+  `hash` varchar(500) NOT NULL,
+  `loginname` varchar(50) NOT NULL,
+  `valid_until` int(15) NOT NULL,
+  `allowed_from` text NOT NULL,
+  UNIQUE KEY `loginname` (`loginname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

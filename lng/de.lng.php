@@ -926,6 +926,7 @@ return [
 		'2fa_wrongcode' => 'Der angegebene Code ist nicht korrekt',
 		'gnupgextensionnotavailable' => 'Die PHP GnuPG Extension ist nicht verfügbar. PGP Schlüssel können nicht validiert werden.',
 		'invalidpgppublickey' => 'Der angegebene PGP Public Key ist ungültig',
+		'invalid_validtime' => 'Wert der valid_time in Sekunden muss zwischen 10 und 120 liegen.',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
