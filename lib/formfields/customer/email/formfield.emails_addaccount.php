@@ -46,7 +46,7 @@ return [
 						'autocomplete' => 'off',
 						'mandatory' => true,
 						'next_to' => [
-							'admin_password_suggestion' => [
+							'email_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',
 								'type' => 'text',
 								'visible' => (Settings::Get('panel.password_regex') == ''),

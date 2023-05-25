@@ -43,13 +43,16 @@ return [
 					'email_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off'
-					],
-					'email_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword()
+						'autocomplete' => 'off',
+						'next_to' => [
+							'email_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					]
 				]
 			]

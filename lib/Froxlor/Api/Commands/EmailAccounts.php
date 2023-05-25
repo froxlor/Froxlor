@@ -99,6 +99,11 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				Response::standardError('notallowedtouseaccounts', '', true);
 			}
 
+			if (!empty($emailaddr)) {
+				$idna_convert = new IdnaWrapper();
+				$emailaddr = $idna_convert->encode($emailaddr);
+			}
+
 			// get email address
 			$result = $this->apiCall('Emails.get', [
 				'id' => $id,
@@ -356,6 +361,11 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+
+		if (!empty($emailaddr)) {
+			$idna_convert = new IdnaWrapper();
+			$emailaddr = $idna_convert->encode($emailaddr);
+		}
 
 		// validation
 		$result = $this->apiCall('Emails.get', [
