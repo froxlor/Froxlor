@@ -500,6 +500,8 @@ return [
 		'adminguide' => 'Admin guide',
 		'userguide' => 'User guide',
 		'apiguide' => 'API guide',
+		'domain_duplicate' => 'Duplicate domain',
+		'domain_duplicate_named' => 'Duplicate %s',
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',

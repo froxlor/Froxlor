@@ -489,6 +489,8 @@ return [
 		'adminguide' => 'Admin Guide',
 		'userguide' => 'User Guide',
 		'apiguide' => 'API Guide',
+		'domain_duplicate' => 'Domain duplizieren',
+		'domain_duplicate_named' => '%s duplizieren',
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',
