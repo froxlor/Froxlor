@@ -636,6 +636,23 @@ if ($page == 'domains' || $page == 'overview') {
 				'alert_msg' => lng('domains.import_description')
 			]);
 		}
+	} elseif ($action == 'duplicate') {
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			try {
+				Domains::getLocal($userinfo, $_POST)->duplicate();
+			} catch (Exception $e) {
+				Response::dynamicError($e->getMessage());
+			}
+			Response::redirectTo($filename, [
+				'page' => $page,
+				'searchfield' => 'd.domain_ace',
+				'searchtext' => $_POST['domain'] ?? ""
+			]);
+		} else {
+			Response::redirectTo($filename, [
+				'page' => 'overview'
+			]);
+		}
 	}
 } elseif ($page == 'domainssleditor') {
 	require_once __DIR__ . '/ssl_editor.php';
