@@ -28,7 +28,7 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
-use Froxlor\Http\HttpClient;
+use Froxlor\FileDir;
 use Froxlor\Install\AutoUpdate;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
@@ -132,7 +132,7 @@ elseif ($page == 'getdownload') {
 elseif ($page == 'extract') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$toExtract = isset($_POST['archive']) ? $_POST['archive'] : null;
-		$localArchive = Froxlor::getInstallDir() . '/updates/' . $toExtract;
+		$localArchive = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/updates/' . $toExtract);
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . Froxlor::getInstallDir());
 		$result = AutoUpdate::extractZip($localArchive);
 		if ($result > 0) {
@@ -146,7 +146,7 @@ elseif ($page == 'extract') {
 		Response::redirectTo('admin_updates.php');
 	} else {
 		$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
-		$localArchive = Froxlor::getInstallDir() . '/updates/' . $toExtract;
+		$localArchive = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/updates/' . $toExtract);
 	}
 
 	if (!file_exists($localArchive)) {
