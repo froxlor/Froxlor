@@ -76,7 +76,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT
-				`d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `c`.`adminid` as customeradmin,
+				`d`.*, `c`.`loginname`, `c`.`deactivated` as `customer_deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `c`.`adminid` as customeradmin,
 				`ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
@@ -1137,6 +1137,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            (true), requires SSL
 	 * @param string $description
 	 *            optional custom description (currently not used/shown in the frontend), default empty
+	 * @param bool $deactivated
+	 *            optional, if 1 (true) the domain can be deactivated/suspended
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -1232,6 +1234,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$tlsv13_cipher_list = $result['tlsv13_cipher_list'];
 			}
 			$description = $this->getParam('description', true, $result['description']);
+			$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 
 			// count subdomain usage of source-domain
 			$subdomains_stmt = Database::prepare("
@@ -1832,6 +1835,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$update_data['honorcipherorder'] = $honorcipherorder;
 			$update_data['sessiontickets'] = $sessiontickets;
 			$update_data['description'] = $description;
+			$update_data['deactivated'] = $deactivated;
 			$update_data['id'] = $id;
 
 			$update_stmt = Database::prepare("
@@ -1878,10 +1882,16 @@ class Domains extends ApiCommand implements ResourceEntity
 				`ssl_enabled` = :sslenabled,
 				`ssl_honorcipherorder` = :honorcipherorder,
 				`ssl_sessiontickets` = :sessiontickets,
-				`description` = :description
+				`description` = :description,
+				`deactivated` = :deactivated
 				WHERE `id` = :id
 			");
 			Database::pexecute($update_stmt, $update_data, true, true);
+
+			// activate/deactivate domain-based services
+			if ($deactivated != $result['deactivated']) {
+				// @TODO
+			}
 
 			$_update_data['customerid'] = $customerid;
 			$_update_data['adminid'] = $adminid;
@@ -1900,6 +1910,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$_update_data['honorcipherorder'] = $honorcipherorder;
 			$_update_data['sessiontickets'] = $sessiontickets;
 			$_update_data['parentdomainid'] = $id;
+			$_update_data['deactivated'] = $deactivated;
 
 			// if php config is to be set for all subdomains, check here
 			$update_phpconfig = '';
@@ -1932,7 +1943,8 @@ class Domains extends ApiCommand implements ResourceEntity
 				`ssl_cipher_list` = :ssl_cipher_list,
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
 				`ssl_honorcipherorder` = :honorcipherorder,
-				`ssl_sessiontickets` = :sessiontickets
+				`ssl_sessiontickets` = :sessiontickets,
+				`deativated` = :deactivated
 				" . $update_phpconfig . $upd_specialsettings . $updatechildren . $update_sslredirect . "
 				WHERE `parentdomainid` = :parentdomainid
 			");

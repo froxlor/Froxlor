@@ -63,7 +63,8 @@ class Style
 				$termination_css = 'bg-danger';
 			}
 		}
-		return $attributes['fields']['deactivated'] ? 'bg-info' : $termination_css;
+		$deactivated = $attributes['fields']['deactivated'] || $attributes['fields']['customer_deactivated'];
+		return $deactivated ? 'bg-info' : $termination_css;
 	}
 
 	public static function resultCustomerLockedOrDeactivated(array $attributes): string

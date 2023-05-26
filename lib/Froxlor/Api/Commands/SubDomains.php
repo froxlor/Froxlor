@@ -941,7 +941,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				'`d`.`parentdomainid`',
 				'`d`.`letsencrypt`',
 				'`d`.`registration_date`',
-				'`d`.`termination_date`'
+				'`d`.`termination_date`',
+				'`d`.`deactivated`'
 			];
 		}
 		$query_fields = [];

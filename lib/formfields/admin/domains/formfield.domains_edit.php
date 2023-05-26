@@ -97,7 +97,13 @@ return [
 						'type' => 'date',
 						'value' => $result['termination_date'],
 						'size' => 10
-					]
+					],
+					'deactivated' => [
+						'label' => lng('admin.deactivated'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['deactivated']
+					],
 				]
 			],
 			'section_e' => [
