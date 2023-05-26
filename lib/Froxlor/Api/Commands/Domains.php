@@ -1944,7 +1944,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
 				`ssl_honorcipherorder` = :honorcipherorder,
 				`ssl_sessiontickets` = :sessiontickets,
-				`deativated` = :deactivated
+				`deactivated` = :deactivated
 				" . $update_phpconfig . $upd_specialsettings . $updatechildren . $update_sslredirect . "
 				WHERE `parentdomainid` = :parentdomainid
 			");
