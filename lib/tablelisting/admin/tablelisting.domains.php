@@ -48,6 +48,7 @@ return [
 			'd.domain_ace' => [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
+				'isdefaultsearchfield' => true,
 			],
 			'ipsandports' => [
 				'label' => lng('admin.ipsandports.ipsandports'),

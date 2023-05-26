@@ -48,6 +48,7 @@ return [
 				'field' => 'loginname',
 				'callback' => [Impersonate::class, 'admin'],
 				'sortable' => true,
+				'isdefaultsearchfield' => true,
 			],
 			'name' => [
 				'label' => lng('customer.name'),

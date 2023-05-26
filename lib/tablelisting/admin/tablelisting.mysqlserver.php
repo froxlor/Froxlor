@@ -40,6 +40,7 @@ return [
 			'caption' => [
 				'label' => lng('admin.mysqlserver.caption'),
 				'field' => 'caption',
+				'isdefaultsearchfield' => true,
 			],
 			'host' => [
 				'label' => lng('admin.mysqlserver.host'),

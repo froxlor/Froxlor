@@ -230,6 +230,7 @@ class Listing
 					'label' => $coldata['label'],
 					'checked' => in_array($column, $tabellisting['visible_columns']),
 					'searchable' => $coldata['searchable'] ?? true,
+					'isdefaultsearchfield' => $coldata['isdefaultsearchfield'] ?? false,
 				];
 			}
 		}

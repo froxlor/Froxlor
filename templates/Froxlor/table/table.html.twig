@@ -111,7 +111,7 @@
 						<select class="form-select" name="searchfield" id="searchfield">
 						{% for key, column in listing.available_columns %}
 							{% if column.searchable is not defined or (column.searchable is defined and column.searchable == true) %}
-							<option value="{{ key }}">{{ column.label }}</option>
+							<option value="{{ key }}" {% if column.isdefaultsearchfield is defined and column.isdefaultsearchfield == true %}selected{% endif %}>{{ column.label }}</option>
 							{% endif %}
 						{% endfor %}
 						</select>
