@@ -865,7 +865,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * lists all subdomain entries
+	 * lists all customer domain/subdomain entries
 	 *
 	 * @param bool $with_ips
 	 *            optional, default true
@@ -910,15 +910,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = [];
-			$customer_stdsubs = [];
 			foreach ($custom_list_result as $customer) {
 				$customer_ids[] = $customer['customerid'];
-				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
 			if (empty($customer_ids)) {
-				throw new Exception("Required resource unsatisfied.", 405);
-			}
-			if (empty($customer_stdsubs)) {
 				throw new Exception("Required resource unsatisfied.", 405);
 			}
 
@@ -931,9 +926,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			$customer_ids = [
 				$this->getUserDetail('customerid')
-			];
-			$customer_stdsubs = [
-				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			];
 
 			$select_fields = [
@@ -963,7 +955,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
-			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` ASC, `d`.`parentdomainid` ASC " . $this->getOrderBy(true) . $this->getLimit());
+			" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` ASC, `d`.`parentdomainid` ASC " . $this->getOrderBy(true) . $this->getLimit());
 
 		$result = [];
 		Database::pexecute($domains_stmt, $query_fields, true, true);
