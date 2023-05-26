@@ -2017,12 +2017,8 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (wenn zutreffend)<br/><br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!',
 		],
 		'includedefault_sslvhostconf' => 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren',
-		'apply_specialsettings_default' => [
-			'title' => 'Standardwert für "Übernehme Einstellungen für alle Subdomains (*.beispiel.de)\' Einstellung beim Bearbeiten einer Domain',
-		],
-		'apply_phpconfigs_default' => [
-			'title' => 'Standardwert für "PHP-Config für alle Subdomains übernehmen:\' Einstellung beim Bearbeiten einer Domain',
-		],
+		'apply_specialsettings_default' => 'Standardwert für "Übernehme Einstellungen für alle Subdomains (*.beispiel.de)" Einstellung beim Bearbeiten einer Domain',
+		'apply_phpconfigs_default' => 'Standardwert für "PHP-Config für alle Subdomains übernehmen:" Einstellung beim Bearbeiten einer Domain',
 		'awstats' => [
 			'logformat' => [
 				'title' => 'LogFormat Einstellung',

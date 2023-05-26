@@ -2136,12 +2136,8 @@ Yours sincerely, your administrator',
 			'description' => 'The content of this field will be included into this ip/port vHost container directly. You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (if applicable)<br/> Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!',
 		],
 		'includedefault_sslvhostconf' => 'Include non-SSL vHost-settings in SSL-vHost',
-		'apply_specialsettings_default' => [
-			'title' => 'Default value for "Apply specialsettings to all subdomains (*.example.com)\' setting when editing a domain',
-		],
-		'apply_phpconfigs_default' => [
-			'title' => 'Default value for "Apply php-config to all subdomains:\' setting when editing a domain',
-		],
+		'apply_specialsettings_default' => 'Default value for "Apply specialsettings to all subdomains (*.example.com)" setting when editing a domain',
+		'apply_phpconfigs_default' => 'Default value for "Apply php-config to all subdomains" setting when editing a domain',
 		'awstats' => [
 			'logformat' => [
 				'title' => 'LogFormat setting',
