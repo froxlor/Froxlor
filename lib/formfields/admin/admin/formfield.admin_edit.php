@@ -133,7 +133,7 @@ return [
 					'customers' => [
 						'label' => lng('admin.customers'),
 						'type' => 'textul',
-						'value' => $result['customers'],
+						'value' => empty($result['customers']) ? '0' : $result['customers'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
@@ -146,7 +146,7 @@ return [
 					'domains' => [
 						'label' => lng('admin.domains'),
 						'type' => 'textul',
-						'value' => $result['domains'],
+						'value' => empty($result['domains']) ? '0' : $result['domains'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
@@ -159,49 +159,49 @@ return [
 					'diskspace' => [
 						'label' => lng('customer.diskspace') . ' (' . lng('customer.mib') . ')',
 						'type' => 'textul',
-						'value' => $result['diskspace'],
+						'value' => empty($result['diskspace']) ? '0' : $result['diskspace'],
 						'maxlength' => 6,
 						'mandatory' => true
 					],
 					'traffic' => [
 						'label' => lng('customer.traffic') . ' (' . lng('customer.gib') . ')',
 						'type' => 'textul',
-						'value' => $result['traffic'],
+						'value' => empty($result['traffic']) ? '0' : $result['traffic'],
 						'maxlength' => 4,
 						'mandatory' => true
 					],
 					'subdomains' => [
 						'label' => lng('customer.subdomains'),
 						'type' => 'textul',
-						'value' => $result['subdomains'],
+						'value' => empty($result['subdomains']) ? '0' : $result['subdomains'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
 					'emails' => [
 						'label' => lng('customer.emails'),
 						'type' => 'textul',
-						'value' => $result['emails'],
+						'value' => empty($result['emails']) ? '0' : $result['emails'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
 					'email_accounts' => [
 						'label' => lng('customer.accounts'),
 						'type' => 'textul',
-						'value' => $result['email_accounts'],
+						'value' => empty($result['email_accounts']) ? '0' : $result['email_accounts'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
 					'email_forwarders' => [
 						'label' => lng('customer.forwarders'),
 						'type' => 'textul',
-						'value' => $result['email_forwarders'],
+						'value' => empty($result['email_forwarders']) ? '0' : $result['email_forwarders'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
 					'email_quota' => [
 						'label' => lng('customer.email_quota') . ' (' . lng('customer.mib') . ')',
 						'type' => 'textul',
-						'value' => $result['email_quota'],
+						'value' => empty($result['email_quota']) ? '0' : $result['email_quota'],
 						'maxlength' => 9,
 						'visible' => Settings::Get('system.mail_quota_enabled') == '1',
 						'mandatory' => true
@@ -209,13 +209,13 @@ return [
 					'ftps' => [
 						'label' => lng('customer.ftps'),
 						'type' => 'textul',
-						'value' => $result['ftps'],
+						'value' => empty($result['ftps']) ? '0' : $result['ftps'],
 						'maxlength' => 9
 					],
 					'mysqls' => [
 						'label' => lng('customer.mysqls'),
 						'type' => 'textul',
-						'value' => $result['mysqls'],
+						'value' => empty($result['mysqls']) ? '0' : $result['mysqls'],
 						'maxlength' => 9,
 						'mandatory' => true
 					]
