@@ -52,16 +52,16 @@ class Check
 		];
 
 		$check_array = [
-			'system_mod_fcgid_enabled' => [
-				'other_post_field' => 'system_phpfpm_enabled',
+			'system_mod_fcgid' => [
+				'other_post_field' => 'phpfpm_enabled',
 				'other_enabled' => 'phpfpm.enabled',
 				'other_enabled_lng' => 'phpfpmstillenabled',
 				'deactivate' => [
 					'phpfpm.enabled_ownvhost' => 0
 				]
 			],
-			'system_phpfpm_enabled' => [
-				'other_post_field' => 'system_mod_fcgid_enabled',
+			'phpfpm_enabled' => [
+				'other_post_field' => 'system_mod_fcgid',
 				'other_enabled' => 'system.mod_fcgid',
 				'other_enabled_lng' => 'fcgidstillenabled',
 				'deactivate' => [
