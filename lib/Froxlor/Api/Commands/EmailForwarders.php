@@ -77,6 +77,11 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			$idna_convert = new IdnaWrapper();
 			$destination = $idna_convert->encode($destination);
 
+			if (!empty($emailaddr)) {
+				$idna_convert = new IdnaWrapper();
+				$emailaddr = $idna_convert->encode($emailaddr);
+			}
+
 			$result = $this->apiCall('Emails.get', [
 				'id' => $id,
 				'emailaddr' => $emailaddr
