@@ -166,7 +166,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 			$row['mail'] *= 1024;
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list traffic");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list traffic");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result

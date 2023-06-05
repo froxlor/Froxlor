@@ -898,7 +898,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$result['ipsandports'] = $this->getIpsForDomain($result['id']);
 				}
 				$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] get domain '" . $result['domain'] . "'");
 				return $this->response($result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -1801,7 +1801,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				Database::pexecute($upd_stmt, [
 					'id' => $id
 				], true, true);
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] removed specialsettings on all subdomains of domain #" . $id);
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] removed specialsettings on all subdomains of domain #" . $id);
 			}
 
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
@@ -2221,7 +2221,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			// remove domain from acme.sh / lets encrypt if used
 			Cronjob::inserttask(TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			User::updateCounters();
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config

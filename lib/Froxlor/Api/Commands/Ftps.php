@@ -257,7 +257,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					Customers::increaseUsage($customer['customerid'], 'ftp_lastaccountnumber');
 				}
 
-				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
+				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added ftp-account '" . $username . " (" . $path . ")'");
 				Cronjob::inserttask(TaskId::CREATE_FTP);
 
 				if ($sendinfomail == 1) {
@@ -302,7 +302,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 
 					$this->mailer()->clearAddresses();
 				}
-				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
+				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added ftp-user '" . $username . "'");
 
 				$result = $this->apiCall('Ftps.get', [
 					'username' => $username
@@ -367,7 +367,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$params['idun'] = ($id <= 0 ? $username : $id);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get ftp-user '" . $result['username'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get ftp-user '" . $result['username'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "username '" . $username . "'");
@@ -453,7 +453,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 				"id" => $id,
 				"password" => $cryptPassword
 			], true, true);
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ftp-account password for '" . $result['username'] . "'");
 		}
 
 		// path update?
@@ -471,7 +471,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					"customerid" => $customer['customerid'],
 					"id" => $id
 				], true, true);
-				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account homdir for '" . $result['username'] . "'");
+				$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ftp-account homdir for '" . $result['username'] . "'");
 			}
 		}
 		// it's the task for "new ftp" but that will
@@ -533,7 +533,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list ftp-users");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list ftp-users");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result

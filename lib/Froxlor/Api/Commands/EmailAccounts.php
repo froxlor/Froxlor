@@ -311,7 +311,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email account for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added email account for '" . $result['email_full'] . "'");
 			$result = $this->apiCall('Emails.get', [
 				'emailaddr' => $result['email_full']
 			]);
@@ -460,7 +460,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			Admins::increaseUsage($customer['adminid'], 'email_quota_used', '', ($quota - $result['quota']));
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated email account '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated email account '" . $result['email_full'] . "'");
 		$result = $this->apiCall('Emails.get', [
 			'emailaddr' => $result['email_full']
 		]);
@@ -566,7 +566,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
 		Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $quota);
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted email account for '" . $result['email_full'] . "'");
 		return $this->response($result);
 	}
 }

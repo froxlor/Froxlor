@@ -89,7 +89,7 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE,
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO,
 			"[API] list email-domains");
 		return $this->response([
 			'count' => count($result),
