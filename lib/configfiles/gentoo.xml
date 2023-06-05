@@ -17,11 +17,13 @@
 			<default for="lighttpd" settinggroup="system" varname="apacheconf_diroptions" value="/etc/lighttpd/diropts.d/"></default>
 			<default for="lighttpd" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/lighttpd/froxlor-htpasswd/"></default>
 			<default for="lighttpd" settinggroup="system" varname="apachereload_command" value="/etc/init.d/lighttpd reload"></default>
+			<default for="lighttpd" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/lighttpd/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_vhost" value="/etc/nginx/sites-enabled/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_diroptions" value="/etc/nginx/sites-enabled/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/nginx/froxlor-htpasswd/"></default>
 			<default for="nginx" settinggroup="system" varname="apachereload_command" value="/etc/init.d/nginx reload"></default>
 			<default for="nginx" settinggroup="system" varname="letsencryptacmeconf" value="/etc/nginx/acme.conf"></default>
+			<default for="nginx" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/nginx/"></default>
 			<default settinggroup="system" varname="bindreload_command" value="/etc/init.d/named restart"></default>
 			<default settinggroup="system" varname="crondreload" value="/etc/init.d/cronie restart"></default>
 		</defaults>
