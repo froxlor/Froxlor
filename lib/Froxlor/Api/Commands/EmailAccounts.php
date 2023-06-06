@@ -95,9 +95,13 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$customer = $this->getCustomerData('email_accounts');
 
 			// check for imap||pop3 == 1, see #1298
+			// d00p, 6.5.2023 @revert this - if a customer has resources which allow email accounts
+			// it implicitly allowed SMTP, e.g. sending of emails which also requires an account to exist
+			/*
 			if ($customer['imap'] != '1' && $customer['pop3'] != '1') {
 				Response::standardError('notallowedtouseaccounts', '', true);
 			}
+			*/
 
 			if (!empty($emailaddr)) {
 				$idna_convert = new IdnaWrapper();

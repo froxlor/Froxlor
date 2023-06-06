@@ -186,7 +186,7 @@ return [
 					'url' => 'admin_customers.php?page=customers',
 					'label' => lng('admin.customers'),
 					'required_resources' => 'customers',
-					'add_shortlink' => CurrentUser::canAddResource('customers') ? 'admin_customers.php?page=customers&action=add' : null,
+					'add_shortlink' => CurrentUser::isAdmin() && CurrentUser::canAddResource('customers') ? 'admin_customers.php?page=customers&action=add' : null,
 				],
 				[
 					'url' => 'admin_admins.php?page=admins',
@@ -198,7 +198,7 @@ return [
 					'url' => 'admin_domains.php?page=domains',
 					'label' => lng('admin.domains'),
 					'required_resources' => 'domains',
-					'add_shortlink' => CurrentUser::canAddResource('domains') ? 'admin_domains.php?page=domains&action=add' : null,
+					'add_shortlink' => CurrentUser::isAdmin() && CurrentUser::canAddResource('domains') ? 'admin_domains.php?page=domains&action=add' : null,
 				],
 				[
 					'url' => 'admin_domains.php?page=sslcertificates',

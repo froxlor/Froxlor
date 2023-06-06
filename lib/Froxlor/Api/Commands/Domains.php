@@ -1892,8 +1892,8 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($deactivated != $result['deactivated']) {
 				// deactivate email accounts
 				$yesno = ($deactivated ? 'N' : 'Y');
-				$pop3 = ($deactivated ? '0' : (int)$result['pop3']);
-				$imap = ($deactivated ? '0' : (int)$result['imap']);
+				$pop3 = ($deactivated ? '0' : (int)$customer['pop3']);
+				$imap = ($deactivated ? '0' : (int)$customer['imap']);
 
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_MAIL_USERS . "`
