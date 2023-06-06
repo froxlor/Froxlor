@@ -224,6 +224,12 @@ return [
 					'add_shortlink' => 'admin_plans.php?page=overview&action=add'
 				],
 				[
+					'url' => 'admin_backups.php?page=overview',
+					'label' => lng('admin.backups.backups'),
+					'required_resources' => 'change_serversettings',
+					'add_shortlink' => 'admin_backups.php?page=overview&action=add'
+				],
+				[
 					'url' => 'admin_settings.php?page=updatecounters',
 					'label' => lng('admin.updatecounters'),
 					'required_resources' => 'change_serversettings'

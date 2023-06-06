@@ -32,6 +32,7 @@ const TABLE_MAIL_USERS = 'mail_users';
 const TABLE_MAIL_VIRTUAL = 'mail_virtual';
 const TABLE_PANEL_ACTIVATION = 'panel_activation';
 const TABLE_PANEL_ADMINS = 'panel_admins';
+const TABLE_PANEL_BACKUPS = 'panel_backups';
 const TABLE_PANEL_CUSTOMERS = 'panel_customers';
 const TABLE_PANEL_DATABASES = 'panel_databases';
 const TABLE_PANEL_DOMAINS = 'panel_domains';

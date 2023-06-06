@@ -500,6 +500,9 @@ return [
 		'adminguide' => 'Admin guide',
 		'userguide' => 'User guide',
 		'apiguide' => 'API guide',
+		'backups' => [
+			'backups' => 'Backups',
+		],
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',
@@ -2419,5 +2422,10 @@ Yours sincerely, your administrator',
 		'title' => 'Welcome to froxlor!',
 		'config_note' => 'In order for froxlor to be able to communicate properly with the backend, you have to configure it.',
 		'config_now' => 'Configure now'
+	],
+	'backup' => [
+		'backup' => 'Backup',
+		'size' => 'Size',
+		'created_at' => 'Created at',
 	],
 ];
