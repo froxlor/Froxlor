@@ -39,46 +39,44 @@ class ExportCron extends FroxlorCron
 
 	public static function run()
 	{
-		self::runFork([self::class, 'handle']);
-	}
-
-	public static function handle()
-	{
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'BackupCron: started - creating customer backup');
 
 		$result_tasks_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20' ORDER BY `id` ASC
 		");
-
-		$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :id");
-
-		$cronlog = FroxlorLogger::getInstanceOf();
 		$all_jobs = $result_tasks_stmt->fetchAll();
-		foreach ($all_jobs as $row) {
-			if ($row['data'] != '') {
-				$row['data'] = json_decode($row['data'], true);
-			}
 
-			if (is_array($row['data'])) {
-				if (isset($row['data']['customerid']) && isset($row['data']['loginname']) && isset($row['data']['destdir'])) {
-					$row['data']['destdir'] = FileDir::makeCorrectDir($row['data']['destdir']);
-					$customerdocroot = FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
+		self::runFork([self::class, 'handle'], $all_jobs);
+	}
 
-					// create folder if not exists
-					if (!file_exists($row['data']['destdir']) && $row['data']['destdir'] != '/' && $row['data']['destdir'] != Settings::Get('system.documentroot_prefix') && $row['data']['destdir'] != $customerdocroot) {
-						FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating backup-destination path for customer: ' . escapeshellarg($row['data']['destdir']));
-						FileDir::safe_exec('mkdir -p ' . escapeshellarg($row['data']['destdir']));
-					}
+	public static function handle(array $row)
+	{
+		$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :id");
+		$cronlog = FroxlorLogger::getInstanceOf();
 
-					self::createCustomerBackup($row['data'], $customerdocroot, $cronlog);
-				}
-			}
-
-			// remove entry
-			Database::pexecute($del_stmt, [
-				'id' => $row['id']
-			]);
+		if ($row['data'] != '') {
+			$row['data'] = json_decode($row['data'], true);
 		}
+
+		if (is_array($row['data'])) {
+			if (isset($row['data']['customerid']) && isset($row['data']['loginname']) && isset($row['data']['destdir'])) {
+				$row['data']['destdir'] = FileDir::makeCorrectDir($row['data']['destdir']);
+				$customerdocroot = FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
+
+				// create folder if not exists
+				if (!file_exists($row['data']['destdir']) && $row['data']['destdir'] != '/' && $row['data']['destdir'] != Settings::Get('system.documentroot_prefix') && $row['data']['destdir'] != $customerdocroot) {
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating backup-destination path for customer: ' . escapeshellarg($row['data']['destdir']));
+					FileDir::safe_exec('mkdir -p ' . escapeshellarg($row['data']['destdir']));
+				}
+
+				self::createCustomerBackup($row['data'], $customerdocroot, $cronlog);
+			}
+		}
+
+		// remove entry
+		Database::pexecute($del_stmt, [
+			'id' => $row['id']
+		]);
 	}
 
 	/**
@@ -193,13 +191,13 @@ class ExportCron extends FroxlorCron
 			// create tar-file
 			$backup_file = FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz' . (!empty($data['pgp_public_key']) ? '.gpg' : ''));
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating backup-file "' . $backup_file . '"');
-			if (!empty($data['pgp_public_key'])){
+			if (!empty($data['pgp_public_key'])) {
 				// pack all archives in tmp-dir to one archive and encrypt it with gpg
 				$recipient_file = FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-recipients.gpg');
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating recipient-file "' . $recipient_file . '"');
 				file_put_contents($recipient_file, $data['pgp_public_key']);
-				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file '. escapeshellarg($recipient_file) .' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes');
-				FileDir::safe_exec('tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file '. escapeshellarg($recipient_file) .' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes', $return_value, ['|']);
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file ' . escapeshellarg($recipient_file) . ' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes');
+				FileDir::safe_exec('tar cfz - -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data) . ' | gpg --encrypt --recipient-file ' . escapeshellarg($recipient_file) . ' --output ' . escapeshellarg($backup_file) . ' --trust-model always --batch --yes', $return_value, ['|']);
 			} else {
 				// pack all archives in tmp-dir to one archive
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
