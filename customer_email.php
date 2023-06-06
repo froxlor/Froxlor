@@ -84,7 +84,7 @@ if ($page == 'overview' || $page == 'emails') {
 if ($page == 'email_domain') {
 	$email_domainid = Request::any('domainid', 0);
 	if ($action == '') {
-		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "viewed customer_email::emails");
 
 		$sql_search = [];
 		if ($email_domainid > 0) {

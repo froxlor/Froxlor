@@ -25,10 +25,10 @@
 
 namespace Froxlor;
 
-use Froxlor\Database\Database;
-use Froxlor\UI\Collection;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\SubDomains;
+use Froxlor\Database\Database;
+use Froxlor\UI\Collection;
 
 /**
  * Class to manage the current user / session
@@ -151,15 +151,21 @@ class CurrentUser
 			]);
 			$addition = $result['emaildomains'] != 0;
 		} elseif ($resource == 'subdomains') {
-			$parentDomainCollection = (new Collection(SubDomains::class, $_SESSION['userinfo'],
-				['sql_search' => ['d.parentdomainid' => 0]]));
-			$addition = $parentDomainCollection != 0;
+			$parentDomainCollection = (new Collection(
+				SubDomains::class,
+				$_SESSION['userinfo'],
+				['sql_search' => [
+					'd.parentdomainid' => 0,
+					'd.id' => ['op' => '<>', 'value' => $_SESSION['userinfo']['standardsubdomain']]
+				]
+				]
+			));
+			$addition = $parentDomainCollection->count() != 0;
 		} elseif ($resource == 'domains') {
 			$customerCollection = (new Collection(Customers::class, $_SESSION['userinfo']));
-			$addition = $customerCollection != 0;
+			$addition = $customerCollection->count() != 0;
 		}
 
 		return ($_SESSION['userinfo'][$resource . '_used'] < $_SESSION['userinfo'][$resource] || $_SESSION['userinfo'][$resource] == '-1') && $addition;
 	}
-
 }
