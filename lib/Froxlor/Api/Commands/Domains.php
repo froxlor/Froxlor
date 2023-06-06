@@ -1890,7 +1890,26 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// activate/deactivate domain-based services
 			if ($deactivated != $result['deactivated']) {
-				// @TODO
+				// deactivate email accounts
+				$yesno = ($deactivated ? 'N' : 'Y');
+				$pop3 = ($deactivated ? '0' : (int)$result['pop3']);
+				$imap = ($deactivated ? '0' : (int)$result['imap']);
+
+				$upd_stmt = Database::prepare("
+					UPDATE `" . TABLE_MAIL_USERS . "`
+					SET `postfix`= :yesno, `pop3` = :pop3, `imap` = :imap
+					WHERE `customerid` = :customerid AND `domainid` = :domainid
+				");
+				Database::pexecute($upd_stmt, [
+					'yesno' => $yesno,
+					'pop3' => $pop3,
+					'imap' => $imap,
+					'customerid' => $customerid,
+					'domainid' => $id
+				]);
+
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " domain '" . $result['domain'] . "'");
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 
 			$_update_data['customerid'] = $customerid;

@@ -515,5 +515,14 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Database::query($sql);
 	Update::lastStepStatus(0);
 
+	Update::showUpdateStep("Adjusting setting for deactivated webroot");
+	$current_deactivated_webroot = Settings::Get('system.deactivateddocroot');
+	if (empty($current_deactivated_webroot)) {
+		Settings::Set('system.deactivateddocroot', FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/templates/misc/deactivated/'));
+		Update::lastStepStatus(0);
+	} else {
+		Update::lastStepStatus(1, 'Customized setting, not changing');
+	}
+
 	Froxlor::updateToDbVersion('202305240');
 }
