@@ -486,7 +486,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$result['ipsandports'] = $this->getIpsForDomain($result['id']);
 			}
 			$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -856,7 +856,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			Cronjob::inserttask(TaskId::REBUILD_DNS);
 			$idna_convert = new IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
 		$result = $this->apiCall('SubDomains.get', [
 			'id' => $id

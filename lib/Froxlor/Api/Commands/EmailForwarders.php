@@ -121,7 +121,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			// update customer usage
 			Customers::increaseUsage($customer['customerid'], 'email_forwarders_used');
 
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email forwarder for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added email forwarder for '" . $result['email_full'] . "'");
 
 			$result = $this->apiCall('Emails.get', [
 				'emailaddr' => $result['email_full']
@@ -298,7 +298,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			// update customer usage
 			Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used');
 
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email forwarder for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted email forwarder for '" . $result['email_full'] . "'");
 
 			$result = $this->apiCall('Emails.get', [
 				'emailaddr' => $result['email_full']

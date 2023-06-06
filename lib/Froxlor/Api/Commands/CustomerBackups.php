@@ -212,7 +212,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 				$result[] = $entry;
 			}
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list customer-backups");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list customer-backups");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result

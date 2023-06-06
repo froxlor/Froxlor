@@ -67,7 +67,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list php-configs");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list php-configs");
 
 			$with_subdomains = $this->getBoolParam('with_subdomains', true, false);
 			$query_fields = [];
@@ -392,7 +392,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$ins_data['id'] = Database::lastInsertId();
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', [
 				'id' => $ins_data['id']
@@ -629,7 +629,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', [
 				'id' => $id
@@ -686,7 +686,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			], true, true);
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response($result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);

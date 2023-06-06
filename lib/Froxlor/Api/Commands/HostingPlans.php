@@ -61,7 +61,7 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list hosting-plans");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list hosting-plans");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT p.*, a.loginname as adminname
@@ -227,7 +227,7 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 				'valuearr' => json_encode($value_arr)
 			];
 			Database::pexecute($ins_stmt, $ins_data, true, true);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added hosting-plan '" . $name . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] added hosting-plan '" . $name . "'");
 			$result = $this->apiCall('HostingPlans.get', [
 				'planname' => $name
 			]);
@@ -264,7 +264,7 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get hosting-plan '" . $result['name'] . "'");
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] get hosting-plan '" . $result['name'] . "'");
 				return $this->response($result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "planname '" . $planname . "'");
@@ -414,7 +414,7 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 				'id' => $id
 			];
 			Database::pexecute($upd_stmt, $update_data, true, true);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated hosting-plan '" . $result['name'] . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] updated hosting-plan '" . $result['name'] . "'");
 			return $this->response($update_data);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);

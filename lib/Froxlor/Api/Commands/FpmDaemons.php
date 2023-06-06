@@ -64,7 +64,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list fpm-daemons");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list fpm-daemons");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "`" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
@@ -258,7 +258,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$id = Database::lastInsertId();
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] fpm-daemon with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', [
 				'id' => $id
 			]);
@@ -384,7 +384,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] fpm-daemon with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', [
 				'id' => $id
 			]);
@@ -433,7 +433,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			], true, true);
 
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response($result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);

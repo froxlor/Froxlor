@@ -413,7 +413,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		$zone = Dns::createDomainZone($id);
 		$zonefile = (string)$zone;
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get dns-zone for '" . $result['domain'] . "'");
 		return $this->response(explode("\n", $zonefile));
 	}
 

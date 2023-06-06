@@ -147,7 +147,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 
 			// insert task to re-generate the cron.d-file
 			Cronjob::inserttask(TaskId::REBUILD_CRON);
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] cronjob with description '" . $result['module'] . '/' . $result['cronfile'] . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] cronjob with description '" . $result['module'] . '/' . $result['cronfile'] . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('Cronjobs.get', [
 				'id' => $id
 			]);
@@ -177,7 +177,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list cronjobs");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list cronjobs");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` " . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());

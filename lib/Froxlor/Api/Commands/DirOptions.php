@@ -144,7 +144,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		];
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added directory-option for '" . $userpath . "'");
 		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 
 		$result = $this->apiCall('DirOptions.get', [
@@ -247,7 +247,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		$params['id'] = $id;
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory options for '" . $result['path'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get directory options for '" . $result['path'] . "'");
 			return $this->response($result);
 		}
 		$key = "id #" . $id;
@@ -331,7 +331,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 				"id" => $id
 			];
 			Database::pexecute($stmt, $params, true, true);
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited directory options for '" . str_replace($customer['documentroot'], '/', $result['path']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] edited directory options for '" . str_replace($customer['documentroot'], '/', $result['path']) . "'");
 		}
 
 		$result = $this->apiCall('DirOptions.get', [
@@ -379,7 +379,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-options");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list directory-options");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result
@@ -478,7 +478,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			"customerid" => $customer_data['customerid'],
 			"id" => $id
 		], true, true);
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 		return $this->response($result);
 	}

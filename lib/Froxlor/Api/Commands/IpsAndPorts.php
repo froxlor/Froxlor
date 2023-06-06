@@ -65,7 +65,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || !empty($this->getUserDetail('ip')))) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list ips and ports");
 			$ip_where = "";
 			$append_where = false;
 			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
@@ -335,7 +335,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'id' => $id
 			], true, true);
 			if ($result) {
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] get ip " . $result['ip'] . " " . $result['port']);
 				return $this->response($result);
 			}
 			throw new Exception("IP/port with id #" . $id . " could not be found", 404);

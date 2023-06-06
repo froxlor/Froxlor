@@ -73,7 +73,7 @@ class Froxlor extends ApiCommand
 
 			if (empty($uc_data) || empty($response) || $uc_data['ts'] + self::UPDATE_CHECK_INTERVAL < time() || $uc_data['channel'] != Settings::Get('system.update_channel') || $force_ucheck) {
 				// log our actions
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] checking for updates");
 
 				// check for new version
 				$aucheck = AutoUpdate::checkVersion();
@@ -143,7 +143,7 @@ class Froxlor extends ApiCommand
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$json_str = $this->getParam('json_str');
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "User " . $this->getUserDetail('loginname') . " imported settings");
 			try {
 				SImExporter::import($json_str);
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
