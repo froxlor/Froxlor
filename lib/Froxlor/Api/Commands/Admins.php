@@ -95,7 +95,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list admins");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list admins");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT *
@@ -407,7 +407,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			];
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get admin '" . $result['loginname'] . "'");
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] get admin '" . $result['loginname'] . "'");
 				return $this->response($result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
@@ -705,7 +705,7 @@ class Admins extends ApiCommand implements ResourceEntity
 						WHERE `adminid` = :adminid
 					");
 					Database::pexecute($upd_stmt, $upd_data, true, true);
-					$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
+					$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] edited admin '" . $result['loginname'] . "'");
 
 					// get all admin-data for return-array
 					$result = $this->apiCall('Admins.get', [

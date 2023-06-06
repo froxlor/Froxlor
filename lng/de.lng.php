@@ -489,6 +489,8 @@ return [
 		'adminguide' => 'Admin Guide',
 		'userguide' => 'User Guide',
 		'apiguide' => 'API Guide',
+		'domain_duplicate' => 'Domain duplizieren',
+		'domain_duplicate_named' => '%s duplizieren',
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',
@@ -665,9 +667,6 @@ return [
 		'aliasdomains' => 'Aliasdomains',
 		'redirectifpathisurl' => 'Redirect-Code (Standard: leer)',
 		'redirectifpathisurlinfo' => 'Der Redirect-Code kann gewählt werden, wenn der eingegebene Pfad eine URL ist.<br/><strong class="text-danger">HINWEIS:</strong> Änderungen werden nur wirksam wenn der Pfad eine URL ist.',
-		'issubof' => 'Diese Domain ist eine Subdomain von der Domain',
-		'issubofinfo' => 'Diese Einstellung muss gesetzt werden, wenn Sie eine Subdomain einer Hauptdomain als Hauptdomain anlegen (z. B. soll "www.domain.tld" hinzugefügt werden, somit muss hier "domain.tld" ausgewählt werden).',
-		'nosubtomaindomain' => 'Keine Subdomain einer Hauptdomain',
 		'ipandport_multi' => [
 			'title' => 'IP-Adresse(n)',
 			'description' => 'Definieren Sie eine oder mehrere IP-Adresse(n) für diese Domain.<br /><br /><div class="text-danger">Hinweis: Die IP-Adressen können nicht geändert werden, sollte die Domain als <strong>Alias-Domain</strong> für eine andere Domain konfiguriert worden sein.</div>',
@@ -700,6 +699,7 @@ return [
 		'openbasedirenabled' => 'Openbasedir Einschränkung',
 		'hsts' => 'HSTS aktiviert',
 		'aliasdomainid' => 'ID der Alias-Domain',
+		'nodomainsassignedbyadmin' => 'Diesem Account wurde noch keine (aktive) Domain zugewiesen. Bitte kontaktiere deinen Administrator, wenn du der Meinung bist, das ist nicht korrekt.',
 	],
 	'emails' => [
 		'description' => 'Hier können Sie Ihre E-Mail-Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>',
@@ -770,6 +770,7 @@ return [
 		'domainisaliasorothercustomer' => 'Die ausgewählte Aliasdomain ist entweder selbst eine Aliasdomain, hat nicht die gleiche IP/Port-Kombination oder gehört einem anderen Kunden.',
 		'emailexistalready' => 'Die E-Mail-Adresse "%s" existiert bereits.',
 		'maindomainnonexist' => 'Die Hauptdomain "%s" existiert nicht.',
+		'maindomaindeactivated' => 'Die Hauptdomain "%s" ist deaktiviert.',
 		'destinationnonexist' => 'Bitte geben Sie Ihre Weiterleitungsadresse im Feld \'Nach\' ein.',
 		'destinationalreadyexistasmail' => 'Die Weiterleitung zu "%s" existiert bereits als aktive E-Mail-Adresse.',
 		'destinationalreadyexist' => 'Es existiert bereits eine Weiterleitung nach "%s".',
@@ -929,6 +930,7 @@ return [
 		'2fa_wrongcode' => 'Der angegebene Code ist nicht korrekt',
 		'gnupgextensionnotavailable' => 'Die PHP GnuPG Extension ist nicht verfügbar. PGP Schlüssel können nicht validiert werden.',
 		'invalidpgppublickey' => 'Der angegebene PGP Public Key ist ungültig',
+		'invalid_validtime' => 'Wert der valid_time in Sekunden muss zwischen 10 und 120 liegen.',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
@@ -1287,7 +1289,6 @@ Vielen Dank, Ihr Administrator',
 		'admin_quotas_reallyenforce' => 'Sind Sie sicher, dass Sie allen Benutzern das Default-Quota zuweisen wollen? Dies kann nicht rückgängig gemacht werden!',
 		'phpsetting_reallydelete' => 'Wollen Sie diese PHP-Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.',
 		'fpmsetting_reallydelete' => 'Wollen Sie diese PHP-FPM Einstellungen wirklich löschen? Alle PHP Konfigurationen die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.',
-		'remove_subbutmain_domains' => 'Auch Domains entfernen, welche als volle Domains hinzugefügt wurden, aber Subdomains von dieser Domain sind?',
 		'customer_reallyunlock' => 'Wollen Sie den Kunden "%s" wirklich entsperren?',
 		'admin_integritycheck_reallyfix' => 'M&ouml;chten Sie wirklich versuchen s&auml;mtliche Datenbank-Integrit&auml;tsprobleme automatisch zu beheben?',
 		'plan_reallydelete' => 'Wollen Sie den Hostingplan %s wirklich löschen?',
@@ -2018,12 +2019,8 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (wenn zutreffend)<br/><br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!',
 		],
 		'includedefault_sslvhostconf' => 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren',
-		'apply_specialsettings_default' => [
-			'title' => 'Standardwert für "Übernehme Einstellungen für alle Subdomains (*.beispiel.de)\' Einstellung beim Bearbeiten einer Domain',
-		],
-		'apply_phpconfigs_default' => [
-			'title' => 'Standardwert für "PHP-Config für alle Subdomains übernehmen:\' Einstellung beim Bearbeiten einer Domain',
-		],
+		'apply_specialsettings_default' => 'Standardwert für "Übernehme Einstellungen für alle Subdomains (*.beispiel.de)" Einstellung beim Bearbeiten einer Domain',
+		'apply_phpconfigs_default' => 'Standardwert für "PHP-Config für alle Subdomains übernehmen:" Einstellung beim Bearbeiten einer Domain',
 		'awstats' => [
 			'logformat' => [
 				'title' => 'LogFormat Einstellung',

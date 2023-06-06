@@ -41,6 +41,7 @@ return [
 			'description' => [
 				'label' => lng('admin.phpsettings.description'),
 				'field' => 'description',
+				'isdefaultsearchfield' => true,
 			],
 			'configs' => [
 				'label' => lng('admin.phpsettings.activephpconfigs'),

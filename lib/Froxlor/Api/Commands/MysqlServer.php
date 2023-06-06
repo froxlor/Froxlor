@@ -26,14 +26,15 @@
 namespace Froxlor\Api\Commands;
 
 use Exception;
-use PDO;
-use PDOException;
-use Froxlor\Froxlor;
-use Froxlor\PhpHelper;
 use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
 use Froxlor\Database\Database;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
 use Froxlor\Validate\Validate;
+use PDO;
+use PDOException;
 
 class MysqlServer extends ApiCommand implements ResourceEntity
 {
@@ -73,8 +74,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 *             optional, test connection with given credentials, default is true (yes)
 	 *
 	 * @access admin
-	 * @throws Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function add()
 	{
@@ -112,7 +113,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			);
 			if (!empty($mysql_ca)) {
 				$options[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ca;
-				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_verifycert;
+				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)$mysql_verifycert;
 			}
 
 			$dsn = "mysql:host=" . $mysql_host . ";port=" . $mysql_port . ";";
@@ -167,6 +168,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			$this->addDatabaseFromCustomerAllowedList($newdbserver);
 		}
 
+		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added new database server '" . $description . "' (" . $mysql_host . ")");
+
 		return $this->response(['dbserver' => $newdbserver]);
 	}
 
@@ -179,16 +182,16 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 *
 	 * @access admin
-	 * @throws Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function delete()
 	{
 		$this->validateAccess();
 
-		$id = (int) $this->getParam('id', true, -1);
+		$id = (int)$this->getParam('id', true, -1);
 		$dn_optional = $id >= 0;
-		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = (int)$this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		if ($dbserver == 0) {
@@ -212,7 +215,11 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		// when removing, remove from list of allowed_mysqlservers from any customers
 		$this->removeDatabaseFromCustomerAllowedList($dbserver);
 
+		$description = $sql_root[$dbserver]['caption'] ?? "unknown";
+		$mysql_host = $sql_root[$dbserver]['host'] ?? "unknown";
 		unset($sql_root[$dbserver]);
+
+		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] removed database server '" . $description . "' (" . $mysql_host . ")");
 
 		$this->generateNewUserData($sql, $sql_root);
 		return $this->response(['true']);
@@ -287,14 +294,14 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 *
 	 * @access admin, customer
-	 * @throws Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function get()
 	{
-		$id = (int) $this->getParam('id', true, -1);
+		$id = (int)$this->getParam('id', true, -1);
 		$dn_optional = $id >= 0;
-		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = (int)$this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		$sql_root = [];
@@ -317,6 +324,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 
 		unset($sql_root[$dbserver]['password']);
 		$sql_root[$dbserver]['id'] = $dbserver;
+		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] get database-server '" . $sql_root[$dbserver]['caption'] . "'");
 		return $this->response($sql_root[$dbserver]);
 	}
 
@@ -347,16 +355,16 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 *             optional, test connection with given credentials, default is true (yes)
 	 *
 	 * @access admin
-	 * @throws Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function update()
 	{
 		$this->validateAccess();
 
-		$id = (int) $this->getParam('id', true, -1);
+		$id = (int)$this->getParam('id', true, -1);
 		$dn_optional = $id >= 0;
-		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = (int)$this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		$sql_root = [];
@@ -417,7 +425,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			);
 			if (!empty($mysql_ca)) {
 				$options[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ca;
-				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_verifycert;
+				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)$mysql_verifycert;
 			}
 
 			$dsn = "mysql:host=" . $mysql_host . ";port=" . $mysql_port . ";";
@@ -448,6 +456,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			$this->addDatabaseFromCustomerAllowedList($dbserver);
 		}
 
+		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] edited database server '" . $description . "' (" . $mysql_host . ")");
+
 		return $this->response(['true']);
 	}
 
@@ -472,7 +482,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 				WHERE `dbserver` = :dbserver
 			");
 			$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
-			return (int) $result['num_dbs'];
+			return (int)$result['num_dbs'];
 		} else {
 			$dbserver = $this->getParam('mysql_server');
 			$customer_ids = $this->getAllowedCustomerIds();

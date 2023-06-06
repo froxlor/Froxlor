@@ -278,7 +278,6 @@ CREATE TABLE `panel_domains` (
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
-  `ismainbutsubto` int(11) unsigned NOT NULL default '0',
   `letsencrypt` tinyint(1) NOT NULL default '0',
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',
@@ -555,7 +554,7 @@ opcache.validate_timestamps'),
 	('system', 'defaultip', '1'),
 	('system', 'defaultsslip', ''),
 	('system', 'phpappendopenbasedir', '/tmp/'),
-	('system', 'deactivateddocroot', ''),
+	('system', 'deactivateddocroot', '/var/www/html/froxlor/templates/misc/deactivated/'),
 	('system', 'mailpwcleartext', '0'),
 	('system', 'last_tasks_run', '000000'),
 	('system', 'nameservers', ''),
@@ -697,7 +696,7 @@ opcache.validate_timestamps'),
 	('system', 'distribution', ''),
 	('system', 'update_channel', 'stable'),
 	('system', 'updatecheck_data', ''),
-	('system', 'update_notify_last', '2.0.19'),
+	('system', 'update_notify_last', '2.0.20'),
 	('system', 'traffictool', 'goaccess'),
 	('system', 'req_limit_per_interval', 60),
 	('system', 'req_limit_interval', 60),
@@ -744,8 +743,8 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
-	('panel', 'version', '2.0.19'),
-	('panel', 'db_version', '202304260');
+	('panel', 'version', '2.0.20'),
+	('panel', 'db_version', '202305240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1052,4 +1051,13 @@ CREATE TABLE `panel_usercolumns` (
   KEY adminid (adminid),
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+
+DROP TABLE IF EXISTS `panel_loginlinks`;
+CREATE TABLE `panel_loginlinks` (
+  `hash` varchar(500) NOT NULL,
+  `loginname` varchar(50) NOT NULL,
+  `valid_until` int(15) NOT NULL,
+  `allowed_from` text NOT NULL,
+  UNIQUE KEY `loginname` (`loginname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

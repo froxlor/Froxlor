@@ -199,7 +199,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 
 				$this->mailer()->clearAddresses();
 			}
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added mysql-database '" . $username . "'");
 
 			$result = $this->apiCall('Mysqls.get', [
 				'dbname' => $username,
@@ -299,7 +299,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
 			Database::needRoot(false);
 			$result['size'] = $mbdata['MB'] ?? 0;
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get database '" . $result['databasename'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get database '" . $result['databasename'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "dbname '" . $dbname . "'");
@@ -388,7 +388,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		];
 		Database::pexecute($stmt, $params, true, true);
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated mysql-database '" . $result['databasename'] . "'");
 		$result = $this->apiCall('Mysqls.get', [
 			'dbname' => $result['databasename']
 		]);

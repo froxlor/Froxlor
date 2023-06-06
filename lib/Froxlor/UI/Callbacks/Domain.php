@@ -51,6 +51,9 @@ class Domain
 	public static function domainTarget(array $attributes)
 	{
 		if (empty($attributes['fields']['aliasdomain'])) {
+			if ($attributes['fields']['deactivated']) {
+				return lng('admin.deactivated');
+			}
 			// path or redirect
 			if (preg_match('/^https?\:\/\//', $attributes['fields']['documentroot'])) {
 				return [
@@ -80,7 +83,7 @@ class Domain
 		}
 		$result .= '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
-		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
+		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0  && $attributes['fields']['deactivated'] == 0) {
 			$statsapp = Settings::Get('system.traffictool');
 			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" target="_blank" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
 		}
@@ -95,12 +98,12 @@ class Domain
 
 	public static function canEdit(array $attributes): bool
 	{
-		return (bool)$attributes['fields']['caneditdomain'];
+		return (bool)($attributes['fields']['caneditdomain'] && !$attributes['fields']['deactivated']);
 	}
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		if ((int)$attributes['fields']['email_only'] == 0) {
+		if ((int)$attributes['fields']['email_only'] == 0 && !$attributes['fields']['deactivated']) {
 			if ((int)UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
 				return true;
 			} elseif ((int)UI::getCurrentUser()['adminsession'] == 1) {
@@ -129,7 +132,8 @@ class Domain
 			&& UI::getCurrentUser()['dnsenabled'] == '1'
 			&& $attributes['fields']['caneditdomain'] == '1'
 			&& Settings::Get('system.bind_enable') == '1'
-			&& Settings::Get('system.dnsenabled') == '1';
+			&& Settings::Get('system.dnsenabled') == '1'
+			&& !$attributes['fields']['deactivated'];
 	}
 
 	public static function adminCanEditDNS(array $attributes): bool
@@ -152,6 +156,7 @@ class Domain
 			&& (int)$attributes['fields']['caneditdomain'] == 1
 			&& (int)$attributes['fields']['letsencrypt'] == 0
 			&& (int)$attributes['fields']['email_only'] == 0
+			&& !$attributes['fields']['deactivated']
 		) {
 			return true;
 		}

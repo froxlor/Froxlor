@@ -289,7 +289,7 @@ pm.max_children = 1
 				}
 			}
 
-			// now check if 'sendmail_path' has not beed set in the custom-php.ini
+			// now check if 'sendmail_path' has not been set in the custom-php.ini
 			// if not we use our fallback-default as usual
 			if (strpos($fpm_config, 'php_admin_value[sendmail_path]') === false) {
 				$fpm_config .= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f ' . $this->domain['email'] . "\n";

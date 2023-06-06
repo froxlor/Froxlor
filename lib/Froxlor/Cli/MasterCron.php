@@ -166,6 +166,9 @@ final class MasterCron extends CliCommand
 			FroxlorLogger::getInstanceOf()->setCronLog(0);
 		}
 
+		// clean up possible old login-links
+		Database::query("DELETE FROM `" . TABLE_PANEL_LOGINLINKS . "` WHERE `valid_until` < UNIX_TIMESTAMP()");
+
 		return $result;
 	}
 

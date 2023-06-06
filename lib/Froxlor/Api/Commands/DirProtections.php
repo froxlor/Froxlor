@@ -129,7 +129,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 		];
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
 		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 
 		$result = $this->apiCall('DirProtections.get', [
@@ -196,7 +196,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 		$params['idun'] = ($id <= 0 ? $username : $id);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory protection for '" . $result['path'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get directory protection for '" . $result['path'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "username '" . $username . "'");
@@ -279,7 +279,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated directory-protection '" . $result['username'] . " (" . $result['path'] . ")'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated directory-protection '" . $result['username'] . " (" . $result['path'] . ")'");
 		$result = $this->apiCall('DirProtections.get', [
 			'id' => $result['id']
 		]);
@@ -325,7 +325,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-protections");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list directory-protections");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result
@@ -413,7 +413,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 			"id" => $id
 		]);
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 		return $this->response($result);
 	}

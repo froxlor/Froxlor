@@ -88,8 +88,11 @@ class Emails extends ApiCommand implements ResourceEntity
 			$domain_check = $this->apiCall('SubDomains.get', [
 				'domainname' => $domain
 			], true);
-			if ($domain_check['isemaildomain'] == 0) {
+			if ((int)$domain_check['isemaildomain'] == 0) {
 				Response::standardError('maindomainnonexist', $domain, true);
+			}
+			if ((int)$domain_check['deactivated'] == 1) {
+				Response::standardError('maindomaindeactivated', $domain, true);
 			}
 
 			if (Settings::Get('catchall.catchall_enabled') != '1') {
@@ -159,7 +162,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			// update customer usage
 			Customers::increaseUsage($customer['customerid'], 'emails_used');
 
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email address '" . $email_full . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added email address '" . $email_full . "'");
 
 			$result = $this->apiCall('Emails.get', [
 				'emailaddr' => $email_full
@@ -199,7 +202,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get email address '" . $result['email_full'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
@@ -294,7 +297,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			"id" => $id
 		];
 		Database::pexecute($stmt, $params, true, true);
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
 
 		$result = $this->apiCall('Emails.get', [
 			'emailaddr' => $result['email_full']
@@ -340,7 +343,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list email-addresses");
 		return $this->response([
 			'count' => count($result),
 			'list' => $result
@@ -445,7 +448,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		], true, true);
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted email address '" . $result['email_full'] . "'");
 		return $this->response($result);
 	}
 }

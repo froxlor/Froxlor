@@ -229,6 +229,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			} elseif ($completedomain_check && strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 				// the domain does already exist as main-domain
 				Response::standardError('domainexistalready', $completedomain, true);
+			} elseif ((int)$domain_check['deactivated'] == 1) {
+				// main domain is deactivated
+				Response::standardError('maindomaindeactivated', $domain, true);
 			}
 
 			// if allowed, check for 'is email domain'-flag
@@ -486,7 +489,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$result['ipsandports'] = $this->getIpsForDomain($result['id']);
 			}
 			$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -856,7 +859,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			Cronjob::inserttask(TaskId::REBUILD_DNS);
 			$idna_convert = new IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
 		$result = $this->apiCall('SubDomains.get', [
 			'id' => $id
@@ -865,7 +868,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * lists all subdomain entries
+	 * lists all customer domain/subdomain entries
 	 *
 	 * @param bool $with_ips
 	 *            optional, default true
@@ -910,15 +913,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = [];
-			$customer_stdsubs = [];
 			foreach ($custom_list_result as $customer) {
 				$customer_ids[] = $customer['customerid'];
-				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
 			if (empty($customer_ids)) {
-				throw new Exception("Required resource unsatisfied.", 405);
-			}
-			if (empty($customer_stdsubs)) {
 				throw new Exception("Required resource unsatisfied.", 405);
 			}
 
@@ -931,9 +929,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			$customer_ids = [
 				$this->getUserDetail('customerid')
-			];
-			$customer_stdsubs = [
-				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			];
 
 			$select_fields = [
@@ -949,7 +944,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				'`d`.`parentdomainid`',
 				'`d`.`letsencrypt`',
 				'`d`.`registration_date`',
-				'`d`.`termination_date`'
+				'`d`.`termination_date`',
+				'`d`.`deactivated`'
 			];
 		}
 		$query_fields = [];
@@ -963,7 +959,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
-			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` ASC, `d`.`parentdomainid` ASC " . $this->getOrderBy(true) . $this->getLimit());
+			" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` ASC, `d`.`parentdomainid` ASC " . $this->getOrderBy(true) . $this->getLimit());
 
 		$result = [];
 		Database::pexecute($domains_stmt, $query_fields, true, true);

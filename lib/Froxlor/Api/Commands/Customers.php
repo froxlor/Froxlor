@@ -895,7 +895,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					$result['dbspace_used'] = 0;
 				}
 			}
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get customer '" . $result['loginname'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
@@ -1327,7 +1327,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					'vu' => $valid_until
 				], true, true);
 
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 
@@ -1538,7 +1538,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::query($admin_update_query);
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited user '" . $result['loginname'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] edited user '" . $result['loginname'] . "'");
 
 		/*
 		 * move customer to another admin/reseller; #1166
@@ -1911,7 +1911,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			// now, recalculate the resource-usage for the old and the new admin
 			User::updateCounters(false);
 
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
 
 			$result = $this->apiCall('Customers.get', [
 				'id' => $c_result['customerid']

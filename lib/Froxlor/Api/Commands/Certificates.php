@@ -97,7 +97,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		}
 		if (!$has_cert) {
 			$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
 			$result = $this->apiCall('Certificates.get', [
 				'id' => $domain['id']
 			]);
@@ -248,7 +248,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$ssl_ca_file = $this->getParam('ssl_ca_file', true, '');
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
 		$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, false);
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ssl-certificate for '" . $domain['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ssl-certificate for '" . $domain['domain'] . "'");
 		$result = $this->apiCall('Certificates.get', [
 			'id' => $domain['id']
 		]);
@@ -470,7 +470,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 			if ($chk['letsencrypt'] == '1') {
 				Cronjob::inserttask(TaskId::DELETE_DOMAIN_SSL, $chk['domain']);
 			}
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
 			return $this->response($result);
 		}
 		throw new Exception("Unable to determine SSL certificate. Maybe no access?", 406);

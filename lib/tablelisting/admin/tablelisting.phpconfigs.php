@@ -42,6 +42,7 @@ return [
 			'c.description' => [
 				'label' => lng('admin.phpsettings.description'),
 				'field' => 'description',
+				'isdefaultsearchfield' => true,
 			],
 			'domains' => [
 				'label' => lng('admin.phpsettings.activedomains'),

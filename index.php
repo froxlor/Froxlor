@@ -26,6 +26,7 @@
 const AREA = 'login';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\Api\FroxlorRPC;
 use Froxlor\CurrentUser;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
@@ -37,10 +38,10 @@ use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\System\Crypt;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
-use Froxlor\Language;
 
 if ($action == '') {
 	$action = 'login';
@@ -161,7 +162,7 @@ if ($action == '2fa_entercode') {
 	]);
 	exit();
 } elseif ($action == 'login') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (!empty($_POST)) {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$password = Validate::validate($_POST['password'], 'password');
 
@@ -431,13 +432,13 @@ if ($action == '2fa_entercode') {
 		}
 		$lastqrystr = "";
 		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
-			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
+			$lastqrystr = urlencode($_REQUEST['qrystr']);
 		}
+		$_SESSION['lastscript'] = $lastscript;
+		$_SESSION['lastqrystr'] = $lastqrystr;
 
 		UI::view('login/login.html.twig', [
 			'pagetitle' => 'Login',
-			'lastscript' => $lastscript,
-			'lastqrystr' => $lastqrystr,
 			'upd_in_progress' => $update_in_progress,
 			'message' => $message,
 			'successmsg' => $successmessage
@@ -449,7 +450,7 @@ if ($action == 'forgotpwd') {
 	$adminchecked = false;
 	$message = '';
 
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (!empty($_POST)) {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$email = Validate::validateEmail($_POST['loginemail']);
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `customernumber`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
@@ -633,7 +634,7 @@ if ($action == 'forgotpwd') {
 
 	UI::view('login/fpwd.html.twig', [
 		'pagetitle' => lng('login.presend'),
-		'action' => $action,
+		'formaction' => 'index.php?action='.$action,
 		'message' => $message,
 	]);
 }
@@ -656,7 +657,7 @@ if ($action == 'resetpwd') {
 		$check = substr($activationcode, 40, 10);
 
 		if (substr(md5($third . $timestamp), 0, 10) == $check && $timestamp >= time() - 86400) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (!empty($_POST)) {
 				$stmt = Database::prepare("SELECT `userid`, `admin` FROM `" . TABLE_PANEL_ACTIVATION . "`
 					WHERE `activationcode` = :activationcode");
 				$result = Database::pexecute_first($stmt, [
@@ -730,6 +731,58 @@ if ($action == 'resetpwd') {
 	}
 }
 
+// one-time link login
+if ($action == 'll') {
+	if (!Froxlor::hasUpdates() && !Froxlor::hasDbUpdates()) {
+		$loginname = Request::get('ln');
+		$hash = Request::get('h');
+		if ($loginname && $hash) {
+			$sel_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_LOGINLINKS . "`
+				WHERE `loginname` = :loginname AND `hash` = :hash
+			");
+			try {
+				$entry = Database::pexecute_first($sel_stmt, ['loginname' => $loginname, 'hash' => $hash]);
+			} catch (Exception $e) {
+				$entry = false;
+			}
+			if ($entry) {
+				// delete entry
+				$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_LOGINLINKS . "` WHERE `loginname` = :loginname AND `hash` = :hash");
+				Database::pexecute($del_stmt, ['loginname' => $loginname, 'hash' => $hash]);
+				if (time() <= $entry['valid_until']) {
+					$valid = true;
+					// validate source ip if specified
+					if (!empty($entry['allowed_from'])) {
+						$valid = false;
+						$ip_list = explode(",", $entry['allowed_from']);
+						if (FroxlorRPC::validateAllowedFrom($ip_list, $_SERVER['REMOTE_ADDR'])) {
+							$valid = true;
+						}
+					}
+					if ($valid) {
+						// login user / select only non-deactivated (in case the user got deactivated after generating the link)
+						$userinfo_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`= :loginname AND `deactivated` = 0");
+						try {
+							$userinfo = Database::pexecute_first($userinfo_stmt, [
+								"loginname" => $loginname
+							]);
+						} catch (Exception $e) {
+							$userinfo = false;
+						}
+						if ($userinfo) {
+							$userinfo['userid'] = $userinfo['customerid'];
+							$userinfo['adminsession'] = 0;
+							finishLogin($userinfo);
+						}
+					}
+				}
+			}
+		}
+	}
+	Response::redirectTo('index.php');
+}
+
 function finishLogin($userinfo)
 {
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
@@ -746,29 +799,34 @@ function finishLogin($userinfo)
 		}
 
 		$qryparams = [];
-		if (isset($_POST['qrystr']) && $_POST['qrystr'] != "") {
-			parse_str(urldecode($_POST['qrystr']), $qryparams);
+		if (isset($_SESSION['lastqrystr']) && !empty($_SESSION['lastqrystr'])) {
+			parse_str(urldecode($_SESSION['lastqrystr']), $qryparams);
+			unset($_SESSION['lastqrystr']);
 		}
 
 		if ($userinfo['adminsession'] == '1') {
 			if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
 				Response::redirectTo('admin_updates.php?page=overview');
 			} else {
-				if (isset($_POST['script']) && $_POST['script'] != "") {
-					if (preg_match("/customer\_/", $_POST['script']) === 1) {
+				if (isset($_SESSION['lastscript']) && !empty($_SESSION['lastscript'])) {
+					$lastscript = $_SESSION['lastscript'];
+					unset($_SESSION['lastscript']);
+					if (preg_match("/customer\_/", $lastscript) === 1) {
 						Response::redirectTo('admin_customers.php', [
 							"page" => "customers"
 						]);
 					} else {
-						Response::redirectTo($_POST['script'], $qryparams);
+						Response::redirectTo($lastscript, $qryparams);
 					}
 				} else {
 					Response::redirectTo('admin_index.php', $qryparams);
 				}
 			}
 		} else {
-			if (isset($_POST['script']) && $_POST['script'] != "") {
-				Response::redirectTo($_POST['script'], $qryparams);
+			if (isset($_SESSION['lastscript']) && !empty($_SESSION['lastscript'])) {
+				$lastscript = $_SESSION['lastscript'];
+				unset($_SESSION['lastscript']);
+				Response::redirectTo($lastscript, $qryparams);
 			} else {
 				Response::redirectTo('customer_index.php', $qryparams);
 			}

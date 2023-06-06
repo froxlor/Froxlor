@@ -62,8 +62,8 @@ class Bind extends DnsBase
 		$this->bindconf_file = '# ' . Settings::Get('system.bindconf_directory') . 'froxlor_bind.conf' . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n\n";
 
 		foreach ($domains as $domain) {
-			if ($domain['ismainbutsubto'] > 0) {
-				// domains with ismainbutsubto>0 are handled by recursion within walkDomainList()
+			if ($domain['is_child']) {
+				// domains that are subdomains to other main domains are handled by recursion within walkDomainList()
 				continue;
 			}
 			$this->walkDomainList($domain, $domains);
@@ -114,7 +114,7 @@ class Bind extends DnsBase
 				$isFroxlorHostname = true;
 			}
 
-			if ($domain['ismainbutsubto'] == 0) {
+			if (!$domain['is_child']) {
 				$zoneContent = (string)Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 				$zonefile_name = FileDir::makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);

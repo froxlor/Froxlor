@@ -500,6 +500,8 @@ return [
 		'adminguide' => 'Admin guide',
 		'userguide' => 'User guide',
 		'apiguide' => 'API guide',
+		'domain_duplicate' => 'Duplicate domain',
+		'domain_duplicate_named' => 'Duplicate %s',
 		'backups' => [
 			'backups' => 'Backups',
 		],
@@ -734,9 +736,6 @@ return [
 		'aliasdomains' => 'Alias domains',
 		'redirectifpathisurl' => 'Redirect code (default: empty)',
 		'redirectifpathisurlinfo' => 'You only need to select one of these if you entered an URL as path<br/><strong class="text-danger">NOTE:</strong> Changes are only applied if the given path is an URL.',
-		'issubof' => 'This domain is a subdomain of another domain',
-		'issubofinfo' => 'You have to set this to the correct domain if you want to add a subdomain as full-domain (e.g. you want to add "www.domain.tld", you have to select "domain.tld" here)',
-		'nosubtomaindomain' => 'No subdomain of a full domain',
 		'ipandport_multi' => [
 			'title' => 'IP address(es)',
 			'description' => 'Specify one or more IP address for the domain.<br /><br /><div class="text-danger">NOTE: IP addresses cannot be changed when the domain is configured as <strong>alias-domain</strong> of another domain.</div>',
@@ -769,6 +768,7 @@ return [
 		'openbasedirenabled' => 'Openbasedir restiction',
 		'hsts' => 'HSTS enabled',
 		'aliasdomainid' => 'ID of alias domain',
+		'nodomainsassignedbyadmin' => 'Your account has currently no (active) domains assigned to it. Please contact your administrator if you think this is wrong.',
 	],
 	'emails' => [
 		'description' => 'Here you can create and change your email addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>',
@@ -839,6 +839,7 @@ return [
 		'domainisaliasorothercustomer' => 'The selected alias domain is either itself an alias domain, has a different ip/port combination or belongs to another customer.',
 		'emailexistalready' => 'The email-address %s already exists.',
 		'maindomainnonexist' => 'The main-domain %s does not exist.',
+		'maindomaindeactivated' => 'The main-domain %s is deactivated.',
 		'destinationnonexist' => 'Please create your forwarder in the field \'Destination\'.',
 		'destinationalreadyexistasmail' => 'The forwarder to %s already exists as active email-address.',
 		'destinationalreadyexist' => 'You have already defined a forwarder to "%s"',
@@ -1001,6 +1002,7 @@ return [
 		'2fa_wrongcode' => 'The code entered is not valid',
 		'gnupgextensionnotavailable' => 'The PHP GnuPG extension is not available. Unable to validate PGP Public Key',
 		'invalidpgppublickey' => 'The PGP Public Key is not valid',
+		'invalid_validtime' => 'Valid time in seconds can only be between 10 and 120',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',
@@ -1402,7 +1404,6 @@ Yours sincerely, your administrator',
 		'admin_quotas_reallyenforce' => 'Do you really want to enforce the default quota to all Users? This cannot be reverted!',
 		'phpsetting_reallydelete' => 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.',
 		'fpmsetting_reallydelete' => 'Do you really want to delete these php-fpm settings? All php configurations which use these settings currently will be changed to the default config.',
-		'remove_subbutmain_domains' => 'Also remove domains which are added as full domains but which are subdomains of this domain?',
 		'customer_reallyunlock' => 'Do you really want to unlock customer %s?',
 		'admin_integritycheck_reallyfix' => 'Do you really want to try fixing all database integrity problems automatically?',
 		'plan_reallydelete' => 'Do you really want to delete the hosting plan %s?',
@@ -2140,12 +2141,8 @@ Yours sincerely, your administrator',
 			'description' => 'The content of this field will be included into this ip/port vHost container directly. You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (if applicable)<br/> Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!',
 		],
 		'includedefault_sslvhostconf' => 'Include non-SSL vHost-settings in SSL-vHost',
-		'apply_specialsettings_default' => [
-			'title' => 'Default value for "Apply specialsettings to all subdomains (*.example.com)\' setting when editing a domain',
-		],
-		'apply_phpconfigs_default' => [
-			'title' => 'Default value for "Apply php-config to all subdomains:\' setting when editing a domain',
-		],
+		'apply_specialsettings_default' => 'Default value for "Apply specialsettings to all subdomains (*.example.com)" setting when editing a domain',
+		'apply_phpconfigs_default' => 'Default value for "Apply php-config to all subdomains" setting when editing a domain',
 		'awstats' => [
 			'logformat' => [
 				'title' => 'LogFormat setting',

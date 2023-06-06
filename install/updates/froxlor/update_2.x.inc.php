@@ -492,3 +492,37 @@ if (Froxlor::isFroxlorVersion('2.0.18')) {
 	Update::showUpdateStep("Updating from 2.0.18 to 2.0.19", false);
 	Froxlor::updateToVersion('2.0.19');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.19')) {
+	Update::showUpdateStep("Updating from 2.0.19 to 2.0.20", false);
+	Froxlor::updateToVersion('2.0.20');
+}
+
+if (Froxlor::isDatabaseVersion('202304260')) {
+	Update::showUpdateStep("Cleaning domains table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP COLUMN `ismainbutsubto`;");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Creating new tables and fields");
+	Database::query("DROP TABLE IF EXISTS `panel_loginlinks`;");
+	$sql = "CREATE TABLE `panel_loginlinks` (
+	  `hash` varchar(500) NOT NULL,
+	  `loginname` varchar(50) NOT NULL,
+	  `valid_until` int(15) NOT NULL,
+	  `allowed_from` text NOT NULL,
+	  UNIQUE KEY `loginname` (`loginname`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Adjusting setting for deactivated webroot");
+	$current_deactivated_webroot = Settings::Get('system.deactivateddocroot');
+	if (empty($current_deactivated_webroot)) {
+		Settings::Set('system.deactivateddocroot', FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/templates/misc/deactivated/'));
+		Update::lastStepStatus(0);
+	} else {
+		Update::lastStepStatus(1, 'Customized setting, not changing');
+	}
+
+	Froxlor::updateToDbVersion('202305240');
+}

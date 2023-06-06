@@ -95,8 +95,17 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$customer = $this->getCustomerData('email_accounts');
 
 			// check for imap||pop3 == 1, see #1298
+			// d00p, 6.5.2023 @revert this - if a customer has resources which allow email accounts
+			// it implicitly allowed SMTP, e.g. sending of emails which also requires an account to exist
+			/*
 			if ($customer['imap'] != '1' && $customer['pop3'] != '1') {
 				Response::standardError('notallowedtouseaccounts', '', true);
+			}
+			*/
+
+			if (!empty($emailaddr)) {
+				$idna_convert = new IdnaWrapper();
+				$emailaddr = $idna_convert->encode($emailaddr);
 			}
 
 			// get email address
@@ -306,7 +315,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email account for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added email account for '" . $result['email_full'] . "'");
 			$result = $this->apiCall('Emails.get', [
 				'emailaddr' => $result['email_full']
 			]);
@@ -356,6 +365,11 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+
+		if (!empty($emailaddr)) {
+			$idna_convert = new IdnaWrapper();
+			$emailaddr = $idna_convert->encode($emailaddr);
+		}
 
 		// validation
 		$result = $this->apiCall('Emails.get', [
@@ -450,7 +464,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			Admins::increaseUsage($customer['adminid'], 'email_quota_used', '', ($quota - $result['quota']));
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated email account '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated email account '" . $result['email_full'] . "'");
 		$result = $this->apiCall('Emails.get', [
 			'emailaddr' => $result['email_full']
 		]);
@@ -556,7 +570,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
 		Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $quota);
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted email account for '" . $result['email_full'] . "'");
 		return $this->response($result);
 	}
 }

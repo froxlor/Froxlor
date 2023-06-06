@@ -272,7 +272,8 @@ abstract class ApiCommand extends ApiParameter
 			$ops = [
 				'<',
 				'>',
-				'='
+				'=',
+				'<>'
 			];
 			$first = true;
 			foreach ($search as $field => $valoper) {

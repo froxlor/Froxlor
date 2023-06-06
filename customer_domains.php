@@ -51,7 +51,7 @@ $id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'domains') {
 	if ($action == '') {
-		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "viewed customer_domains::domains");
 
 		$parentdomain_id = (int)Request::any('pid', '0');
 
@@ -73,10 +73,17 @@ if ($page == 'overview' || $page == 'domains') {
 			];
 		}
 
-		UI::view('user/table.html.twig', [
+		$table_tpl = 'table.html.twig';
+		if ($collection->count() == 0) {
+			$table_tpl = 'table-note.html.twig';
+		}
+		UI::view('user/' . $table_tpl, [
 			'listing' => Listing::format($collection, $domain_list_data, 'domain_list'),
 			'actions_links' => $actions_links,
-			'entity_info' => lng('domains.description')
+			'entity_info' => lng('domains.description'),
+			// alert-box
+			'type' => 'warning',
+			'alert_msg' => lng('domains.nodomainsassignedbyadmin')
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
@@ -130,6 +137,7 @@ if ($page == 'overview' || $page == 'domains') {
 					AND `parentdomainid` = '0'
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
+					AND `deactivated` = '0'
 					ORDER BY `domain` ASC");
 				Database::pexecute($stmt, [
 					"customerid" => $userinfo['customerid']
@@ -137,6 +145,14 @@ if ($page == 'overview' || $page == 'domains') {
 				$domains = [];
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains[$row['domain']] = $idna_convert->decode($row['domain']);
+				}
+
+				// check of there are any domains to be used
+				if (count($domains) <= 0) {
+					// no, possible direct URL access, redirect to overview
+					Response::redirectTo($filename, [
+						'page' => $page
+					]);
 				}
 
 				$aliasdomains[0] = lng('domains.noaliasdomain');

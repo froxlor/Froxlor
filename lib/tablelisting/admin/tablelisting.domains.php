@@ -48,6 +48,7 @@ return [
 			'd.domain_ace' => [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
+				'isdefaultsearchfield' => true,
 			],
 			'ipsandports' => [
 				'label' => lng('admin.ipsandports.ipsandports'),
@@ -160,6 +161,11 @@ return [
 					'action' => 'edit',
 					'id' => ':id'
 				],
+			],
+			'duplicate' => [
+				'icon' => 'fa-solid fa-clone',
+				'title' => lng('admin.domain_duplicate'),
+				'modal' => [Text::class, 'domainDuplicateModal'],
 			],
 			'logfiles' => [
 				'icon' => 'fa-solid fa-file',

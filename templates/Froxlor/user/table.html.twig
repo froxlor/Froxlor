@@ -35,7 +35,7 @@
 				{% for link in actions_links %}
 					<a class="btn {{ link.class|default('btn-outline-primary') }}" href="{{ link.href|raw }}">
 						<i class="{{ link.icon|default('fa-solid fa-plus-circle') }}"></i>
-						<span class="d-none d-lg-inline ms-lg-1">{{ link.label }}</span>
+						{% if link.label is defined and link.label is not empty %}<span class="d-none d-lg-inline ms-lg-1">{{ link.label }}</span>{% endif %}
 					</a>
 				{% endfor %}
 			{% endif %}
