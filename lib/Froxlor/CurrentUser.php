@@ -144,7 +144,7 @@ class CurrentUser
 			$result_stmt = Database::prepare("
 				SELECT COUNT(`id`) as emaildomains
 				FROM `" . TABLE_PANEL_DOMAINS . "`
-				WHERE `customerid`= :cid AND `isemaildomain` = '1'
+				WHERE `customerid`= :cid AND `isemaildomain` = '1' AND `deactivated` = '0'
 			");
 			$result = Database::pexecute_first($result_stmt, [
 				"cid" => $_SESSION['userinfo']['customerid']
@@ -156,6 +156,7 @@ class CurrentUser
 				$_SESSION['userinfo'],
 				['sql_search' => [
 					'd.parentdomainid' => 0,
+					'd.deactivated' => 0,
 					'd.id' => ['op' => '<>', 'value' => $_SESSION['userinfo']['standardsubdomain']]
 				]
 				]

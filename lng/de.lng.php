@@ -699,7 +699,7 @@ return [
 		'openbasedirenabled' => 'Openbasedir Einschränkung',
 		'hsts' => 'HSTS aktiviert',
 		'aliasdomainid' => 'ID der Alias-Domain',
-		'nodomainsassignedbyadmin' => 'Diesem Account wurde noch keine Domain zugewiesen. Bitte kontaktiere deinen Administrator, wenn du der Meinung bist, das ist nicht korrekt.',
+		'nodomainsassignedbyadmin' => 'Diesem Account wurde noch keine (aktive) Domain zugewiesen. Bitte kontaktiere deinen Administrator, wenn du der Meinung bist, das ist nicht korrekt.',
 	],
 	'emails' => [
 		'description' => 'Hier können Sie Ihre E-Mail-Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>',
@@ -770,6 +770,7 @@ return [
 		'domainisaliasorothercustomer' => 'Die ausgewählte Aliasdomain ist entweder selbst eine Aliasdomain, hat nicht die gleiche IP/Port-Kombination oder gehört einem anderen Kunden.',
 		'emailexistalready' => 'Die E-Mail-Adresse "%s" existiert bereits.',
 		'maindomainnonexist' => 'Die Hauptdomain "%s" existiert nicht.',
+		'maindomaindeactivated' => 'Die Hauptdomain "%s" ist deaktiviert.',
 		'destinationnonexist' => 'Bitte geben Sie Ihre Weiterleitungsadresse im Feld \'Nach\' ein.',
 		'destinationalreadyexistasmail' => 'Die Weiterleitung zu "%s" existiert bereits als aktive E-Mail-Adresse.',
 		'destinationalreadyexist' => 'Es existiert bereits eine Weiterleitung nach "%s".',

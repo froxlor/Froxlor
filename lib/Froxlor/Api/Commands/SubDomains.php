@@ -229,6 +229,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			} elseif ($completedomain_check && strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 				// the domain does already exist as main-domain
 				Response::standardError('domainexistalready', $completedomain, true);
+			} elseif ((int)$domain_check['deactivated'] == 1) {
+				// main domain is deactivated
+				Response::standardError('maindomaindeactivated', $domain, true);
 			}
 
 			// if allowed, check for 'is email domain'-flag

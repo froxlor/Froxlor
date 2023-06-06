@@ -137,6 +137,7 @@ if ($page == 'overview' || $page == 'domains') {
 					AND `parentdomainid` = '0'
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
+					AND `deactivated` = '0'
 					ORDER BY `domain` ASC");
 				Database::pexecute($stmt, [
 					"customerid" => $userinfo['customerid']

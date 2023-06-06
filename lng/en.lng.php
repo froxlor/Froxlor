@@ -765,7 +765,7 @@ return [
 		'openbasedirenabled' => 'Openbasedir restiction',
 		'hsts' => 'HSTS enabled',
 		'aliasdomainid' => 'ID of alias domain',
-		'nodomainsassignedbyadmin' => 'Your account has currently no domains assigned to it. Please contact your administrator if you think this is wrong.',
+		'nodomainsassignedbyadmin' => 'Your account has currently no (active) domains assigned to it. Please contact your administrator if you think this is wrong.',
 	],
 	'emails' => [
 		'description' => 'Here you can create and change your email addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>',
@@ -836,6 +836,7 @@ return [
 		'domainisaliasorothercustomer' => 'The selected alias domain is either itself an alias domain, has a different ip/port combination or belongs to another customer.',
 		'emailexistalready' => 'The email-address %s already exists.',
 		'maindomainnonexist' => 'The main-domain %s does not exist.',
+		'maindomaindeactivated' => 'The main-domain %s is deactivated.',
 		'destinationnonexist' => 'Please create your forwarder in the field \'Destination\'.',
 		'destinationalreadyexistasmail' => 'The forwarder to %s already exists as active email-address.',
 		'destinationalreadyexist' => 'You have already defined a forwarder to "%s"',
