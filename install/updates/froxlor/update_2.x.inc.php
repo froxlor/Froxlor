@@ -524,5 +524,52 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 		Update::lastStepStatus(1, 'Customized setting, not changing');
 	}
 
+	Update::showUpdateStep("Creating new tables and fields for backups");
+	Database::query("DROP TABLE IF EXISTS `panel_backups`;");
+	$sql = "CREATE TABLE `panel_backups` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `adminid` int(11) NOT NULL,
+	  `customerid` int(11) NOT NULL,
+	  `loginname` varchar(255) NOT NULL,
+	  `size` bigint(20) NOT NULL,
+	  `created_at` int(15) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Adding new backup settings");
+	Settings::AddNew('backup.enabled', 0);
+	Settings::AddNew('backup.type', 'Local');
+	Settings::AddNew('backup.region', '');
+	Settings::AddNew('backup.bucket', '');
+	Settings::AddNew('backup.destination_path', '/srv/backups/');
+	Settings::AddNew('backup.hostname', '');
+	Settings::AddNew('backup.username', '');
+	Settings::AddNew('backup.password', '');
+	Settings::AddNew('backup.pgp_public_key', '');
+	Settings::AddNew('backup.retention', 3);
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Adjusting cronjobs");
+	Database::query("
+        UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET
+        `module`= 'froxlor/export',
+        `cronfile` = 'export',
+        `cronclass` = '\\Froxlor\\Cron\\System\\ExportCron',
+        `desc_lng_key` = 'cron_export'
+        WHERE `module` = 'froxlor/backup'
+    ");
+	Database::query("
+        INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` SET
+        `module`= 'froxlor/backup',
+        `cronfile` = 'backup',
+        `cronclass` = '\\Froxlor\\Cron\\Backup\\BackupCron',
+        `interval` = '1 DAY',
+        `isactive` = '0',
+        `desc_lng_key` = 'cron_backup'
+    ");
+	Update::lastStepStatus(0);
+
 	Froxlor::updateToDbVersion('202305240');
 }

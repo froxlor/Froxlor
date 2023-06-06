@@ -236,7 +236,7 @@ return [
 					'varname' => 'backupenabled',
 					'type' => 'checkbox',
 					'default' => false,
-					'cronmodule' => 'froxlor/backup',
+					'cronmodule' => 'froxlor/export',
 					'save_method' => 'storeSettingField'
 				],
 				'system_createstdsubdom_default' => [

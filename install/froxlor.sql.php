@@ -700,6 +700,16 @@ opcache.validate_timestamps'),
 	('system', 'traffictool', 'goaccess'),
 	('system', 'req_limit_per_interval', 60),
 	('system', 'req_limit_interval', 60),
+	('backup', 'enabled', 0),
+	('backup', 'type', 'Local'),
+	('backup', 'region', ''),
+	('backup', 'bucket', ''),
+	('backup', 'destination_path', '/srv/backups/'),
+	('backup', 'hostname', ''),
+	('backup', 'username', ''),
+	('backup', 'password', ''),
+	('backup', 'pgp_public_key', ''),
+	('backup', 'retention', '3'),
 	('api', 'enabled', '0'),
 	('api', 'customer_default', '1'),
 	('2fa', 'enabled', '1'),
@@ -913,7 +923,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 	(3, 'froxlor/reports', 'usage_report', '\\Froxlor\\Cron\\Traffic\\ReportsCron', '1 DAY', '1', 'cron_usage_report'),
 	(4, 'froxlor/core', 'mailboxsize', '\\Froxlor\\Cron\\System\\MailboxsizeCron', '6 HOUR', '1', 'cron_mailboxsize'),
 	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh', '5 MINUTE', '0', 'cron_letsencrypt'),
-	(6, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\System\\BackupCron', '1 DAY', '0', 'cron_backup');
+	(6, 'froxlor/export', 'export', '\\Froxlor\\Cron\\System\\ExportCron', '1 DAY', '0', 'cron_export');
+	(7, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\Backup\\BackupCron', '1 DAY', '0', 'cron_backup');
 
 
 DROP TABLE IF EXISTS `ftp_quotalimits`;

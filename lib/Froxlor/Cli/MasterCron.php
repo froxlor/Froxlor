@@ -52,7 +52,7 @@ final class MasterCron extends CliCommand
 		$this->setDescription('Regulary perform tasks created by froxlor');
 		$this->addArgument('job', InputArgument::IS_ARRAY, 'Job(s) to run');
 		$this->addOption('run-task', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Run a specific task [1 = re-generate configs, 4 = re-generate dns zones, 10 = re-set quotas, 99 = re-create cron.d-file]')
-			->addOption('force', 'f', InputOption::VALUE_NONE, 'Forces re-generating of config-files (webserver, nameserver, etc.)')
+			->addOption('force', 'f', InputOption::VALUE_NONE, 'Forces given job or, if none given, forces re-generating of config-files (webserver, nameserver, etc.)')
 			->addOption('debug', 'd', InputOption::VALUE_NONE, 'Output debug information about what is going on to STDOUT.')
 			->addOption('no-fork', 'N', InputOption::VALUE_NONE, 'Do not fork to background (traffic cron only).');
 	}
@@ -71,12 +71,13 @@ final class MasterCron extends CliCommand
 
 		// handle force option
 		if ($input->getOption('force')) {
-			// rebuild all config files
-			Cronjob::inserttask(TaskId::REBUILD_VHOST);
-			Cronjob::inserttask(TaskId::REBUILD_DNS);
-			Cronjob::inserttask(TaskId::CREATE_QUOTA);
-			Cronjob::inserttask(TaskId::REBUILD_CRON);
-			array_push($jobs, 'tasks');
+			if (empty($jobs) || in_array('tasks', $jobs)) {
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
+				Cronjob::inserttask(TaskId::REBUILD_DNS);
+				Cronjob::inserttask(TaskId::CREATE_QUOTA);
+				Cronjob::inserttask(TaskId::REBUILD_CRON);
+				array_push($jobs, 'tasks');
+			}
 			define('CRON_IS_FORCED', 1);
 		}
 		// handle debug option
@@ -91,7 +92,7 @@ final class MasterCron extends CliCommand
 		if ($input->getOption('run-task')) {
 			$tasks_to_run = $input->getOption('run-task');
 			foreach ($tasks_to_run as $ttr) {
-				if (in_array($ttr, [1, 4, 10, 99])) {
+				if (in_array($ttr, [TaskId::REBUILD_VHOST, TaskId::REBUILD_DNS, TaskId::CREATE_QUOTA, TaskId::REBUILD_CRON])) {
 					Cronjob::inserttask($ttr);
 					array_push($jobs, 'tasks');
 				} else {

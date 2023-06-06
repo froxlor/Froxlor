@@ -30,6 +30,7 @@ namespace Froxlor\Cron\Traffic;
  * @author        Froxlor team <team@froxlor.org> (2010-)
  */
 
+use Froxlor\Cron\Forkable;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
@@ -42,51 +43,15 @@ use PDO;
 
 class TrafficCron extends FroxlorCron
 {
+	use Forkable;
 
 	public static function run()
 	{
-		// Check Traffic-Lock
-		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
-			$TrafficLock = FileDir::makeCorrectFile("/var/run/froxlor_cron_traffic.lock");
-			if (file_exists($TrafficLock) && is_numeric($TrafficPid = file_get_contents($TrafficLock))) {
-				if (function_exists('posix_kill')) {
-					$TrafficPidStatus = @posix_kill($TrafficPid, 0);
-				} else {
-					system("kill -CHLD " . $TrafficPid . " 1> /dev/null 2> /dev/null", $TrafficPidStatus);
-					$TrafficPidStatus = !$TrafficPidStatus;
-				}
-				if ($TrafficPidStatus) {
-					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
-					return 1;
-				}
-			}
-			// Create Traffic Log and Fork
-			// We close the database - connection before we fork, so we don't share resources with the child
-			Database::needRoot(false); // this forces the connection to be set to null
-			$TrafficPid = pcntl_fork();
-			// Parent
-			if ($TrafficPid) {
-				file_put_contents($TrafficLock, $TrafficPid);
-				// unnecessary to recreate database connection here
-				return 0;
-			} elseif ($TrafficPid == 0) {
-				// Child
-				posix_setsid();
-				// re-create db
-				Database::needRoot(false);
-			} else {
-				// Fork failed
-				return 1;
-			}
-		} elseif (!defined('CRON_NOFORK_FLAG')) {
-			if (extension_loaded('pcntl')) {
-				$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
-			} else {
-				$msg = "PHP compiled without pcntl.";
-			}
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
-		}
+		self::runFork([self::class, 'handle']);
+	}
 
+	public static function handle()
+	{
 		/**
 		 * TRAFFIC AND DISKUSAGE MEASURE
 		 */
@@ -611,11 +576,6 @@ class TrafficCron extends FroxlorCron
 		}
 
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = 'system' AND `varname` = 'last_traffic_run'");
-
-		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
-			@unlink($TrafficLock);
-			die();
-		}
 	}
 
 	/**

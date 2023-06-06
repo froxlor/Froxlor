@@ -314,4 +314,30 @@ class Check
 		}
 		return $returnvalue;
 	}
+
+	public static function checkPgpPublicKeySetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+	{
+		// if the field is empty, we don't need to check anything
+		if ($newfieldvalue === '') {
+			return [self::FORMFIELDS_PLAUSIBILITY_CHECK_OK];
+		}
+
+		// check if gnupg extension is loaded
+		if (!extension_loaded('gnupg')) {
+			return [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				'gnupgextensionnotavailable'
+			];
+		}
+		// check if the pgp public key is a valid key
+		putenv('GNUPGHOME='.sys_get_temp_dir());
+		if (gnupg_import(gnupg_init(), $newfieldvalue) === false) {
+			return [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				'invalidpgppublickey'
+			];
+		}
+
+		return [self::FORMFIELDS_PLAUSIBILITY_CHECK_OK];
+	}
 }

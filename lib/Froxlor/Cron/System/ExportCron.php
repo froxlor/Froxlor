@@ -25,59 +25,25 @@
 
 namespace Froxlor\Cron\System;
 
+use Exception;
+use Froxlor\Cron\Forkable;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
 
-class BackupCron extends FroxlorCron
+class ExportCron extends FroxlorCron
 {
+	use Forkable;
 
 	public static function run()
 	{
-		// Check Backup-Lock
-		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
-			$BackupLock = FileDir::makeCorrectFile("/var/run/froxlor_cron_backup.lock");
-			if (file_exists($BackupLock) && is_numeric($BackupPid = file_get_contents($BackupLock))) {
-				if (function_exists('posix_kill')) {
-					$BackupPidStatus = @posix_kill($BackupPid, 0);
-				} else {
-					system("kill -CHLD " . $BackupPid . " 1> /dev/null 2> /dev/null", $BackupPidStatus);
-					$BackupPidStatus = !$BackupPidStatus;
-				}
-				if ($BackupPidStatus) {
-					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Backup run already in progress');
-					return 1;
-				}
-			}
-			// Create Backup Log and Fork
-			// We close the database - connection before we fork, so we don't share resources with the child
-			Database::needRoot(false); // this forces the connection to be set to null
-			$BackupPid = pcntl_fork();
-			// Parent
-			if ($BackupPid) {
-				file_put_contents($BackupLock, $BackupPid);
-				// unnecessary to recreate database connection here
-				return 0;
-			} elseif ($BackupPid == 0) {
-				// Child
-				posix_setsid();
-				// re-create db
-				Database::needRoot(false);
-			} else {
-				// Fork failed
-				return 1;
-			}
-		} elseif (!defined('CRON_NOFORK_FLAG')) {
-			if (extension_loaded('pcntl')) {
-				$msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
-			} else {
-				$msg = "PHP compiled without pcntl.";
-			}
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, $msg . " Not forking backup-cron, this may take a long time!");
-		}
+		self::runFork([self::class, 'handle']);
+	}
 
+	public static function handle()
+	{
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'BackupCron: started - creating customer backup');
 
 		$result_tasks_stmt = Database::query("
@@ -113,12 +79,6 @@ class BackupCron extends FroxlorCron
 				'id' => $row['id']
 			]);
 		}
-
-
-		if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
-			@unlink($BackupLock);
-			die();
-		}
 	}
 
 	/**
@@ -128,6 +88,7 @@ class BackupCron extends FroxlorCron
 	 *
 	 * @return void
 	 *
+	 * @throws Exception
 	 */
 	private static function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog = null)
 	{
