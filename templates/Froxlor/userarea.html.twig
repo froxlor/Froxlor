@@ -51,23 +51,11 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarOpts">
 							<li>
-								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_password'}) }}"><i class="fa-solid fa-lock"></i> {{ lng('login.password') }}</a>
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_language'}) }}"><i class="fa-solid fa-flag"></i> {{ lng('login.language') }}</a>
+								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'profile'}) }}"><i class="fa-solid fa-user-gear"></i> {{ lng('panel.profile') }}</a>
 							</li>
 							{% if get_setting('2fa.enabled') == 1 %}
 								<li>
 									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': '2fa'}) }}"><i class="fa-solid fa-shield"></i> {{ lng('2fa.2fa') }}</a>
-								</li>
-							{% endif %}
-							{% if get_setting('panel.allow_theme_change_admin') == '1' and userinfo.adminsession == 1 %}
-								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}"><i class="fa-solid fa-image"></i> {{ lng('panel.theme') }}</a>
-								</li>
-							{% elseif get_setting('panel.allow_theme_change_customer') == '1' and userinfo.adminsession == 0 %}
-								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}"><i class="fa-solid fa-image"></i> {{ lng('panel.theme') }}</a>
 								</li>
 							{% endif %}
 							{% if get_setting('api.enabled') == 1 and userinfo.api_allowed == 1 %}

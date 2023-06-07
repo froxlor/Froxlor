@@ -1236,6 +1236,7 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Wähle das zu durchsuchende Feld aus'
 		],
 		'upload_import' => 'Hochladen und importieren',
+		'profile' => 'Mein Profil',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',
