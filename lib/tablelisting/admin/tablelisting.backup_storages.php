@@ -32,10 +32,10 @@ use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
-	'backups_list' => [
-		'title' => lng('admin.backups.backups'),
+	'backup_storages_list' => [
+		'title' => lng('backup.backup_storages.list'),
 		'icon' => 'fa-solid fa-file-archive',
-		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
+		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
 		'default_sorting' => ['loginname' => 'asc'],
 		'columns' => [
 			'id' => [
@@ -43,45 +43,52 @@ return [
 				'field' => 'id',
 				'sortable' => true,
 			],
-			'customerid' => [
-				'label' => lng('customerid'),
-				'field' => 'customerid',
+			'description' => [
+				'label' => lng('description'),
+				'field' => 'description',
 				'sortable' => true,
 			],
-			'loginname' => [
-				'label' => lng('login.username'),
-				'field' => 'loginname',
-				'callback' => [Impersonate::class, 'customer'],
+			'type' => [
+				'label' => lng('type'),
+				'field' => 'type',
 				'sortable' => true,
 			],
-			'adminid' => [
-				'label' => lng('adminid'),
-				'field' => 'adminid',
+			'region' => [
+				'label' => lng('region'),
+				'field' => 'region',
 				'sortable' => true,
 			],
-			'adminname' => [
-				'label' => lng('admin.admin'),
-				'field' => 'adminname',
-				'callback' => [Impersonate::class, 'admin'],
+			'bucket' => [
+				'label' => lng('bucket'),
+				'field' => 'bucket',
 				'sortable' => true,
 			],
-			'size' => [
-				'label' => lng('backup.size'),
-				'field' => 'size',
+			'destination_path' => [
+				'label' => lng('destination_path'),
+				'field' => 'destination_path',
 				'sortable' => true,
 			],
-			'created_at' => [
-				'label' => lng('backup.created_at'),
-				'field' => 'created_at',
+			'hostname' => [
+				'label' => lng('hostname'),
+				'field' => 'hostname',
+				'sortable' => true,
+			],
+			'username' => [
+				'label' => lng('username'),
+				'field' => 'username',
+				'sortable' => true,
+			],
+			'retention' => [
+				'label' => lng('retention'),
+				'field' => 'retention',
 				'sortable' => true,
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('admin_list', [
 			'id',
-			'adminname',
-			'loginname',
-			'size',
-			'created_at',
+			'description',
+			'type',
+			'retention',
 		]),
 		'actions' => [
 			'show' => [

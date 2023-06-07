@@ -27,7 +27,7 @@ return [
 	'backups_add' => [
 		'title' => lng('backups.backups_add'),
 		'image' => 'fa-solid fa-file-archive',
-		'self_overview' => ['section' => 'backups', 'page' => 'backups'],
+		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
 		'sections' => []
 	],
 ];
