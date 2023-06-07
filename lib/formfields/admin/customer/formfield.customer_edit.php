@@ -323,11 +323,11 @@ return [
 						'selected' => $result['backup'],
 						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
 					],
-					'access_backup' => [
-						'label' => lng('backup.access_backup'),
+					'access_backups' => [
+						'label' => lng('backup.access_backups'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => $result['access_backup'],
+						'checked' => $result['access_backups'],
 						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
 					],
 				]

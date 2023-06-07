@@ -315,8 +315,8 @@ return [
 						'selected' => Settings::Get('backup.default_storage'),
 						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
 					],
-					'access_backup' => [
-						'label' => lng('backup.access_backup'),
+					'access_backups' => [
+						'label' => lng('backup.access_backups'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => Settings::Get('backup.enabled') == '1' && Settings::Get('backup.default_customer_access'),

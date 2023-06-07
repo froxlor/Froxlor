@@ -158,9 +158,9 @@ return [
 				'callback' => [Backup::class, 'backupStorageLink'],
 				'visible' => (bool)Settings::Get('backup.enabled'),
 			],
-			'c.access_backup' => [
-				'label' => lng('backup.access_backup'),
-				'field' => 'access_backup',
+			'c.access_backups' => [
+				'label' => lng('backup.access_backups'),
+				'field' => 'access_backups',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
 				'visible' => (bool)Settings::Get('backup.enabled'),
