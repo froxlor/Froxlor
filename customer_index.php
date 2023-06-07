@@ -41,7 +41,7 @@ use Froxlor\System\Cronjob;
 use Froxlor\Cron\TaskId;
 
 if ($action == 'logout') {
-	$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
+	$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, 'logged out');
 
 	unset($_SESSION['userinfo']);
 	CurrentUser::setData();
@@ -65,7 +65,7 @@ if ($action == 'logout') {
 }
 
 if ($page == 'overview') {
-	$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_index");
+	$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "viewed customer_index");
 
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid

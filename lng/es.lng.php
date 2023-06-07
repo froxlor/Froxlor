@@ -956,7 +956,6 @@ return [
 		'autoupdate_10' => 'La versión mínima soportada de PHP es 7.4.0',
 		'autoupdate_11' => 'Webupdate está desactivado',
 		'mailaccistobedeleted' => 'Otra cuenta con el mismo nombre (%s) está siendo eliminada y por lo tanto no puede ser añadida en este momento.',
-		'customerhasongoingbackupjob' => 'Ya hay un trabajo de copia de seguridad esperando a ser procesado, por favor sea paciente.',
 		'dns_domain_nodns' => 'DNS no está habilitado para este dominio',
 		'dns_content_empty' => 'No hay contenido',
 		'dns_content_invalid' => 'El contenido DNS no es válido',

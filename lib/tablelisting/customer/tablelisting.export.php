@@ -74,7 +74,7 @@ return [
 				'class' => 'btn-warning',
 				'href' => [
 					'section' => 'extras',
-					'page' => 'backup',
+					'page' => 'export',
 					'action' => 'abort',
 					'id' => ':id'
 				],

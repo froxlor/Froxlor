@@ -132,7 +132,7 @@ class DataDump extends ApiCommand implements ResourceEntity
 		// schedule export job
 		Cronjob::inserttask(TaskId::CREATE_CUSTOMER_DATADUMP, $task_data);
 
-		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added customer data-dump job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added customer data export job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
 		return $this->response($task_data);
 	}
 
