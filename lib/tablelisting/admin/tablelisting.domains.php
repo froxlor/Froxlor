@@ -23,6 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\Style;
@@ -113,6 +114,13 @@ return [
 				'label' => lng('admin.phpenabled'),
 				'field' => 'phpenabled',
 				'callback' => [Text::class, 'boolean'],
+			],
+			'd.phpsettingid' => [
+				'label' => lng('admin.phpsettings.title'),
+				'field' => 'phpsettingid',
+				'searchable' => false,
+				'callback' => [Domain::class, 'getPhpConfigName'],
+				'visible' => (int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1
 			],
 			'd.openbasedir' => [
 				'label' => lng('domains.openbasedirenabled'),

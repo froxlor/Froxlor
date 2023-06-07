@@ -25,6 +25,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\Database\Database;
 use Froxlor\Domain\Domain as DDomain;
 use Froxlor\FileDir;
 use Froxlor\Settings;
@@ -79,11 +80,11 @@ class Domain
 	{
 		$result = '';
 		if ($attributes['fields']['parentdomainid'] != 0) {
-				$result = '<i class="fa-solid fa-turn-up me-2 fa-rotate-90 opacity-50"></i>';
+			$result = '<i class="fa-solid fa-turn-up me-2 fa-rotate-90 opacity-50"></i>';
 		}
 		$result .= '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
-		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0  && $attributes['fields']['deactivated'] == 0) {
+		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0 && $attributes['fields']['deactivated'] == 0) {
 			$statsapp = Settings::Get('system.traffictool');
 			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" target="_blank" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
 		}
@@ -189,13 +190,11 @@ class Domain
 		// specified certificate for domain
 		if ($attributes['fields']['domain_hascert'] == 1) {
 			$result['icon'] .= ' text-success';
-		}
-		// shared certificates (e.g. subdomain if domain where certificate is specified)
+		} // shared certificates (e.g. subdomain if domain where certificate is specified)
 		elseif ($attributes['fields']['domain_hascert'] == 2) {
 			$result['icon'] .= ' text-warning';
 			$result['title'] .= "\n" . lng('panel.ssleditor_infoshared');
-		}
-		// no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
+		} // no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
 		elseif ($attributes['fields']['domain_hascert'] == 0) {
 			$result['icon'] .= ' text-danger';
 			$result['title'] .= "\n" . lng('panel.ssleditor_infoglobal');
@@ -216,5 +215,23 @@ class Domain
 			return $iplist;
 		}
 		return lng('panel.empty');
+	}
+
+	public static function getPhpConfigName(array $attributes): string
+	{
+		$sel_stmt = Database::prepare("SELECT `description` FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id");
+		$phpconfig = Database::pexecute_first($sel_stmt, ['id' => $attributes['data']]);
+		if ((int)UI::getCurrentUser()['adminsession'] == 1) {
+			$linker = UI::getLinker();
+			$result = '<a href="' . $linker->getLink([
+				'section' => 'phpsettings',
+				'page' => 'overview',
+				'searchfield' => 'c.id',
+				'searchtext' => $attributes['data'],
+			]) . '">' . $phpconfig['description'] . '</a>';
+		} else {
+			$result = $phpconfig['description'];
+		}
+		return $result;
 	}
 }
