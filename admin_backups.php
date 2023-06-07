@@ -30,6 +30,7 @@ use Froxlor\Api\Commands\Backups;
 use Froxlor\Api\Commands\BackupStorages;
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -39,7 +40,7 @@ $id = (int)Request::any('id');
 
 if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
-		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_backups");
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "viewed admin_backups");
 
 		try {
 			$admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.backups.php';
@@ -81,7 +82,7 @@ if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversetti
 	}
 } else if ($page == 'storages' && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
-		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_backup_storage");
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "list backup storages");
 
 		try {
 			$admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.backup_storages.php';
@@ -106,7 +107,31 @@ if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversetti
 			]
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
+		try {
+			$json_result = BackupStorages::getLocal($userinfo, [
+				'id' => $id
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
+		if ($result['id'] != '') {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				BackupStorages::getLocal($userinfo, [
+					'id' => $id
+				])->delete();
+				Response::redirectTo($filename, [
+					'page' => $page
+				]);
+			} else {
+				HTML::askYesNo('backup_backup_server_reallydelete', $filename, [
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				], $result['id']);
+			}
+		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {

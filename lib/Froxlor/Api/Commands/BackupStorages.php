@@ -105,7 +105,26 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	/**
 	 * create a backup storage by given id
 	 *
-	 * @param string $name
+	 * @param string $type
+	 *            required, backup storage type
+	 * @param string $destination_path
+	 *            required, destination path for backup storage
+	 * @param string $description
+	 *            description for backup storage
+	 * @param string $region
+	 *            region for backup storage (used for S3)
+	 * @param string $bucket
+	 *            bucket for backup storage (used for S3)
+	 * @param string $hostname
+	 *            hostname for backup storage
+	 * @param string $username
+	 *            username for backup storage (also used as access key for S3)
+	 * @param string $password
+	 *            password for backup storage (also used as secret key for S3)
+	 * @param string $pgp_public_key
+	 *            pgp public key for backup storage
+	 * @param string $retention
+	 *            retention for backup storage
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -114,7 +133,84 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			//
+			// required parameters
+			$type = $this->getParam('type');
+			$destination_path = $this->getParam('destination_path');
+
+			// parameters
+			$description = $this->getParam('description', true, null);
+			$region = $this->getParam('region', true, null);
+			$bucket = $this->getParam('bucket', true, null);
+			$hostname = $this->getParam('hostname', true, null);
+			$username = $this->getParam('username', true, null);
+			$password = $this->getParam('password', true, null);
+			$pgp_public_key = $this->getParam('pgp_public_key', true, null);
+			$retention = $this->getParam('retention', true, null);
+
+			// validation
+			$destination_path = FileDir::makeCorrectDir(Validate::validate($destination_path, 'destination_path', Validate::REGEX_DIR, '', [], true));
+			// TODO: add more validation
+
+			// pgp public key validation
+			if (!empty($pgp_public_key)) {
+				// check if gnupg extension is loaded
+				if (!extension_loaded('gnupg')) {
+					Response::standardError('gnupgextensionnotavailable', '', true);
+				}
+				// check if the pgp public key is a valid key
+				putenv('GNUPGHOME='.sys_get_temp_dir());
+				if (gnupg_import(gnupg_init(), $pgp_public_key) === false) {
+					Response::standardError('invalidpgppublickey', '', true);
+				}
+			}
+
+			// store
+			$stmt = Database::prepare("
+				INSERT INTO `" . TABLE_PANEL_BACKUP_STORAGES . "` (
+				`description`,
+				`type`,
+				`region`,
+				`bucket`,
+				`destination_path`,
+				`hostname`,
+				`username`,
+				`password`,
+				`pgp_public_key`,
+				`retention`
+				) VALUES (
+				:description,
+				:type,
+				:region,
+				:bucket,
+				:destination_path,
+				:hostname,
+				:username,
+				:password,
+				:pgp_public_key,
+				:retention
+				)
+			");
+			$params = [
+				"description" => $description,
+				"type" => $type,
+				"region" => $region,
+				"bucket" => $bucket,
+				"destination_path" => $destination_path,
+				"hostname" => $hostname,
+				"username" => $username,
+				"password" => $password,
+				"pgp_public_key" => $pgp_public_key,
+				"retention" => $retention,
+			];
+			Database::pexecute($stmt, $params, true, true);
+			$id = Database::lastInsertId();
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] edited backup storage for '" . $result['id'] . "'");
+
+			// return
+			$result = $this->apiCall('BackupStorages.get', [
+				'id' => $id
+			]);
+			return $this->response($result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -155,7 +251,27 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	 * update a backup storage by given id
 	 *
 	 * @param int $id
-	 * 			required, the backup-storage-id
+	 * 		      required, the backup-storage-id
+	 * @param string $type
+	 *            backup storage type
+	 * @param string $destination_path
+	 *            destination path for backup storage
+	 * @param string $description
+	 *            description for backup storage
+	 * @param string $region
+	 *            region for backup storage (used for S3)
+	 * @param string $bucket
+	 *            bucket for backup storage (used for S3)
+	 * @param string $hostname
+	 *            hostname for backup storage
+	 * @param string $username
+	 *            username for backup storage (also used as access key for S3)
+	 * @param string $password
+	 *            password for backup storage (also used as secret key for S3)
+	 * @param string $pgp_public_key
+	 *            pgp public key for backup storage
+	 * @param string $retention
+	 *            retention for backup storage
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -179,12 +295,13 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 			$destination_path = $this->getParam('destination_path', true, $result['destination_path']);
 			$hostname = $this->getParam('hostname', true, $result['hostname']);
 			$username = $this->getParam('username', true, $result['username']);
-			$password = $this->getParam('password', true, 'password');
+			$password = $this->getParam('password', true, $result['password']);
 			$pgp_public_key = $this->getParam('pgp_public_key', true, $result['pgp_public_key']);
 			$retention = $this->getParam('retention', true, $result['retention']);
 
 			// validation
 			$destination_path = FileDir::makeCorrectDir(Validate::validate($destination_path, 'destination_path', Validate::REGEX_DIR, '', [], true));
+			// TODO: add more validation
 
 			// pgp public key validation
 			if (!empty($pgp_public_key)) {
@@ -240,7 +357,7 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * delete a backup-storage entry by either id
+	 * delete a backup-storage entry by id
 	 *
 	 * @param int $id
 	 *            required, the backup-storage-id
@@ -251,6 +368,29 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	 */
 	public function delete()
 	{
+		$id = $this->getParam('id');
+
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+			// validation
+			$result = $this->apiCall('BackupStorages.get', [
+				'id' => $id
+			]);
+
+			// delete
+			$stmt = Database::prepare("
+				DELETE FROM `" . TABLE_PANEL_BACKUP_STORAGES . "`
+				WHERE `id` = :id
+			");
+			$params = [
+				"id" => $id
+			];
+			Database::pexecute($stmt, $params, true, true);
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted backup storage for '" . $result['id'] . "'");
+
+			// return
+			return $this->response(true);
+		}
+
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 }
