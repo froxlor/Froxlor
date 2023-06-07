@@ -4,22 +4,22 @@ use PHPUnit\Framework\TestCase;
 use Froxlor\Settings;
 use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Customers;
-use Froxlor\Api\Commands\CustomerBackups;
+use Froxlor\Api\Commands\DataDump;
 
 /**
  *
  * @covers \Froxlor\Api\ApiCommand
  * @covers \Froxlor\Api\ApiParameter
- * @covers \Froxlor\Api\Commands\CustomerBackups
+ * @covers \Froxlor\Api\Commands\DataDump
  */
-class CustomerBackupsTest extends TestCase
+class DataDumpTest extends TestCase
 {
 
-	public function testAdminCustomerBackupsNotEnabled()
+	public function testAdminDataDumpNotEnabled()
 	{
 		global $admin_userdata;
 
-		Settings::Set('system.backupenabled', 0, true);
+		Settings::Set('system.exportenabled', 0, true);
 
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
@@ -28,18 +28,18 @@ class CustomerBackupsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(405);
 		$this->expectExceptionMessage("You cannot access this resource");
-		CustomerBackups::getLocal($customer_userdata)->add();
+		DataDump::getLocal($customer_userdata)->add();
 	}
 
 	/**
 	 *
-	 * @depends testAdminCustomerBackupsNotEnabled
+	 * @depends testAdminDataDumpNotEnabled
 	 */
-	public function testAdminCustomerBackupsExtrasHidden()
+	public function testAdminDataDumpExtrasHidden()
 	{
 		global $admin_userdata;
 
-		Settings::Set('system.backupenabled', 1, true);
+		Settings::Set('system.exportenabled', 1, true);
 		Settings::Set('panel.customer_hide_options', 'extras', true);
 
 		// get customer
@@ -49,18 +49,18 @@ class CustomerBackupsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(405);
 		$this->expectExceptionMessage("You cannot access this resource");
-		CustomerBackups::getLocal($customer_userdata)->add();
+		DataDump::getLocal($customer_userdata)->add();
 	}
 
 	/**
 	 *
-	 * @depends testAdminCustomerBackupsExtrasHidden
+	 * @depends testAdminDataDumpExtrasHidden
 	 */
-	public function testAdminCustomerBackupsExtrasBackupHidden()
+	public function testAdminDataDumpExtrasExportHidden()
 	{
 		global $admin_userdata;
 
-		Settings::Set('panel.customer_hide_options', 'extras.backup', true);
+		Settings::Set('panel.customer_hide_options', 'extras.export', true);
 
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
@@ -69,14 +69,14 @@ class CustomerBackupsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(405);
 		$this->expectExceptionMessage("You cannot access this resource");
-		CustomerBackups::getLocal($customer_userdata)->add();
+		DataDump::getLocal($customer_userdata)->add();
 	}
 
 	/**
 	 *
-	 * @depends testAdminCustomerBackupsExtrasBackupHidden
+	 * @depends testAdminDataDumpExtrasExportHidden
 	 */
-	public function testCustomerCustomerBackupsAdd()
+	public function testCustomerDataDumpAdd()
 	{
 		global $admin_userdata;
 
@@ -90,24 +90,24 @@ class CustomerBackupsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$data = [
-			'path' => '/my-backup',
-			'backup_dbs' => 2,
-			'backup_mail' => 3,
-			'backup_web' => 4
+			'path' => '/my-dump',
+			'dump_dbs' => 2,
+			'dump_mail' => 3,
+			'dump_web' => 4
 		];
-		$json_result = CustomerBackups::getLocal($customer_userdata, $data)->add();
+		$json_result = DataDump::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals($customer_userdata['documentroot'] . 'my-backup/', $result['destdir']);
-		$this->assertEquals('1', $result['backup_dbs']);
-		$this->assertEquals('1', $result['backup_mail']);
-		$this->assertEquals('1', $result['backup_web']);
+		$this->assertEquals($customer_userdata['documentroot'] . 'my-dump/', $result['destdir']);
+		$this->assertEquals('1', $result['dump_dbs']);
+		$this->assertEquals('1', $result['dump_mail']);
+		$this->assertEquals('1', $result['dump_web']);
 	}
 
 	/**
 	 *
-	 * @depends testCustomerCustomerBackupsAdd
+	 * @depends testCustomerDataDumpAdd
 	 */
-	public function testCustomerCustomerBackupsAddPathNotDocroot()
+	public function testCustomerDataDumpAddPathNotDocroot()
 	{
 		global $admin_userdata;
 
@@ -122,49 +122,49 @@ class CustomerBackupsTest extends TestCase
 		];
 
 		$this->expectExceptionCode(400);
-		$this->expectExceptionMessage('The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups');
-		$json_result = CustomerBackups::getLocal($customer_userdata, $data)->add();
+		$this->expectExceptionMessage('The folder for data-dumps cannot be your homedir, please chose a folder within your homedir, e.g. /dumps');
+		$json_result = DataDump::getLocal($customer_userdata, $data)->add();
 	}
 
-	public function testAdminCustomerBackupsGet()
+	public function testAdminDataDumpGet()
 	{
 		global $admin_userdata;
 		$this->expectExceptionCode(303);
-		CustomerBackups::getLocal($admin_userdata)->get();
+		DataDump::getLocal($admin_userdata)->get();
 	}
 
-	public function testAdminCustomerBackupsUpdate()
+	public function testAdminDataDumpUpdate()
 	{
 		global $admin_userdata;
 		$this->expectExceptionCode(303);
-		CustomerBackups::getLocal($admin_userdata)->update();
+		DataDump::getLocal($admin_userdata)->update();
 	}
 
 	/**
 	 *
-	 * @depends testCustomerCustomerBackupsAdd
+	 * @depends testCustomerDataDumpAdd
 	 */
-	public function testAdminCustomerBackupsListing()
+	public function testAdminDataDumpListing()
 	{
 		global $admin_userdata;
 
-		$json_result = CustomerBackups::getLocal($admin_userdata)->listing();
+		$json_result = DataDump::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
-		$this->assertEquals('1', $result['list'][0]['data']['backup_dbs']);
-		$this->assertEquals('1', $result['list'][0]['data']['backup_mail']);
-		$this->assertEquals('1', $result['list'][0]['data']['backup_web']);
+		$this->assertEquals('1', $result['list'][0]['data']['dump_dbs']);
+		$this->assertEquals('1', $result['list'][0]['data']['dump_mail']);
+		$this->assertEquals('1', $result['list'][0]['data']['dump_web']);
 
-		$json_result = CustomerBackups::getLocal($admin_userdata)->listingCount();
+		$json_result = DataDump::getLocal($admin_userdata)->listingCount();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result);
 	}
 
 	/**
 	 *
-	 * @depends testCustomerCustomerBackupsAdd
+	 * @depends testCustomerDataDumpAdd
 	 */
-	public function testCustomerCustomerBackupsDelete()
+	public function testCustomerDataDumpDelete()
 	{
 		global $admin_userdata;
 
@@ -175,18 +175,18 @@ class CustomerBackupsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$data = [
-			'backup_job_entry' => 1
+			'job_entry' => 1
 		];
-		$json_result = CustomerBackups::getLocal($customer_userdata, $data)->delete();
+		$json_result = DataDump::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue($result);
 	}
 
 	/**
 	 *
-	 * @depends testAdminCustomerBackupsListing
+	 * @depends testAdminDataDumpListing
 	 */
-	public function testCustomerCustomerBackupsDeleteNotFound()
+	public function testCustomerDataDumpDeleteNotFound()
 	{
 		global $admin_userdata;
 
@@ -200,7 +200,7 @@ class CustomerBackupsTest extends TestCase
 			'backup_job_entry' => 1337
 		];
 		$this->expectExceptionCode(404);
-		$this->expectExceptionMessage('Backup job with id #1337 could not be found');
-		CustomerBackups::getLocal($customer_userdata, $data)->delete();
+		$this->expectExceptionMessage('Data export job with id #1337 could not be found');
+		DataDump::getLocal($customer_userdata, $data)->delete();
 	}
 }

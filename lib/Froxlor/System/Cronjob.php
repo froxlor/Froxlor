@@ -211,10 +211,10 @@ class Cronjob
 				'type' => TaskId::DELETE_DOMAIN_SSL,
 				'data' => $data
 			]);
-		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && isset($params[0]) && is_array($params[0])) {
+		} elseif ($type == TaskId::CREATE_CUSTOMER_DATADUMP && isset($params[0]) && is_array($params[0])) {
 			$data = json_encode($params[0]);
 			Database::pexecute($ins_stmt, [
-				'type' => TaskId::CREATE_CUSTOMER_BACKUP,
+				'type' => TaskId::CREATE_CUSTOMER_DATADUMP,
 				'data' => $data
 			]);
 		}

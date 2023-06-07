@@ -133,9 +133,9 @@ return [
 					'show_element' => (Settings::Get('logger.enabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
 				],
 				[
-					'url' => 'customer_extras.php?page=backup',
-					'label' => lng('menue.extras.backup'),
-					'show_element' => (Settings::Get('system.backupenabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
+					'url' => 'customer_extras.php?page=export',
+					'label' => lng('menue.extras.export'),
+					'show_element' => (Settings::Get('system.exportenabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.export'))
 				]
 			]
 		],

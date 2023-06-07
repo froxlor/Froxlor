@@ -646,7 +646,7 @@ opcache.validate_timestamps'),
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
 	('system', 'leapiversion', '2'),
-	('system', 'backupenabled', '0'),
+	('system', 'exportenabled', '0'),
 	('system', 'dnsenabled', '0'),
 	('system', 'dns_server', 'Bind'),
 	('system', 'apacheglobaldiropt', ''),
@@ -1070,5 +1070,16 @@ CREATE TABLE `panel_loginlinks` (
   `valid_until` int(15) NOT NULL,
   `allowed_from` text NOT NULL,
   UNIQUE KEY `loginname` (`loginname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+DROP TABLE IF EXISTS `panel_backups`;
+CREATE TABLE `panel_backups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `adminid` int(11) NOT NULL,
+  `customerid` int(11) NOT NULL,
+  `loginname` varchar(255) NOT NULL,
+  `size` bigint(20) NOT NULL,
+  `created_at` int(15) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

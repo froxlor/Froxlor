@@ -46,7 +46,7 @@ class TasksCron extends FroxlorCron
 		 * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
 		 */
 		self::$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "TasksCron: Searching for tasks to do");
-		// no type 99 (regenerate cron.d-file) and no type 20 (customer backup)
+		// no type 99 (regenerate cron.d-file) and no type 20 (customer data export)
 		// order by type descending to re-create bind and then webserver at the end
 		$result_tasks_stmt = Database::query("
 			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `type` DESC, `id` ASC

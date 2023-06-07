@@ -230,10 +230,10 @@ return [
 						'onlyif' => 1
 					]
 				],
-				'system_backupenabled' => [
-					'label' => lng('serversettings.backupenabled'),
+				'system_exportenabled' => [
+					'label' => lng('serversettings.exportenabled'),
 					'settinggroup' => 'system',
-					'varname' => 'backupenabled',
+					'varname' => 'exportenabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'cronmodule' => 'froxlor/export',
