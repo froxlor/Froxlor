@@ -197,7 +197,7 @@ class DataDumpTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$data = [
-			'backup_job_entry' => 1337
+			'job_entry' => 1337
 		];
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage('Data export job with id #1337 could not be found');
