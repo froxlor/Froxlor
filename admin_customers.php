@@ -27,6 +27,7 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\BackupStorages;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\CurrentUser;
@@ -224,6 +225,26 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 				$hosting_plans[$row['id']] = $row['name'];
 			}
 
+			// backup storages
+			$backup_storages = [];
+			if (Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1') {
+				$backup_storages = [
+					0 => lng('backup.storage_none')
+				];
+				try {
+					$result_json = BackupStorages::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $storagedata) {
+						$backup_storages[] = [
+							'label' => $storagedata['description'] . '(' . $storagedata['type'] . ')',
+							'value' => $storagedata['id']
+						];
+					}
+				} catch (Exception $e) {
+					/* just none */
+				}
+			}
+
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 
 			UI::view('user/form.html.twig', [
@@ -304,6 +325,26 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 				];
 				while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
 					$hosting_plans[$row['id']] = $row['name'];
+				}
+
+				// backup storages
+				$backup_storages = [];
+				if (Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1') {
+					$backup_storages = [
+						0 => lng('backup.storage_none')
+					];
+					try {
+						$result_json = BackupStorages::getLocal($userinfo)->listing();
+						$result_decoded = json_decode($result_json, true)['data']['list'];
+						foreach ($result_decoded as $storagedata) {
+							$backup_storages[] = [
+								'label' => $storagedata['description'] . '(' . $storagedata['type'] . ')',
+								'value' => $storagedata['id']
+							];
+						}
+					} catch (Exception $e) {
+						/* just none */
+					}
 				}
 
 				$available_admins_stmt = Database::prepare("

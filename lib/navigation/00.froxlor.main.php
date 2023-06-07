@@ -266,7 +266,8 @@ return [
 					'url' => 'admin_backups.php?page=overview',
 					'label' => lng('admin.backups.backups'),
 					'required_resources' => 'change_serversettings',
-					'add_shortlink' => 'admin_backups.php?page=overview&action=add'
+					'add_shortlink' => 'admin_backups.php?page=overview&action=add',
+					'show_element' => (Settings::Get('backup.enabled') == true)
 				],
 				[
 					'url' => 'admin_logger.php?page=log',
