@@ -90,21 +90,6 @@ return [
 						'checked' => Settings::Get('api.enabled') == '1' && Settings::Get('api.customer_default'),
 						'visible' => Settings::Get('api.enabled') == '1'
 					],
-					'backup' => [
-						'label' => lng('backup.backup_storage.title'),
-						'desc' => lng('backup.backup_storage.description'),
-						'type' => 'select',
-						'select_var' => $backup_storages,
-						'selected' => Settings::Get('backup.default_storage'),
-						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
-					],
-					'access_backup' => [
-						'label' => lng('backup.access_backup'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => Settings::Get('backup.enabled') == '1' && Settings::Get('backup.default_customer_access'),
-						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
-					],
 				]
 			],
 			'section_b' => [
@@ -321,7 +306,22 @@ return [
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
-					]
+					],
+					'backup' => [
+						'label' => lng('backup.backup_storage.title'),
+						'desc' => lng('backup.backup_storage.description'),
+						'type' => 'select',
+						'select_var' => $backup_storages,
+						'selected' => Settings::Get('backup.default_storage'),
+						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
+					],
+					'access_backup' => [
+						'label' => lng('backup.access_backup'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => Settings::Get('backup.enabled') == '1' && Settings::Get('backup.default_customer_access'),
+						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
+					],
 				]
 			]
 		]

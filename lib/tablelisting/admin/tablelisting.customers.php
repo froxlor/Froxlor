@@ -23,6 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Backup;
 use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;

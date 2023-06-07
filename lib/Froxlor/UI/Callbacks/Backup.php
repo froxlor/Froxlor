@@ -32,7 +32,7 @@ class Backup
 {
 	public static function backupStorageLink(array $attributes)
 	{
-		$sel_stmt = Database::prepare("SELECT `description` FROM `" . TABLE_PANEL_BACKUPSTORAGES . "` WHERE `id` = :id");
+		$sel_stmt = Database::prepare("SELECT `description` FROM `" . TABLE_PANEL_BACKUP_STORAGES . "` WHERE `id` = :id");
 		$backupstorage = Database::pexecute_first($sel_stmt, ['id' => $attributes['data']]);
 		if ((int)UI::getCurrentUser()['adminsession'] == 1 && UI::getCurrentUser()['change_serversettings']) {
 			$linker = UI::getLinker();
