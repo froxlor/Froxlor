@@ -23,39 +23,21 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-namespace Froxlor\Cron\Backup;
+use Froxlor\Froxlor;
+use Froxlor\FileDir;
+use Froxlor\Config\ConfigParser;
+use Froxlor\Install\Update;
+use Froxlor\Settings;
 
-use Froxlor\Cron\Forkable;
-use Froxlor\Cron\FroxlorCron;
+$preconfig = [
+	'title' => '2.1.x updates',
+	'fields' => []
+];
+$return = [];
 
-class BackupCron extends FroxlorCron
-{
-	use Forkable;
+if (Update::versionInUpdate($current_version, '2.1.0-dev1')) {
 
-	public static function run()
-	{
-		$users = ['web1', 'web2', 'web3', 'web4', 'web5', 'web6', 'web7', 'web8', 'web9', 'web10'];
-
-		self::runFork([self::class, 'handle'], [
-			[
-				'user' => '1',
-				'data' => 'value1',
-			],
-			[
-				'user' => '2',
-				'data' => 'value2',
-			]
-		]);
-	}
-
-	private static function handle(array $userdata)
-	{
-		echo "BackupCron: started - creating customer backup for user " . $userdata['user'] . "\n";
-
-		echo $userdata['data'] . "\n";
-
-		sleep(rand(1, 3));
-
-		echo "BackupCron: finished - creating customer backup for user " . $userdata['user'] . "\n";
-	}
 }
+
+$preconfig['fields'] = $return;
+return $preconfig;

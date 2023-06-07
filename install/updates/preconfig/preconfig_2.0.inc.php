@@ -30,7 +30,7 @@ use Froxlor\Install\Update;
 use Froxlor\Settings;
 
 $preconfig = [
-	'title' => '2.x updates',
+	'title' => '2.0.x updates',
 	'fields' => []
 ];
 $return = [];

@@ -223,6 +223,8 @@ CREATE TABLE `panel_customers` (
   `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
   `allowed_mysqlserver` text NOT NULL,
+  `backup` int(11) NOT NULL default '1',
+  `access_backups` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
@@ -1063,6 +1065,7 @@ CREATE TABLE `panel_usercolumns` (
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
 DROP TABLE IF EXISTS `panel_loginlinks`;
 CREATE TABLE `panel_loginlinks` (
   `hash` varchar(500) NOT NULL,
@@ -1072,6 +1075,27 @@ CREATE TABLE `panel_loginlinks` (
   UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
+DROP TABLE IF EXISTS `panel_backup_storages`;
+CREATE TABLE `panel_backup_storages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT 'local',
+  `region` varchar(255) NULL,
+  `bucket` varchar(255) NULL,
+  `destination_path` varchar(255) NOT NULL,
+  `hostname` varchar(255) NULL,
+  `username` varchar(255) NULL,
+  `password` varchar(255) NULL,
+  `pgp_public_key` varchar(255) NULL,
+  `retention` int(3) NOT NULL DEFAULT 3,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+INSERT INTO `panel_backup_storages` (`id`, `description`, `destination_path`) VALUES
+	(1, 'Local backup storage', '/var/customers/backups');
+
+
 DROP TABLE IF EXISTS `panel_backups`;
 CREATE TABLE `panel_backups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1079,6 +1103,8 @@ CREATE TABLE `panel_backups` (
   `customerid` int(11) NOT NULL,
   `loginname` varchar(255) NOT NULL,
   `size` bigint(20) NOT NULL,
+  `storage_id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
   `created_at` int(15) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
