@@ -30,12 +30,6 @@ use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
-use Froxlor\Idna\IdnaWrapper;
-use Froxlor\Settings;
-use Froxlor\System\Crypt;
-use Froxlor\UI\Response;
-use Froxlor\User;
-use Froxlor\Validate\Validate;
 use PDO;
 
 /**
@@ -97,11 +91,11 @@ class Backups extends ApiCommand implements ResourceEntity
 		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backups");
 		$query_fields = [];
 		$result_stmt = Database::prepare("
-				SELECT `b`.*, `a`.`loginname` as `adminname`
-				FROM `" . TABLE_PANEL_BACKUPS . "` `b`
-				LEFT JOIN `" . TABLE_PANEL_ADMINS . "` `a` USING(`adminid`)
-				WHERE `b`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-			");
+			SELECT `b`.*, `a`.`loginname` as `adminname`
+			FROM `" . TABLE_PANEL_BACKUPS . "` `b`
+			LEFT JOIN `" . TABLE_PANEL_ADMINS . "` `a` USING(`adminid`)
+			WHERE `b`.`customerid` IN (" . implode(', ', $customer_ids) . ")
+		");
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		$result = [];
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -111,8 +105,6 @@ class Backups extends ApiCommand implements ResourceEntity
 			'count' => count($result),
 			'list' => $result
 		]);
-
-		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -125,77 +117,94 @@ class Backups extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		if ($this->isAdmin()) {
-			$result_stmt = Database::prepare("
-				SELECT COUNT(*) as num_backups
-				FROM `" . TABLE_PANEL_BACKUPS . "`
-			");
-			$result = Database::pexecute_first($result_stmt, null, true, true);
-			if ($result) {
-				return $this->response($result['num_backups']);
+			// if we're an admin, list all backups of all the admins customers
+			// or optionally for one specific customer identified by id or loginname
+			$customerid = $this->getParam('customerid', true, 0);
+			$loginname = $this->getParam('loginname', true, '');
+
+			if (!empty($customerid) || !empty($loginname)) {
+				$result = $this->apiCall('Customers.get', [
+					'id' => $customerid,
+					'loginname' => $loginname
+				]);
+				$custom_list_result = [
+					$result
+				];
+			} else {
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 			}
-			$this->response(0);
+			$customer_ids = [];
+			foreach ($custom_list_result as $customer) {
+				$customer_ids[] = $customer['customerid'];
+			}
+			if (empty($customer_ids)) {
+				throw new Exception("Required resource unsatisfied.", 405);
+			}
+		} else {
+			$customer_ids = [
+				$this->getUserDetail('customerid')
+			];
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_backups
+			FROM `" . TABLE_PANEL_BACKUPS . "` `b`
+			WHERE `b`.`customerid` IN (" . implode(', ', $customer_ids) . ")
+		");
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response($result['num_backups']);
+		}
+		$this->response(0);
 	}
 
 	/**
-	 * create a new admin user
+	 * You cannot add a backup entry
 	 *
-	 * @param string $name
-	 *
-	 * @access admin
-	 * @return string json-encoded array
 	 * @throws Exception
 	 */
 	public function add()
 	{
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new Exception('You cannot add a backup entry', 303);
 	}
 
 	/**
-	 * return an admin entry by either id or loginname
+	 * return a backup entry by id
 	 *
 	 * @param int $id
-	 *            optional, the admin-id
-	 * @param string $loginname
-	 *            optional, the loginname
+	 *            optional, the backup-entry-id
 	 *
-	 * @access admin
+	 * @access admin, customers
 	 * @return string json-encoded array
 	 * @throws Exception
 	 */
 	public function get()
 	{
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new Exception("@TODO", 303);
 	}
 
 	/**
-	 * update an admin user by given id or loginname
+	 * You cannot update a backup entry
 	 *
-	 * @param int $id
-	 * 			required, the admin-id
-	 *
-	 * @access admin
-	 * @return string json-encoded array
 	 * @throws Exception
 	 */
 	public function update()
 	{
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new Exception('You cannot update a backup entry', 303);
 	}
 
 	/**
-	 * delete a admin entry by either id or loginname
+	 * delete a backup entry by id
 	 *
 	 * @param int $id
-	 *            required, the admin-id
+	 *            required, the backup-entry-id
 	 *
-	 * @access admin
+	 * @access admin, customer
 	 * @return string json-encoded array
 	 * @throws Exception
 	 */
 	public function delete()
 	{
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new Exception("@TODO", 303);
 	}
 }
