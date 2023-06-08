@@ -27,6 +27,10 @@ namespace Froxlor\Cron\Backup;
 
 use Froxlor\Cron\Forkable;
 use Froxlor\Cron\FroxlorCron;
+use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use PDO;
 
 class BackupCron extends FroxlorCron
 {
@@ -34,28 +38,45 @@ class BackupCron extends FroxlorCron
 
 	public static function run()
 	{
-		$users = ['web1', 'web2', 'web3', 'web4', 'web5', 'web6', 'web7', 'web8', 'web9', 'web10'];
+		if(!Settings::Get('backup.enabled')) {
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'BackupCron: disabled - exiting');
+			return -1;
+		}
 
-		self::runFork([self::class, 'handle'], [
-			[
-				'user' => '1',
-				'data' => 'value1',
-			],
-			[
-				'user' => '2',
-				'data' => 'value2',
-			]
-		]);
+		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_BACKUP_STORAGES . "`");
+		Database::pexecute($stmt);
+
+		$storages = [];
+		while ($storage = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$storages[$storage['id']] = $storage;
+		}
+
+		$stmt = Database::prepare("SELECT
+			customerid,
+		    loginname,
+		    adminid,
+		    backup,
+		    guid,
+		    documentroot
+			FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `backup` > 0
+		");
+		Database::pexecute($stmt);
+
+		$customers = [];
+		while ($customer = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$customer['storage'] = $storages[$customer['backup']];
+			$customers[] = $customer;
+		}
+
+		self::runFork([self::class, 'handle'], $customers);
 	}
 
 	private static function handle(array $userdata)
 	{
-		echo "BackupCron: started - creating customer backup for user " . $userdata['user'] . "\n";
+		echo "BackupCron: started - creating customer backup for user " . $userdata['loginname'] . "\n";
 
-		echo $userdata['data'] . "\n";
+		echo json_encode($userdata['storage']) . "\n";
 
-		sleep(rand(1, 3));
-
-		echo "BackupCron: finished - creating customer backup for user " . $userdata['user'] . "\n";
+		echo "BackupCron: finished - creating customer backup for user " . $userdata['loginname'] . "\n";
 	}
 }

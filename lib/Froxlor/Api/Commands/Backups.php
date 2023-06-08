@@ -63,24 +63,55 @@ class Backups extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backups");
-			$query_fields = [];
-			$result_stmt = Database::prepare("
+		if ($this->isAdmin()) {
+			// if we're an admin, list all backups of all the admins customers
+			// or optionally for one specific customer identified by id or loginname
+			$customerid = $this->getParam('customerid', true, 0);
+			$loginname = $this->getParam('loginname', true, '');
+
+			if (!empty($customerid) || !empty($loginname)) {
+				$result = $this->apiCall('Customers.get', [
+					'id' => $customerid,
+					'loginname' => $loginname
+				]);
+				$custom_list_result = [
+					$result
+				];
+			} else {
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
+			}
+			$customer_ids = [];
+			foreach ($custom_list_result as $customer) {
+				$customer_ids[] = $customer['customerid'];
+			}
+			if (empty($customer_ids)) {
+				throw new Exception("Required resource unsatisfied.", 405);
+			}
+		} else {
+			$customer_ids = [
+				$this->getUserDetail('customerid')
+			];
+		}
+
+		$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backups");
+		$query_fields = [];
+		$result_stmt = Database::prepare("
 				SELECT `b`.*, `a`.`loginname` as `adminname`
 				FROM `" . TABLE_PANEL_BACKUPS . "` `b`
 				LEFT JOIN `" . TABLE_PANEL_ADMINS . "` `a` USING(`adminid`)
+				WHERE `b`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			");
-			Database::pexecute($result_stmt, $query_fields, true, true);
-			$result = [];
-			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$result[] = $row;
-			}
-			return $this->response([
-				'count' => count($result),
-				'list' => $result
-			]);
+		Database::pexecute($result_stmt, $query_fields, true, true);
+		$result = [];
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$result[] = $row;
 		}
+		return $this->response([
+			'count' => count($result),
+			'list' => $result
+		]);
+
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
@@ -93,7 +124,7 @@ class Backups extends ApiCommand implements ResourceEntity
 	 */
 	public function listingCount()
 	{
-		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_backups
 				FROM `" . TABLE_PANEL_BACKUPS . "`

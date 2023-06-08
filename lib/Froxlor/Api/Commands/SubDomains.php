@@ -1059,17 +1059,19 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			];
 		}
-		// prepare select statement
-		$domains_stmt = Database::prepare("
-			SELECT COUNT(*) as num_subdom
-			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
-			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-			AND `d`.`email_only` = '0'
-			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")
-		");
-		$result = Database::pexecute_first($domains_stmt, null, true, true);
-		if ($result) {
-			return $this->response($result['num_subdom']);
+		if (!empty($customer_ids)) {
+			// prepare select statement
+			$domains_stmt = Database::prepare("
+				SELECT COUNT(*) as num_subdom
+				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+				WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
+				AND `d`.`email_only` = '0'
+				AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")
+			");
+			$result = Database::pexecute_first($domains_stmt, null, true, true);
+			if ($result) {
+				return $this->response($result['num_subdom']);
+			}
 		}
 		return $this->response(0);
 	}

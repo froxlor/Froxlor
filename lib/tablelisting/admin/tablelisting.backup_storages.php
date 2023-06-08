@@ -84,7 +84,7 @@ return [
 				'sortable' => true,
 			],
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('admin_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('backup_storages_list', [
 			'id',
 			'description',
 			'type',
@@ -94,8 +94,6 @@ return [
 			'show' => [
 				'icon' => 'fa-solid fa-eye',
 				'title' => lng('usersettings.custom_notes.title'),
-				'modal' => [Text::class, 'customerNoteDetailModal'],
-				'visible' => [Customer::class, 'hasNote']
 			],
 			'edit' => [
 				'icon' => 'fa-solid fa-edit',
@@ -117,13 +115,7 @@ return [
 					'action' => 'delete',
 					'id' => ':id'
 				],
-				'visible' => [Admin::class, 'isNotMe']
 			],
 		],
-		'format_callback' => [
-			[Style::class, 'deactivated'],
-			[Style::class, 'diskspaceWarning'],
-			[Style::class, 'trafficWarning']
-		]
 	]
 ];
