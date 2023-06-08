@@ -244,7 +244,6 @@ return [
 		],
 		'server' => [
 			'label' => lng('admin.server'),
-			'required_resources' => 'change_serversettings',
 			'icon' => 'fa-solid fa-server',
 			'elements' => [
 				[
@@ -265,14 +264,11 @@ return [
 				[
 					'url' => 'admin_backups.php?page=overview',
 					'label' => lng('admin.backups.backups'),
-					'required_resources' => 'change_serversettings',
-					'add_shortlink' => 'admin_backups.php?page=overview&action=add',
 					'show_element' => (Settings::Get('backup.enabled') == true)
 				],
 				[
 					'url' => 'admin_logger.php?page=log',
 					'label' => lng('menue.logger.logger'),
-					'required_resources' => 'change_serversettings',
 					'show_element' => (Settings::Get('logger.enabled') == true)
 				],
 				[

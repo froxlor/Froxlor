@@ -38,7 +38,7 @@ use Froxlor\UI\Response;
 
 $id = (int)Request::any('id');
 
-if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversettings'] == '1') {
+if (($page == 'backups' || $page == 'overview')) {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "viewed admin_backups");
 
@@ -54,10 +54,6 @@ if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversetti
 			'listing' => Listing::format($collection, $admin_list_data, 'backups_list'),
 			'actions_links' => [
 				[
-					'href' => $linker->getLink(['section' => 'backups', 'page' => $page, 'action' => 'add']),
-					'label' => lng('admin.backups_add')
-				],
-				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => $page, 'action' => 'restore']),
 					'label' => lng('admin.backups_restore'),
 					'icon' => 'fa-solid fa-file-import',
@@ -67,7 +63,8 @@ if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversetti
 					'href' => $linker->getLink(['section' => 'backups', 'page' => 'storages']),
 					'label' => lng('admin.backup_storages'),
 					'icon' => 'fa-solid fa-hard-drive',
-					'class' => 'btn-outline-secondary'
+					'class' => 'btn-outline-secondary',
+					'visible' => $userinfo['change_serversettings'] == '1'
 				]
 			]
 		]);
@@ -181,4 +178,6 @@ if (($page == 'backups' || $page == 'overview') && $userinfo['change_serversetti
 			}
 		}
 	}
+} else {
+	Response::dynamicError('403');
 }

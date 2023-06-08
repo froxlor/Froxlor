@@ -24,6 +24,7 @@
  */
 
 use Froxlor\UI\Callbacks\Admin;
+use Froxlor\UI\Callbacks\Backup;
 use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
@@ -63,20 +64,32 @@ return [
 				'label' => lng('admin.admin'),
 				'field' => 'adminname',
 				'callback' => [Impersonate::class, 'admin'],
-				'sortable' => true,
 			],
 			'size' => [
 				'label' => lng('backup.size'),
 				'field' => 'size',
+				'sortable' => true,
+				'callback' => [Text::class, 'size'],
+			],
+			'storage_id' => [
+				'label' => lng('backup.backup_storage.title'),
+				'field' => 'storage_id',
+				'class' => 'text-center',
+				'callback' => [Backup::class, 'backupStorageLink'],
+			],
+			'filename' => [
+				'label' => lng('backup.size'),
+				'field' => 'filename',
 				'sortable' => true,
 			],
 			'created_at' => [
 				'label' => lng('backup.created_at'),
 				'field' => 'created_at',
 				'sortable' => true,
+				'callback' => [Text::class, 'timestamp'],
 			],
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('admin_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('backups_list', [
 			'id',
 			'adminname',
 			'loginname',
@@ -84,22 +97,6 @@ return [
 			'created_at',
 		]),
 		'actions' => [
-			'show' => [
-				'icon' => 'fa-solid fa-eye',
-				'title' => lng('usersettings.custom_notes.title'),
-				'modal' => [Text::class, 'customerNoteDetailModal'],
-				'visible' => [Customer::class, 'hasNote']
-			],
-			'edit' => [
-				'icon' => 'fa-solid fa-edit',
-				'title' => lng('panel.edit'),
-				'href' => [
-					'section' => 'backups',
-					'page' => 'storages',
-					'action' => 'edit',
-					'id' => ':id'
-				],
-			],
 			'delete' => [
 				'icon' => 'fa-solid fa-trash',
 				'title' => lng('panel.delete'),
@@ -110,13 +107,8 @@ return [
 					'action' => 'delete',
 					'id' => ':id'
 				],
-				'visible' => [Admin::class, 'isNotMe']
+				'visible' => [Admin::class, 'canChangeServerSettings'],
 			],
-		],
-		'format_callback' => [
-			[Style::class, 'deactivated'],
-			[Style::class, 'diskspaceWarning'],
-			[Style::class, 'trafficWarning']
 		]
 	]
 ];
