@@ -449,7 +449,15 @@ class PhpHelper
 			'ssl_specialsettings',
 			'default_vhostconf_domain',
 			'ssl_default_vhostconf_domain',
-			'filecontent'
+			'filecontent',
+			'admin_password',
+			'password',
+			'new_customer_password',
+			'privileged_password',
+			'email_password',
+			'directory_password',
+			'ftp_password',
+			'mysql_password',
 		];
 		if (!empty($global)) {
 			$tmp = $global;
