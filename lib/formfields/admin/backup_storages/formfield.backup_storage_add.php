@@ -36,7 +36,9 @@ return [
 				'fields' => [
 					'description' => [
 						'label' => lng('backup.backup_storage.description'),
-						'type' => 'text'
+						'type' => 'text',
+						'maxlength' => 200,
+						'mandatory' => true,
 					],
 					'type' => [
 						'label' => lng('backup.backup_storage.type'),
@@ -48,7 +50,8 @@ return [
 							'sftp' => lng('backup.backup_storage.type_sftp'),
 							'rsync' => lng('backup.backup_storage.type_rsync'),
 							's3' => lng('backup.backup_storage.type_s3'),
-						]
+						],
+						'mandatory' => true,
 					],
 					'region' => [
 						'label' => lng('backup.backup_storage.region'),
@@ -72,7 +75,8 @@ return [
 					],
 					'password' => [
 						'label' => lng('backup.backup_storage.password'),
-						'type' => 'text'
+						'type' => 'password',
+						'autocomplete' => 'off',
 					],
 					'pgp_public_key' => [
 						'label' => lng('backup.backup_storage.pgp_public_key'),

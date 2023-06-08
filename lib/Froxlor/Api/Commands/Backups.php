@@ -43,37 +43,6 @@ use PDO;
  */
 class Backups extends ApiCommand implements ResourceEntity
 {
-
-	/**
-	 * increase resource-usage
-	 *
-	 * @param int $adminid
-	 * @param string $resource
-	 * @param string $extra
-	 *            optional, default empty
-	 * @param int $increase_by
-	 *            optional, default 1
-	 */
-	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increase_by = 1)
-	{
-		self::updateResourceUsage(TABLE_PANEL_BACKUPS, 'adminid', $adminid, '+', $resource, $extra, $increase_by);
-	}
-
-	/**
-	 * decrease resource-usage
-	 *
-	 * @param int $adminid
-	 * @param string $resource
-	 * @param string $extra
-	 *            optional, default empty
-	 * @param int $decrease_by
-	 *            optional, default 1
-	 */
-	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '', $decrease_by = 1)
-	{
-		self::updateResourceUsage(TABLE_PANEL_BACKUPS, 'adminid', $adminid, '-', $resource, $extra, $decrease_by);
-	}
-
 	/**
 	 * lists all admin entries
 	 *
@@ -95,7 +64,7 @@ class Backups extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list backups");
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backups");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT `b`.*, `a`.`loginname` as `adminname`

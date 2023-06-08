@@ -35,7 +35,8 @@ return [
 					'description' => [
 						'label' => lng('backup.backup_storage.description'),
 						'type' => 'text',
-						'value' => $result['description']
+						'value' => $result['description'],
+						'mandatory' => true,
 					],
 					'type' => [
 						'label' => lng('backup.backup_storage.type'),
@@ -47,7 +48,8 @@ return [
 							'sftp' => lng('backup.backup_storage.type_sftp'),
 							'rsync' => lng('backup.backup_storage.type_rsync'),
 							's3' => lng('backup.backup_storage.type_s3'),
-						]
+						],
+						'mandatory' => true,
 					],
 					'region' => [
 						'label' => lng('backup.backup_storage.region'),
@@ -75,7 +77,7 @@ return [
 						'value' => $result['username']
 					],
 					'password' => [
-						'label' => lng('backup.backup_storage.password'),
+						'label' => lng('backup.backup_storage.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
 						'autocomplete' => 'off'
 					],

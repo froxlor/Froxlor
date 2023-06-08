@@ -46,7 +46,9 @@ class ExportCron extends FroxlorCron
 		");
 		$all_jobs = $result_tasks_stmt->fetchAll();
 
-		self::runFork([self::class, 'handle'], $all_jobs);
+		if (!empty($all_jobs)) {
+			self::runFork([self::class, 'handle'], $all_jobs);
+		}
 	}
 
 	public static function handle(array $row)

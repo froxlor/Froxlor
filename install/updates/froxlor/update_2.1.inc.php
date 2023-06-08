@@ -113,6 +113,7 @@ if (Froxlor::isDatabaseVersion('202304260')) {
         `module`= 'froxlor/export',
         `cronfile` = 'export',
         `cronclass` = '\\Froxlor\\Cron\\System\\ExportCron',
+        `interval` = '1 HOUR',
         `desc_lng_key` = 'cron_export'
         WHERE `module` = 'froxlor/backup'
     ");

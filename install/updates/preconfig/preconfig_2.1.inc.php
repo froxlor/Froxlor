@@ -36,7 +36,19 @@ $preconfig = [
 $return = [];
 
 if (Update::versionInUpdate($current_version, '2.1.0-dev1')) {
-
+	// Backup
+	$description = 'Froxlor now comes with a backup capability (More info see [DOCS LINK].';
+	$question = '<strong>Would you like to enable the backup-feature (default: yes)</strong>';
+	$return['panel_settings_mode'] = [
+		'type' => 'select',
+		'select_var' => [
+			0 => 'No',
+			1 => 'Yes'
+		],
+		'selected' => 1,
+		'label' => $question,
+		'prior_infotext' => $description
+	];
 }
 
 $preconfig['fields'] = $return;
