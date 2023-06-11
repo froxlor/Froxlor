@@ -94,6 +94,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 			$result['switched_user'] = CurrentUser::getData();
 			$result['adminsession'] = 0;
 			$result['userid'] = $result['customerid'];
+			session_regenerate_id();
 			CurrentUser::setData($result);
 
 			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");

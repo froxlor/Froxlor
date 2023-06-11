@@ -786,6 +786,7 @@ if ($action == 'll') {
 function finishLogin($userinfo)
 {
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
+		session_regenerate_id();
 		CurrentUser::setData($userinfo);
 
 		$language = $userinfo['def_language'] ?? Settings::Get('panel.standardlanguage');

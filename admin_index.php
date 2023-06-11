@@ -53,6 +53,7 @@ if ($action == 'logout') {
 	if (is_array(CurrentUser::getField('switched_user'))) {
 		$result = CurrentUser::getData();
 		$result = $result['switched_user'];
+		session_regenerate_id();
 		CurrentUser::setData($result);
 		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 		$redirect = "admin_" . $target . ".php";
