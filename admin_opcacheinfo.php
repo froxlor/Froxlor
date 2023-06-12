@@ -58,12 +58,12 @@ if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_
 }
 
 if (!extension_loaded('Zend OPcache')) {
-	Response::standardError(lng('error.no_opcacheinfo'));
+	Response::standardError('no_opcacheinfo');
 }
 
 $ocEnabled = ini_get('opcache.enable');
 if (empty($ocEnabled)) {
-	Response::standardError(lng('error.inactive_opcacheinfo'));
+	Response::standardError('inactive_opcacheinfo');
 }
 
 if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {
