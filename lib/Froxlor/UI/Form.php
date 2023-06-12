@@ -232,7 +232,7 @@ class Form
 							if (((isset($fielddetails['visible']) && $fielddetails['visible']) || !isset($fielddetails['visible'])) && (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option'])))) {
 								$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
 								if ($newfieldvalue != $fielddetails['value']) {
-									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) != true) {
+									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
 										Response::standardError($error, $fieldname);
 									} else {
 										$changed_fields[$fieldname] = $newfieldvalue;

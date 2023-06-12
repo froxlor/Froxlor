@@ -319,7 +319,11 @@ class Data
 	{
 		$returnvalue = 'stringformaterror';
 
-		if (preg_match('/^[^\0]*$/', $newfieldvalue)) {
+		if (isset($fielddata['string_regexp']) && $fielddata['string_regexp'] != '') {
+			if (preg_match($fielddata['string_regexp'], $newfieldvalue)) {
+				$returnvalue = true;
+			}
+		} else if (preg_match('/^[^\0]*$/', $newfieldvalue)) {
 			$returnvalue = true;
 		}
 
