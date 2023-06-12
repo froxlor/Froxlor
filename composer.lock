@@ -4,8 +4,70 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2de39e6b85579ce1f0c2f7a16d57ede3",
+    "content-hash": "9ce9c044d979a2358438b876c3c73561",
     "packages": [
+        {
+            "name": "amnuts/opcache-gui",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amnuts/opcache-gui.git",
+                "reference": "a4af194185bcda734cf3e15e877b217153fffd2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amnuts/opcache-gui/zipball/a4af194185bcda734cf3e15e877b217153fffd2b",
+                "reference": "a4af194185bcda734cf3e15e877b217153fffd2b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-zend-opcache": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amnuts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Collington",
+                    "email": "andy@amnuts.com",
+                    "homepage": "https://blog.amnuts.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/amnuts/opcache-gui/graphs/contributors"
+                }
+            ],
+            "description": "A clean, effective and responsive interface for Zend OPcache, with real(ish)-time monitoring, filtering and the ability to invalidate files",
+            "keywords": [
+                "Opcache",
+                "cache",
+                "gui",
+                "interface",
+                "opcodes"
+            ],
+            "support": {
+                "email": "andy@amnuts.com",
+                "issues": "https://github.com/amnuts/opcache-gui/issues",
+                "source": "https://github.com/amnuts/opcache-gui/tree/3.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/amnuts",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-02T23:08:34+00:00"
+        },
         {
             "name": "erusev/parsedown",
             "version": "1.7.4",
