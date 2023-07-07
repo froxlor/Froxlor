@@ -54,7 +54,7 @@ if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 	$config_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/');
 	// show list of available distro's
 	$distros = glob($config_dir . '*.xml');
-	$distributions_select[''] = '-';
+	// selection is required $distributions_select[''] = '-';
 	// read in all the distros
 	foreach ($distros as $_distribution) {
 		// get configparser object
