@@ -33,6 +33,7 @@ use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
 
 if ($userinfo['change_serversettings'] == '1') {
 	if ($action == 'setconfigured') {
@@ -91,6 +92,7 @@ if ($userinfo['change_serversettings'] == '1') {
 	}
 
 	if ($distribution != "" && isset($_POST['finish'])) {
+		$valid_keys = ['http', 'dns', 'smtp', 'mail', 'ftp', 'system', 'distro'];
 		unset($_POST['finish']);
 		unset($_POST['csrf_token']);
 		$params = $_POST;
@@ -98,6 +100,20 @@ if ($userinfo['change_serversettings'] == '1') {
 		$params['system'] = [];
 		foreach ($_POST['system'] as $sysdaemon) {
 			$params['system'][] = $sysdaemon;
+		}
+		// validate params
+		foreach ($params as $key => $value) {
+			if (!in_array($key, $valid_keys)) {
+				unset($params[$key]);
+				continue;
+			}
+			if (!is_array($value)) {
+				$params[$key] = Validate::validate($value, $key);
+			} else {
+				foreach ($value as $subkey => $subvalue) {
+					$params[$key][$subkey] = Validate::validate($subvalue, $key.'.'.$subkey);
+				}
+			}
 		}
 		$params_content = json_encode($params);
 		$params_filename = FileDir::makeCorrectFile(Froxlor::getInstallDir() . 'install/' . Froxlor::genSessionId() . '.json');
