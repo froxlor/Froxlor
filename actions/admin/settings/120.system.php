@@ -107,7 +107,8 @@ return [
 					'varname' => 'enabled',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'api_customer_default' => [
 					'label' => lng('serversettings.api_customer_default'),

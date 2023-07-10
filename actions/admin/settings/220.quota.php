@@ -44,24 +44,30 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_repquota_path',
 					'type' => 'text',
+					'string_type' => 'file',
 					'default' => '/usr/sbin/repquota',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_diskquota_quotatool_path' => [
 					'label' => lng('serversettings.diskquota_quotatool_path.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_quotatool_path',
 					'type' => 'text',
+					'string_type' => 'file',
 					'default' => '/usr/bin/quotatool',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_diskquota_customer_partition' => [
 					'label' => lng('serversettings.diskquota_customer_partition.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_customer_partition',
 					'type' => 'text',
+					'string_type' => 'file',
 					'default' => '/dev/root',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				]
 			]
 		]

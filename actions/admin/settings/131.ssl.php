@@ -157,7 +157,8 @@ return [
 					'string_type' => 'file',
 					'default' => '/root/.acme.sh/acme.sh',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'system_letsencryptacmeconf' => [
 					'label' => lng('serversettings.letsencryptacmeconf'),

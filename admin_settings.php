@@ -77,7 +77,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			if (Form::processForm($settings_data, $_POST, [
 				'filename' => $filename,
 				'action' => $action,
-				'page' => $page
+				'page' => $page,
+				'part' => $_part,
 			], $_part, $settings_all, $settings_part, $only_enabledisable)) {
 				$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
