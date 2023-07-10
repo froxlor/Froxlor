@@ -46,6 +46,8 @@ return [
 		'2fa_overview_desc' => 'Hier kann für das Konto eine Zwei-Faktor-Authentisierung aktiviert werden.<br><br>Es kann entweder eine Authenticator-App (time-based one-time password / TOTP) genutzt werden oder ein Einmalpasswort, welches nach erfolgreichem Login an die hinterlegte E-Mail Adresse gesendet wird.',
 		'2fa_email_desc' => 'Das Konto ist eingerichtet, um Einmalpasswörter per E-Mail zu erhalten. Zum Deaktivieren, klicke auf "2FA deaktivieren"',
 		'2fa_ga_desc' => 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "2FA deaktivieren"',
+		'2fa_not_activated' => 'Zwei-Faktor Authentifizierung ist nicht aktiviert',
+		'2fa_not_activated_for_user' => 'Zwei-Faktor Authentifizierung ist für den aktuellen Benutzer nicht aktiviert',
 	],
 	'admin' => [
 		'overview' => 'Übersicht',
@@ -2090,6 +2092,7 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Rate-Limit-Intervall',
 			'description' => 'Zeit in Sekunden für die maximale Anzahl von HTTP-Anfragen, Standard ist "60".',
 		],
+		'option_requires_otp' => 'Das Ändern dieser Einstellung erfordert OTP Validierung',
 	],
 	'spf' => [
 		'use_spf' => 'Aktiviere SPF für Domains?',

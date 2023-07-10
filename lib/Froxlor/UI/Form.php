@@ -191,7 +191,7 @@ class Form
 				$otp_enabled_user = (int)CurrentUser::getField('type_2fa') != 0;
 				$do_show = !$fielddata['required_otp'] || ($otp_enabled_system && $otp_enabled_user);
 				if (!$do_show) {
-					$fielddata['note'] = lng('serversettings.option_required_otp');
+					$fielddata['note'] = lng('serversettings.option_requires_otp');
 					if (!$otp_enabled_system) {
 						$fielddata['note'] .= '<br>' . lng('2fa.2fa_not_activated');
 					} elseif (!$otp_enabled_user) {

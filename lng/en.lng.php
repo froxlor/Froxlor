@@ -46,6 +46,8 @@ return [
 		'2fa_overview_desc' => 'Here you can activate a two-factor authentication for your account.<br><br>You can either use an authenticator-app (time-based one-time password / TOTP) or let froxlor send you an email to your account-address after each successful login with a one-time password.',
 		'2fa_email_desc' => 'Your account is set up to use one-time passwords via e-mail. To deactivate, click on "Deactivate 2FA"',
 		'2fa_ga_desc' => 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "Deactivate 2FA"',
+		'2fa_not_activated' => 'Two-factor authentication is not enabled',
+		'2fa_not_activated_for_user' => 'Two-factor authentication is not enabled for the current user',
 	],
 	'admin' => [
 		'overview' => 'Overview',
@@ -2215,6 +2217,7 @@ Yours sincerely, your administrator',
 			'title' => 'Rate-limit interval',
 			'description' => 'Specify the time in seconds for the number of HTTP requests, default is "60"',
 		],
+		'option_requires_otp' => 'This setting requires an OTP validation',
 	],
 	'spf' => [
 		'use_spf' => 'Activate SPF for domains?',
