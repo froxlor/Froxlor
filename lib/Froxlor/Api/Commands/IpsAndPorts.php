@@ -175,9 +175,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$docroot = Validate::validate($this->getParam('docroot', true, ''), 'docroot', Validate::REGEX_DIR, '', [], true);
 
 			if ((int)Settings::Get('system.use_ssl') == 1) {
-				$ssl = !empty($this->getBoolParam('ssl', true, 0)) ? intval($this->getBoolParam('ssl', true, 0)) : 0;
-				$ssl_cert_file = Validate::validate($this->getParam('ssl_cert_file', $ssl, ''), 'ssl_cert_file', '', '', [], true);
-				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', [], true);
+				$ssl = (bool)$this->getBoolParam('ssl', true, 0);
+				$ssl_cert_file = Validate::validate($this->getParam('ssl_cert_file', !$ssl, ''), 'ssl_cert_file', '', '', [], true);
+				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', !$ssl, ''), 'ssl_key_file', '', '', [], true);
 				$ssl_ca_file = Validate::validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', [], true);
 				$ssl_cert_chainfile = Validate::validate($this->getParam('ssl_cert_chainfile', true, ''), 'ssl_cert_chainfile', '', '', [], true);
 				$sslss = $this->getParam('ssl_specialsettings', true, '');
@@ -414,9 +414,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$docroot = Validate::validate($this->getParam('docroot', true, $result['docroot']), 'docroot', Validate::REGEX_DIR, '', [], true);
 
 			if ((int)Settings::Get('system.use_ssl') == 1) {
-				$ssl = $this->getBoolParam('ssl', true, $result['ssl']);
-				$ssl_cert_file = Validate::validate($this->getParam('ssl_cert_file', $ssl, $result['ssl_cert_file']), 'ssl_cert_file', '', '', [], true);
-				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', [], true);
+				$ssl = (bool)$this->getBoolParam('ssl', true, $result['ssl']);
+				$ssl_cert_file = Validate::validate($this->getParam('ssl_cert_file', !$ssl, $result['ssl_cert_file']), 'ssl_cert_file', '', '', [], true);
+				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', !$ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', [], true);
 				$ssl_ca_file = Validate::validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', [], true);
 				$ssl_cert_chainfile = Validate::validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', [], true);
 				$sslss = $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings']);
