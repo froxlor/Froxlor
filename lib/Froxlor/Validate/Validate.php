@@ -260,7 +260,7 @@ class Validate
 	}
 
 	/**
-	 * Returns if an emailaddress is in correct format or not
+	 * Returns if an email-address is in correct format or not
 	 *
 	 * @param string $email The email address to check
 	 *

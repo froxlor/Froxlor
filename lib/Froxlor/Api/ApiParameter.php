@@ -39,12 +39,12 @@ abstract class ApiParameter
 
 	/**
 	 *
-	 * @param array $params
+	 * @param array|null $params
 	 *            optional, array of parameters (var=>value) for the command
 	 *
 	 * @throws Exception
 	 */
-	public function __construct($params = null)
+	public function __construct(array $params = null)
 	{
 		if (!is_null($params)) {
 			$params = $this->trimArray($params);
@@ -57,7 +57,7 @@ abstract class ApiParameter
 	 *
 	 * @param array $input
 	 *
-	 * @return array
+	 * @return string|array
 	 */
 	private function trimArray($input)
 	{
@@ -79,9 +79,9 @@ abstract class ApiParameter
 	/**
 	 * get specific parameter which also has and unlimited-field
 	 *
-	 * @param string $param
+	 * @param string|null $param
 	 *            parameter to get out of the request-parameter list
-	 * @param string $ul_field
+	 * @param string|null $ul_field
 	 *            parameter to get out of the request-parameter list
 	 * @param bool $optional
 	 *            default: false
@@ -91,7 +91,7 @@ abstract class ApiParameter
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
+	protected function getUlParam(string $param = null, string $ul_field = null, bool $optional = false, $default = 0)
 	{
 		$param_value = (int)$this->getParam($param, $optional, $default);
 		$ul_field_value = $this->getBoolParam($ul_field, true, 0);
@@ -102,11 +102,11 @@ abstract class ApiParameter
 	}
 
 	/**
-	 * get specific parameter from the parameterlist;
+	 * get specific parameter from the parameter list;
 	 * check for existence and != empty if needed.
 	 * Maybe more in the future
 	 *
-	 * @param string $param
+	 * @param string|null $param
 	 *            parameter to get out of the request-parameter list
 	 * @param bool $optional
 	 *            default: false
@@ -116,7 +116,7 @@ abstract class ApiParameter
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function getParam($param = null, $optional = false, $default = '')
+	protected function getParam(string $param = null, bool $optional = false, $default = '')
 	{
 		// does it exist?
 		if (!isset($this->cmd_params[$param])) {
@@ -128,7 +128,7 @@ abstract class ApiParameter
 			return $default;
 		}
 		// is it empty? - test really on string, as value 0 is being seen as empty by php
-		if ($this->cmd_params[$param] === "") {
+		if (!is_array($this->cmd_params[$param]) && trim($this->cmd_params[$param]) === "") {
 			if ($optional === false) {
 				// get module + function for better error-messages
 				$inmod = $this->getModFunctionString();
@@ -142,7 +142,7 @@ abstract class ApiParameter
 
 	/**
 	 * returns "module::function()" for better error-messages (missing parameter etc.)
-	 * makes debugging a whole lot more comfortable
+	 * makes debugging a lot more comfortable
 	 *
 	 * @param int $level
 	 *            depth of backtrace, default 2
@@ -152,7 +152,7 @@ abstract class ApiParameter
 	 *
 	 * @return string
 	 */
-	private function getModFunctionString($level = 1, $max_level = 5, $trace = null)
+	private function getModFunctionString(int $level = 1, int $max_level = 5, $trace = null)
 	{
 		// which class called us
 		$_class = get_called_class();
@@ -174,7 +174,7 @@ abstract class ApiParameter
 	/**
 	 * getParam wrapper for boolean parameter
 	 *
-	 * @param string $param
+	 * @param string|null $param
 	 *            parameter to get out of the request-parameter list
 	 * @param bool $optional
 	 *            default: false
@@ -183,7 +183,7 @@ abstract class ApiParameter
 	 *
 	 * @return string
 	 */
-	protected function getBoolParam($param = null, $optional = false, $default = false)
+	protected function getBoolParam(string $param = null, bool $optional = false, $default = false)
 	{
 		$_default = '0';
 		if ($default) {
