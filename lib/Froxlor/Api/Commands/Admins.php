@@ -584,6 +584,18 @@ class Admins extends ApiCommand implements ResourceEntity
 					$theme = Settings::Get('panel.default_theme');
 				}
 
+				if (empty(trim($name))) {
+					Response::standardError([
+						'stringisempty',
+						'admin.name'
+					], '', true);
+				}
+				if (empty(trim($email))) {
+					Response::standardError([
+						'stringisempty',
+						'admin.email'
+					], '', true);
+				}
 				if (!Validate::validateEmail($email)) {
 					Response::standardError('emailiswrong', $email, true);
 				} else {
