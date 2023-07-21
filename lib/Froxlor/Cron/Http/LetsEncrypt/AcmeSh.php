@@ -236,9 +236,12 @@ class AcmeSh extends FroxlorCron
 		return false;
 	}
 
-	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
+	private static function checkFsFilesAreNewer($domain, $cert_date = 0): bool
 	{
-		$certificate_folder = self::getWorkingDirFromEnv(strtolower($domain));
+		$certificate_folder = self::getCertificateFolder(strtolower($domain));
+		if (empty($certificate_folder)) {
+			return false;
+		}
 		$ssl_file = FileDir::makeCorrectFile($certificate_folder . '/' . strtolower($domain) . '.cer');
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
@@ -250,9 +253,13 @@ class AcmeSh extends FroxlorCron
 		return false;
 	}
 
-	public static function getWorkingDirFromEnv($domain = "", $forced_noecc = false)
+	public static function getWorkingDirFromEnv($domain = "", $forced_ecc = false): string
 	{
-		if (Settings::Get('system.leecc') > 0 && !$forced_noecc) {
+		// first try without _ecc either if it's enabled currently or not as
+		// it might have been at some point so there is a chance we have certificates
+		// with and without _ecc - the method getCertificateFolder() will check both
+		// possibilities
+		if ($forced_ecc) {
 			$domain .= "_ecc";
 		}
 		$env_file = FileDir::makeCorrectFile(dirname(self::getAcmeSh()) . '/acme.sh.env');
@@ -262,7 +269,7 @@ class AcmeSh extends FroxlorCron
 cut -d'"' -f2
 EOC;
 			exec('grep "LE_WORKING_DIR" ' . escapeshellarg($env_file) . ' | ' . $cut, $output);
-			if (is_array($output) && !empty($output) && isset($output[0]) && !empty($output[0])) {
+			if (is_array($output) && !empty($output) && !empty($output[0])) {
 				return FileDir::makeCorrectDir($output[0] . "/" . $domain);
 			}
 		}
@@ -635,35 +642,21 @@ EOC;
 	 */
 	private static function readCertificateToVar($domain, &$return, &$cronlog)
 	{
-		$certificate_folder = self::getWorkingDirFromEnv($domain);
-		$certificate_folder_noecc = null;
-		if (Settings::Get('system.leecc') > 0) {
-			$certificate_folder_noecc = self::getWorkingDirFromEnv($domain, true);
-		}
-		$certificate_folder = FileDir::makeCorrectDir($certificate_folder);
+		$certificate_folder = self::getCertificateFolder($domain);
 
-		if (is_dir($certificate_folder) || is_dir($certificate_folder_noecc)) {
-			foreach (
-				[
-					'crt' => $domain . '.cer',
-					'key' => $domain . '.key',
-					'chain' => 'ca.cer',
-					'fullchain' => 'fullchain.cer',
-					'csr' => $domain . '.csr'
-				] as $index => $sslfile
-			) {
+		if (!empty($certificate_folder)) {
+			$certificate_files = [
+				'crt' => $domain . '.cer',
+				'key' => $domain . '.key',
+				'chain' => 'ca.cer',
+				'fullchain' => 'fullchain.cer',
+				'csr' => $domain . '.csr'
+			];
+			foreach ($certificate_files as $index => $sslfile) {
 				$ssl_file = FileDir::makeCorrectFile($certificate_folder . '/' . $sslfile);
 				if (file_exists($ssl_file)) {
 					$return[$index] = file_get_contents($ssl_file);
 				} else {
-					if (!empty($certificate_folder_noecc)) {
-						$ssl_file_fb = FileDir::makeCorrectFile($certificate_folder_noecc . '/' . $sslfile);
-						if (file_exists($ssl_file_fb)) {
-							$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "ECC certificates activated but found only non-ecc file");
-							$return[$index] = file_get_contents($ssl_file_fb);
-							continue;
-						}
-					}
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not find file '" . $sslfile . "' in '" . $certificate_folder . "'");
 					$return[$index] = null;
 				}
@@ -671,5 +664,19 @@ EOC;
 		} else {
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not find certificate-folder '" . $certificate_folder . "'");
 		}
+	}
+
+	private static function getCertificateFolder(string $domain): string
+	{
+		$certificate_folder = self::getWorkingDirFromEnv(strtolower($domain));
+		if (file_exists($certificate_folder)) {
+			return $certificate_folder;
+		}
+		$certificate_folder_ecc = self::getWorkingDirFromEnv($domain, true);
+		if (file_exists($certificate_folder_ecc)) {
+			return $certificate_folder_ecc;
+		}
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not find certificate-folder for domain '" . $domain . "'");
+		return "";
 	}
 }
