@@ -2602,7 +2602,6 @@ ServerName                     "<SERVERNAME> FTP Server"
 ServerType			standalone
 DeferWelcome			off
 
-MultilineRFC2228		on
 DefaultServer			on
 ShowSymlinks			on
 
@@ -2941,7 +2940,6 @@ SQLNamedQuery get-quota-limit SELECT "ftp_users.username AS name, ftp_quotalimit
 SQLNamedQuery get-quota-tally SELECT "name, quota_type, bytes_in_used,bytes_out_used, bytes_xfer_used, files_in_used, files_out_used,files_xfer_used FROM ftp_quotatallies WHERE name = '%{0}' AND quota_type = '%{1}'"
 SQLNamedQuery update-quota-tally UPDATE "bytes_in_used = bytes_in_used + %{0}, bytes_out_used = bytes_out_used + %{1}, bytes_xfer_used = bytes_xfer_used + %{2}, files_in_used = files_in_used + %{3}, files_out_used= files_out_used + %{4}, files_xfer_used = files_xfer_used + %{5} WHERE name= '%{6}' AND quota_type = '%{7}'" ftp_quotatallies
 SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}, %{7}" ftp_quotatallies
-
 </IfModule>
 ]]>
 						</content>
@@ -2957,7 +2955,7 @@ TLSRSACertificateFile                   /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile                /etc/ssl/private/proftpd.key
 TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
 TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
-TLSOptions                              NoCertRequest NoSessionReuseRequired
+TLSOptions                              NoSessionReuseRequired
 TLSVerifyClient                         off
 
 # Are clients required to use FTP over TLS when talking to this server?
