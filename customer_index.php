@@ -113,6 +113,11 @@ if ($page == 'overview') {
 	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : -1;
 	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
 
+	if (Settings::Get('system.mail_quota_enabled')) {
+		$userinfo['email_quota_bytes'] = ($userinfo['email_quota'] > -1) ? $userinfo['email_quota'] * 1024 : -1;
+		$userinfo['email_quota_bytes_used'] = $userinfo['email_quota_used'] * 1024;
+	}
+
 	if ($usages) {
 		$userinfo['diskspace_bytes_used'] = $usages['webspace'] * 1024;
 		$userinfo['mailspace_used'] = $usages['mail'] * 1024;
