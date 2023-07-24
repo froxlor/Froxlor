@@ -65,7 +65,13 @@ return [
 						'type' => 'select',
 						'select_var' => $shells,
 						'selected' => $result['shell'] ?? '/bin/false'
-					]
+					],
+					'login_enabled' => [
+						'label' => lng('panel.active'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['login_enabled'] == 'Y',
+					],
 				]
 			]
 		]

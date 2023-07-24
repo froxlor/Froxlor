@@ -43,6 +43,14 @@ class Text
 		];
 	}
 
+	public static function yesno(array $attributes): array
+	{
+		return [
+			'macro' => 'boolean',
+			'data' => $attributes['data'] == 'Y'
+		];
+	}
+
 	public static function customerfullname(array $attributes): string
 	{
 		return User::getCorrectFullUserDetails($attributes['fields'], true);

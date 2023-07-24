@@ -34,6 +34,11 @@ class Style
 		return $attributes['fields']['deactivated'] ? 'bg-danger' : '';
 	}
 
+	public static function loginDisabled(array $attributes): string
+	{
+		return $attributes['fields']['login_enabled'] == 'N' ? 'bg-danger' : '';
+	}
+
 	public static function resultIntegrityBad(array $attributes): string
 	{
 		return $attributes['fields']['result'] ? '' : 'bg-warning';

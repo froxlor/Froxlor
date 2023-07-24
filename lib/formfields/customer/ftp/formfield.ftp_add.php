@@ -79,7 +79,13 @@ return [
 						'type' => 'select',
 						'select_var' => $shells,
 						'selected' => '/bin/false'
-					]
+					],
+					'login_enabled' => [
+						'label' => lng('panel.active'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => true
+					],
 				]
 			]
 		]
