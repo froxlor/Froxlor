@@ -1242,6 +1242,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'upload_import' => 'Hochladen und importieren',
 		'profile' => 'Mein Profil',
+		'use_checkbox_for_unlimited' => 'Der Wert "0" deaktiviert die Resource. Die Checkbox rechts erlaubt "unlimitierte" Nutzung.',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',

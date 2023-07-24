@@ -1355,6 +1355,7 @@ Yours sincerely, your administrator',
 		],
 		'upload_import' => 'Upload and import',
 		'profile' => 'My profile',
+		'use_checkbox_for_unlimited' => 'The value "0" deactivates this resource. The checkbox on the right allows "unlimited" usage.',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',
