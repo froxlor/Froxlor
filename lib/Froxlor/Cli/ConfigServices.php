@@ -42,7 +42,7 @@ final class ConfigServices extends CliCommand
 {
 
 	private $yes_to_all_supported = [
-		/* 'bookworm', */
+		'bookworm',
 		'bionic',
 		'bullseye',
 		'buster',

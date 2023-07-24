@@ -1517,7 +1517,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain = '1'
+query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain = '1' AND deactivated = 0
 ]]>
 							</content>
 						</file>
@@ -3393,7 +3393,6 @@ ServerName                     "<SERVERNAME> FTP Server"
 ServerType			standalone
 DeferWelcome			off
 
-MultilineRFC2228		on
 DefaultServer			on
 ShowSymlinks			on
 
@@ -3730,7 +3729,6 @@ SQLNamedQuery get-quota-limit SELECT "ftp_users.username AS name, ftp_quotalimit
 SQLNamedQuery get-quota-tally SELECT "name, quota_type, bytes_in_used,bytes_out_used, bytes_xfer_used, files_in_used, files_out_used,files_xfer_used FROM ftp_quotatallies WHERE name = '%{0}' AND quota_type = '%{1}'"
 SQLNamedQuery update-quota-tally UPDATE "bytes_in_used = bytes_in_used + %{0}, bytes_out_used = bytes_out_used + %{1}, bytes_xfer_used = bytes_xfer_used + %{2}, files_in_used = files_in_used + %{3}, files_out_used= files_out_used + %{4}, files_xfer_used = files_xfer_used + %{5} WHERE name= '%{6}' AND quota_type = '%{7}'" ftp_quotatallies
 SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}, %{7}" ftp_quotatallies
-
 </IfModule>
 ]]>
 						</content>
@@ -3741,16 +3739,16 @@ SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}
 <IfModule mod_tls.c>
 TLSEngine                               on
 TLSLog                                  /var/log/proftpd/tls.log
-TLSProtocol                             TLSv1 TLSv1.1 TLSv1.2
+TLSProtocol                             TLSv1.2 TLSv1.3
 TLSRSACertificateFile                   /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile                /etc/ssl/private/proftpd.key
 TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
 TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
-TLSOptions                              NoCertRequest NoSessionReuseRequired
+TLSOptions                              NoSessionReuseRequired
 TLSVerifyClient                         off
 
 # Are clients required to use FTP over TLS when talking to this server?
-#TLSRequired                             on
+TLSRequired                             on
 
 # Allow SSL/TLS renegotiations when the client requests them, but
 # do not force the renegotiations.  Some clients do not support
@@ -3761,6 +3759,37 @@ TLSVerifyClient                         off
 #TLSRenegotiate                          required off
 </IfModule>
 ]]>
+						</content>
+					</file>
+					<file name="/etc/proftpd/conf.d/99-froxlor-ratelimit.conf" chown="root:0"
+						  chmod="0644">
+						<content><![CDATA[
+<Class whitelist>
+From 127.0.0.1
+</Class>
+
+MaxLoginAttempts 3
+<IfModule mod_ban.c>
+ <IfClass whitelist>
+  BanEngine off
+ </IfClass>
+ <IfClass !whitelist>
+  BanEngine on
+ </IfClass>
+BanLog /var/log/proftpd/ban.log
+BanTable /etc/proftpd/ban.tab
+BanMessage "User %u was banned."
+BanOnEvent ClientConnectRate 5/00:00:02 12:00:00 "Stop connecting frequently"
+BanOnEvent MaxLoginAttempts 3/00:30:00 12:00:00
+BanOnEvent AnonRejectPasswords 1/01:00:00 99:99:99
+BanControlsACLs all allow user root
+</IfModule>
+
+<IfClass whitelist>
+BanEngine off
+DelayEngine off
+</IfClass>
+					]]>
 						</content>
 					</file>
 					<command><![CDATA[service proftpd restart]]></command>

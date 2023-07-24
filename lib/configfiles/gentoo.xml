@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Gentoo" version="2.2"
+	<distribution name="Gentoo" version="3.0"
 		defaulteditor="/usr/bin/nano">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
@@ -1473,7 +1473,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain = '1'
+query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain = '1' AND deactivated = 0
 ]]>
 							</content>
 						</file>
@@ -3421,7 +3421,6 @@ MaxInstances			50
 
 # General settings
 DeferWelcome			on
-MultilineRFC2228		on
 ShowSymlinks			on
 AllowOverwrite			on
 AllowStoreRestart		on
@@ -3487,10 +3486,10 @@ SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}
 <IfModule mod_tls.c>
 TLSEngine on
 TLSLog /var/log/proftpd-tls.log
-TLSProtocol TLSv1 TLSv1.1 TLSv1.2
+TLSProtocol TLSv1.2 TLSv1.3
 #TLSTimeoutHandshake 120
 # Really important for WinClients and some clients
-TLSOptions NoCertRequest NoSessionReuseRequired
+TLSOptions NoSessionReuseRequired
 TLSRSACertificateFile /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile /etc/ssl/private/proftpd.key
 TLSECCertificateFile /etc/ssl/certs/proftpd_ec.crt
@@ -3499,7 +3498,7 @@ TLSECCertificateKeyFile /etc/ssl/private/proftpd_ec.key
 # Authenticate client that want to use FTP over TLS?
 TLSVerifyClient off
 # Uncomment the following line to force tls login
-#TLSRequired on
+TLSRequired on
 </IfModule>
 
 # LOG settings
@@ -3517,6 +3516,32 @@ ExtendedLog /var/log/proftpd-access.log WRITE,READ write
 
 # make proftpd faster / do not perform ident and reverse dns lookup
 UseReverseDNS off
+
+<Class whitelist>
+From 127.0.0.1
+</Class>
+
+MaxLoginAttempts 3
+<IfModule mod_ban.c>
+ <IfClass whitelist>
+  BanEngine off
+ </IfClass>
+ <IfClass !whitelist>
+  BanEngine on
+ </IfClass>
+BanLog /var/log/proftpd-ban.log
+BanTable /etc/proftpd/ban.tab
+BanMessage "User %u was banned."
+BanOnEvent ClientConnectRate 5/00:00:02 12:00:00 "Stop connecting frequently"
+BanOnEvent MaxLoginAttempts 3/00:30:00 12:00:00
+BanOnEvent AnonRejectPasswords 1/01:00:00 99:99:99
+BanControlsACLs all allow user root
+</IfModule>
+
+<IfClass whitelist>
+BanEngine off
+DelayEngine off
+</IfClass>
 ]]>
 						</content>
 					</file>
