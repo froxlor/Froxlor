@@ -389,6 +389,23 @@ if ($page == 'overview' || $page == 'domains') {
 		} else {
 			Response::standardError('domains_canteditdomain');
 		}
+	} elseif ($action == 'jqSpeciallogfileNote') {
+		$domainid = intval($_POST['id']);
+		$newval = intval($_POST['newval']);
+		try {
+			$json_result = SubDomains::getLocal($userinfo, [
+				'id' => $domainid
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+		if ($newval != $result['speciallogfile']) {
+			echo json_encode(['changed' => true, 'info' => lng('admin.speciallogwarning')]);
+			exit();
+		}
+		echo 0;
+		exit();
 	}
 } elseif ($page == 'domainssleditor') {
 	require_once __DIR__ . '/ssl_editor.php';

@@ -647,6 +647,7 @@ return [
 	],
 	'domain' => [
 		'openbasedirpath' => 'OpenBasedir-Pfad',
+		'inherited' => 'Gleich wie Elterndomain',
 		'docroot' => 'Oben angegebener Pfad',
 		'homedir' => 'Heimverzeichnis',
 		'docparent' => 'Elternverzeichnis des oben angegebenen Pfads',

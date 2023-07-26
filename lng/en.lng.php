@@ -714,6 +714,7 @@ return [
 	],
 	'domain' => [
 		'openbasedirpath' => 'OpenBasedir-path',
+		'inherited' => 'Same as parent-domain',
 		'docroot' => 'Path from field above',
 		'homedir' => 'Home directory',
 		'docparent' => 'Parent-directory of path from field above',

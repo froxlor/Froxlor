@@ -67,6 +67,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *            optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
 	 *            optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 * @param int $speciallogfile
+	 *            optional, whether to create an exclusive web-logfile for this domain (1) or not (0) or inherit value from parentdomain (2, default)
 	 * @param bool $sslenabled
 	 *            optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default
 	 *            1 (true)
@@ -107,6 +109,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$openbasedir_path = $this->getParam('openbasedir_path', true, 0);
 			$phpsettingid = $this->getParam('phpsettingid', true, 0);
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
+			$speciallogfile = intval($this->getParam('speciallogfile', true, 2));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
 			if (Settings::Get('system.use_ssl')) {
 				$sslenabled = $this->getBoolParam('sslenabled', true, 1);
@@ -276,6 +279,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = 2;
 			}
 
+			// validate speciallogfile value
+			if ($speciallogfile < 0 || $speciallogfile > 2) {
+				$speciallogfile = 2; // inherit from parent-domain
+			}
+
 			// get the phpsettingid from parentdomain, #107
 			$phpsid_stmt = Database::prepare("
 				SELECT `phpsettingid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :id
@@ -354,7 +362,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"openbasedir" => $domain_check['openbasedir'],
 				"openbasedir_path" => $openbasedir_path,
 				"phpenabled" => $domain_check['phpenabled'],
-				"speciallogfile" => $domain_check['speciallogfile'],
+				"speciallogfile" => $speciallogfile == 2 ? $domain_check['speciallogfile'] : $speciallogfile,
 				"specialsettings" => $domain_check['specialsettings'],
 				"ssl_specialsettings" => $domain_check['ssl_specialsettings'],
 				"include_specialsettings" => $domain_check['include_specialsettings'],
@@ -591,6 +599,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *            optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
 	 *            optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 * @param bool $speciallogfile
+	 *            optional, whether to create an exclusive web-logfile for this domain
+	 * @param bool $speciallogverified
+	 *            optional, when setting $speciallogfile to false, this needs to be set to true to confirm the action,
+	 *            default 0 (false)
 	 * @param bool $sslenabled
 	 *            optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default
 	 *            1 (true)
@@ -648,6 +661,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 		$redirectcode = $this->getParam('redirectcode', true, Domain::getDomainRedirectId($id));
+		$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
+		$speciallogverified = $this->getBoolParam('speciallogverified', true, 0);
 		if (Settings::Get('system.use_ssl')) {
 			$sslenabled = $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
@@ -757,6 +772,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$ssl_redirect = 2;
 		}
 
+		if ($speciallogfile != $result['speciallogfile'] && $speciallogverified != '1') {
+			$speciallogfile = $result['speciallogfile'];
+		}
+
 		// is-email-domain flag changed - remove mail accounts and mail-addresses
 		if (($result['isemaildomain'] == '1') && $isemaildomain == '0') {
 			$params = [
@@ -789,7 +808,21 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Domain::updateRedirectOfDomain($id, $redirectcode);
 		}
 
-		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != (int)$result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $http2 != $result['http2']) {
+		if ($path != $result['documentroot']
+			|| $isemaildomain != $result['isemaildomain']
+			|| $wwwserveralias != $result['wwwserveralias']
+			|| $iswildcarddomain != $result['iswildcarddomain']
+			|| $aliasdomain != (int)$result['aliasdomain']
+			|| $openbasedir_path != $result['openbasedir_path']
+			|| $ssl_redirect != $result['ssl_redirect']
+			|| $letsencrypt != $result['letsencrypt']
+			|| $hsts_maxage != $result['hsts']
+			|| $hsts_sub != $result['hsts_sub']
+			|| $hsts_preload != $result['hsts_preload']
+			|| $phpsettingid != $result['phpsettingid']
+			|| $http2 != $result['http2']
+			|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
+		) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`documentroot` = :documentroot,
@@ -805,7 +838,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
 					`hsts_preload` = :hsts_preload,
-					`phpsettingid` = :phpsettingid
+					`phpsettingid` = :phpsettingid,
+					`speciallogfile` = :speciallogfile
 					WHERE `customerid`= :customerid AND `id`= :id
 				");
 			$params = [
@@ -823,6 +857,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"hsts_sub" => $hsts_sub,
 				"hsts_preload" => $hsts_preload,
 				"phpsettingid" => $phpsettingid,
+				"speciallogfile" => $speciallogfile,
 				"customerid" => $customer['customerid'],
 				"id" => $id
 			];
