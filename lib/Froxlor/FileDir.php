@@ -219,7 +219,7 @@ class FileDir
 		}
 
 		// execute the command and return output
-		$return = '';
+		$return = [];
 
 		// -------------------------------------------------------------------------------
 		if ($return_value == false) {

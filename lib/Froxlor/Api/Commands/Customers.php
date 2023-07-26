@@ -100,7 +100,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					AND `id`<> :stdd
 				");
 				$usages_stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					SELECT webspace, mail, mysql FROM `" . TABLE_PANEL_DISKSPACE . "`
 					WHERE `customerid` = :cid
 					ORDER BY `stamp` DESC LIMIT 1
 				");
@@ -109,11 +109,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($show_usages) {
 					// get number of domains
-					Database::pexecute($domains_stmt, [
+					$domains = Database::pexecute_first($domains_stmt, [
 						'cid' => $row['customerid'],
 						'stdd' => $row['standardsubdomain']
 					]);
-					$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
 					$row['domains'] = intval($domains['domains']);
 					// get disk-space usages for web, mysql and mail
 					$usages = Database::pexecute_first($usages_stmt, [

@@ -556,6 +556,10 @@ EOC;
 						Settings::Set('system.le_froxlor_enabled', 0);
 					}
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt deactivated for domain " . $domain);
+					if (!defined('CRON_IS_FORCED') && !defined('CRON_DEBUG_FLAG')) {
+						// email info to admin that lets encrypt has been disabled for this domain
+						Cronjob::notifyMailToAdmin("Let's Encrypt has been deactivated for domain '" . $domain . "' due to failed dns validation (wrong or no IP address)");
+					}
 				}
 			}
 		}
@@ -586,11 +590,20 @@ EOC;
 				$acmesh_cmd .= " --debug";
 			}
 
-			$acme_result = FileDir::safe_exec($acmesh_cmd);
+			$exit_code = null;
+			$acme_result = FileDir::safe_exec($acmesh_cmd, $exit_code);
 			// debug output of acme.sh run
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, implode("\n", $acme_result));
 
-			self::certToDb($certrow, $cronlog, $acme_result);
+			if ($exit_code != 0) {
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, "Non-successful exit-code returned :(");
+				if (!defined('CRON_IS_FORCED') && !defined('CRON_DEBUG_FLAG')) {
+					Cronjob::notifyMailToAdmin("Let's Encrypt certificate could not be obtained for: " . implode(", ", $domains) . "\n\n" . implode("\n", $acme_result));
+				}
+			} else {
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, "Successful exit-code returned - storing certificate");
+				self::certToDb($certrow, $cronlog, $acme_result);
+			}
 		}
 	}
 
