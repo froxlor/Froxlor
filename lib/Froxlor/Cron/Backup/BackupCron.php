@@ -25,6 +25,8 @@
 
 namespace Froxlor\Cron\Backup;
 
+use Exception;
+use Froxlor\Backup\Storages\StorageFactory;
 use Froxlor\Cron\Forkable;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Database\Database;
@@ -38,7 +40,7 @@ class BackupCron extends FroxlorCron
 
 	public static function run()
 	{
-		if(!Settings::Get('backup.enabled')) {
+		if (!Settings::Get('backup.enabled')) {
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'BackupCron: disabled - exiting');
 			return -1;
 		}
@@ -71,11 +73,22 @@ class BackupCron extends FroxlorCron
 		self::runFork([self::class, 'handle'], $customers);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private static function handle(array $userdata)
 	{
 		echo "BackupCron: started - creating customer backup for user " . $userdata['loginname'] . "\n";
 
-		echo json_encode($userdata['storage']) . "\n";
+		$backupStorage = StorageFactory::fromType($userdata['storage']['type'], $userdata);
+		// initialize storage
+		$backupStorage->init();
+		// do what is required to obtain files/archives and move/upload
+		$backupStorage->prepareFiles();
+		// upload/move to target
+		$backupStorage->createFromFiles();
+		// remove by retention
+		$backupStorage->removeOld();
 
 		echo "BackupCron: finished - creating customer backup for user " . $userdata['loginname'] . "\n";
 	}

@@ -73,8 +73,8 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backup storages");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_BACKUP_STORAGES . "`
-			");
+				SELECT * FROM `" . TABLE_PANEL_BACKUP_STORAGES . "` ". $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit()
+			);
 			Database::pexecute($result_stmt, $query_fields, true, true);
 			$result = [];
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -30,7 +30,7 @@ return [
 			'icon' => 'fa-solid fa-sliders',
 			'advanced_mode' => true,
 			'fields' => [
-				'system_backup_enabled' => [
+				'backup_enabled' => [
 					'label' => lng('serversettings.backup_enabled'),
 					'settinggroup' => 'backup',
 					'varname' => 'enabled',
@@ -40,74 +40,39 @@ return [
 					'overview_option' => true,
 					'cronmodule' => 'froxlor/backup'
 				],
-				'system_backup_type' => [
-					'label' => lng('serversettings.backup_type'),
+				'backup_default_storage' => [
+					'label' => lng('serversettings.backup_default_storage'),
 					'settinggroup' => 'backup',
-					'varname' => 'type',
+					'varname' => 'default_storage',
 					'type' => 'select',
-					'default' => 'Local',
-					'select_var' => [
-						'Local' => lng('serversettings.local'),
-						'SFTP' => lng('serversettings.sftp'),
-						'FTPS' => lng('serversettings.ftps'),
-						'S3' => lng('serversettings.s3'),
+					'default' => '1',
+					'option_options_method' => [
+						'\\Froxlor\\Backup\\Backup',
+						'getBackupStorages'
 					],
-					'save_method' => 'storeSettingField',
-					'overview_option' => true,
+					'save_method' => 'storeSettingField'
 				],
-				'system_backup_region' => [
-					'label' => lng('serversettings.backup_region'),
+				'backup_default_retention' => [
+					'label' => lng('serversettings.backup_default_retention'),
 					'settinggroup' => 'backup',
-					'varname' => 'region',
-					'type' => 'text',
-					'default' => 'eu-central-1',
-					'save_method' => 'storeSettingField',
-				],
-				'system_backup_bucket' => [
-					'label' => lng('serversettings.backup_bucket'),
-					'settinggroup' => 'backup',
-					'varname' => 'bucket',
-					'type' => 'text',
-					'default' => '',
+					'varname' => 'default_retention',
+					'type' => 'number',
+					'default' => 3,
+					'min' => 0,
 					'save_method' => 'storeSettingField',
 				],
-				'system_backup_destination_path' => [
-					'label' => lng('serversettings.backup_destination_path'),
+				'backup_default_customer_access' => [
+					'label' => lng('serversettings.backup_default_customer_access'),
 					'settinggroup' => 'backup',
-					'varname' => 'destination_path',
-					'type' => 'text',
-					'string_type' => 'confdir',
-					'default' => '/srv/backups/',
+					'varname' => 'default_customer_access',
+					'type' => 'checkbox',
+					'default' => true,
 					'save_method' => 'storeSettingField',
 				],
-				'system_backup_hostname' => [
-					'label' => lng('serversettings.backup_hostname'),
+				'backup_default_pgp_public_key' => [
+					'label' => lng('serversettings.backup_default_pgp_public_key'),
 					'settinggroup' => 'backup',
-					'varname' => 'hostname',
-					'type' => 'text',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-				],
-				'system_backup_username' => [
-					'label' => lng('serversettings.backup_username'),
-					'settinggroup' => 'backup',
-					'varname' => 'username',
-					'type' => 'text',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-				],
-				'system_backup_password' => [
-					'label' => lng('serversettings.backup_password'),
-					'settinggroup' => 'backup',
-					'varname' => 'password',
-					'type' => 'password',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-				],
-				'system_backup_pgp_public_key' => [
-					'label' => lng('serversettings.backup_pgp_public_key'),
-					'settinggroup' => 'backup',
-					'varname' => 'pgp_public_key',
+					'varname' => 'default_pgp_public_key',
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
@@ -115,15 +80,6 @@ return [
 						'\\Froxlor\\Validate\\Check',
 						'checkPgpPublicKeySetting'
 					],
-				],
-				'system_backup_retention' => [
-					'label' => lng('serversettings.backup_retention'),
-					'settinggroup' => 'backup',
-					'varname' => 'retention',
-					'type' => 'number',
-					'default' => 3,
-					'min' => 0,
-					'save_method' => 'storeSettingField',
 				],
 			]
 		]

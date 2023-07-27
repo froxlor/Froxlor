@@ -95,7 +95,8 @@ class Backups extends ApiCommand implements ResourceEntity
 			FROM `" . TABLE_PANEL_BACKUPS . "` `b`
 			LEFT JOIN `" . TABLE_PANEL_ADMINS . "` `a` USING(`adminid`)
 			WHERE `b`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-		");
+			" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit()
+		);
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		$result = [];
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {

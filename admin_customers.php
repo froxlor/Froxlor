@@ -236,7 +236,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 					$result_json = BackupStorages::getLocal($userinfo)->listing();
 					$result_decoded = json_decode($result_json, true)['data']['list'];
 					foreach ($result_decoded as $storagedata) {
-						$backup_storages[$storagedata['id']] = $storagedata['description'] . ' (' . $storagedata['type'] . ')';
+						$backup_storages[$storagedata['id']] = "[" . $storagedata['type'] . "] " . html_entity_decode($storagedata['description']);
 					}
 				} catch (Exception $e) {
 					/* just none */
@@ -335,7 +335,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 						$result_json = BackupStorages::getLocal($userinfo)->listing();
 						$result_decoded = json_decode($result_json, true)['data']['list'];
 						foreach ($result_decoded as $storagedata) {
-							$backup_storages[$storagedata['id']] = $storagedata['description'] . ' (' . $storagedata['type'] . ')';
+							$backup_storages[$storagedata['id']] = "[" . $storagedata['type'] . "] " . html_entity_decode($storagedata['description']);
 						}
 					} catch (Exception $e) {
 						/* just none */

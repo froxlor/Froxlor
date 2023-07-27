@@ -73,8 +73,8 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	  `destination_path` varchar(255) NOT NULL,
 	  `hostname` varchar(255) NULL,
 	  `username` varchar(255) NULL,
-	  `password` varchar(255) NULL,
-	  `pgp_public_key` varchar(255) NULL,
+	  `password` text,
+	  `pgp_public_key` text,
 	  `retention` int(3) NOT NULL DEFAULT 3,
 	  PRIMARY KEY (`id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
@@ -105,6 +105,8 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Settings::AddNew('backup.enabled', 0);
 	Settings::AddNew('backup.default_storage', 1);
 	Settings::AddNew('backup.default_customer_access', 1);
+	Settings::AddNew('backup.default_pgp_public_key', '');
+	Settings::AddNew('backup.default_retention', 3);
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting cronjobs");
