@@ -449,7 +449,11 @@ class Core
 				$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
 				$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
 				// fcgid
-				$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";
+				if ($this->validatedData['distribution'] == 'bookworm') {
+					$binary = "/usr/bin/php-cgi" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;
+				} else {
+					$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";
+				}
 			}
 			$db_user->query("UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET `reload_cmd` = '" . $reload . "', `config_dir` = '" . $config_dir . "' WHERE `id` ='1';");
 			$db_user->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `binary` = '" . $binary . "';");
