@@ -82,15 +82,15 @@ if (($page == 'backups' || $page == 'overview')) {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "list backup storages");
 
 		try {
-			$admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.backup_storages.php';
+			$backup_storage_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.backup_storages.php';
 			$collection = (new Collection(BackupStorages::class, $userinfo))
-				->withPagination($admin_list_data['backup_storages_list']['columns'], $admin_list_data['backup_storages_list']['default_sorting']);
+				->withPagination($backup_storage_list_data['backup_storages_list']['columns'], $backup_storage_list_data['backup_storages_list']['default_sorting']);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => Listing::format($collection, $admin_list_data, 'backup_storages_list'),
+			'listing' => Listing::format($collection, $backup_storage_list_data, 'backup_storages_list'),
 			'actions_links' => [
 				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => 'backups']),

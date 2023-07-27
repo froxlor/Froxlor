@@ -36,7 +36,7 @@ return [
 		'title' => lng('backup.backup_storages.list'),
 		'icon' => 'fa-solid fa-file-archive',
 		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
-		'default_sorting' => ['loginname' => 'asc'],
+		'default_sorting' => ['description' => 'asc'],
 		'columns' => [
 			'id' => [
 				'label' => 'ID',

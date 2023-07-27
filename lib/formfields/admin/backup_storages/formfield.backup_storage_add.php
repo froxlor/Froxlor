@@ -81,6 +81,7 @@ return [
 					'pgp_public_key' => [
 						'label' => lng('backup.backup_storage.pgp_public_key'),
 						'type' => 'textarea',
+						'value' => Settings::Get('backup.default_pgp_public_key')
 					],
 					'retention' => [
 						'label' => lng('backup.backup_storage.retention'),
