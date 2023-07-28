@@ -235,51 +235,30 @@ class Domain
 	}
 
 	/**
-	 * check whether a domain has subdomains added as full-domains
-	 * #329
+	 * get ids of domains that are main domains but a subdomain of another main domain (for DNS)
 	 *
-	 * @param int $id domain-id
+	 * @param int $id main-domain to check
 	 *
-	 * @return bool
+	 * @return array
 	 * @throws \Exception
 	 */
-	public static function domainHasMainSubDomains(int $id): bool
+	public static function getMainSubdomainIds(int $id): array
 	{
 		$result_stmt = Database::prepare("
-		SELECT COUNT(`id`) as `mainsubs` FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `ismainbutsubto` = :id");
-		$result = Database::pexecute_first($result_stmt, [
-			'id' => $id
-		]);
-
-		if ($result && isset($result['mainsubs'])) {
-			return $result['mainsubs'] > 0;
-		}
-		return false;
-	}
-
-	/**
-	 * check whether a subof-domain exists
-	 * #329
-	 *
-	 * @param int $id subof-domain-id
-	 *
-	 * @return bool
-	 * @throws \Exception
-	 */
-	public static function domainMainToSubExists(int $id): bool
-	{
-		$result_stmt = Database::prepare("
-		SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :id");
+			SELECT id
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE
+			isbinddomain = 1 AND
+			domain LIKE CONCAT('%.', ( SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` AS d WHERE d.id = :id ))
+		");
 		Database::pexecute($result_stmt, [
 			'id' => $id
 		]);
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-		if ($result && isset($result['id'])) {
-			return $result['id'] > 0;
+		$result = [];
+		while ($entry = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$result = $entry['id'];
 		}
-		return false;
+		return $result;
 	}
 
 	/**

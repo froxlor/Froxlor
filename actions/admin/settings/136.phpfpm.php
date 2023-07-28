@@ -126,7 +126,8 @@ return [
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'phpfpm_ini_values' => [
 					'label' => lng('phpfpm.ini_values'),
@@ -135,7 +136,8 @@ return [
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'phpfpm_ini_admin_flags' => [
 					'label' => lng('phpfpm.ini_admin_flags'),
@@ -144,7 +146,8 @@ return [
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'phpfpm_ini_admin_values' => [
 					'label' => lng('phpfpm.ini_admin_values'),
@@ -153,7 +156,8 @@ return [
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				]
 			]
 		]

@@ -37,6 +37,7 @@ return [
 			'ip' => [
 				'label' => lng('admin.ipsandports.ip'),
 				'field' => 'ip',
+				'isdefaultsearchfield' => true,
 			],
 			'port' => [
 				'label' => lng('admin.ipsandports.port'),

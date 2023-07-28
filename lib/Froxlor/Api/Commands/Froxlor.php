@@ -37,6 +37,7 @@ use Froxlor\Settings;
 use Froxlor\SImExporter;
 use Froxlor\System\Cronjob;
 use Froxlor\System\Crypt;
+use Froxlor\Validate\Validate;
 use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -267,6 +268,79 @@ class Froxlor extends ApiCommand
 	{
 		$length = $this->getParam('length', true, 10);
 		return $this->response(Crypt::generatePassword($length));
+	}
+
+	/**
+	 * return a one-time login link URL for a given user
+	 *
+	 * @param int $customerid optional, required if $loginname is not specified, user to create link for
+	 * @param string $loginname optional, required if $customerid is not specified, user to create link for
+	 * @param int $valid_time optional, value in seconds how long the link will be valid, default is 10 seconds, valid values are numbers from 10 to 120
+	 * @param string $allowed_from optional, comma separated list of ip addresses or networks to allow login from via this link
+	 *
+	 * @access admin
+	 * @return string json-encoded array [base => domain, uri => relative link]
+	 * @throws Exception
+	 */
+	public function generateLoginLink()
+	{
+		if ($this->isAdmin()) {
+			$customer = $this->getCustomerData();
+
+			// cannot create link for deactivated users
+			if ((int)$customer['deactivated'] == 1) {
+				throw new Exception("Cannot generate link for deactivated user", 406);
+			}
+
+			$valid_time = (int)$this->getParam('valid_time', true, 10);
+			$allowed_from = $this->getParam('allowed_from', true, '');
+
+			$valid_time = Validate::validate($valid_time, 'valid time', '/^(1[0-1][0-9]|120|[1-9][0-9])$/', 'invalid_validtime', [10], true);
+
+			// validate allowed_from
+			if (!empty($allowed_from)) {
+				$ip_list = array_map('trim', explode(",", $allowed_from));
+				$_check_list = $ip_list;
+				foreach ($_check_list as $idx => $ip) {
+					if (Validate::validate_ip2($ip, true, 'invalidip', true, true, true) == false) {
+						throw new Exception('Invalid ip address', 406);
+					}
+					// check for cidr
+					if (strpos($ip, '/') !== false) {
+						$ipparts = explode("/", $ip);
+						// shorten IP
+						$ip = inet_ntop(inet_pton($ipparts[0]));
+						// re-add cidr
+						$ip .= '/' . $ipparts[1];
+					} else {
+						// shorten IP
+						$ip = inet_ntop(inet_pton($ip));
+					}
+					$ip_list[$idx] = $ip;
+				}
+				$allowed_from = implode(",", array_unique($ip_list));
+			}
+
+			$hash = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
+
+			$ins_stmt = Database::prepare("
+				INSERT INTO `" . TABLE_PANEL_LOGINLINKS . "`
+				SET `hash` = :hash, `loginname` = :loginname, `valid_until` = :validuntil, `allowed_from` = :allowedfrom
+				ON DUPLICATE KEY UPDATE `hash` = :hash, `valid_until` = :validuntil, `allowed_from` = :allowedfrom
+			");
+			Database::pexecute($ins_stmt, [
+				'hash' => $hash,
+				'loginname' => $customer['loginname'],
+				'validuntil' => time() + $valid_time,
+				'allowedfrom' => $allowed_from
+			]);
+
+			return $this->response([
+				'base' => 'https://' . Settings::Get('system.hostname') . '/' . (Settings::Get('system.froxlordirectlyviahostname') != 1 ? basename(\Froxlor\Froxlor::getInstallDir()) . '/' : ''),
+				'uri' => 'index.php?action=ll&ln=' . $customer['loginname'] . '&h=' . $hash
+			]);
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**

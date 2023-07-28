@@ -265,7 +265,7 @@ return [
 						'extras.directoryprotection' => lng('menue.extras.extras') . " / " . lng('menue.extras.directoryprotection'),
 						'extras.pathoptions' => lng('menue.extras.extras') . " / " . lng('menue.extras.pathoptions'),
 						'extras.logger' => lng('menue.extras.extras') . " / " . lng('menue.logger.logger'),
-						'extras.backup' => lng('menue.extras.extras') . " / " . lng('menue.extras.backup'),
+						'extras.export' => lng('menue.extras.extras') . " / " . lng('menue.extras.export'),
 						'traffic' => lng('menue.traffic.traffic'),
 						'traffic.http' => lng('menue.traffic.traffic') . " / HTTP",
 						'traffic.ftp' => lng('menue.traffic.traffic') . " / FTP",

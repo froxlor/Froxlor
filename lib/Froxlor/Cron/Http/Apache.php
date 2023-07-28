@@ -631,29 +631,6 @@ class Apache extends HttpConfigBase
 	}
 
 	/**
-	 * Get the filename for the virtualhost
-	 */
-	protected function getVhostFilename($domain, $ssl_vhost = false)
-	{
-		if ((int)$domain['parentdomainid'] == 0 && Domain::isCustomerStdSubdomain((int)$domain['id']) == false && ((int)$domain['ismainbutsubto'] == 0 || Domain::domainMainToSubExists($domain['ismainbutsubto']) == false)) {
-			$vhost_no = '35';
-		} elseif ((int)$domain['parentdomainid'] == 0 && Domain::isCustomerStdSubdomain((int)$domain['id']) == false && (int)$domain['ismainbutsubto'] > 0) {
-			$vhost_no = '30';
-		} else {
-			// number of dots in a domain specifies it's position (and depth of subdomain) starting at 29 going downwards on higher depth
-			$vhost_no = (string)(30 - substr_count($domain['domain'], ".") + 1);
-		}
-
-		if ($ssl_vhost === true) {
-			$vhost_filename = FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
-		} else {
-			$vhost_filename = FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
-		}
-
-		return $vhost_filename;
-	}
-
-	/**
 	 * We compose the virtualhost entry for one domain
 	 */
 	protected function getVhostContent($domain, $ssl_vhost = false)

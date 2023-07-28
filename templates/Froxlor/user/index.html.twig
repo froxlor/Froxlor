@@ -41,6 +41,9 @@
 				{{ dashboard.ditem('customer.emails', userinfo.emails, userinfo.emails_used) }}
 				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used, null, false, userinfo.mailspace_used) }}
 				{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, userinfo.email_forwarders_used) }}
+				{% if get_setting('system.mail_quota_enabled') and userinfo.email_quota != '0' %}
+					{{ dashboard.ditem('customer.email_quota', userinfo.email_quota_bytes, userinfo.email_quota_bytes_used, null, true) }}
+				{% endif %}
 				{{ dashboard.ditem('customer.ftps', userinfo.ftps, userinfo.ftps_used) }}
 			</div>
 		{% endif %}

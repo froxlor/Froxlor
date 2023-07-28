@@ -223,6 +223,8 @@ CREATE TABLE `panel_customers` (
   `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
   `allowed_mysqlserver` text NOT NULL,
+  `backup` int(11) NOT NULL default '1',
+  `access_backups` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
@@ -278,7 +280,6 @@ CREATE TABLE `panel_domains` (
   `phpsettingid` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1',
   `mod_fcgid_starter` int(4) default '-1',
   `mod_fcgid_maxrequests` int(4) default '-1',
-  `ismainbutsubto` int(11) unsigned NOT NULL default '0',
   `letsencrypt` tinyint(1) NOT NULL default '0',
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',
@@ -555,7 +556,7 @@ opcache.validate_timestamps'),
 	('system', 'defaultip', '1'),
 	('system', 'defaultsslip', ''),
 	('system', 'phpappendopenbasedir', '/tmp/'),
-	('system', 'deactivateddocroot', ''),
+	('system', 'deactivateddocroot', '/var/www/html/froxlor/templates/misc/deactivated/'),
 	('system', 'mailpwcleartext', '0'),
 	('system', 'last_tasks_run', '000000'),
 	('system', 'nameservers', ''),
@@ -647,7 +648,7 @@ opcache.validate_timestamps'),
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
 	('system', 'leapiversion', '2'),
-	('system', 'backupenabled', '0'),
+	('system', 'exportenabled', '0'),
 	('system', 'dnsenabled', '0'),
 	('system', 'dns_server', 'Bind'),
 	('system', 'apacheglobaldiropt', ''),
@@ -701,6 +702,11 @@ opcache.validate_timestamps'),
 	('system', 'traffictool', 'goaccess'),
 	('system', 'req_limit_per_interval', 60),
 	('system', 'req_limit_interval', 60),
+	('backup', 'enabled', 0),
+	('backup', 'default_storage', '1'),
+	('backup', 'default_customer_access', '1'),
+	('backup', 'default_pgp_public_key', ''),
+	('backup', 'default_retention', '3'),
 	('api', 'enabled', '0'),
 	('api', 'customer_default', '1'),
 	('2fa', 'enabled', '1'),
@@ -914,7 +920,8 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 	(3, 'froxlor/reports', 'usage_report', '\\Froxlor\\Cron\\Traffic\\ReportsCron', '1 DAY', '1', 'cron_usage_report'),
 	(4, 'froxlor/core', 'mailboxsize', '\\Froxlor\\Cron\\System\\MailboxsizeCron', '6 HOUR', '1', 'cron_mailboxsize'),
 	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh', '5 MINUTE', '0', 'cron_letsencrypt'),
-	(6, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\System\\BackupCron', '1 DAY', '0', 'cron_backup');
+	(6, 'froxlor/export', 'export', '\\Froxlor\\Cron\\System\\ExportCron', '1 HOUR', '0', 'cron_export'),
+	(7, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\Backup\\BackupCron', '1 DAY', '0', 'cron_backup');
 
 
 DROP TABLE IF EXISTS `ftp_quotalimits`;
@@ -1052,4 +1059,48 @@ CREATE TABLE `panel_usercolumns` (
   KEY adminid (adminid),
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `panel_loginlinks`;
+CREATE TABLE `panel_loginlinks` (
+  `hash` varchar(500) NOT NULL,
+  `loginname` varchar(50) NOT NULL,
+  `valid_until` int(15) NOT NULL,
+  `allowed_from` text NOT NULL,
+  UNIQUE KEY `loginname` (`loginname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `panel_backup_storages`;
+CREATE TABLE `panel_backup_storages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT 'local',
+  `region` varchar(255) NULL,
+  `bucket` varchar(255) NULL,
+  `destination_path` varchar(255) NOT NULL,
+  `hostname` varchar(255) NULL,
+  `username` varchar(255) NULL,
+  `password` text,
+  `pgp_public_key` text,
+  `retention` int(3) NOT NULL DEFAULT 3,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+INSERT INTO `panel_backup_storages` (`id`, `description`, `destination_path`) VALUES
+	(1, 'Local backup storage', '/var/customers/backups');
+
+
+DROP TABLE IF EXISTS `panel_backups`;
+CREATE TABLE `panel_backups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `adminid` int(11) NOT NULL,
+  `customerid` int(11) NOT NULL,
+  `loginname` varchar(255) NOT NULL,
+  `size` bigint(20) NOT NULL,
+  `storage_id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `created_at` int(15) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

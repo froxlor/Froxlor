@@ -23,6 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\Style;
@@ -48,6 +49,7 @@ return [
 			'd.domain_ace' => [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
+				'isdefaultsearchfield' => true,
 			],
 			'ipsandports' => [
 				'label' => lng('admin.ipsandports.ipsandports'),
@@ -113,6 +115,13 @@ return [
 				'field' => 'phpenabled',
 				'callback' => [Text::class, 'boolean'],
 			],
+			'd.phpsettingid' => [
+				'label' => lng('admin.phpsettings.title'),
+				'field' => 'phpsettingid',
+				'searchable' => false,
+				'callback' => [Domain::class, 'getPhpConfigName'],
+				'visible' => (int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1
+			],
 			'd.openbasedir' => [
 				'label' => lng('domains.openbasedirenabled'),
 				'field' => 'openbasedir',
@@ -160,6 +169,11 @@ return [
 					'action' => 'edit',
 					'id' => ':id'
 				],
+			],
+			'duplicate' => [
+				'icon' => 'fa-solid fa-clone',
+				'title' => lng('admin.domain_duplicate'),
+				'modal' => [Text::class, 'domainDuplicateModal'],
 			],
 			'logfiles' => [
 				'icon' => 'fa-solid fa-file',

@@ -62,7 +62,7 @@ if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['cha
 }
 
 if (!function_exists('apcu_cache_info') || !function_exists('apcu_sma_info')) {
-	Response::standardError(lng('error.no_apcuinfo'));
+	Response::standardError('no_apcuinfo');
 }
 
 if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {

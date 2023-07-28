@@ -80,7 +80,8 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/bind9 reload',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_nameservers' => [
 					'label' => lng('serversettings.nameservers'),
@@ -111,7 +112,8 @@ return [
 					'string_delimiter' => ',',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_powerdns_mode' => [
 					'label' => lng('serversettings.powerdns_mode'),

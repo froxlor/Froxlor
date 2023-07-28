@@ -112,11 +112,11 @@ class FroxlorRPC
 	 *
 	 * @return bool
 	 */
-	private static function validateAllowedFrom(array $allowed_from, string $remote_addr): bool
+	public static function validateAllowedFrom(array $allowed_from, string $remote_addr): bool
 	{
 		// shorten IP for comparison
 		$remote_addr = inet_ntop(inet_pton($remote_addr));
-		// check for diret matches
+		// check for direct matches
 		if (in_array($remote_addr, $allowed_from)) {
 			return true;
 		}

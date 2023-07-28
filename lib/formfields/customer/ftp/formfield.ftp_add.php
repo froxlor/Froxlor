@@ -59,13 +59,16 @@ return [
 						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'mandatory' => true
-					],
-					'ftp_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword()
+						'mandatory' => true,
+						'next_to' => [
+							'ftp_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					],
 					'sendinfomail' => [
 						'label' => lng('customer.sendinfomail'),
@@ -79,7 +82,13 @@ return [
 						'type' => 'select',
 						'select_var' => $shells,
 						'selected' => '/bin/false'
-					]
+					],
+					'login_enabled' => [
+						'label' => lng('panel.active'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => true
+					],
 				]
 			]
 		]

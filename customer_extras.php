@@ -26,7 +26,7 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
+use Froxlor\Api\Commands\DataDump as DataDump;
 use Froxlor\Api\Commands\DirOptions as DirOptions;
 use Froxlor\Api\Commands\DirProtections as DirProtections;
 use Froxlor\Customer\Customer;
@@ -282,18 +282,18 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			}
 		}
 	}
-} elseif ($page == 'backup') {
+} elseif ($page == 'export') {
 	// redirect if this customer sub-page is hidden via settings
-	if (Settings::IsInList('panel.customer_hide_options', 'extras.backup')) {
+	if (Settings::IsInList('panel.customer_hide_options', 'extras.export')) {
 		Response::redirectTo('customer_index.php');
 	}
 
-	if (Settings::Get('system.backupenabled') == 1) {
+	if (Settings::Get('system.exportenabled') == 1) {
 		if ($action == 'abort') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
+				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::export - aborted scheduled data export job");
 				try {
-					CustomerBackups::getLocal($userinfo, $_POST)->delete();
+					DataDump::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -302,43 +302,43 @@ if ($page == 'overview' || $page == 'htpasswds') {
 					'action' => ''
 				]);
 			} else {
-				HTML::askYesNo('extras_reallydelete_backup', $filename, [
-					'backup_job_entry' => $id,
+				HTML::askYesNo('extras_reallydelete_export', $filename, [
+					'job_entry' => $id,
 					'section' => 'extras',
 					'page' => $page,
 					'action' => $action
 				]);
 			}
 		} elseif ($action == '') {
-			$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
+			$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "viewed customer_extras::export");
 
 			// check whether there is a backup-job for this customer
 			try {
-				$backup_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.backups.php';
-				$collection = (new Collection(CustomerBackups::class, $userinfo));
+				$export_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.export.php';
+				$collection = (new Collection(DataDump::class, $userinfo));
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					CustomerBackups::getLocal($userinfo, $_POST)->add();
+					DataDump::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
-				Response::standardSuccess('backupscheduled');
+				Response::standardSuccess('exportscheduled');
 			} else {
 				$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
+				$export_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.export.php';
 
 				UI::view('user/form-datatable.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'extras']),
-					'formdata' => $backup_data['backup'],
-					'tabledata' => Listing::format($collection, $backup_list_data, 'backup_list'),
+					'formdata' => $export_data['export'],
+					'tabledata' => Listing::format($collection, $export_list_data, 'export_list'),
 				]);
 			}
 		}
 	} else {
-		Response::standardError('backupfunctionnotenabled');
+		Response::standardError('exportfunctionnotenabled');
 	}
 }

@@ -25,10 +25,13 @@
 
 namespace Froxlor;
 
-use Froxlor\Database\Database;
-use Froxlor\UI\Collection;
+use Exception;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\SubDomains;
+use Froxlor\Database\Database;
+use Froxlor\UI\Collection;
+use Froxlor\UI\Response;
+use RobThree\Auth\TwoFactorAuthException;
 
 /**
  * Class to manage the current user / session
@@ -144,22 +147,90 @@ class CurrentUser
 			$result_stmt = Database::prepare("
 				SELECT COUNT(`id`) as emaildomains
 				FROM `" . TABLE_PANEL_DOMAINS . "`
-				WHERE `customerid`= :cid AND `isemaildomain` = '1'
+				WHERE `customerid`= :cid AND `isemaildomain` = '1' AND `deactivated` = '0'
 			");
 			$result = Database::pexecute_first($result_stmt, [
 				"cid" => $_SESSION['userinfo']['customerid']
 			]);
 			$addition = $result['emaildomains'] != 0;
 		} elseif ($resource == 'subdomains') {
-			$parentDomainCollection = (new Collection(SubDomains::class, $_SESSION['userinfo'],
-				['sql_search' => ['d.parentdomainid' => 0]]));
-			$addition = $parentDomainCollection != 0;
+			$parentDomainCollection = (new Collection(
+				SubDomains::class,
+				$_SESSION['userinfo'],
+				['sql_search' => [
+					'd.parentdomainid' => 0,
+					'd.deactivated' => 0,
+					'd.id' => ['op' => '<>', 'value' => $_SESSION['userinfo']['standardsubdomain']]
+				]
+				]
+			));
+			$addition = $parentDomainCollection->count() != 0;
 		} elseif ($resource == 'domains') {
 			$customerCollection = (new Collection(Customers::class, $_SESSION['userinfo']));
-			$addition = $customerCollection != 0;
+			$addition = $customerCollection->count() != 0;
 		}
 
 		return ($_SESSION['userinfo'][$resource . '_used'] < $_SESSION['userinfo'][$resource] || $_SESSION['userinfo'][$resource] == '-1') && $addition;
 	}
 
+	/**
+	 * @throws TwoFactorAuthException
+	 */
+	public static function sendOtpEmail()
+	{
+		global $mail;
+
+		if (self::getField('type_2fa') == 1) {
+			// generate code
+			$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
+			$code = $tfa->getCode($tfa->createSecret());
+			// set code for user
+			$table = TABLE_PANEL_CUSTOMERS;
+			$uid = 'customerid';
+			if (self::isAdmin()) {
+				$table = TABLE_PANEL_ADMINS;
+				$uid = 'adminid';
+			}
+			$stmt = Database::prepare("UPDATE $table SET `data_2fa` = :d2fa WHERE `$uid` = :uid");
+			Database::pexecute($stmt, [
+				"d2fa" => $code,
+				"uid" => self::getField($uid)
+			]);
+			// build up & send email
+			$_mailerror = false;
+			$mailerr_msg = "";
+			$replace_arr = [
+				'CODE' => $code
+			];
+			$mail_body = html_entity_decode(PhpHelper::replaceVariables(lng('mails.2fa.mailbody'), $replace_arr));
+
+			try {
+				$mail->Subject = lng('mails.2fa.subject');
+				$mail->AltBody = $mail_body;
+				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+				$mail->AddAddress(self::getField('email'), User::getCorrectUserSalutation(self::getData()));
+				$mail->Send();
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+
+			if ($_mailerror) {
+				$rstlog = FroxlorLogger::getInstanceOf([
+					'loginname' => '2fa code-sending'
+				]);
+				$rstlog->logAction(FroxlorLogger::ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+				Response::redirectTo('index.php', [
+					'showmessage' => '4',
+					'customermail' => self::getField('email')
+				]);
+				exit();
+			}
+
+			$mail->ClearAddresses();
+		}
+	}
 }

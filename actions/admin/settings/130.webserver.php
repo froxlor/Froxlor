@@ -181,7 +181,8 @@ return [
 					'label' => lng('serversettings.logfiles_format'),
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_format',
-					'type' => 'text',
+					'type' => (strpos(Settings::Get('system.logfiles_format'), '"') !== false ? 'textarea' : 'text'),
+					'string_regexp' => '/^[^\0\r\n<>]*$/i',
 					'default' => '',
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
@@ -307,7 +308,8 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/apache2 reload',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_phpreload_command' => [
 					'label' => lng('serversettings.phpreload_command'),
@@ -319,7 +321,8 @@ return [
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => [
 						'nginx'
-					]
+					],
+					'required_otp' => true
 				],
 				'system_nginx_php_backend' => [
 					'label' => lng('serversettings.nginx_php_backend'),

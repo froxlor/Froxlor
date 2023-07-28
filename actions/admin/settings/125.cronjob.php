@@ -46,7 +46,8 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/usr/bin/nice -n 5 /usr/bin/php -q',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_crondreload' => [
 					'label' => lng('serversettings.system_crondreload'),
@@ -55,7 +56,8 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/cron reload',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_cron_allowautoupdate' => [
 					'label' => lng('serversettings.system_cron_allowautoupdate'),
@@ -63,7 +65,8 @@ return [
 					'varname' => 'cron_allowautoupdate',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				]
 			]
 		]

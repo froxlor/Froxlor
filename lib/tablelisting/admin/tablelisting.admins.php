@@ -48,6 +48,7 @@ return [
 				'field' => 'loginname',
 				'callback' => [Impersonate::class, 'admin'],
 				'sortable' => true,
+				'isdefaultsearchfield' => true,
 			],
 			'name' => [
 				'label' => lng('customer.name'),
@@ -93,6 +94,11 @@ return [
 				'field' => 'deactivated',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
+			],
+			'lastlogin_succ' => [
+				'label' => lng('admin.lastlogin_succ'),
+				'field' => 'lastlogin_succ',
+				'callback' => [Text::class, 'timestamp'],
 			],
 			'theme' => [
 				'label' => lng('panel.theme'),

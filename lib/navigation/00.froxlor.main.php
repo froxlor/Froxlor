@@ -133,9 +133,9 @@ return [
 					'show_element' => (Settings::Get('logger.enabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
 				],
 				[
-					'url' => 'customer_extras.php?page=backup',
-					'label' => lng('menue.extras.backup'),
-					'show_element' => (Settings::Get('system.backupenabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
+					'url' => 'customer_extras.php?page=export',
+					'label' => lng('menue.extras.export'),
+					'show_element' => (Settings::Get('system.exportenabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.export'))
 				]
 			]
 		],
@@ -186,7 +186,7 @@ return [
 					'url' => 'admin_customers.php?page=customers',
 					'label' => lng('admin.customers'),
 					'required_resources' => 'customers',
-					'add_shortlink' => CurrentUser::canAddResource('customers') ? 'admin_customers.php?page=customers&action=add' : null,
+					'add_shortlink' => CurrentUser::isAdmin() && CurrentUser::canAddResource('customers') ? 'admin_customers.php?page=customers&action=add' : null,
 				],
 				[
 					'url' => 'admin_admins.php?page=admins',
@@ -198,7 +198,7 @@ return [
 					'url' => 'admin_domains.php?page=domains',
 					'label' => lng('admin.domains'),
 					'required_resources' => 'domains',
-					'add_shortlink' => CurrentUser::canAddResource('domains') ? 'admin_domains.php?page=domains&action=add' : null,
+					'add_shortlink' => CurrentUser::isAdmin() && CurrentUser::canAddResource('domains') ? 'admin_domains.php?page=domains&action=add' : null,
 				],
 				[
 					'url' => 'admin_domains.php?page=sslcertificates',
@@ -244,7 +244,6 @@ return [
 		],
 		'server' => [
 			'label' => lng('admin.server'),
-			'required_resources' => 'change_serversettings',
 			'icon' => 'fa-solid fa-server',
 			'elements' => [
 				[
@@ -263,9 +262,13 @@ return [
 					'required_resources' => 'change_serversettings'
 				],
 				[
+					'url' => 'admin_backups.php?page=overview',
+					'label' => lng('admin.backups.backups'),
+					'show_element' => (Settings::Get('backup.enabled') == true)
+				],
+				[
 					'url' => 'admin_logger.php?page=log',
 					'label' => lng('menue.logger.logger'),
-					'required_resources' => 'change_serversettings',
 					'show_element' => (Settings::Get('logger.enabled') == true)
 				],
 				[

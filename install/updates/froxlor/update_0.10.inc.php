@@ -23,11 +23,11 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\Froxlor;
-use Froxlor\FileDir;
 use Froxlor\Database\Database;
-use Froxlor\Settings;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\Install\Update;
+use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\System\IPTools;
 

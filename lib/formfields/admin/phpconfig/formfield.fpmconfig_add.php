@@ -44,7 +44,8 @@ return [
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => 'service php7.4-fpm restart',
-						'mandatory' => true
+						'mandatory' => true,
+						'required_otp' => true
 					],
 					'config_dir' => [
 						'label' => lng('serversettings.phpfpm_settings.configdir'),

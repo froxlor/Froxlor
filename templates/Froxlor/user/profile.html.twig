@@ -1,0 +1,142 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+	<h3 class="page-header">{{ lng('panel.profile') }}</h3>
+
+	<div class="row">
+		<div class="col-12 col-md-6 col-lg-4">
+			{# change password #}
+			<form action="{{ linker({'section':'index','page':'profile'}) }}"
+				  class="col-12 max-w-420 d-flex flex-column"
+				  method="post"
+				  enctype="application/x-www-form-urlencoded">
+				<div class="card shadow">
+					<div class="card-body">
+						<h5 class="card-title"><i class="fa-solid fa-lock me-1"></i>{{ lng('menue.main.changepassword') }}</h5>
+
+						<div class="mb-3">
+							<label for="old_password"
+								   class="col-form-label">{{ lng('changepassword.old_password') }}</label>
+							<input class="form-control" type="password" name="old_password" id="old_password"
+								   value=""
+								   required/>
+						</div>
+						<div class="mb-3">
+							<label for="new_password"
+								   class="col-form-label">{{ lng('changepassword.new_password') }}</label>
+							<input class="form-control" type="password" name="new_password" id="new_password"
+								   value=""
+								   required/>
+						</div>
+						<div class="mb-3">
+							<label for="new_password_confirm"
+								   class="col-form-label">{{ lng('changepassword.new_password_confirm') }}</label>
+							<input class="form-control" type="password" name="new_password_confirm"
+								   id="new_password_confirm" value="" required/>
+						</div>
+
+						{% if userinfo.adminsession == 0 %}
+
+							<div class="mb-3">
+								<label for="change_main_ftp"
+									   class="col-form-label">{{ lng('changepassword.also_change_ftp') }}</label>
+								<div class="form-check form-switch">
+									<input type="hidden" name="change_main_ftp" value="false">
+									<input class="form-check-input" type="checkbox" name="change_main_ftp"
+										   id="change_main_ftp" value="true" checked>
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="change_stats"
+									   class="col-form-label">{{ lng('changepassword.also_change_stats') }}</label>
+								<div class="form-check form-switch">
+									<input type="hidden" name="change_stats" value="false">
+									<input class="form-check-input" type="checkbox" name="change_stats"
+										   id="change_stats" value="true" checked>
+								</div>
+							</div>
+
+						{% endif %}
+					</div>
+
+					<div class="card-body d-grid gap-2">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+						<input type="hidden" name="page" value="{{ page }}"/>
+						<input type="hidden" name="send" value="changepassword"/>
+						<button class="btn btn-primary rounded-top-0" type="submit" name="dosave">
+							<i class="fa-regular fa-floppy-disk"></i>
+							{{ lng('menue.main.changepassword') }}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		{% if (get_setting('panel.allow_theme_change_admin') == '1' and userinfo.adminsession == 1) or (get_setting('panel.allow_theme_change_customer') == '1' and userinfo.adminsession == 0) %}
+			<div class="col-12 col-md-6 col-lg-4">
+				{# change theme #}
+				<form action="{{ linker({'section':'index','page':'profile'}) }}"
+					  class="col-12 max-w-420 d-flex flex-column" method="post"
+					  enctype="application/x-www-form-urlencoded">
+					<div class="card shadow">
+						<div class="card-body">
+							<h5 class="card-title"><i class="fa-solid fa-image me-1"></i>{{ lng('menue.main.changetheme') }}</h5>
+
+							<div>
+								<label for="theme" class="col-form-label">{{ lng('panel.theme') }}</label>
+								<select class="form-select" name="theme" id="theme" required>
+									{% for val,t in themes %}
+										<option
+											value="{{ val }}" {% if default_theme == val %} selected="selected" {% endif %}>{{ t|raw }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+
+						<div class="card-body d-grid gap-2">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+							<input type="hidden" name="page" value="{{ page }}"/>
+							<input type="hidden" name="send" value="changetheme"/>
+							<button class="btn btn-primary rounded-top-0" type="submit" name="dosave">
+								<i class="fa-regular fa-floppy-disk"></i>
+								{{ lng('menue.main.changetheme') }}
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		{% endif %}
+		<div class="col-12 col-md-6 col-lg-4">
+			{# change language #}
+			<form action="{{ linker({'section':'index','page':'profile'}) }}"
+				  class="col-12 max-w-420 d-flex flex-column" method="post"
+				  enctype="application/x-www-form-urlencoded">
+				<div class="card shadow">
+					<div class="card-body">
+						<h5 class="card-title"><i class="fa-solid fa-flag me-1"></i>{{ lng('menue.main.changelanguage') }}</h5>
+
+						<div>
+							<label for="def_language" class="col-form-label">{{ lng('login.language') }}</label>
+							<select class="form-select" name="def_language" id="def_language" required>
+								<option value="profile">{{ lng('login.profile_lng') }}</option>
+								{% for val,lang in languages %}
+									<option
+										value="{{ val }}" {% if default_lang == val %} selected="selected" {% endif %}>{{ lang|raw }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="card-body d-grid gap-2">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
+						<input type="hidden" name="page" value="{{ page }}"/>
+						<input type="hidden" name="send" value="changelanguage"/>
+						<button class="btn btn-primary rounded-top-0" type="submit" name="dosave">
+							<i class="fa-regular fa-floppy-disk"></i>
+							{{ lng('menue.main.changelanguage') }}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+	</div>
+{% endblock %}

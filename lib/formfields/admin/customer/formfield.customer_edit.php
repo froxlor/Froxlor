@@ -87,7 +87,7 @@ return [
 						'value' => '1',
 						'checked' => $result['api_allowed'],
 						'visible' => Settings::Get('api.enabled') == '1'
-					]
+					],
 				]
 			],
 			'section_b' => [
@@ -198,6 +198,7 @@ return [
 				'fields' => [
 					'diskspace' => [
 						'label' => lng('customer.diskspace') . ' (' . lng('customer.mib') . ')',
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['diskspace']) ? '0' : $result['diskspace'],
 						'maxlength' => 16,
@@ -205,6 +206,7 @@ return [
 					],
 					'traffic' => [
 						'label' => lng('customer.traffic') . ' (' . lng('customer.gib') . ')',
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['traffic']) ? '0' : $result['traffic'],
 						'maxlength' => 14,
@@ -212,6 +214,7 @@ return [
 					],
 					'subdomains' => [
 						'label' => lng('customer.subdomains'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['subdomains']) ? '0' : $result['subdomains'],
 						'maxlength' => 9,
@@ -219,6 +222,7 @@ return [
 					],
 					'emails' => [
 						'label' => lng('customer.emails'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['emails']) ? '0' : $result['emails'],
 						'maxlength' => 9,
@@ -226,6 +230,7 @@ return [
 					],
 					'email_accounts' => [
 						'label' => lng('customer.accounts'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['email_accounts']) ? '0' : $result['email_accounts'],
 						'maxlength' => 9,
@@ -233,6 +238,7 @@ return [
 					],
 					'email_forwarders' => [
 						'label' => lng('customer.forwarders'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['email_forwarders']) ? '0' : $result['email_forwarders'],
 						'maxlength' => 9,
@@ -240,6 +246,7 @@ return [
 					],
 					'email_quota' => [
 						'label' => lng('customer.email_quota') . ' (' . lng('customer.mib') . ')',
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['email_quota']) ? '0' : $result['email_quota'],
 						'maxlength' => 9,
@@ -262,6 +269,7 @@ return [
 					],
 					'ftps' => [
 						'label' => lng('customer.ftps'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['ftps']) ? '0' : $result['ftps'],
 						'maxlength' => 9,
@@ -269,6 +277,7 @@ return [
 					],
 					'mysqls' => [
 						'label' => lng('customer.mysqls'),
+						'desc' => lng('panel.use_checkbox_for_unlimited'),
 						'type' => 'textul',
 						'value' => empty($result['mysqls']) ? '0' : $result['mysqls'],
 						'maxlength' => 9,
@@ -314,7 +323,22 @@ return [
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['logviewenabled']
-					]
+					],
+					'backup' => [
+						'label' => lng('backup.backup_storage.title'),
+						'desc' => lng('backup.backup_storage.description'),
+						'type' => 'select',
+						'select_var' => $backup_storages,
+						'selected' => $result['backup'],
+						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
+					],
+					'access_backups' => [
+						'label' => lng('backup.access_backups'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['access_backups'],
+						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
+					],
 				]
 			],
 			'section_d' => [

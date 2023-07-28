@@ -51,13 +51,16 @@ return [
 						'label' => lng('login.password'),
 						'desc' => lng('ftp.editpassdescription'),
 						'type' => 'password',
-						'autocomplete' => 'off'
-					],
-					'ftp_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword()
+						'autocomplete' => 'off',
+						'next_to' => [
+							'ftp_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					],
 					'shell' => [
 						'visible' => Settings::Get('system.allow_customer_shell') == '1',
@@ -65,7 +68,13 @@ return [
 						'type' => 'select',
 						'select_var' => $shells,
 						'selected' => $result['shell'] ?? '/bin/false'
-					]
+					],
+					'login_enabled' => [
+						'label' => lng('panel.active'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['login_enabled'] == 'Y',
+					],
 				]
 			]
 		]

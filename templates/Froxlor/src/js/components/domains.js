@@ -36,7 +36,7 @@ $(function() {
 			$('#speciallogfile').removeClass('is-invalid');
 			$('#speciallogverified').val(0);
 			$.ajax({
-				url: "admin_domains.php?page=overview&action=jqSpeciallogfileNote",
+				url: window.location.pathname.substring(1) + "?page=overview&action=jqSpeciallogfileNote",
 				type: "POST",
 				data: {
 					id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')

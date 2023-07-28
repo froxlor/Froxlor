@@ -100,7 +100,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					AND `id`<> :stdd
 				");
 				$usages_stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					SELECT webspace, mail, mysql FROM `" . TABLE_PANEL_DISKSPACE . "`
 					WHERE `customerid` = :cid
 					ORDER BY `stamp` DESC LIMIT 1
 				");
@@ -109,11 +109,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($show_usages) {
 					// get number of domains
-					Database::pexecute($domains_stmt, [
+					$domains = Database::pexecute_first($domains_stmt, [
 						'cid' => $row['customerid'],
 						'stdd' => $row['standardsubdomain']
 					]);
-					$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
 					$row['domains'] = intval($domains['domains']);
 					// get disk-space usages for web, mysql and mail
 					$usages = Database::pexecute_first($usages_stmt, [
@@ -274,6 +273,13 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param array $allowed_mysqlserver
 	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
 	 *                             default is to allow the default dbserver (id=0)
+	 * @param int $backup
+	 *        	                   optional, either 0 to disable backup for this customer or a backup-storage-id
+	 *                             where backups are to be stored, requires change_serversettings permissions,
+	 *                             default is system-setting backup.default_storage
+	 * @param bool $access_backups
+	 *        	                   optional, where the customer is allowed to view backups, default is system-setting
+	 *                             default_customer_access
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -358,6 +364,24 @@ class Customers extends ApiCommand implements ResourceEntity
 				} else {
 					// mysql not allowed, so no mysql available for customer
 					$p_allowed_mysqlserver = [];
+				}
+
+				if ($this->getUserDetail('change_serversettings')) {
+					$backup = $this->getParam('backup', true, Settings::Get('backup.default_storage'));
+					if ($backup > 0) {
+						try {
+							$this->apiCall('BackupStorages.get', [
+								'id' => $backup
+							]);
+						} catch (Exception $e) {
+							// not found or other issue, set default
+							$backup = Settings::Get('backup.default_storage');
+						}
+					}
+					$access_backups = $this->getBoolParam('access_backups', true, Settings::Get('backup.default_customer_access'));
+				} else {
+					$backup = Settings::Get('backup.default_storage');
+					$access_backups = Settings::Get('backup.default_customer_access');
 				}
 
 				// validation
@@ -534,7 +558,9 @@ class Customers extends ApiCommand implements ResourceEntity
 						'theme' => $_theme,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show,
-						'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver)
+						'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver),
+						'backup' => $backup,
+						'access_backups' => $access_backups
 					];
 
 					$ins_stmt = Database::prepare("
@@ -577,7 +603,9 @@ class Customers extends ApiCommand implements ResourceEntity
 						`theme` = :theme,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show,
-						`allowed_mysqlserver`= :allowed_mysqlserver
+						`allowed_mysqlserver`= :allowed_mysqlserver,
+						`backup` = :backup,
+						`access_backups` = :access_backups
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
@@ -1025,6 +1053,13 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param array $allowed_mysqlserver
 	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
 	 *                             default is to allow the default dbserver (id=0)
+	 * @param int $backup
+	 *        	                   optional, either 0 to disable backup for this customer or a backup-storage-id
+	 *                             where backups are to be stored, requires change_serversettings permissions,
+	 *                             default is system-setting backup.default_storage
+	 * @param bool $access_backups
+	 *        	                   optional, where the customer is allowed to view backups, default is system-setting
+	 *                             default_customer_access
 	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
@@ -1086,6 +1121,24 @@ class Customers extends ApiCommand implements ResourceEntity
 			$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 			$theme = $this->getParam('theme', true, $result['theme']);
 			$allowed_mysqlserver = $this->getParam('allowed_mysqlserver', true, json_decode($result['allowed_mysqlserver'], true));
+
+			if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+				$backup = $this->getParam('backup', true, $result['backup']);
+				if ($backup > 0) {
+					try {
+						 $this->apiCall('BackupStorages.get', [
+							'id' => $backup
+						 ]);
+					} catch (Exception $e) {
+						// not found or other issue, dont update
+						$backup = $result['backup'];
+					}
+				}
+				$access_backups = $this->getBoolParam('access_backups', true, Settings::Get('backup.default_customer_access'));
+			} else {
+				$backup = $result['backup'];
+				$access_backups = $result['access_backups'];
+			}
 		} else {
 			// allowed parameters
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
@@ -1118,6 +1171,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			if (! empty($allowed_mysqlserver)) {
 				$allowed_mysqlserver = array_map('intval', $allowed_mysqlserver);
 			}
+
 		}
 		$def_language = Validate::validate($def_language, 'default language', '', '', [], true);
 		$theme = Validate::validate($theme, 'theme', '', '', [], true);
@@ -1390,7 +1444,9 @@ class Customers extends ApiCommand implements ResourceEntity
 				'custom_notes' => $custom_notes,
 				'custom_notes_show' => $custom_notes_show,
 				'api_allowed' => $api_allowed,
-				'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver)
+				'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver),
+				'backup' => $backup,
+				'access_backups' => $access_backups
 			];
 			$upd_data += $admin_upd_data;
 		}
@@ -1433,7 +1489,9 @@ class Customers extends ApiCommand implements ResourceEntity
 				`custom_notes` = :custom_notes,
 				`custom_notes_show` = :custom_notes_show,
 				`api_allowed` = :api_allowed,
-				`allowed_mysqlserver` = :allowed_mysqlserver";
+				`allowed_mysqlserver` = :allowed_mysqlserver,
+				`backup`= :backup,
+				`access_backups` = :access_backups";
 			$upd_query .= $admin_upd_query;
 		}
 		$upd_query .= " WHERE `customerid` = :customerid";

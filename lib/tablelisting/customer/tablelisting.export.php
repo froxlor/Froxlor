@@ -28,10 +28,10 @@ use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
-	'backup_list' => [
-		'title' => lng('error.customerhasongoingbackupjob'),
+	'export_list' => [
+		'title' => lng('error.customerhasongoingexportjob'),
 		'icon' => 'fa-solid fa-server',
-		'self_overview' => ['section' => 'extras', 'page' => 'backup'],
+		'self_overview' => ['section' => 'extras', 'page' => 'export'],
 		'default_sorting' => ['destdir' => 'asc'],
 		'columns' => [
 			'destdir' => [
@@ -39,27 +39,33 @@ return [
 				'field' => 'data.destdir',
 				'callback' => [Ftp::class, 'pathRelative']
 			],
-			'backup_web' => [
-				'label' => lng('extras.backup_web'),
-				'field' => 'data.backup_web',
+			'pgp_public_key' => [
+				'label' => lng('panel.pgp_public_key'),
+				'field' => 'data.pgp_public_key',
+				'callback' => [Text::class, 'boolean']
+			],
+			'dump_web' => [
+				'label' => lng('extras.dump_web'),
+				'field' => 'data.dump_web',
 				'callback' => [Text::class, 'boolean'],
 			],
-			'backup_mail' => [
-				'label' => lng('extras.backup_mail'),
-				'field' => 'data.backup_mail',
+			'dump_mail' => [
+				'label' => lng('extras.dump_mail'),
+				'field' => 'data.dump_mail',
 				'callback' => [Text::class, 'boolean'],
 			],
-			'backup_dbs' => [
-				'label' => lng('extras.backup_dbs'),
-				'field' => 'data.backup_dbs',
+			'dump_dbs' => [
+				'label' => lng('extras.dump_dbs'),
+				'field' => 'data.dump_dbs',
 				'callback' => [Text::class, 'boolean'],
 			]
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('backup_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('export_list', [
 			'destdir',
-			'backup_web',
-			'backup_mail',
-			'backup_dbs'
+			'pgp_public_key',
+			'dump_web',
+			'dump_mail',
+			'dump_dbs'
 		]),
 		'actions' => [
 			'delete' => [
@@ -68,7 +74,7 @@ return [
 				'class' => 'btn-warning',
 				'href' => [
 					'section' => 'extras',
-					'page' => 'backup',
+					'page' => 'export',
 					'action' => 'abort',
 					'id' => ':id'
 				],

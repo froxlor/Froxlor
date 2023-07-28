@@ -27,6 +27,7 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\BackupStorages;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\CurrentUser;
@@ -93,6 +94,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 			$result['switched_user'] = CurrentUser::getData();
 			$result['adminsession'] = 0;
 			$result['userid'] = $result['customerid'];
+			session_regenerate_id();
 			CurrentUser::setData($result);
 
 			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
@@ -224,6 +226,23 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 				$hosting_plans[$row['id']] = $row['name'];
 			}
 
+			// backup storages
+			$backup_storages = [];
+			if (Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1') {
+				$backup_storages = [
+					0 => lng('backup.storage_none')
+				];
+				try {
+					$result_json = BackupStorages::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $storagedata) {
+						$backup_storages[$storagedata['id']] = "[" . $storagedata['type'] . "] " . html_entity_decode($storagedata['description']);
+					}
+				} catch (Exception $e) {
+					/* just none */
+				}
+			}
+
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 
 			UI::view('user/form.html.twig', [
@@ -304,6 +323,23 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 				];
 				while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
 					$hosting_plans[$row['id']] = $row['name'];
+				}
+
+				// backup storages
+				$backup_storages = [];
+				if (Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1') {
+					$backup_storages = [
+						0 => lng('backup.storage_none')
+					];
+					try {
+						$result_json = BackupStorages::getLocal($userinfo)->listing();
+						$result_decoded = json_decode($result_json, true)['data']['list'];
+						foreach ($result_decoded as $storagedata) {
+							$backup_storages[$storagedata['id']] = "[" . $storagedata['type'] . "] " . html_entity_decode($storagedata['description']);
+						}
+					} catch (Exception $e) {
+						/* just none */
+					}
 				}
 
 				$available_admins_stmt = Database::prepare("

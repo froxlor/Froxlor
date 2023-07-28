@@ -72,6 +72,8 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 *            optional whether to add additional usernames to the group
 	 * @param bool $is_defaultuser
 	 *            optional whether this is the standard default ftp user which is being added so no usage is decreased
+	 * @param bool $login_enabled
+	 *            optional whether to allow login (default) or not
 	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
@@ -84,6 +86,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		}
 
 		$is_defaultuser = $this->getBoolParam('is_defaultuser', true, 0);
+		$login_enabled = $this->getBoolParam('login_enabled', true, 1);
 
 		if (($this->getUserDetail('ftps_used') < $this->getUserDetail('ftps') || $this->getUserDetail('ftps') == '-1') || $this->isAdmin() && $is_defaultuser == 1) {
 			// required parameters
@@ -176,13 +179,14 @@ class Ftps extends ApiCommand implements ResourceEntity
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
 						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
-						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid, :shell)");
+						VALUES (:customerid, :username, :description, :password, :homedir, :loginenabled, :guid, :guid, :shell)");
 				$params = [
 					"customerid" => $customer['customerid'],
 					"username" => $username,
 					"description" => $description,
 					"password" => $cryptPassword,
 					"homedir" => $path,
+					"loginenabled" => $login_enabled ? 'Y' : 'N',
 					"guid" => $customer['guid'],
 					"shell" => $shell
 				];
@@ -389,6 +393,8 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 *            optional, description for ftp-user
 	 * @param string $shell
 	 *            optional, default /bin/false (not changeable when deactivated)
+	 * @param bool $login_enabled
+	 *            optional whether to allow login (default) or not
 	 * @param int $customerid
 	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
@@ -419,6 +425,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$password = $this->getParam('ftp_password', true, '');
 		$description = $this->getParam('ftp_description', true, $result['description']);
 		$shell = $this->getParam('shell', true, $result['shell']);
+		$login_enabled = $this->getBoolParam('login_enabled', true, ($result['login_enabled'] == 'Y' ? 1 : 0));
 
 		// validation
 		$password = Validate::validate($password, 'password', '', '', [], true);
@@ -428,6 +435,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 			$shell = Validate::validate(trim($shell), 'shell', '', '', [], true);
 		} else {
 			$shell = "/bin/false";
+		}
+
+		if ($login_enabled != 1) {
+			$login_enabled = 0;
 		}
 
 		// get needed customer info to reduce the ftp-user-counter by one
@@ -480,13 +491,14 @@ class Ftps extends ApiCommand implements ResourceEntity
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_FTP_USERS . "`
-			SET `description` = :desc, `shell` = :shell
+			SET `description` = :desc, `shell` = :shell, `login_enabled` = :loginenabled
 			WHERE `customerid` = :customerid
 			AND `id` = :id
 		");
 		Database::pexecute($stmt, [
 			"desc" => $description,
 			"shell" => $shell,
+			"loginenabled" => $login_enabled ? 'Y' : 'N',
 			"customerid" => $customer['customerid'],
 			"id" => $id
 		], true, true);

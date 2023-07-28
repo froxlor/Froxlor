@@ -4,7 +4,7 @@
 	{% if tabledata.table.tr is not empty and tabledata.table.tr is iterable %}
 		<div class="row mb-2">
 			{% set type = 'warning' %}
-			{% set alert_msg = lng('error.customerhasongoingbackupjob') %}
+			{% set alert_msg = lng('error.customerhasongoingexportjob') %}
 			{% include 'Froxlor/misc/alertbox.html.twig' %}
 		</div>
 		{% import "Froxlor/table/table.html.twig" as table %}

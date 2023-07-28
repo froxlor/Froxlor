@@ -37,7 +37,8 @@ return [
 					'varname' => 'unix_names',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_mailpwcleartext' => [
 					'label' => lng('serversettings.mailpwcleartext'),
@@ -46,7 +47,8 @@ return [
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'system_passwordcryptfunc' => [
 					'label' => lng('serversettings.passwordcryptfunc'),
@@ -59,7 +61,8 @@ return [
 						'getAvailablePasswordHashes'
 					],
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'system_allow_error_report_admin' => [
 					'label' => lng('serversettings.allow_error_report_admin'),
@@ -67,7 +70,8 @@ return [
 					'varname' => 'allow_error_report_admin',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_allow_error_report_customer' => [
 					'label' => lng('serversettings.allow_error_report_customer'),
@@ -75,7 +79,8 @@ return [
 					'varname' => 'allow_error_report_customer',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				],
 				'system_allow_customer_shell' => [
 					'label' => lng('serversettings.allow_allow_customer_shell'),
@@ -84,7 +89,8 @@ return [
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'system_available_shells' => [
 					'label' => lng('serversettings.available_shells'),
@@ -94,7 +100,8 @@ return [
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 				'system_froxlorusergroup' => [
 					'label' => lng('serversettings.froxlorusergroup'),
@@ -108,7 +115,8 @@ return [
 						'checkLocalGroup'
 					],
 					'visible' => Settings::Get('system.nssextrausers'),
-					'advanced_mode' => true
+					'advanced_mode' => true,
+					'required_otp' => true
 				],
 			]
 		]

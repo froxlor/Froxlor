@@ -34,6 +34,11 @@ class Style
 		return $attributes['fields']['deactivated'] ? 'bg-danger' : '';
 	}
 
+	public static function loginDisabled(array $attributes): string
+	{
+		return $attributes['fields']['login_enabled'] == 'N' ? 'bg-danger' : '';
+	}
+
 	public static function resultIntegrityBad(array $attributes): string
 	{
 		return $attributes['fields']['result'] ? '' : 'bg-warning';
@@ -60,17 +65,18 @@ class Style
 			$today = time();
 			$termination_css = 'bg-warning';
 			if ($cdate < $today) {
-				$termination_css = 'bg-danger';
+				$termination_css = 'bg-danger text-light';
 			}
 		}
-		return $attributes['fields']['deactivated'] ? 'bg-info' : $termination_css;
+		$deactivated = $attributes['fields']['deactivated'] || $attributes['fields']['customer_deactivated'];
+		return $deactivated ? 'bg-info text-light' : $termination_css;
 	}
 
 	public static function resultCustomerLockedOrDeactivated(array $attributes): string
 	{
 		$row_css = '';
 		if ((int)$attributes['fields']['deactivated'] == 1) {
-			$row_css = 'bg-info';
+			$row_css = 'bg-info text-light';
 		} elseif (
 			$attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
 			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))

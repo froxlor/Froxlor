@@ -456,10 +456,6 @@ return [
 		'directory_browsing' => 'Procházení obsahu adresáře',
 		'pathoptions_edit' => 'Upravit možnosti cesty',
 		'execute_perl' => 'Spustit perl/CGI',
-		'backup' => 'Vytvořit zálohu',
-		'backup_web' => 'Zálohovat web-data',
-		'backup_mail' => 'Zálohovat mail-data',
-		'backup_dbs' => 'Zálohovat databáze',
 	],
 	'ftp' => [
 		'description' => 'Zde můžeš tvořit a upravovat tvé FTP-účty.<br />Změny jsou uskutečněny okamžitě a účty mohou být použity ihned.',
@@ -549,7 +545,6 @@ return [
 			'extras' => 'Extra',
 			'directoryprotection' => 'Ochrana adresáře',
 			'pathoptions' => 'Možnosti cesty',
-			'backup' => 'Záloha',
 		],
 		'traffic' => [
 			'traffic' => 'Provoz',
@@ -814,9 +809,6 @@ return [
 		],
 		'caa_entry' => [
 			'title' => 'Generovat CAA DNS záznamy',
-		],
-		'backupenabled' => [
-			'title' => 'Povolit zálohy pro zákazníky',
 		],
 		'mail_smtp_passwd' => 'SMTP heslo',
 	],
