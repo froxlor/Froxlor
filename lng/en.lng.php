@@ -1009,6 +1009,7 @@ return [
 		'gnupgextensionnotavailable' => 'The PHP GnuPG extension is not available. Unable to validate PGP Public Key',
 		'invalidpgppublickey' => 'The PGP Public Key is not valid',
 		'invalid_validtime' => 'Valid time in seconds can only be between 10 and 120',
+		'customerphpenabledbutnoconfig' => 'Customer has PHP activated but no PHP-configuration was selected.',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

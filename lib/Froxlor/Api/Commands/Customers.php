@@ -424,6 +424,10 @@ class Customers extends ApiCommand implements ResourceEntity
 				}
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 
+				if (empty($allowed_phpconfigs) && $phpenabled == 1) {
+					Response::standardError('customerphpenabledbutnoconfig', '', true);
+				}
+
 				$allowed_mysqlserver = array();
 				if (! empty($p_allowed_mysqlserver) && is_array($p_allowed_mysqlserver)) {
 					foreach ($p_allowed_mysqlserver as $allowed_ms) {
@@ -1162,6 +1166,9 @@ class Customers extends ApiCommand implements ResourceEntity
 			$custom_notes = Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', Validate::REGEX_CONF_TEXT, '', [], true);
 			if (!empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
+			}
+			if (empty($allowed_phpconfigs) && $phpenabled == 1) {
+				Response::standardError('customerphpenabledbutnoconfig', '', true);
 			}
 
 			// add permission for allowed mysql usage if customer was not allowed to use mysql prior
