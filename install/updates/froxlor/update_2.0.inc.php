@@ -149,7 +149,7 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	Update::showUpdateStep("Adding new settings");
 	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int)$_POST['panel_settings_mode'] : 0;
 	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
-	$system_distribution = isset($_POST['system_distribution']) ? $_POST['system_distribution'] : '';
+	$system_distribution = isset($_POST['system_distribution']) ? $_POST['system_distribution'] : 'bullseye';
 	Settings::AddNew("system.distribution", $system_distribution);
 	Settings::AddNew("system.update_channel", 'stable');
 	Settings::AddNew("system.updatecheck_data", '');
@@ -496,4 +496,9 @@ if (Froxlor::isFroxlorVersion('2.0.18')) {
 if (Froxlor::isFroxlorVersion('2.0.19')) {
 	Update::showUpdateStep("Updating from 2.0.19 to 2.0.20", false);
 	Froxlor::updateToVersion('2.0.20');
+}
+
+if (Froxlor::isFroxlorVersion('2.0.20')) {
+	Update::showUpdateStep("Updating from 2.0.20 to 2.0.21", false);
+	Froxlor::updateToVersion('2.0.21');
 }
