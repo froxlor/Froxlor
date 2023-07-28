@@ -302,6 +302,8 @@ class DomainZones extends ApiCommand implements ResourceEntity
 			}
 		} elseif ($type == 'SSHFP' && !empty($content)) {
 			$content = $content;
+		} elseif ($type == 'TLSA' && !empty($content)) {
+			$content = $content;
 		} elseif ($type == 'TXT' && !empty($content)) {
 			// check that TXT content is enclosed in " "
 			$content = Dns::encloseTXTContent($content);
