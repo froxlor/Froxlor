@@ -701,6 +701,7 @@ return [
 			'RP' => 'Responsible Person record<br>Structure: <code>mailbox[replace @ with a dot] txt-record-name</code><br>Example: <code>team.froxlor.org. froxlor.org.</code>',
 			'SRV' => 'Service location record, used for newer protocols instead of creating protocol-specific records such as MX.<br>Structure: <code>priority weight port target</code><br>Example: <code>0 5 5060 sipserver.example.com.</code><br>Note: For priority, use field above',
 			'SSHFP' => 'The SSHFP resource record is used to publish secure shell (SSH) key fingerprints in the DNS.<br>Structure: <code>algorithm type fingerprint</code><br>Algorithms: <code>0: reserved, 1: RSA, 2: DSA, 3: ECDSA, 4: Ed25519, 6: Ed448</code><br>Types: <code>0: reserved, 1: SHA-1, 2: SHA-256</code><br>Example: <code>2 1 123456789abcdef67890123456789abcdef67890</code>',
+			'TLSA' => 'TLSA (TLS Authentication) record is used to publish fingerprint of a TLS/SSL certificate. It is commonly used for DANE.<br>TLSA records can only be trusted if DNSSEC is enabled on your domain.<br>Structure: <code>usage selector type fingerprint</code><br>Certificate usage: <code>0: PKIX-T, 1: PKIX-EE, 2: DANE-TA, 3: DANE-EE</code><br>Selector: <code>0: Use full certificate, 1: Use subject public key</code><br>Matching type: <code>0: Full: No Hash, 1: SHA-256 Hash, 2:SHA-512 Hash</code><br>Example: <code>3 1 1 123456789abcdef67890123456789abcdef123456789abcdef123456789abcde</code>',
 			'TXT' => 'Free definable, descriptive text.'
 		]
 	],
