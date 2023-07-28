@@ -51,6 +51,7 @@ return [
 							'RP' => 'RP',
 							'SRV' => 'SRV',
 							'SSHFP' => 'SSHFP',
+							'TLSA' => 'TLSA',
 							'TXT' => 'TXT'
 						],
 						'selected' => $type
