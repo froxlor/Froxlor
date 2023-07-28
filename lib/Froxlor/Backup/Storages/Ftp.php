@@ -35,19 +35,23 @@ class Ftp extends Storage
 	}
 
 	/**
+	 * Move/Upload file from tmp-source-directory. The file should be moved or deleted afterward.
+	 * Must return the (relative) path including filename to the backup.
+	 *
 	 * @param string $filename
 	 * @param string $tmp_source_directory
-	 * @return bool
+	 * @return string
 	 * @throws Exception
 	 */
-	protected function putFile(string $filename, string $tmp_source_directory): bool
+	protected function putFile(string $filename, string $tmp_source_directory): string
 	{
 		$source = FileDir::makeCorrectFile($tmp_source_directory . "/" . $filename);
-		$target = basename($filename);
-		if (file_exists($source) && !file_exists($target)) {
-			return ftp_put($this->ftp_conn, $target, $source, FTP_BINARY);
+		if (file_exists($source) && ftp_size($this->ftp_conn, $filename) == -1) {
+			if (ftp_put($this->ftp_conn, $filename, $source, FTP_BINARY)) {
+				return FileDir::makeCorrectFile($this->getDestinationDirectory() . '/' . $filename);
+			}
 		}
-		return false;
+		return "";
 	}
 
 	/**

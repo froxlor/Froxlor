@@ -26,6 +26,7 @@
 use Froxlor\UI\Callbacks\Admin;
 use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;
+use Froxlor\UI\Callbacks\PHPConf;
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Text;
@@ -115,6 +116,7 @@ return [
 					'action' => 'delete',
 					'id' => ':id'
 				],
+				'visible' => [PHPConf::class, 'isNotDefault']
 			],
 		],
 	]

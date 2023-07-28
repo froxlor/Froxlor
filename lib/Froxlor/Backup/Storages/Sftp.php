@@ -14,13 +14,16 @@ class Sftp extends Storage
 	}
 
 	/**
+	 * Move/Upload file from tmp-source-directory. The file should be moved or deleted afterward.
+	 * Must return the (relative) path including filename to the backup.
+	 *
 	 * @param string $filename
 	 * @param string $tmp_source_directory
-	 * @return bool
+	 * @return string
 	 */
-	protected function putFile(string $filename, string $tmp_source_directory): bool
+	protected function putFile(string $filename, string $tmp_source_directory): string
 	{
-		// TODO: Implement putFiles() method.
+		return "";
 	}
 
 	/**
