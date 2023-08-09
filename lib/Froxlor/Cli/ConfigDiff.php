@@ -52,7 +52,7 @@ final class ConfigDiff extends CliCommand
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-//		$this->validateRequirements($input, $output);
+		require Froxlor::getInstallDir() . '/lib/functions.php';
 
 		$parsers = $versions = [];
 		foreach (glob(Froxlor::getInstallDir() . '/lib/configfiles/*.xml') as $config) {
