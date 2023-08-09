@@ -41,17 +41,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigDiff extends CliCommand
 {
-
-	private $yes_to_all_supported = [
-		/* 'bookworm', */
-		'bionic',
-		'bullseye',
-		'buster',
-		'focal',
-		'jammy',
-	];
-
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setName('froxlor:config-diff')
 			->setDescription('Shows differences in config templates between OS versions')
@@ -60,10 +50,9 @@ final class ConfigDiff extends CliCommand
 			->addOption('list', 'l', InputOption::VALUE_NONE, 'List all possible OS versions');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$this->validateRequirements($input, $output);
-		require Froxlor::getInstallDir() . '/lib/functions.php';
+//		$this->validateRequirements($input, $output);
 
 		$parsers = $versions = [];
 		foreach (glob(Froxlor::getInstallDir() . '/lib/configfiles/*.xml') as $config) {
