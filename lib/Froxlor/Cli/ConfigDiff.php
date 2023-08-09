@@ -26,18 +26,11 @@
 namespace Froxlor\Cli;
 
 use Froxlor\Config\ConfigParser;
-use Froxlor\Database\Database;
-use Froxlor\FileDir;
 use Froxlor\Froxlor;
-use Froxlor\PhpHelper;
-use Froxlor\Settings;
-use Froxlor\SImExporter;
-use Froxlor\System\Crypt;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigDiff extends CliCommand
 {
@@ -116,7 +109,7 @@ final class ConfigDiff extends CliCommand
 
 						$key = "{$service->title} : {$daemon->title} : {$instruction['name']}";
 						if (!isset($files[$key])) {
-							$files[$key] = ['from'=>'', 'to'=>''];
+							$files[$key] = ['from' => '', 'to' => ''];
 						}
 						$files[$key][$todo[1]] = $this->filterContent($content);
 					}
