@@ -123,8 +123,8 @@ final class ConfigDiff extends CliCommand
 		ksort($files);
 
 		$diff_params = '';
-		if ($input->hasOption('diff-params')) {
-			$diff_params = "-" . $input->getOption('diff-params');
+		if ($input->hasOption('diff-params') && trim($input->getOption('diff-params')) !== '') {
+			$diff_params = "-" . trim($input->getOption('diff-params'));
 		}
 
 		// Run diff on each file and output, if anything changed
