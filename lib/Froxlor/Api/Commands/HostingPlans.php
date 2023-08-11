@@ -200,8 +200,8 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 			$value_arr['logviewenabled'] = $this->getBoolParam('logviewenabled', true, 0);
 
 			// validation
-			$name = Validate::validate(trim($name), 'name', '', '', [], true);
-			$description = Validate::validate(str_replace("\r\n", "\n", $description), 'description', Validate::REGEX_DESC_TEXT);
+			$name = Validate::validate(trim($name), 'name', Validate::REGEX_DESC_TEXT, '', [], true);
+			$description = Validate::validate(str_replace("\r\n", "\n", $description), 'description', Validate::REGEX_CONF_TEXT);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$value_arr['email_quota'] = -1;
@@ -382,8 +382,8 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 			$value_arr['logviewenabled'] = $this->getBoolParam('logviewenabled', true, $result['logviewenabled']);
 
 			// validation
-			$name = Validate::validate(trim($name), 'name', '', '', [], true);
-			$description = Validate::validate(str_replace("\r\n", "\n", $description), 'description', Validate::REGEX_DESC_TEXT);
+			$name = Validate::validate(trim($name), 'name', Validate::REGEX_DESC_TEXT, '', [], true);
+			$description = Validate::validate(str_replace("\r\n", "\n", $description), 'description', Validate::REGEX_CONF_TEXT);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$value_arr['email_quota'] = -1;
