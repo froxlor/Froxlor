@@ -77,6 +77,7 @@ if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettin
 			$result['switched_user'] = CurrentUser::getData();
 			$result['adminsession'] = 1;
 			$result['userid'] = $result['adminid'];
+			session_regenerate_id(true);
 			CurrentUser::setData($result);
 
 			$log->logAction(

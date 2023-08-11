@@ -40,7 +40,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
-use Froxlor\Language;
 
 if ($action == '') {
 	$action = 'login';
@@ -433,8 +432,13 @@ if ($action == '2fa_entercode') {
 		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
 			$lastqrystr = urlencode($_REQUEST['qrystr']);
 		}
-		$_SESSION['lastscript'] = $lastscript;
-		$_SESSION['lastqrystr'] = $lastqrystr;
+
+		if (!empty($lastscript)) {
+			$_SESSION['lastscript'] = $lastscript;
+		}
+		if (!empty($lastqrystr)) {
+			$_SESSION['lastqrystr'] = $lastqrystr;
+		}
 
 		UI::view('login/login.html.twig', [
 			'pagetitle' => 'Login',
@@ -633,7 +637,7 @@ if ($action == 'forgotpwd') {
 
 	UI::view('login/fpwd.html.twig', [
 		'pagetitle' => lng('login.presend'),
-		'formaction' => 'index.php?action='.$action,
+		'formaction' => 'index.php?action=' . $action,
 		'message' => $message,
 	]);
 }
@@ -733,6 +737,7 @@ if ($action == 'resetpwd') {
 function finishLogin($userinfo)
 {
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
+		session_regenerate_id(true);
 		CurrentUser::setData($userinfo);
 
 		$language = $userinfo['def_language'] ?? Settings::Get('panel.standardlanguage');
@@ -746,7 +751,7 @@ function finishLogin($userinfo)
 		}
 
 		$qryparams = [];
-		if (isset($_SESSION['lastqrystr']) && !empty($_SESSION['lastqrystr'])) {
+		if (!empty($_SESSION['lastqrystr'])) {
 			parse_str(urldecode($_SESSION['lastqrystr']), $qryparams);
 			unset($_SESSION['lastqrystr']);
 		}
@@ -755,7 +760,7 @@ function finishLogin($userinfo)
 			if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
 				Response::redirectTo('admin_updates.php?page=overview');
 			} else {
-				if (isset($_SESSION['lastscript']) && !empty($_SESSION['lastscript'])) {
+				if (!empty($_SESSION['lastscript'])) {
 					$lastscript = $_SESSION['lastscript'];
 					unset($_SESSION['lastscript']);
 					if (preg_match("/customer\_/", $lastscript) === 1) {
@@ -770,7 +775,7 @@ function finishLogin($userinfo)
 				}
 			}
 		} else {
-			if (isset($_SESSION['lastscript']) && !empty($_SESSION['lastscript'])) {
+			if (!empty($_SESSION['lastscript'])) {
 				$lastscript = $_SESSION['lastscript'];
 				unset($_SESSION['lastscript']);
 				Response::redirectTo($lastscript, $qryparams);

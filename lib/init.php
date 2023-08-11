@@ -181,8 +181,10 @@ if (@file_exists('templates/' . $theme . '/config.json')) {
 }
 
 // check for existence of variant in theme
-if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant,
-			$_themeoptions['variants']))) {
+if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists(
+    $themevariant,
+    $_themeoptions['variants']
+))) {
 	$themevariant = "default";
 }
 
@@ -216,12 +218,11 @@ UI::twig()->addGlobal('header_logo', $header_logo);
 if (!CurrentUser::hasSession() && AREA != 'login') {
 	unset($_SESSION['userinfo']);
 	CurrentUser::setData();
-	session_destroy();
-	$params = [
-		"script" => basename($_SERVER["SCRIPT_NAME"]),
-		"qrystr" => $_SERVER["QUERY_STRING"]
+	$_SESSION = [
+		"lastscript" => basename($_SERVER["SCRIPT_NAME"]),
+		"lastqrystr" => $_SERVER["QUERY_STRING"]
 	];
-	Response::redirectTo('index.php', $params);
+	Response::redirectTo('index.php');
 	exit();
 }
 
