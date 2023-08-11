@@ -290,7 +290,8 @@ class UI
 		];
 	}
 
-	public static function validateThemeTemplate(string $name, string $theme = "") {
+	public static function validateThemeTemplate(string $name, string $theme = "")
+	{
 		if (empty(trim($theme))) {
 			$theme = self::getTheme();
 		}
