@@ -26,6 +26,7 @@
 namespace Froxlor\Cli;
 
 use Froxlor\Config\ConfigParser;
+use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +41,8 @@ final class ConfigDiff extends CliCommand
 			->setDescription('Shows differences in config templates between OS versions')
 			->addArgument('from', InputArgument::OPTIONAL, 'OS version to compare against')
 			->addArgument('to', InputArgument::OPTIONAL, 'OS version to compare from')
-			->addOption('list', 'l', InputOption::VALUE_NONE, 'List all possible OS versions');
+			->addOption('list', 'l', InputOption::VALUE_NONE, 'List all possible OS versions')
+			->addOption('diff-params', 'p', InputOption::VALUE_REQUIRED, 'Additional parameters for `diff`');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
@@ -78,14 +80,15 @@ final class ConfigDiff extends CliCommand
 
 		$parser_from = $parsers[$input->getArgument('from')];
 		$parser_to = $parsers[$input->getArgument('to')];
-		$tmp_from = tempnam('/tmp', 'froxlor_config_diff_from');
-		$tmp_to = tempnam('/tmp', 'froxlor_config_diff_to');
+		$tmp_from = tempnam(sys_get_temp_dir(), 'froxlor_config_diff_from');
+		$tmp_to = tempnam(sys_get_temp_dir(), 'froxlor_config_diff_to');
 		$files = [];
+		$titles_by_key = [];
 
 		// Aggregate content for each config file
 		foreach ([[$parser_from, 'from'], [$parser_to, 'to']] as $todo) {
-			foreach ($todo[0]->getServices() as $service) {
-				foreach ($service->getDaemons() as $daemon) {
+			foreach ($todo[0]->getServices() as $service_type => $service) {
+				foreach ($service->getDaemons() as $daemon_name => $daemon) {
 					foreach ($daemon->getConfig() as $instruction) {
 						if ($instruction['type'] !== 'file') {
 							continue;
@@ -107,7 +110,8 @@ final class ConfigDiff extends CliCommand
 							throw new \Exception("Cannot find content for {$instruction['name']}");
 						}
 
-						$key = "{$service->title} : {$daemon->title} : {$instruction['name']}";
+						$key = "{$service_type}_{$daemon_name}_{$instruction['name']}";
+						$titles_by_key[$key] = "{$service->title} : {$daemon->title} : {$instruction['name']}";
 						if (!isset($files[$key])) {
 							$files[$key] = ['from' => '', 'to' => ''];
 						}
@@ -118,17 +122,22 @@ final class ConfigDiff extends CliCommand
 		}
 		ksort($files);
 
+		$diff_params = '';
+		if ($input->hasOption('diff-params')) {
+			$diff_params = "-" . $input->getOption('diff-params');
+		}
+
 		// Run diff on each file and output, if anything changed
 		foreach ($files as $file_key => $content) {
 			file_put_contents($tmp_from, $content['from']);
 			file_put_contents($tmp_to, $content['to']);
-			exec("diff {$tmp_from} {$tmp_to}", $diff_output);
+			$diff_output = FileDir::safe_exec("diff {$diff_params} {$tmp_from} {$tmp_to}");
 
 			if (count($diff_output) === 0) {
 				continue;
 			}
 
-			$output->writeln('<info># ' . $file_key . '</info>');
+			$output->writeln('<info># ' . $titles_by_key[$file_key] . '</info>');
 			$output->writeln(implode("\n", $diff_output) . "\n");
 			unset($diff_output);
 		}
