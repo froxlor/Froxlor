@@ -42,7 +42,7 @@ final class ConfigDiff extends CliCommand
 			->addArgument('from', InputArgument::OPTIONAL, 'OS version to compare against')
 			->addArgument('to', InputArgument::OPTIONAL, 'OS version to compare from')
 			->addOption('list', 'l', InputOption::VALUE_NONE, 'List all possible OS versions')
-			->addOption('diff-params', 'p', InputOption::VALUE_REQUIRED, 'Additional parameters for `diff`');
+			->addOption('diff-params', '', InputOption::VALUE_REQUIRED, 'Additional parameters for `diff`, e.g. --diff-params="--color=always"');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
