@@ -78,6 +78,13 @@ final class ConfigDiff extends CliCommand
 			return self::INVALID;
 		}
 
+		// Make sure diff is installed
+		$check_diff_installed = FileDir::safe_exec('which diff');
+		if (count($check_diff_installed) === 0) {
+			$output->writeln('<error>Unable to find "diff" installation on your system.</error>');
+			return self::INVALID;
+		}
+
 		$parser_from = $parsers[$input->getArgument('from')];
 		$parser_to = $parsers[$input->getArgument('to')];
 		$tmp_from = tempnam(sys_get_temp_dir(), 'froxlor_config_diff_from');
@@ -124,14 +131,14 @@ final class ConfigDiff extends CliCommand
 
 		$diff_params = '';
 		if ($input->hasOption('diff-params') && trim($input->getOption('diff-params')) !== '') {
-			$diff_params = "-" . trim($input->getOption('diff-params'));
+			$diff_params = trim($input->getOption('diff-params'));
 		}
 
 		// Run diff on each file and output, if anything changed
 		foreach ($files as $file_key => $content) {
 			file_put_contents($tmp_from, $content['from']);
 			file_put_contents($tmp_to, $content['to']);
-			$diff_output = FileDir::safe_exec("diff {$diff_params} {$tmp_from} {$tmp_to}");
+			$diff_output = FileDir::safe_exec("{$check_diff_installed[0]} {$diff_params} {$tmp_from} {$tmp_to}");
 
 			if (count($diff_output) === 0) {
 				continue;
