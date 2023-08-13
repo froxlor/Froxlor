@@ -38,7 +38,7 @@ return [
 					'url' => 'customer_email.php?page=emails',
 					'label' => lng('menue.email.emails'),
 					'required_resources' => 'emails',
-					'add_shortlink' => CurrentUser::canAddResource('emails') ? 'customer_email.php?page=emails&action=add' : null,
+					'add_shortlink' => CurrentUser::canAddResource('emails') ? 'customer_email.php?page=email_domain&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.webmail_url'),
