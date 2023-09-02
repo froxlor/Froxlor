@@ -55,6 +55,7 @@ class IpAddr
 
 	/**
 	 * @return array
+	 * @throws \Exception
 	 */
 	public static function getSslIpPortCombinations(): array
 	{
@@ -75,7 +76,7 @@ class IpAddr
 		$additional_conditions_params = [];
 		$additional_conditions_array = [];
 
-		if ($userinfo['ip'] != '-1') {
+		if (!empty($userinfo) && $userinfo['ip'] != '-1') {
 			$admin_ip_stmt = Database::prepare("
 				SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = IN (:ipid)
 			");
