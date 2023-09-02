@@ -38,7 +38,7 @@ return [
 					'url' => 'customer_email.php?page=emails',
 					'label' => lng('menue.email.emails'),
 					'required_resources' => 'emails',
-					'add_shortlink' => CurrentUser::canAddResource('emails') ? 'customer_email.php?page=email_domain&action=add' : null,
+					'add_shortlink' => !CurrentUser::isAdmin() && CurrentUser::canAddResource('emails') ? 'customer_email.php?page=email_domain&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.webmail_url'),
@@ -60,7 +60,7 @@ return [
 					'url' => 'customer_mysql.php?page=mysqls',
 					'label' => lng('menue.mysql.databases'),
 					'required_resources' => 'mysqls',
-					'add_shortlink' => CurrentUser::canAddResource('mysqls')? 'customer_mysql.php?page=mysqls&action=add' : null,
+					'add_shortlink' => !CurrentUser::isAdmin() && CurrentUser::canAddResource('mysqls')? 'customer_mysql.php?page=mysqls&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.phpmyadmin_url'),
@@ -81,7 +81,7 @@ return [
 				[
 					'url' => 'customer_domains.php?page=domains',
 					'label' => lng('menue.domains.settings'),
-					'add_shortlink' => CurrentUser::canAddResource('subdomains') ? 'customer_domains.php?page=domains&action=add' : null,
+					'add_shortlink' => !CurrentUser::isAdmin() && CurrentUser::canAddResource('subdomains') ? 'customer_domains.php?page=domains&action=add' : null,
 				],
 				[
 					'url' => 'customer_domains.php?page=sslcertificates',
@@ -98,7 +98,7 @@ return [
 				[
 					'url' => 'customer_ftp.php?page=accounts',
 					'label' => lng('menue.ftp.accounts'),
-					'add_shortlink' => CurrentUser::canAddResource('ftps') ? 'customer_ftp.php?page=accounts&action=add' : null,
+					'add_shortlink' => !CurrentUser::isAdmin() && CurrentUser::canAddResource('ftps') ? 'customer_ftp.php?page=accounts&action=add' : null,
 				],
 				[
 					'url' => Settings::Get('panel.webftp_url'),
