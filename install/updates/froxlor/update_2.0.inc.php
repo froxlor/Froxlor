@@ -497,3 +497,18 @@ if (Froxlor::isFroxlorVersion('2.0.19')) {
 	Update::showUpdateStep("Updating from 2.0.19 to 2.0.20", false);
 	Froxlor::updateToVersion('2.0.20');
 }
+
+if (Froxlor::isFroxlorVersion('2.0.20')) {
+	Update::showUpdateStep("Updating from 2.0.20 to 2.0.21", false);
+	Froxlor::updateToVersion('2.0.21');
+}
+
+if (Froxlor::isFroxlorVersion('2.0.21')) {
+	Update::showUpdateStep("Updating from 2.0.21 to 2.0.22", false);
+	Froxlor::updateToVersion('2.0.22');
+}
+
+if (Froxlor::isFroxlorVersion('2.0.22')) {
+	Update::showUpdateStep("Updating from 2.0.22 to 2.0.23", false);
+	Froxlor::updateToVersion('2.0.23');
+}

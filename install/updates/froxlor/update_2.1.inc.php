@@ -63,8 +63,8 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	}
 
 	Update::showUpdateStep("Creating new tables and fields for backups");
-	Database::query("DROP TABLE IF EXISTS `". TABLE_PANEL_BACKUP_STORAGES ."`;");
-	$sql = "CREATE TABLE `". TABLE_PANEL_BACKUP_STORAGES ."` (
+	Database::query("DROP TABLE IF EXISTS `" . TABLE_PANEL_BACKUP_STORAGES . "`;");
+	$sql = "CREATE TABLE `" . TABLE_PANEL_BACKUP_STORAGES . "` (
 	  `id` int(11) NOT NULL AUTO_INCREMENT,
 	  `description` varchar(255) NOT NULL,
 	  `type` varchar(255) NOT NULL DEFAULT 'local',
@@ -83,8 +83,8 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 		INSERT INTO `panel_backup_storages` (`id`, `description`, `destination_path`) VALUES
 		(1, 'Local backup storage', '/var/customers/backups');
 	");
-	Database::query("DROP TABLE IF EXISTS `". TABLE_PANEL_BACKUPS ."`;");
-	$sql = "CREATE TABLE `". TABLE_PANEL_BACKUPS ."` (
+	Database::query("DROP TABLE IF EXISTS `" . TABLE_PANEL_BACKUPS . "`;");
+	$sql = "CREATE TABLE `" . TABLE_PANEL_BACKUPS . "` (
 	  `id` int(11) NOT NULL AUTO_INCREMENT,
 	  `adminid` int(11) NOT NULL,
 	  `customerid` int(11) NOT NULL,
@@ -107,6 +107,7 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Settings::AddNew('backup.default_customer_access', 1);
 	Settings::AddNew('backup.default_pgp_public_key', '');
 	Settings::AddNew('backup.default_retention', 3);
+	Settings::AddNew('backup.backup_tmp_dir', '/var/customers/backup/');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting cronjobs");

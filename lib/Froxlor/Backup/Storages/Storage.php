@@ -5,6 +5,7 @@ namespace Froxlor\Backup\Storages;
 use Exception;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
+use Froxlor\Settings;
 
 abstract class Storage
 {
@@ -19,7 +20,8 @@ abstract class Storage
 	public function __construct(array $storage_data)
 	{
 		$this->sData = $storage_data;
-		$this->tmpDirectory = FileDir::makeCorrectDir(sys_get_temp_dir() . '/backup-' . $this->sData['loginname']);
+		$tmpDirectory = Settings::Get('backup.backup_tmp_dir') ?: sys_get_temp_dir();
+		$this->tmpDirectory = FileDir::makeCorrectDir($tmpDirectory . '/backup-' . $this->sData['loginname']);
 	}
 
 	/**

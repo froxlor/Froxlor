@@ -2,15 +2,30 @@
 
 namespace Froxlor\Backup\Storages;
 
+use Aws\S3\S3Client;
+use Froxlor\FileDir;
+
 class S3 extends Storage
 {
+
+	private S3Client $s3_client;
 
 	/**
 	 * @return bool
 	 */
 	public function init(): bool
 	{
-		// TODO: Implement init() method.
+		$raw_credentials = [
+			'credentials' => [
+				'key' => $this->sData['storage']['username'] ?? '',
+				'secret' => $this->sData['storage']['password'] ?? ''
+			],
+			'endpoint' => $this->sData['storage']['hostname'] ?? '',
+			'region' => $this->sData['storage']['region'] ?? '',
+			'version' => 'latest',
+			'use_path_style_endpoint' => true
+		];
+		$this->s3_client = new S3Client($raw_credentials);
 	}
 
 	/**
@@ -23,7 +38,11 @@ class S3 extends Storage
 	 */
 	protected function putFile(string $filename, string $tmp_source_directory): string
 	{
-		return "";
+		$this->s3_client->putObject([
+			'Bucket' => $this->sData['storage']['bucket'],
+			'Key' => $filename,
+			'SourceFile' => FileDir::makeCorrectFile($tmp_source_directory . '/' . $filename),
+		]);
 	}
 
 	/**
@@ -32,7 +51,15 @@ class S3 extends Storage
 	 */
 	protected function rmFile(string $filename): bool
 	{
-		// TODO: Implement removeOld() method.
+		$result = $this->s3_client->deleteObject([
+			'Bucket' => $this->sData['storage']['bucket'],
+			'Key' => $filename,
+		]);
+
+		if ($result['DeleteMarker']) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -26,6 +26,7 @@
 
 declare(strict_types=1);
 
+use Froxlor\Cli\BackupCommand;
 use Froxlor\Cli\ConfigDiff;
 use Symfony\Component\Console\Application;
 use Froxlor\Cli\RunApiCommand;
@@ -62,5 +63,6 @@ $application->add(new InstallCommand());
 $application->add(new MasterCron());
 $application->add(new UserCommand());
 $application->add(new ValidateAcmeWebroot());
+$application->add(new BackupCommand());
 $application->add(new ConfigDiff());
 $application->run();

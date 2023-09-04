@@ -56,7 +56,8 @@
 		"erusev/parsedown": "^1.7",
 		"symfony/console": "^5.4",
 		"pear/net_dns2": "^1.5",
-		"amnuts/opcache-gui": "^3.4"
+		"amnuts/opcache-gui": "^3.4",
+		"aws/aws-sdk-php": "^3.280"
     },
 	"require-dev": {
 		"phpunit/phpunit": "^9",
