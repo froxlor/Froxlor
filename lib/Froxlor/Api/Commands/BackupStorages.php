@@ -35,6 +35,9 @@ use Froxlor\Settings;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use PDO;
+use phpseclib3\Crypt\Common\PublicKey;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Exception\NoKeyLoadedException;
 
 /**
  * @since 2.1.0
@@ -73,7 +76,7 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] list backup storages");
 			$query_fields = [];
 			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_BACKUP_STORAGES . "` ". $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit()
+				SELECT * FROM `" . TABLE_PANEL_BACKUP_STORAGES . "` " . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit()
 			);
 			Database::pexecute($result_stmt, $query_fields, true, true);
 			$result = [];
@@ -133,7 +136,7 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	 * @param string $pgp_public_key
 	 *            optional, pgp public key for backup storage
 	 * @param string $retention
-	 *            optional, retention for backup storage (default 3)
+	 *            optional, retention for backup storage (default {backup.default_retention})
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -177,10 +180,36 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 			$username = $this->getParam('username', $optional_flags['username']);
 			$password = $this->getParam('password', $optional_flags['password']);
 			$pgp_public_key = $this->getParam('pgp_public_key', true, null);
-			$retention = $this->getParam('retention', true, 3);
+			$retention = $this->getParam('retention', true, Settings::Get('backup.default_retention'));
 
 			// validation
 			$destination_path = FileDir::makeCorrectDir(Validate::validate($destination_path, 'destination_path', Validate::REGEX_DIR, '', [], true));
+			if ($type != 'local') {
+				if (!Validate::validateUrl($hostname)) {
+					Response::standardError('invalidhostname', '', true);
+				}
+				// check whether password is an ssh public key
+				$pwd_is_ssh_key = false;
+				try {
+					$key = PublicKeyLoader::loadPublicKey($password);
+					if ($key instanceof PublicKey) {
+						$pwd_is_ssh_key = true;
+					}
+				} catch (NoKeyLoadedException $e) {
+					/* nothing to do */
+				}
+				if (!$pwd_is_ssh_key) {
+					// normal password
+					$password = Validate::validate($password, 'password', '', '', [], true);
+				}
+			}
+			if ($type == 's3') {
+				$region = Validate::validate($region, 'region', '', '', [], true);
+				$bucket = Validate::validate($bucket, 'bucket', '/(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/', '', [], true);
+			}
+			if ($retention <= 0) {
+				$retention = Settings::Get('backup.default_retention');
+			}
 			// TODO: add more validation
 
 			// pgp public key validation
@@ -303,7 +332,7 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 	 * @param string $pgp_public_key
 	 *            optional, pgp public key for backup storage
 	 * @param string $retention
-	 *            optional, retention for backup storage (default 3)
+	 *            optional, retention for backup storage (default {backup.default_retention})
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -342,7 +371,23 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 				if (empty($username)) {
 					throw new Exception("Field 'username' cannot be empty", 406);
 				}
-				$password = Validate::validate($password, 'password', '', '', [], true);
+				// password change
+				if (!empty($password)) {
+					// check whether password is an ssh public key
+					$pwd_is_ssh_key = false;
+					try {
+						$key = PublicKeyLoader::loadPublicKey($password);
+						if ($key instanceof PublicKey) {
+							$pwd_is_ssh_key = true;
+						}
+					} catch (NoKeyLoadedException $e) {
+						/* nothing to do */
+					}
+					if (!$pwd_is_ssh_key) {
+						// normal password
+						$password = Validate::validate($password, 'password', '', '', [], true);
+					}
+				}
 			}
 			if ($type == 's3') {
 				if (empty($region)) {
@@ -355,6 +400,16 @@ class BackupStorages extends ApiCommand implements ResourceEntity
 
 			// validation
 			$destination_path = FileDir::makeCorrectDir(Validate::validate($destination_path, 'destination_path', Validate::REGEX_DIR, '', [], true));
+			if ($type != 'local' && !Validate::validateUrl($hostname)) {
+				Response::standardError('invalidhostname', '', true);
+			}
+			if ($type == 's3') {
+				$region = Validate::validate($region, 'region', '', '', [], true);
+				$bucket = Validate::validate($bucket, 'bucket', '/(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/', '', [], true);
+			}
+			if ($retention <= 0) {
+				$retention = Settings::Get('backup.default_retention');
+			}
 			// TODO: add more validation
 
 			// pgp public key validation

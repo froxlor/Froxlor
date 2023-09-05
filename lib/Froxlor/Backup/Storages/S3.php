@@ -35,13 +35,16 @@ class S3 extends Storage
 	 * @param string $filename
 	 * @param string $tmp_source_directory
 	 * @return string
+	 * @throws \Exception
 	 */
 	protected function putFile(string $filename, string $tmp_source_directory): string
 	{
+		$source = FileDir::makeCorrectFile($tmp_source_directory . "/" . $filename);
+		$target = FileDir::makeCorrectFile($this->getDestinationDirectory() . "/" . $filename);
 		$this->s3_client->putObject([
 			'Bucket' => $this->sData['storage']['bucket'],
-			'Key' => $filename,
-			'SourceFile' => FileDir::makeCorrectFile($tmp_source_directory . '/' . $filename),
+			'Key' => $target,
+			'SourceFile' => $source,
 		]);
 	}
 

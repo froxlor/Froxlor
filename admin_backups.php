@@ -55,13 +55,13 @@ if (($page == 'backups' || $page == 'overview')) {
 			'actions_links' => [
 				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => $page, 'action' => 'restore']),
-					'label' => lng('admin.backups_restore'),
+					'label' => lng('backup.backups_restore'),
 					'icon' => 'fa-solid fa-file-import',
 					'class' => 'btn-outline-secondary'
 				],
 				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => 'storages']),
-					'label' => lng('admin.backup_storages'),
+					'label' => lng('backup.backup_storages'),
 					'icon' => 'fa-solid fa-hard-drive',
 					'class' => 'btn-outline-secondary',
 					'visible' => $userinfo['change_serversettings'] == '1'
@@ -94,12 +94,12 @@ if (($page == 'backups' || $page == 'overview')) {
 			'actions_links' => [
 				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => 'backups']),
-					'label' => lng('admin.backups'),
+					'label' => lng('backup.backups'),
 					'icon' => 'fa-solid fa-reply'
 				],
 				[
 					'href' => $linker->getLink(['section' => 'backups', 'page' => $page, 'action' => 'add']),
-					'label' => lng('admin.backup_storage_add')
+					'label' => lng('backup.backup_storage.add')
 				]
 			]
 		]);

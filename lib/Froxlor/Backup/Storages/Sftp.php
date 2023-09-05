@@ -2,15 +2,34 @@
 
 namespace Froxlor\Backup\Storages;
 
+use Exception;
+use Froxlor\FileDir;
+use phpseclib3\Net\SFTP as secSFTP;
+
 class Sftp extends Storage
 {
+	private secSFTP $sftp_client;
 
 	/**
 	 * @return bool
 	 */
 	public function init(): bool
 	{
-		// TODO: Implement init() method.
+		$hostname = $this->sData['storage']['hostname'] ?? '';
+		$username = $this->sData['storage']['username'] ?? '';
+		$password = $this->sData['storage']['password'] ?? '';
+		if (!empty($hostname) && !empty($username) && !empty($password)) {
+			$tmp = explode(":", $hostname);
+			$hostname = $tmp[0];
+			$port = $tmp[1] ?? 22;
+			$this->sftp_client = new secSFTP($hostname, $port);
+			if ($this->sftp_client->isConnected()) {
+				// @todo login by either user/passwd or user/ssh-key
+				return true;
+			}
+			return false;
+		}
+		throw new Exception('Empty hostname for FTP backup storage');
 	}
 
 	/**
@@ -20,19 +39,27 @@ class Sftp extends Storage
 	 * @param string $filename
 	 * @param string $tmp_source_directory
 	 * @return string
+	 * @throws Exception
 	 */
 	protected function putFile(string $filename, string $tmp_source_directory): string
 	{
-		return "";
+		$source = FileDir::makeCorrectFile($tmp_source_directory . "/" . $filename);
+		$target = FileDir::makeCorrectFile($this->getDestinationDirectory() . "/" . $filename);
+		$this->sftp_client->put($target, $source, secSFTP::SOURCE_LOCAL_FILE);
 	}
 
 	/**
 	 * @param string $filename
 	 * @return bool
+	 * @throws Exception
 	 */
 	protected function rmFile(string $filename): bool
 	{
-		// TODO: Implement removeOld() method.
+		$target = FileDir::makeCorrectFile($this->getDestinationDirectory() . "/" . $filename);
+		if ($this->sftp_client->file_exists($target)) {
+			return $this->sftp_client->delete($target);
+		}
+		return false;
 	}
 
 	/**
@@ -40,6 +67,7 @@ class Sftp extends Storage
 	 */
 	public function shutdown(): bool
 	{
+		$this->sftp_client->disconnect();
 		return true;
 	}
 }

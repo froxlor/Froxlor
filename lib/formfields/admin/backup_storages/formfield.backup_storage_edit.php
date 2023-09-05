@@ -25,12 +25,12 @@
 
 return [
 	'backup_storage_edit' => [
-		'title' => lng('backups.backup_storage_edit'),
+		'title' => lng('backup.backup_storage.edit'),
 		'image' => 'fa-solid fa-file-archive',
 		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
 		'sections' => [
 			'section_a' => [
-				'title' => lng('backup.backup_storage_edit'),
+				'title' => lng('backup.backup_storage.edit'),
 				'fields' => [
 					'description' => [
 						'label' => lng('backup.backup_storage.description'),
@@ -64,7 +64,8 @@ return [
 					'destination_path' => [
 						'label' => lng('backup.backup_storage.destination_path'),
 						'type' => 'text',
-						'value' => $result['destination_path']
+						'value' => $result['destination_path'],
+						'mandatory' => true,
 					],
 					'hostname' => [
 						'label' => lng('backup.backup_storage.hostname'),
@@ -77,8 +78,9 @@ return [
 						'value' => $result['username']
 					],
 					'password' => [
-						'label' => lng('backup.backup_storage.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
-						'type' => 'password',
+						'label' => lng('backup.backup_storage.password.title'),
+						'desc' => lng('backup.backup_storage.password.description') . '<br>(' . lng('panel.emptyfornochanges') . ')',
+						'type' => 'textarea',
 						'autocomplete' => 'off'
 					],
 					'pgp_public_key' => [

@@ -34,7 +34,7 @@ use Froxlor\UI\Listing;
 
 return [
 	'backup_storages_list' => [
-		'title' => lng('backup.backup_storages.list'),
+		'title' => lng('backup.backup_storage.list'),
 		'icon' => 'fa-solid fa-file-archive',
 		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
 		'default_sorting' => ['description' => 'asc'],
@@ -45,42 +45,42 @@ return [
 				'sortable' => true,
 			],
 			'description' => [
-				'label' => lng('description'),
+				'label' => lng('backup.backup_storage.description'),
 				'field' => 'description',
 				'sortable' => true,
 			],
 			'type' => [
-				'label' => lng('type'),
+				'label' => lng('backup.backup_storage.type'),
 				'field' => 'type',
 				'sortable' => true,
 			],
 			'region' => [
-				'label' => lng('region'),
+				'label' => lng('backup.backup_storage.region'),
 				'field' => 'region',
 				'sortable' => true,
 			],
 			'bucket' => [
-				'label' => lng('bucket'),
+				'label' => lng('backup.backup_storage.bucket'),
 				'field' => 'bucket',
 				'sortable' => true,
 			],
 			'destination_path' => [
-				'label' => lng('destination_path'),
+				'label' => lng('backup.backup_storage.destination_path.title'),
 				'field' => 'destination_path',
 				'sortable' => true,
 			],
 			'hostname' => [
-				'label' => lng('hostname'),
+				'label' => lng('backup.backup_storage.hostname'),
 				'field' => 'hostname',
 				'sortable' => true,
 			],
 			'username' => [
-				'label' => lng('username'),
+				'label' => lng('backup.backup_storage.username'),
 				'field' => 'username',
 				'sortable' => true,
 			],
 			'retention' => [
-				'label' => lng('retention'),
+				'label' => lng('backup.backup_storage.retention'),
 				'field' => 'retention',
 				'sortable' => true,
 			],

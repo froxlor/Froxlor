@@ -81,6 +81,15 @@ return [
 						'checkPgpPublicKeySetting'
 					],
 				],
+				'backup_backup_tmp_dir' => [
+					'label' => lng('serversettings.backup_tmp_dir'),
+					'settinggroup' => 'backup',
+					'varname' => 'backup_tmp_dir',
+					'type' => 'text',
+					'string_type' => 'dir',
+					'default' => '/var/customers/backup/',
+					'save_method' => 'storeSettingField'
+				]
 			]
 		]
 	]

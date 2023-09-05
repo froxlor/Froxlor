@@ -27,12 +27,12 @@ use Froxlor\Settings;
 
 return [
 	'backup_storage_add' => [
-		'title' => lng('backups.backup_storage_add'),
+		'title' => lng('backup.backup_storage.add'),
 		'image' => 'fa-solid fa-file-archive',
 		'self_overview' => ['section' => 'backups', 'page' => 'storages'],
 		'sections' => [
 			'section_a' => [
-				'title' => lng('backup.backup_storage_create'),
+				'title' => lng('backup.backup_storage.create'),
 				'fields' => [
 					'description' => [
 						'label' => lng('backup.backup_storage.description'),
@@ -63,7 +63,8 @@ return [
 					],
 					'destination_path' => [
 						'label' => lng('backup.backup_storage.destination_path'),
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true,
 					],
 					'hostname' => [
 						'label' => lng('backup.backup_storage.hostname'),
@@ -75,7 +76,7 @@ return [
 					],
 					'password' => [
 						'label' => lng('backup.backup_storage.password'),
-						'type' => 'password',
+						'type' => 'textarea',
 						'autocomplete' => 'off',
 					],
 					'pgp_public_key' => [
@@ -87,6 +88,7 @@ return [
 						'label' => lng('backup.backup_storage.retention'),
 						'type' => 'number',
 						'min' => 0,
+						'value' => Settings::Get('backup.default_retention')
 					]
 				]
 			]
