@@ -92,7 +92,14 @@
 				<form class="ms-3 mt-3 ms-lg-5 my-md-0" id="search" method="post">
 					<div class="d-flex align-items-center">
 						<i class="fa-solid fa-search text-muted"></i>
-						<input class="search-input" title="search" type="search" placeholder="{{ lng('panel.search') }}...">
+						<input class="search-input"
+							{% set hasActiveMenuItem = false %}
+							{% for idx,mitems in nav_entries %}
+								{% if mitems.active == 1 %}
+									{% set hasActiveMenuItem = true %}
+								{% endif %}
+							{% endfor %}
+							{% if hasActiveMenuItem == false %} autofocus {% endif %} title="search" type="search" placeholder="{{ lng('panel.search') }}...">
 					</div>
 					<div class="search-results-box p-2 shadow" style="display:none;">
 						<div class="search-results list-group-flush"></div>
