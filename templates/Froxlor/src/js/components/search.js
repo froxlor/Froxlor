@@ -42,7 +42,7 @@ $(function() {
 				Object.keys(data).forEach(key => {
 					dropdown.append('<li class="list-group-item text-muted text-capitalize fw-bold py-1 border-bottom">' + key + '</li>');
 					data[key].forEach(item => {
-						dropdown.append('<li class="list-group-item mt-1"><a href="' + item.href + '" class="text-decoration-none">' + item.title + '</a></li>');
+						dropdown.append('<li class="list-group-item mt-1"><a href="' + item.href + '" tabindex="2" class="text-decoration-none">' + item.title + '</a></li>');
 					});
 				});
 			},
