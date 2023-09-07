@@ -154,17 +154,21 @@ class CurrentUser
 			]);
 			$addition = $result['emaildomains'] != 0;
 		} elseif ($resource == 'subdomains') {
-			$parentDomainCollection = (new Collection(
-				SubDomains::class,
-				$_SESSION['userinfo'],
-				['sql_search' => [
-					'd.parentdomainid' => 0,
-					'd.deactivated' => 0,
-					'd.id' => ['op' => '<>', 'value' => $_SESSION['userinfo']['standardsubdomain']]
+                        if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
+                                $addition = false;
+                        } else {
+				$parentDomainCollection = (new Collection(
+					SubDomains::class,
+					$_SESSION['userinfo'],
+					['sql_search' => [
+						'd.parentdomainid' => 0,
+						'd.deactivated' => 0,
+						'd.id' => ['op' => '<>', 'value' => $_SESSION['userinfo']['standardsubdomain']]
+					]
 				]
-				]
-			));
-			$addition = $parentDomainCollection->count() != 0;
+				));
+				$addition = $parentDomainCollection->count() != 0;
+			}
 		} elseif ($resource == 'domains') {
 			$customerCollection = (new Collection(Customers::class, $_SESSION['userinfo']));
 			$addition = $customerCollection->count() != 0;
