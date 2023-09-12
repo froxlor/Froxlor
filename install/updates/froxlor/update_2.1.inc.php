@@ -132,7 +132,7 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting system for data-export function");
-	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "`SET `varname` = 'exportenabled' WHERE `settinggroup`= 'system' AND `varname`= 'backupenabled");
+	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "`SET `varname` = 'exportenabled' WHERE `settinggroup`= 'system' AND `varname`= 'backupenabled'");
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "`SET `value` = REPLACE(`value`, 'extras.backup', 'extras.export') WHERE `settinggroup` = 'panel' AND `varname` = 'customer_hide_options'");
 	Database::query("DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `section` = 'backup_list'");
 	Database::query("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");

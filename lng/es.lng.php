@@ -2176,7 +2176,7 @@ Atentamente, su administrador'
 			'toolselect' => 'Analizador de tráfico',
 			'webalizer' => 'Webalizer',
 			'awstats' => 'AWStats',
-			'goaccess' => 'goacccess'
+			'goaccess' => 'goaccess'
 		],
 		'requires_reconfiguration' => 'El cambio de esta configuración podría requerir una reconfiguración de los siguientes servicios:<br/><strong>%s</strong>'
 	],

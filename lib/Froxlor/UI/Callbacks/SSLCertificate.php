@@ -47,4 +47,9 @@ class SSLCertificate
 		}
 		return false;
 	}
+
+	public static function isNotLetsEncrypt(array $attributes): bool
+	{
+		return (int)$attributes['fields']['letsencrypt'] == 0;
+	}
 }

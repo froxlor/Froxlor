@@ -863,13 +863,7 @@ class Nginx extends HttpConfigBase
 		// remove comments
 		$vhost = implode("\n", preg_replace('/^(\s+)?#(.*)$/', '', explode("\n", $vhost)));
 		// Break blocks into lines
-		$vhost = str_replace([
-			"{",
-			"}"
-		], [
-			" {\n",
-			"\n}"
-		], $vhost);
+		$vhost = preg_replace("/^(\s+)?location(.+)\{(.+)\}$/misU", "location $2 {\n $3 \n}", $vhost);
 		// Break into array items
 		$vhost = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost))));
 		// Remove empty lines

@@ -2210,7 +2210,7 @@ Yours sincerely, your administrator',
 			'toolselect' => 'Traffic analyzer',
 			'webalizer' => 'Webalizer',
 			'awstats' => 'AWStats',
-			'goaccess' => 'goacccess'
+			'goaccess' => 'goaccess'
 		],
 		'requires_reconfiguration' => 'Changing this settings might require a reconfiguration of the following services:<br><strong>%s</strong>',
 		'req_limit_per_interval' => [
