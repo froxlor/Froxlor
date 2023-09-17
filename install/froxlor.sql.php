@@ -921,8 +921,7 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 	(3, 'froxlor/reports', 'usage_report', '\\Froxlor\\Cron\\Traffic\\ReportsCron', '1 DAY', '1', 'cron_usage_report'),
 	(4, 'froxlor/core', 'mailboxsize', '\\Froxlor\\Cron\\System\\MailboxsizeCron', '6 HOUR', '1', 'cron_mailboxsize'),
 	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh', '5 MINUTE', '0', 'cron_letsencrypt'),
-	(6, 'froxlor/export', 'export', '\\Froxlor\\Cron\\System\\ExportCron', '1 HOUR', '0', 'cron_export'),
-	(7, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\Backup\\BackupCron', '1 DAY', '0', 'cron_backup');
+	(6, 'froxlor/export', 'export', '\\Froxlor\\Cron\\System\\ExportCron', '1 HOUR', '0', 'cron_export');
 
 
 DROP TABLE IF EXISTS `ftp_quotalimits`;
@@ -1069,39 +1068,5 @@ CREATE TABLE `panel_loginlinks` (
   `valid_until` int(15) NOT NULL,
   `allowed_from` text NOT NULL,
   UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-DROP TABLE IF EXISTS `panel_backup_storages`;
-CREATE TABLE `panel_backup_storages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL DEFAULT 'local',
-  `region` varchar(255) NULL,
-  `bucket` varchar(255) NULL,
-  `destination_path` varchar(255) NOT NULL,
-  `hostname` varchar(255) NULL,
-  `username` varchar(255) NULL,
-  `password` text,
-  `pgp_public_key` text,
-  `retention` int(3) NOT NULL DEFAULT 3,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
-INSERT INTO `panel_backup_storages` (`id`, `description`, `destination_path`) VALUES
-	(1, 'Local backup storage', '/var/customers/backups');
-
-
-DROP TABLE IF EXISTS `panel_backups`;
-CREATE TABLE `panel_backups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `adminid` int(11) NOT NULL,
-  `customerid` int(11) NOT NULL,
-  `loginname` varchar(255) NOT NULL,
-  `size` bigint(20) NOT NULL,
-  `storage_id` int(11) NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `created_at` int(15) NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

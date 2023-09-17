@@ -316,21 +316,6 @@ return [
 						'value' => '1',
 						'checked' => true
 					],
-					'backup' => [
-						'label' => lng('backup.backup_storage.title'),
-						'desc' => lng('backup.backup_storage.description'),
-						'type' => 'select',
-						'select_var' => $backup_storages,
-						'selected' => Settings::Get('backup.default_storage'),
-						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
-					],
-					'access_backups' => [
-						'label' => lng('backup.access_backups'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => Settings::Get('backup.enabled') == '1' && Settings::Get('backup.default_customer_access'),
-						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
-					],
 				]
 			]
 		]

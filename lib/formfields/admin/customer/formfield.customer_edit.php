@@ -324,21 +324,6 @@ return [
 						'value' => '1',
 						'checked' => $result['logviewenabled']
 					],
-					'backup' => [
-						'label' => lng('backup.backup_storage.title'),
-						'desc' => lng('backup.backup_storage.description'),
-						'type' => 'select',
-						'select_var' => $backup_storages,
-						'selected' => $result['backup'],
-						'visible' => Settings::Get('backup.enabled') == '1' && $userinfo['change_serversettings'] == '1'
-					],
-					'access_backups' => [
-						'label' => lng('backup.access_backups'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => $result['access_backups'],
-						'visible' => Settings::Get('backup.enabled') == '1' && ($userinfo['change_serversettings'] == '1' || Settings::Get('backup.default_customer_access'))
-					],
 				]
 			],
 			'section_d' => [

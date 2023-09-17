@@ -262,11 +262,6 @@ return [
 					'required_resources' => 'change_serversettings'
 				],
 				[
-					'url' => 'admin_backups.php?page=overview',
-					'label' => lng('admin.backups.backups'),
-					'show_element' => (Settings::Get('backup.enabled') == true)
-				],
-				[
 					'url' => 'admin_logger.php?page=log',
 					'label' => lng('menue.logger.logger'),
 					'show_element' => (Settings::Get('logger.enabled') == true)

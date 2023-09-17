@@ -23,13 +23,11 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\Settings;
-use Froxlor\UI\Callbacks\Backup;
 use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
-use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Style;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
@@ -150,20 +148,6 @@ return [
 				'field' => 'api_allowed',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
-			],
-			'c.backup' => [
-				'label' => lng('backup.backup_storage.title'),
-				'field' => 'backup',
-				'class' => 'text-center',
-				'callback' => [Backup::class, 'backupStorageLink'],
-				'visible' => (bool)Settings::Get('backup.enabled'),
-			],
-			'c.access_backups' => [
-				'label' => lng('backup.access_backups'),
-				'field' => 'access_backups',
-				'class' => 'text-center',
-				'callback' => [Text::class, 'boolean'],
-				'visible' => (bool)Settings::Get('backup.enabled'),
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [
