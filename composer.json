@@ -46,7 +46,6 @@
 		"ext-fileinfo": "*",
 		"ext-gmp": "*",
 		"ext-gd": "*",
-		"ext-ftp": "*",
 		"ext-gnupg": "*",
 		"phpmailer/phpmailer": "~6.0",
 		"monolog/monolog": "^1.24",
