@@ -30,9 +30,9 @@ use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Api\Commands\Domains as Domains;
 use Froxlor\Bulk\DomainBulkAction;
 use Froxlor\Cron\TaskId;
+use Froxlor\CurrentUser;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
-use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
@@ -45,7 +45,6 @@ use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
-use Froxlor\CurrentUser;
 
 $id = (int)Request::any('id');
 
@@ -646,7 +645,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Response::redirectTo($filename, [
 				'page' => $page,
 				'searchfield' => 'd.domain_ace',
-				'searchtext' => $_POST['domain'] ?? ""
+				'searchtext' => Request::post('domain', "")
 			]);
 		} else {
 			Response::redirectTo($filename, [
