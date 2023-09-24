@@ -34,6 +34,7 @@ return [
 		'pt' => 'Portuguese',
 		'se' => 'Swedish',
 		'es' => 'Spanish',
+		'ca' => 'Catalan',
 	],
 	'2fa' => [
 		'2fa' => '2FA options',
