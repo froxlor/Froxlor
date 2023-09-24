@@ -2222,6 +2222,10 @@ Yours sincerely, your administrator',
 			'description' => 'Specify the time in seconds for the number of HTTP requests, default is "60"',
 		],
 		'option_requires_otp' => 'This setting requires an OTP validation',
+		'panel_menu_collapsed' => [
+			'title' => 'Collapse menu-sections',
+			'description' => 'If deactivated, the left-side menu sections will always be expanded.',
+		],
 	],
 	'spf' => [
 		'use_spf' => 'Activate SPF for domains?',

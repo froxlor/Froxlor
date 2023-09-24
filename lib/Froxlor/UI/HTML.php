@@ -25,6 +25,8 @@
 
 namespace Froxlor\UI;
 
+use Froxlor\Settings;
+
 class HTML
 {
 
@@ -116,7 +118,7 @@ class HTML
 						'label' => $navlabel,
 						'icon' => $icon,
 						'items' => $navigation_links,
-						'active' => $box_active
+						'active' => ((int)Settings::Get('panel.menu_collapsed') == 0 ? 1 : $box_active)
 					];
 				}
 			}

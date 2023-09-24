@@ -27,9 +27,10 @@ const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\EmailAccounts;
+use Froxlor\Api\Commands\EmailDomains;
 use Froxlor\Api\Commands\EmailForwarders;
 use Froxlor\Api\Commands\Emails;
-use Froxlor\Api\Commands\EmailDomains;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\PhpHelper;
@@ -41,7 +42,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Check;
-use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'email') || $userinfo['emails'] == 0) {
@@ -67,14 +67,24 @@ if ($page == 'overview' || $page == 'emails') {
 			Response::dynamicError($e->getMessage());
 		}
 
+		$actions_links = [];
+		if (CurrentUser::canAddResource('emails')) {
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
+				'label' => lng('emails.emails_add')
+			];
+		}
+
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/emails/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
+
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $emaildomain_list_data, 'emaildomain_list'),
-			'actions_links' => CurrentUser::canAddResource('emails') ? [
-				[
-					'href' => $linker->getLink(['section' => 'email', 'page' => 'email_domain', 'action' => 'add']),
-					'label' => lng('emails.emails_add')
-				]
-			] : null,
+			'actions_links' => $actions_links,
 		]);
 	} else {
 		// only emails for one domain -> show email address listing directly
@@ -127,6 +137,12 @@ if ($page == 'email_domain') {
 				'label' => lng('emails.emails_add')
 			];
 		}
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/emails/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
 
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $email_list_data, 'email_list'),

@@ -337,7 +337,15 @@ return [
 					'image_name' => 'logo_login',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
-				]
+				],
+				'panel_menu_collapsed' => [
+					'label' => lng('serversettings.panel_menu_collapsed'),
+					'settinggroup' => 'panel',
+					'varname' => 'menu_collapsed',
+					'type' => 'checkbox',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+				],
 			]
 		]
 	]

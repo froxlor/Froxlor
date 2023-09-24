@@ -27,6 +27,7 @@ const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\SubDomains as SubDomains;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
@@ -40,7 +41,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
-use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -63,15 +63,20 @@ if ($page == 'overview' || $page == 'domains') {
 			Response::dynamicError($e->getMessage());
 		}
 
-		$actions_links = false;
+		$actions_links = [];
 		if (CurrentUser::canAddResource('subdomains')) {
-			$actions_links = [
-				[
-					'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
-					'label' => lng('domains.subdomain_add')
-				]
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
+				'label' => lng('domains.subdomain_add')
 			];
 		}
+
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/domains/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
 
 		$table_tpl = 'table.html.twig';
 		if ($collection->count() == 0) {
@@ -239,7 +244,7 @@ if ($page == 'overview' || $page == 'domains') {
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
 
-			if ((int) $result['caneditdomain'] == 0) {
+			if ((int)$result['caneditdomain'] == 0) {
 				Response::standardError('domaincannotbeedited', $result['domain']);
 			}
 

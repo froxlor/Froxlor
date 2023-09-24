@@ -68,14 +68,22 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			Response::dynamicError($e->getMessage());
 		}
 
+		$actions_links = [];
+		$actions_links[] = [
+			'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
+			'label' => lng('extras.directoryprotection_add')
+		];
+
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/extras/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
+
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $htpasswd_list_data, 'htpasswd_list'),
-			'actions_links' => [
-				[
-					'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
-					'label' => lng('extras.directoryprotection_add')
-				]
-			],
+			'actions_links' => $actions_links,
 			'entity_info' => lng('extras.description')
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
@@ -185,14 +193,22 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			Response::dynamicError($e->getMessage());
 		}
 
+		$actions_links = [];
+		$actions_links[] = [
+			'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
+			'label' => lng('extras.pathoptions_add')
+		];
+
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/extras/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
+
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $htaccess_list_data, 'htaccess_list'),
-			'actions_links' => [
-				[
-					'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
-					'label' => lng('extras.pathoptions_add')
-				]
-			],
+			'actions_links' => $actions_links,
 			'entity_info' => lng('extras.description')
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
@@ -331,9 +347,19 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$export_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.export.php';
 
+				$actions_links = [
+					[
+						'href' => 'https://docs.froxlor.org/v2/user-guide/extras/',
+						'target' => '_blank',
+						'icon' => 'fa-solid fa-circle-info',
+						'class' => 'btn-outline-secondary'
+					]
+				];
+
 				UI::view('user/form-datatable.html.twig', [
 					'formaction' => $linker->getLink(['section' => 'extras']),
 					'formdata' => $export_data['export'],
+					'actions_links' => $actions_links,
 					'tabledata' => Listing::format($collection, $export_list_data, 'export_list'),
 				]);
 			}

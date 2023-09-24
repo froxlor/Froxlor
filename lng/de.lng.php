@@ -2096,6 +2096,10 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Zeit in Sekunden für die maximale Anzahl von HTTP-Anfragen, Standard ist "60".',
 		],
 		'option_requires_otp' => 'Das Ändern dieser Einstellung erfordert OTP Validierung',
+		'panel_menu_collapsed' => [
+			'title' => 'Menüabschnitte einklappen',
+			'description' => 'Bei Deaktivierung werden die Menübereiche auf der linken Seite immer aufgeklappt angezeigt.',
+		],
 	],
 	'spf' => [
 		'use_spf' => 'Aktiviere SPF für Domains?',

@@ -53,6 +53,10 @@ if (Froxlor::isDatabaseVersion('202304260')) {
 	Database::query($sql);
 	Update::lastStepStatus(0);
 
+	Update::showUpdateStep("Adding new settings");
+	Settings::AddNew('panel.menu_collapsed', 1);
+	Update::lastStepStatus(0);
+
 	Update::showUpdateStep("Adjusting setting for deactivated webroot");
 	$current_deactivated_webroot = Settings::Get('system.deactivateddocroot');
 	if (empty($current_deactivated_webroot)) {
