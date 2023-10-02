@@ -27,9 +27,9 @@ namespace Froxlor\Cli;
 
 use Exception;
 use Froxlor\Froxlor;
-use Froxlor\Settings;
-use Froxlor\Install\Update;
 use Froxlor\Install\AutoUpdate;
+use Froxlor\Install\Update;
+use Froxlor\Settings;
 use Froxlor\System\Mailer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -44,6 +44,7 @@ final class UpdateCommand extends CliCommand
 		$this->setName('froxlor:update');
 		$this->setDescription('Check for newer version and update froxlor');
 		$this->addOption('check-only', 'c', InputOption::VALUE_NONE, 'Only check for newer version and exit')
+			->addOption('database', 'd', InputOption::VALUE_NONE, 'Only run database updates in case updates are done via apt or manually.')
 			->addOption('mail-notify', 'm', InputOption::VALUE_NONE, 'Additionally inform administrator via email if a newer version was found')
 			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Do not ask for download, extract and database-update, just do it (if not --check-only is set)')
 			->addOption('integer-return', 'i', InputOption::VALUE_NONE, 'Return integer whether a new version is available or not (implies --check-only). Useful for programmatic use.');
@@ -53,7 +54,35 @@ final class UpdateCommand extends CliCommand
 	{
 		$result = self::SUCCESS;
 
+		// database update only
+		if ($input->getOption('database')) {
+			$result = $this->validateRequirements($input, $output, true);
+			if ($result == self::SUCCESS) {
+				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
+					$output->writeln('<info>' . lng('updates.dbupdate_required') . '</>');
+					if ($input->getOption('check-only')) {
+						$output->writeln('<comment>Doing nothing because of "check-only" flag.</>');
+					} else {
+						$yestoall = $input->getOption('yes-to-all') !== false;
+						$helper = $this->getHelper('question');
+						$question = new ConfirmationQuestion('Update database? [no] ', false, '/^(y|j)/i');
+						if ($yestoall || $helper->ask($input, $output, $question)) {
+							$result = $this->runUpdate($output, true);
+						}
+					}
+					return $result;
+				}
+				$output->writeln('<info>' . lng('update.noupdatesavail', (Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')) . '</>');
+			}
+			return $result;
+		}
+
 		$result = $this->validateRequirements($input, $output);
+
+		if ($result != self::SUCCESS) {
+			// requirements failed, exit
+			return $result;
+		}
 
 		require Froxlor::getInstallDir() . '/lib/functions.php';
 
@@ -181,23 +210,5 @@ final class UpdateCommand extends CliCommand
 				Settings::Set('system.update_notify_last', AutoUpdate::getFromResult('version'));
 			}
 		}
-	}
-
-	private function updateDatabase()
-	{
-		include_once Froxlor::getInstallDir() . '/lib/tables.inc.php';
-		define('_CRON_UPDATE', 1);
-		ob_start([
-			$this,
-			'cleanUpdateOutput'
-		]);
-		include_once Froxlor::getInstallDir() . '/install/updatesql.php';
-		ob_end_flush();
-		return self::SUCCESS;
-	}
-
-	private function cleanUpdateOutput($buffer)
-	{
-		return strip_tags(preg_replace("/<br\W*?\/>/", "\n", $buffer));
 	}
 }

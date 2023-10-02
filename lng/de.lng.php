@@ -922,6 +922,7 @@ return [
 		'domain_nopunycode' => 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.',
 		'dns_record_toolong' => 'Records/Labels können maximal 63 Zeichen lang sein',
 		'noipportgiven' => 'Keine IP/Port angegeben',
+		'nosslippportgiven' => 'Wenn SSL aktiviert ist, muss eine SSL IP/Port angegeben werden',
 		'jsonextensionnotfound' => 'Diese Funktion benötigt die PHP json-Erweiterung.',
 		'cannotdeletesuperadmin' => 'Der erste Administrator kann nicht gelöscht werden.',
 		'no_wwwcnamae_ifwwwalias' => 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"',

@@ -25,19 +25,18 @@
 
 namespace Froxlor\Cli;
 
-use PDO;
 use Exception;
+use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\Settings;
-use Froxlor\Database\Database;
+use PDO;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CliCommand extends Command
 {
 
-	protected function validateRequirements(InputInterface $input, OutputInterface $output, bool $ignore_has_updates = false): int
+	protected function validateRequirements(OutputInterface $output, bool $ignore_has_updates = false): int
 	{
 		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
@@ -116,9 +115,11 @@ class CliCommand extends Command
 		return $userinfo;
 	}
 
-	private function runUpdate(OutputInterface $output): int
+	protected function runUpdate(OutputInterface $output, bool $manual = false): int
 	{
-		$output->writeln('<comment>Automatic update is activated and we are going to proceed without any notices</>');
+		if (!$manual) {
+			$output->writeln('<comment>Automatic update is activated and we are going to proceed without any notices</>');
+		}
 		include_once Froxlor::getInstallDir() . '/lib/tables.inc.php';
 		define('_CRON_UPDATE', 1);
 		ob_start([
@@ -127,11 +128,11 @@ class CliCommand extends Command
 		]);
 		include_once Froxlor::getInstallDir() . '/install/updatesql.php';
 		ob_end_flush();
-		$output->writeln('<info>Automatic update done - you should check your settings to be sure everything is fine</>');
+		$output->writeln('<info>' . ($manual ? 'Database' : 'Automatic') . ' update done - you should check your settings to be sure everything is fine</>');
 		return self::SUCCESS;
 	}
 
-	private function cleanUpdateOutput($buffer)
+	private function cleanUpdateOutput($buffer): string
 	{
 		return strip_tags(preg_replace("/<br\W*?\/>/", "\n", $buffer));
 	}

@@ -190,7 +190,7 @@ class Domain
 		// specified certificate for domain
 		if ($attributes['fields']['domain_hascert'] == 1) {
 			$result['icon'] .= ' text-success';
-		} // shared certificates (e.g. subdomain if domain where certificate is specified)
+		} // shared certificates (e.g. subdomain of domain where certificate is specified)
 		elseif ($attributes['fields']['domain_hascert'] == 2) {
 			$result['icon'] .= ' text-warning';
 			$result['title'] .= "\n" . lng('panel.ssleditor_infoshared');

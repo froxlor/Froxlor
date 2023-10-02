@@ -993,6 +993,7 @@ return [
 		'domain_nopunycode' => 'You must not specify punycode (IDNA). The domain will automatically be converted',
 		'dns_record_toolong' => 'Records/labels can only be up to 63 characters',
 		'noipportgiven' => 'No IP/port given',
+		'nosslippportgiven' => 'When enabling SSL you need to select a SSL IP/port',
 		'jsonextensionnotfound' => 'This feature requires the php json-extension.',
 		'cannotdeletesuperadmin' => 'The first admin cannot be deleted.',
 		'no_wwwcnamae_ifwwwalias' => 'Cannot set CNAME record for "www" as domain is set to generate a www-alias. Please change settings to either "No alias" or "Wildcard alias"',

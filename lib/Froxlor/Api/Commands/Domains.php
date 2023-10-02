@@ -316,9 +316,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, -1);
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
+				$sslenabled = $this->getBoolParam('sslenabled', true, 1);
 				$dont_use_default_ssl_ipandport_if_empty = $this->getBoolParam('dont_use_default_ssl_ipandport_if_empty', true, 0);
 				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $dont_use_default_ssl_ipandport_if_empty ? [] : explode(',', Settings::Get('system.defaultsslip')));
-				$sslenabled = $this->getBoolParam('sslenabled', true, 1);
 				$http2 = $this->getBoolParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
@@ -543,6 +543,10 @@ class Domains extends ApiCommand implements ResourceEntity
 					if ($this->getUserDetail('change_serversettings') == '1') {
 						$ssl_specialsettings = Validate::validate(str_replace("\r\n", "\n", $ssl_specialsettings), 'ssl_specialsettings', '/^[^\0]*$/', '', [], true);
 					}
+				}
+				if (Settings::Get('system.use_ssl') == "1" && $sslenabled == 1 && empty($ssl_ipandports)) {
+					// enabled ssl for the domain but no ssl ip/port is selected
+					Response::standardError('nosslippportgiven', '', true);
 				}
 				if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 					$ssl_redirect = 0;
@@ -1516,6 +1520,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			if ($remove_ssl_ipandport || (!empty($p_ssl_ipandports) && $p_ssl_ipandports[0] == -1)) {
 				$ssl_ipandports = [];
+			}
+			if (Settings::Get('system.use_ssl') == "1" && $sslenabled && empty($ssl_ipandports)) {
+				// enabled ssl for the domain but no ssl ip/port is selected
+				Response::standardError('nosslippportgiven', '', true);
 			}
 			if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 				$ssl_redirect = 0;

@@ -43,9 +43,9 @@ final class PhpSessionclean extends CliCommand
 		$this->addArgument('max-lifetime', InputArgument::OPTIONAL, 'The number of seconds after which data will be seen as "garbage" and potentially cleaned up. Defaults to "1440"');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		if ($result == self::SUCCESS) {
 			if ((int)Settings::Get('phpfpm.enabled') == 1) {
@@ -89,7 +89,7 @@ final class PhpSessionclean extends CliCommand
 
 		if (count($paths_to_clean) > 0) {
 			foreach ($paths_to_clean as $ptc) {
-				// find all files older then maxlifetime and delete them
+				// find all files older than maxlifetime and delete them
 				FileDir::safe_exec("find -O3 \"" . $ptc . "\" -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin \"+" . $maxlifetime . "\" -delete");
 			}
 		}
