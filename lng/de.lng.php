@@ -2213,7 +2213,7 @@ Vielen Dank, Ihr Administrator',
 	'usersettings' => [
 		'custom_notes' => [
 			'title' => 'Eigene Notizen',
-			'description' => 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.',
+			'description' => 'Hier können Notizen je nach Lust und Laune eingetragen werden. Diese werden in der Administrator/Kunden-Übersicht bei dem jeweiligen Benutzer angezeigt.<br>Markdown ist unterstützt, HTML wird entfernt.',
 			'show' => 'Zeige die Notizen auf dem Dashboard des Benutzers',
 		],
 		'api_allowed' => [

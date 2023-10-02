@@ -29,6 +29,7 @@ use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
+use Froxlor\System\Markdown;
 use Froxlor\UI\Panel\UI;
 use Froxlor\User;
 use PDO;
@@ -93,7 +94,7 @@ class Text
 			'entry' => $attributes['fields']['id'],
 			'id' => 'cnModal' . $attributes['fields']['id'],
 			'title' => lng('usersettings.custom_notes.title') . ': ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
-			'body' => nl2br($note)
+			'body' => nl2br(Markdown::cleanCustomNotes($note))
 		];
 	}
 

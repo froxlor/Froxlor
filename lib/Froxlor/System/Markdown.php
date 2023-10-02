@@ -23,22 +23,36 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-namespace Froxlor\UI\Callbacks;
+namespace Froxlor\System;
 
-use Froxlor\Settings;
-use Froxlor\System\Markdown;
+use League\CommonMark\Exception\CommonMarkException;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 
-class Customer
+class Markdown
 {
-	public static function isLocked(array $attributes): bool
+
+	private static $converter = null;
+
+	public static function converter(): ?GithubFlavoredMarkdownConverter
 	{
-		return $attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
-			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'));
+		if (is_null(self::$converter)) {
+			self::$converter = new GithubFlavoredMarkdownConverter([
+				'html_input' => 'strip',
+				'allow_unsafe_links' => false,
+			]);
+		}
+		return self::$converter;
 	}
 
-	public static function hasNote(array $attributes): bool
+	public static function cleanCustomNotes(string $note = ""): string
 	{
-		$cleanNote = Markdown::cleanCustomNotes($attributes['fields']['custom_notes'] ?? "");
-		return !empty($cleanNote);
+		if (!empty($note)) {
+			try {
+				$note = self::converter()->convert($note)->getContent();
+			} catch (CommonMarkException $e) {
+				$note = "";
+			}
+		}
+		return $note;
 	}
 }

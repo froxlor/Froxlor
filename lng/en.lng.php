@@ -2346,7 +2346,7 @@ Yours sincerely, your administrator',
 	'usersettings' => [
 		'custom_notes' => [
 			'title' => 'Custom notes',
-			'description' => 'Feel free to put any notes you want/need in here. They will show up in the admin/customer overview for the corresponding user.',
+			'description' => 'Feel free to put any notes you want/need in here. They will show up in the admin/customer overview for the corresponding user.<br>Markdown is supported, HTML will be removed.',
 			'show' => 'Show your notes on the dashboard of the user',
 		],
 		'api_allowed' => [
