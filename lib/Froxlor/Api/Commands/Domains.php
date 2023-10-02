@@ -1211,7 +1211,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $remove_ssl_ipandport ? [
 				-1
 			] : null);
-			$sslenabled = $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
+			$sslenabled = $remove_ssl_ipandport ? false : $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$http2 = $this->getBoolParam('http2', true, $result['http2']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
@@ -2320,6 +2320,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			unset($result['wwwserveralias']);
 			unset($result['iswildcarddomain']);
+
+			// translate sslenabled flag
+			$result['sslenabled'] = $result['ssl_enabled'];
+			unset($result['ssl_enabled']);
 
 			$additional_params = $this->getParamList();
 			// unset unneeded params from this call
