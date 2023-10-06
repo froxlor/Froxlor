@@ -25,10 +25,10 @@
 
 namespace Froxlor\Traffic;
 
-use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Customers;
-use Froxlor\UI\Collection;
 use Froxlor\Api\Commands\Traffic as TrafficAPI;
+use Froxlor\Database\Database;
+use Froxlor\UI\Collection;
 
 class Traffic
 {
@@ -38,10 +38,10 @@ class Traffic
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function getCustomerStats(array $userinfo, string $range = null): array
+	public static function getCustomerStats(array $userinfo, string $range = null, bool $overview = false): array
 	{
 		$trafficCollectionObj = (new Collection(TrafficAPI::class, $userinfo,
-			self::getParamsByRange($range, ['customer_traffic' => true,])));
+			self::getParamsByRange($range, ['customer_traffic' => true])));
 		if ($userinfo['adminsession'] == 1) {
 			$trafficCollectionObj->has('customer', Customers::class, 'customerid', 'customerid');
 		}
@@ -53,27 +53,36 @@ class Traffic
 		$months = [];
 		$days = [];
 		foreach ($trafficCollection['data']['list'] as $item) {
+			$http = $item['http'];
+			$ftp = ($item['ftp_up'] + $item['ftp_down']);
+			$mail = $item['mail'];
+			$total = $http + $ftp + $mail;
+
 			// per user total
-			$users[$item['customerid']]['loginname'] = $item['customer']['loginname'];
-			$users[$item['customerid']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$users[$item['customerid']]['http'] += $item['http'];
-			$users[$item['customerid']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$users[$item['customerid']]['mail'] += $item['mail'];
-			// per year
-			$years[$item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$years[$item['year']]['http'] += $item['http'];
-			$years[$item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$years[$item['year']]['mail'] += $item['mail'];
-			// per month
-			$months[$item['month'] . '/' . $item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$months[$item['month'] . '/' . $item['year']]['http'] += $item['http'];
-			$months[$item['month'] . '/' . $item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$months[$item['month'] . '/' . $item['year']]['mail'] += $item['mail'];
-			// per day
-			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
-			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['http'] += $item['http'];
-			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
-			$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['mail'] += $item['mail'];
+			if ($userinfo['adminsession'] == 1) {
+				$users[$item['customerid']]['loginname'] = $item['customer']['loginname'];
+			}
+			$users[$item['customerid']]['total'] += $total;
+			$users[$item['customerid']]['http'] += $http;
+			$users[$item['customerid']]['ftp'] += $ftp;
+			$users[$item['customerid']]['mail'] += $mail;
+			if (!$overview) {
+				// per year
+				$years[$item['year']]['total'] += $total;
+				$years[$item['year']]['http'] += $http;
+				$years[$item['year']]['ftp'] += $ftp;
+				$years[$item['year']]['mail'] += $mail;
+				// per month
+				$months[$item['month'] . '/' . $item['year']]['total'] += $total;
+				$months[$item['month'] . '/' . $item['year']]['http'] += $http;
+				$months[$item['month'] . '/' . $item['year']]['ftp'] += $ftp;
+				$months[$item['month'] . '/' . $item['year']]['mail'] += $mail;
+				// per day
+				$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['total'] += $total;
+				$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['http'] += $http;
+				$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['ftp'] += $ftp;
+				$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']]['mail'] += $mail;
+			}
 		}
 
 		// calculate overview for given range from users
@@ -85,10 +94,13 @@ class Traffic
 			$metrics['mail'] += $user['mail'];
 		}
 
-		// get all possible years for filter
-		$sel_stmt = Database::prepare("SELECT DISTINCT year FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE 1 ORDER BY `year` DESC");
-		Database::pexecute($sel_stmt);
-		$years_avail = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		$years_avail = [];
+		if (!$overview) {
+			// get all possible years for filter
+			$sel_stmt = Database::prepare("SELECT DISTINCT year FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE 1 ORDER BY `year` DESC");
+			Database::pexecute($sel_stmt);
+			$years_avail = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		}
 
 		return [
 			'metrics' => $metrics,

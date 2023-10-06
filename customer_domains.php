@@ -27,6 +27,7 @@ const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\SubDomains as SubDomains;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
@@ -40,7 +41,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
-use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -51,7 +51,7 @@ $id = (int)Request::any('id');
 
 if ($page == 'overview' || $page == 'domains') {
 	if ($action == '') {
-		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "viewed customer_domains::domains");
 
 		$parentdomain_id = (int)Request::any('pid', '0');
 
@@ -63,20 +63,32 @@ if ($page == 'overview' || $page == 'domains') {
 			Response::dynamicError($e->getMessage());
 		}
 
-		$actions_links = false;
+		$actions_links = [];
 		if (CurrentUser::canAddResource('subdomains')) {
-			$actions_links = [
-				[
-					'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
-					'label' => lng('domains.subdomain_add')
-				]
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
+				'label' => lng('domains.subdomain_add')
 			];
 		}
 
-		UI::view('user/table.html.twig', [
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/domains/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
+
+		$table_tpl = 'table.html.twig';
+		if ($collection->count() == 0) {
+			$table_tpl = 'table-note.html.twig';
+		}
+		UI::view('user/' . $table_tpl, [
 			'listing' => Listing::format($collection, $domain_list_data, 'domain_list'),
 			'actions_links' => $actions_links,
-			'entity_info' => lng('domains.description')
+			'entity_info' => lng('domains.description'),
+			// alert-box
+			'type' => 'warning',
+			'alert_msg' => lng('domains.nodomainsassignedbyadmin')
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
@@ -130,6 +142,7 @@ if ($page == 'overview' || $page == 'domains') {
 					AND `parentdomainid` = '0'
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
+					AND `deactivated` = '0'
 					ORDER BY `domain` ASC");
 				Database::pexecute($stmt, [
 					"customerid" => $userinfo['customerid']
@@ -137,6 +150,14 @@ if ($page == 'overview' || $page == 'domains') {
 				$domains = [];
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains[$row['domain']] = $idna_convert->decode($row['domain']);
+				}
+
+				// check of there are any domains to be used
+				if (count($domains) <= 0) {
+					// no, possible direct URL access, redirect to overview
+					Response::redirectTo($filename, [
+						'page' => $page
+					]);
 				}
 
 				$aliasdomains[0] = lng('domains.noaliasdomain');
@@ -223,7 +244,7 @@ if ($page == 'overview' || $page == 'domains') {
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
 
-			if ((int) $result['caneditdomain'] == 0) {
+			if ((int)$result['caneditdomain'] == 0) {
 				Response::standardError('domaincannotbeedited', $result['domain']);
 			}
 
@@ -373,6 +394,23 @@ if ($page == 'overview' || $page == 'domains') {
 		} else {
 			Response::standardError('domains_canteditdomain');
 		}
+	} elseif ($action == 'jqSpeciallogfileNote') {
+		$domainid = intval($_POST['id']);
+		$newval = intval($_POST['newval']);
+		try {
+			$json_result = SubDomains::getLocal($userinfo, [
+				'id' => $domainid
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+		if ($newval != $result['speciallogfile']) {
+			echo json_encode(['changed' => true, 'info' => lng('admin.speciallogwarning')]);
+			exit();
+		}
+		echo 0;
+		exit();
 	}
 } elseif ($page == 'domainssleditor') {
 	require_once __DIR__ . '/ssl_editor.php';

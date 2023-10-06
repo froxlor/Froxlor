@@ -89,6 +89,9 @@ return [
 					'action' => 'delete',
 					'id' => ':id'
 				],
+				// Let's Encrypt certificates can be removed 'correctly'
+				// by disabling let's encrypt for the domain
+				'visible' => [SSLCertificate::class, 'isNotLetsEncrypt']
 			],
 		]
 	]

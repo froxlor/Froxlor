@@ -25,6 +25,8 @@
 
 namespace Froxlor\UI;
 
+use Froxlor\CurrentUser;
+use Froxlor\FroxlorTwoFactorAuth;
 use Froxlor\Settings;
 use Froxlor\Validate\Check;
 
@@ -183,6 +185,21 @@ class Form
 				}
 			}
 
+			// OTP security validation for sensitive settings
+			if (!Settings::Config('disable_otp_security_check') && isset($fielddata['required_otp']) && $do_show) {
+				$otp_enabled_system = (bool)Settings::Get('2fa.enabled');
+				$otp_enabled_user = (int)CurrentUser::getField('type_2fa') != 0;
+				$do_show = !$fielddata['required_otp'] || ($otp_enabled_system && $otp_enabled_user);
+				if (!$do_show) {
+					$fielddata['note'] = lng('serversettings.option_requires_otp');
+					if (!$otp_enabled_system) {
+						$fielddata['note'] .= '<br>' . lng('2fa.2fa_not_activated');
+					} elseif (!$otp_enabled_user) {
+						$fielddata['note'] .= '<br>' . lng('2fa.2fa_not_activated_for_user');
+					}
+				}
+			}
+
 			if (!$do_show) {
 				$fielddata['visible'] = false;
 			}
@@ -232,7 +249,7 @@ class Form
 							if (((isset($fielddetails['visible']) && $fielddetails['visible']) || !isset($fielddetails['visible'])) && (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option'])))) {
 								$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
 								if ($newfieldvalue != $fielddetails['value']) {
-									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) != true) {
+									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
 										Response::standardError($error, $fieldname);
 									} else {
 										$changed_fields[$fieldname] = $newfieldvalue;
@@ -283,6 +300,38 @@ class Form
 										}
 									}
 								}
+								if (!Settings::Config('disable_otp_security_check') && isset($fielddetails['required_otp']) && isset($changed_fields[$fieldname])) {
+									$otp_enabled_system = (bool)Settings::Get('2fa.enabled');
+									$otp_enabled_user = (int)CurrentUser::getField('type_2fa') != 0;
+									$do_update = !$fielddetails['required_otp'] || ($otp_enabled_system && $otp_enabled_user);
+									if ($do_update) {
+										// setting that requires OTP verification
+										if (empty($input['otp_verification'])) {
+											// in case email 2fa is enabled, send it now
+											CurrentUser::sendOtpEmail();
+											// build up form
+											if (is_array($url_params) && isset($url_params['filename'])) {
+												$filename = $url_params['filename'];
+												unset($url_params['filename']);
+											} else {
+												$filename = '';
+											}
+											HTML::askOTP('please_enter_otp', $filename, array_merge($url_params, $submitted_fields));
+										} else {
+											// validate given OTP code
+											$code = trim($input['otp_verification']);
+											$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
+											$result = $tfa->verifyCode(CurrentUser::getField('data_2fa'), $code, 3);
+											if (!$result) {
+												Response::standardError('otpnotvalidated');
+											}
+										}
+									} else {
+										// do not update this setting
+										unset($changed_fields[$fieldname]);
+									}
+								}
+
 							}
 						}
 					}

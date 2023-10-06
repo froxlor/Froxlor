@@ -25,6 +25,8 @@
 
 namespace Froxlor\UI;
 
+use Froxlor\Settings;
+
 class HTML
 {
 
@@ -116,7 +118,7 @@ class HTML
 						'label' => $navlabel,
 						'icon' => $icon,
 						'items' => $navigation_links,
-						'active' => $box_active
+						'active' => ((int)Settings::Get('panel.menu_collapsed') == 0 ? 1 : $box_active)
 					];
 				}
 			}
@@ -218,6 +220,19 @@ class HTML
 				'chk_text' => $chk_text,
 				'show' => $show_checkbox
 			]
+		]);
+		exit();
+	}
+
+	public static function askOTP(string $text, string $targetfile, array $params = [], string $replacer = '', array $back_link = [])
+	{
+		$text = lng('question.' . $text, [htmlspecialchars($replacer)]);
+
+		Panel\UI::view('form/otpquestion.html.twig', [
+			'action' => $targetfile,
+			'url_params' => $params,
+			'question' => $text,
+			'back_link' => $back_link
 		]);
 		exit();
 	}

@@ -137,7 +137,8 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => '/etc/init.d/dkim-filter restart',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'required_otp' => true
 				]
 			]
 		]

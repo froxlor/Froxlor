@@ -29,6 +29,7 @@ namespace Froxlor\UI\Panel;
 
 use Froxlor\Idna\IdnaWrapper;
 use Froxlor\Settings;
+use Froxlor\System\Markdown;
 use Parsedown;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -53,9 +54,9 @@ class FroxlorTwig extends AbstractExtension
 				$this,
 				'idnDecodeFilter'
 			]),
-			new TwigFilter('parsedown', [
+			new TwigFilter('markdown', [
 				$this,
-				'callParsedown'
+				'callMarkdown'
 			])
 		];
 	}
@@ -148,10 +149,9 @@ class FroxlorTwig extends AbstractExtension
 		return UI::getLinker()->getLink($linkopts);
 	}
 
-	public function callParsedown($string)
+	public function callMarkdown($string): string
 	{
-		$pd = new Parsedown();
-		return $pd->line($string);
+		return Markdown::cleanCustomNotes($string ?? "");
 	}
 
 	/**

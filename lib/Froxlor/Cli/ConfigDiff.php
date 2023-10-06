@@ -45,6 +45,9 @@ final class ConfigDiff extends CliCommand
 			->addOption('diff-params', '', InputOption::VALUE_REQUIRED, 'Additional parameters for `diff`, e.g. --diff-params="--color=always"');
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		require Froxlor::getInstallDir() . '/lib/functions.php';

@@ -31,6 +31,7 @@ use Froxlor\Api\Commands\Froxlor as Froxlor;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
+use Froxlor\Language;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\System\Crypt;
@@ -38,7 +39,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
-use Froxlor\Language;
 
 $id = (int)Request::any('id');
 
@@ -197,107 +197,104 @@ if ($page == 'overview') {
 		'outstanding_tasks' => $outstanding_tasks,
 		'cron_last_runs' => $cron_last_runs
 	]);
-} elseif ($page == 'change_password') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$old_password = Validate::validate($_POST['old_password'], 'old password');
+} elseif ($page == 'profile') {
+	$languages = Language::getLanguages();
 
-		if (!Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
-			Response::standardError('oldpasswordnotcorrect');
-		}
+	if (!empty($_POST)) {
+		if ($_POST['send'] == 'changepassword') {
+			$old_password = Validate::validate($_POST['old_password'], 'old password');
 
-		try {
-			$new_password = Crypt::validatePassword($_POST['new_password'], 'new password');
-			$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
+			if (!Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
+				Response::standardError('oldpasswordnotcorrect');
+			}
 
-		if ($old_password == '') {
-			Response::standardError([
-				'stringisempty',
-				'changepassword.old_password'
-			]);
-		} elseif ($new_password == '') {
-			Response::standardError([
-				'stringisempty',
-				'changepassword.new_password'
-			]);
-		} elseif ($new_password_confirm == '') {
-			Response::standardError([
-				'stringisempty',
-				'changepassword.new_password_confirm'
-			]);
-		} elseif ($new_password != $new_password_confirm) {
-			Response::standardError('newpasswordconfirmerror');
-		} else {
 			try {
-				Admins::getLocal($userinfo, [
-					'id' => $userinfo['adminid'],
-					'admin_password' => $new_password
-				])->update();
+				$new_password = Crypt::validatePassword($_POST['new_password'], 'new password');
+				$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
-			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'changed password');
+
+			if ($old_password == '') {
+				Response::standardError([
+					'stringisempty',
+					'changepassword.old_password'
+				]);
+			} elseif ($new_password == '') {
+				Response::standardError([
+					'stringisempty',
+					'changepassword.new_password'
+				]);
+			} elseif ($new_password_confirm == '') {
+				Response::standardError([
+					'stringisempty',
+					'changepassword.new_password_confirm'
+				]);
+			} elseif ($new_password != $new_password_confirm) {
+				Response::standardError('newpasswordconfirmerror');
+			} else {
+				try {
+					Admins::getLocal($userinfo, [
+						'id' => $userinfo['adminid'],
+						'admin_password' => $new_password
+					])->update();
+				} catch (Exception $e) {
+					Response::dynamicError($e->getMessage());
+				}
+				$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'changed password');
+				Response::redirectTo($filename);
+			}
+		} elseif ($_POST['send'] == 'changetheme') {
+			if (Settings::Get('panel.allow_theme_change_admin') == 1) {
+				$theme = Validate::validate($_POST['theme'], 'theme');
+				try {
+					Admins::getLocal($userinfo, [
+						'id' => $userinfo['adminid'],
+						'theme' => $theme
+					])->update();
+				} catch (Exception $e) {
+					Response::dynamicError($e->getMessage());
+				}
+
+				$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
+			}
+			Response::redirectTo($filename);
+		} elseif ($_POST['send'] == 'changelanguage') {
+			$def_language = Validate::validate($_POST['def_language'], 'default language');
+
+			if (isset($languages[$def_language])) {
+				try {
+					Admins::getLocal($userinfo, [
+						'id' => $userinfo['adminid'],
+						'def_language' => $def_language
+					])->update();
+					CurrentUser::setField('language', $def_language);
+				} catch (Exception $e) {
+					Response::dynamicError($e->getMessage());
+				}
+			}
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
 			Response::redirectTo($filename);
 		}
 	} else {
-		UI::view('user/change_password.html.twig');
-	}
-} elseif ($page == 'change_language') {
-	$languages = Language::getLanguages();
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$def_language = Validate::validate($_POST['def_language'], 'default language');
-
-		if (isset($languages[$def_language])) {
-			try {
-				Admins::getLocal($userinfo, [
-					'id' => $userinfo['adminid'],
-					'def_language' => $def_language
-				])->update();
-				CurrentUser::setField('language', $def_language);
-			} catch (Exception $e) {
-				Response::dynamicError($e->getMessage());
-			}
+		// change theme
+		$default_theme = Settings::Get('panel.default_theme');
+		if ($userinfo['theme'] != '') {
+			$default_theme = $userinfo['theme'];
 		}
-		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
-		Response::redirectTo($filename);
-	} else {
+		$themes_avail = UI::getThemes();
+
+		// change language
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		UI::view('user/change_language.html.twig', [
-			'languages' => $languages,
-			'default_lang' => $default_lang
-		]);
-	}
-} elseif ($page == 'change_theme') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$theme = Validate::validate($_POST['theme'], 'theme');
-		try {
-			Admins::getLocal($userinfo, [
-				'id' => $userinfo['adminid'],
-				'theme' => $theme
-			])->update();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-
-		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
-		Response::redirectTo($filename);
-	} else {
-		$default_theme = Settings::Get('panel.default_theme');
-		if ($userinfo['theme'] != '') {
-			$default_theme = $userinfo['theme'];
-		}
-
-		$themes_avail = UI::getThemes();
-
-		UI::view('user/change_theme.html.twig', [
+		UI::view('user/profile.html.twig', [
 			'themes' => $themes_avail,
-			'default_theme' => $default_theme
+			'default_theme' => $default_theme,
+			'languages' => $languages,
+			'default_lang' => $default_lang,
 		]);
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_admin') == '1') {

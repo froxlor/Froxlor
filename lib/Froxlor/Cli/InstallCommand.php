@@ -26,13 +26,13 @@
 namespace Froxlor\Cli;
 
 use Exception;
-use Froxlor\Froxlor;
 use Froxlor\Config\ConfigParser;
+use Froxlor\Froxlor;
 use Froxlor\Install\Install;
 use Froxlor\Install\Install\Core;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -53,7 +53,10 @@ final class InstallCommand extends Command
 			->addOption('create-userdata-from-str', 'c', InputOption::VALUE_REQUIRED, 'Creates lib/userdata.inc.php file from string created by web-install process');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	/**
+	 * @throws Exception
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$result = self::SUCCESS;
 
@@ -137,10 +140,12 @@ final class InstallCommand extends Command
 			$decoded_input = [];
 		}
 
-		$result = $this->showStep(0, $extended, $decoded_input);
-		return $result;
+		return $this->showStep(0, $extended, $decoded_input);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private function showStep(int $step = 0, bool $extended = false, array $decoded_input = []): int
 	{
 		$result = self::SUCCESS;

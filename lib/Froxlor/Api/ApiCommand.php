@@ -272,7 +272,8 @@ abstract class ApiCommand extends ApiParameter
 			$ops = [
 				'<',
 				'>',
-				'='
+				'=',
+				'<>'
 			];
 			$first = true;
 			foreach ($search as $field => $valoper) {
@@ -396,6 +397,7 @@ abstract class ApiCommand extends ApiParameter
 
 			$nat_fields = [
 				'`c`.`loginname`',
+				'`c`.`name`',
 				'`a`.`loginname`',
 				'`adminname`',
 				'`databasename`',

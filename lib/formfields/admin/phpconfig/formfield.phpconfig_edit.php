@@ -47,7 +47,8 @@ return [
 						'label' => lng('admin.phpsettings.binary'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => $result['binary']
+						'value' => $result['binary'],
+						'required_otp' => true
 					],
 					'fpmconfig' => [
 						'visible' => Settings::Get('phpfpm.enabled') == 1,
@@ -62,7 +63,8 @@ return [
 						'desc' => lng('admin.phpsettings.file_extensions_note'),
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => $result['file_extensions']
+						'value' => $result['file_extensions'],
+						'required_otp' => true
 					],
 					'mod_fcgid_starter' => [
 						'visible' => Settings::Get('system.mod_fcgid') == 1,
@@ -185,7 +187,8 @@ return [
 						'cols' => 80,
 						'rows' => 20,
 						'value' => $result['phpsettings'],
-						'mandatory' => true
+						'mandatory' => true,
+						'required_otp' => true
 					],
 					'allow_all_customers' => [
 						'label' => lng('serversettings.phpfpm_settings.allow_all_customers.title'),

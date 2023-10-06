@@ -731,9 +731,6 @@ return [
 		'aliasdomains' => 'Alias dominios',
 		'redirectifpathisurl' => 'Código de redirección (por defecto: vacío)',
 		'redirectifpathisurlinfo' => 'Sólo tiene que seleccionar una de estas opciones si ha introducido una URL como ruta<br/><strong class="text-danger">NOTA:</strong> Los cambios sólo se aplican si la ruta indicada es una URL.',
-		'issubof' => 'Este dominio es un subdominio de otro dominio',
-		'issubofinfo' => 'Si desea añadir un subdominio como dominio completo, deberá establecerlo en el dominio correcto (por ejemplo, si desea añadir "www.domain.tld", deberá seleccionar "dominio.tld").',
-		'nosubtomaindomain' => 'No es subdominio de un dominio completo',
 		'ipandport_multi' => [
 			'title' => 'Direcciones IP',
 			'description' => 'Especifique una o más direcciones IP para el dominio.<br/><br/><div class="text-danger">NOTA: Las direcciones IP no pueden cambiarse cuando el dominio está configurado como <strong>alias-dominio</strong> de otro dominio.</div>'
@@ -840,7 +837,6 @@ return [
 		'destinationalreadyexistasmail' => 'El remitente a %s ya existe como dirección de correo electrónico activa.',
 		'destinationalreadyexist' => 'Ya ha definido un reenviador para "%s".',
 		'destinationiswrong' => 'La %s la redirección contiene caracteres no válidos o está incompleta.',
-		'backupfoldercannotbedocroot' => 'La carpeta para las copias de seguridad no puede ser su carpeta de inicio, elija una carpeta dentro de su carpeta de inicio, por ejemplo, /backups.',
 		'templatelanguagecombodefined' => 'La combinación idioma/plantilla seleccionada ya ha sido definida.',
 		'templatelanguageinvalid' => 'El idioma seleccionado no existe.',
 		'ipstillhasdomains' => 'La combinación IP/Puerto que desea eliminar todavía tiene dominios asignados, por favor reasígnelos a otras combinaciones IP/Puerto antes de eliminar esta combinación IP/Puerto.',
@@ -960,8 +956,6 @@ return [
 		'autoupdate_10' => 'La versión mínima soportada de PHP es 7.4.0',
 		'autoupdate_11' => 'Webupdate está desactivado',
 		'mailaccistobedeleted' => 'Otra cuenta con el mismo nombre (%s) está siendo eliminada y por lo tanto no puede ser añadida en este momento.',
-		'customerhasongoingbackupjob' => 'Ya hay un trabajo de copia de seguridad esperando a ser procesado, por favor sea paciente.',
-		'backupfunctionnotenabled' => 'La función de copia de seguridad no está habilitada',
 		'dns_domain_nodns' => 'DNS no está habilitado para este dominio',
 		'dns_content_empty' => 'No hay contenido',
 		'dns_content_invalid' => 'El contenido DNS no es válido',
@@ -1013,10 +1007,6 @@ return [
 		'execute_perl' => 'Ejecutar perl/CGI',
 		'htpasswdauthname' => 'Razón de autenticación (AuthName)',
 		'directoryprotection_edit' => 'Editar protección de directorio',
-		'backup' => 'Crear copia de seguridad',
-		'backup_web' => 'Copia de seguridad de datos web',
-		'backup_mail' => 'Copia de seguridad de los datos de correo',
-		'backup_dbs' => 'Copia de seguridad de bases de datos',
 		'path_protection_label' => '<strong class="text-danger">Importante</strong>',
 		'path_protection_info' => 'Le recomendamos encarecidamente que proteja la ruta indicada, consulte "Extras" -> "Protección de directorios".'
 	],
@@ -1165,7 +1155,7 @@ Atentamente, su administrador'
 			'extras' => 'Extras',
 			'directoryprotection' => 'Protección de directorios',
 			'pathoptions' => 'Opciones de ruta',
-			'backup' => 'Copia de seguridad'
+			'export' => 'Exportación de datos'
 		],
 		'traffic' => [
 			'traffic' => 'Tráfico',
@@ -1374,7 +1364,6 @@ Atentamente, su administrador'
 		'email_reallydelete_forwarder' => '¿Realmente quieres borrar el forwarder %s?',
 		'extras_reallydelete' => '¿Realmente quieres borrar la protección de directorio de %s?',
 		'extras_reallydelete_pathoptions' => '¿Realmente quieres borrar las opciones de ruta de %s?',
-		'extras_reallydelete_backup' => '¿Realmente quieres abortar el trabajo de copia de seguridad planificado?',
 		'ftp_reallydelete' => '¿Realmente quieres borrar la cuenta FTP %s?',
 		'mysql_reallydelete' => '¿Realmente quieres borrar la base de datos %s? Esto no se puede deshacer.',
 		'admin_configs_reallyrebuild' => '¿Realmente quieres reconstruir todos los archivos de configuración?',
@@ -1390,7 +1379,6 @@ Atentamente, su administrador'
 		'admin_quotas_reallyenforce' => '¿Realmente desea aplicar la cuota por defecto a todos los usuarios? Esto no se puede revertir.',
 		'phpsetting_reallydelete' => '¿Realmente desea eliminar esta configuración? Todos los dominios que usen esta configuración serán cambiados a la configuración por defecto.',
 		'fpmsetting_reallydelete' => '¿Realmente desea eliminar esta configuración de php-fpm? Todas las configuraciones de php que utilicen estos ajustes se cambiarán a la configuración por defecto.',
-		'remove_subbutmain_domains' => '¿Quitar también los dominios que se añaden como dominios completos pero que son subdominios de este dominio?',
 		'customer_reallyunlock' => '¿Realmente quieres desbloquear al cliente %s?',
 		'admin_integritycheck_reallyfix' => '¿Realmente quieres intentar arreglar todos los problemas de integridad de la base de datos automáticamente?',
 		'plan_reallydelete' => '¿De verdad quieres eliminar el plan de alojamiento %s?',
@@ -2034,10 +2022,6 @@ Atentamente, su administrador'
 			'title' => 'Registros DNS CAA adicionales',
 			'description' => 'DNS Certification Authority Authorization (CAA) es un mecanismo de política de seguridad en Internet que permite a los titulares de nombres de dominio indicar a las autoridades de certificación<br/>si están autorizadas a emitir certificados digitales para un nombre de dominio concreto. Lo hace mediante un nuevo registro de recursos del Sistema de Nombres de Dominio (DNS) "CAA".<br/><br/>El contenido de este campo se incluirá en la zona DNS directamente (cada línea da lugar a un registro CAA).<br/>Si Let\'s Encrypt está habilitado para este dominio, esta entrada siempre se añadirá automáticamente y no es necesario añadirla manualmente:<br/> 0<code>issue "letsencrypt.org"</code> (Si el dominio es un dominio comodín, se utilizará issuewild en su lugar).<br/>Para habilitar el informe de incidentes, puede añadir un registro <code>iodef</code>. Un ejemplo para enviar dicho informe a <code>me@example.com</code> sería:<br/> 0<code>iodef "mailto:me@example.com"</code><br/><br/><strong>Atención:</strong> No se comprobará si el código contiene errores. Si contiene errores, ¡es posible que sus registros CAA no funcionen!'
 		],
-		'backupenabled' => [
-			'title' => 'Activar copia de seguridad para clientes',
-			'description' => 'Si se activa, el cliente podrá programar trabajos de copia de seguridad (cron-backup) que generan un archivo dentro de su docroot (subdirectorio a elección del cliente)'
-		],
 		'dnseditorenable' => [
 			'title' => 'Habilitar editor DNS',
 			'description' => 'Permite a los administradores y a los clientes gestionar las entradas DNS del dominio'
@@ -2192,7 +2176,7 @@ Atentamente, su administrador'
 			'toolselect' => 'Analizador de tráfico',
 			'webalizer' => 'Webalizer',
 			'awstats' => 'AWStats',
-			'goaccess' => 'goacccess'
+			'goaccess' => 'goaccess'
 		],
 		'requires_reconfiguration' => 'El cambio de esta configuración podría requerir una reconfiguración de los siguientes servicios:<br/><strong>%s</strong>'
 	],
@@ -2213,8 +2197,6 @@ Atentamente, su administrador'
 		'settingssaved' => 'La configuración se ha guardado correctamente.',
 		'rebuildingconfigs' => 'Tareas insertadas con éxito para reconstruir archivos de configuración',
 		'domain_import_successfully' => 'Se han importado correctamente los dominios %s.',
-		'backupscheduled' => 'Se ha programado su tarea de copia de seguridad. Espere a que se procese.',
-		'backupaborted' => 'Su copia de seguridad programada ha sido cancelada',
 		'dns_record_added' => 'Registro añadido correctamente',
 		'dns_record_deleted' => 'Registro eliminado correctamente',
 		'testmailsent' => 'Correo de prueba enviado correctamente',
@@ -2233,7 +2215,6 @@ Atentamente, su administrador'
 		'DELETE_EMAIL_DATA' => 'Borrar datos de e-mail del cliente.',
 		'DELETE_FTP_DATA' => 'Borrar los datos de la cuenta ftp del cliente.',
 		'REBUILD_CRON' => 'Reconstruir el archivo cron.d',
-		'CREATE_CUSTOMER_BACKUP' => 'Trabajo de copia de seguridad para el cliente %s',
 		'DELETE_DOMAIN_PDNS' => 'Borrar dominio %s de la base de datos PowerDNS',
 		'DELETE_DOMAIN_SSL' => 'Borrar archivos ssl de dominio %s'
 	],

@@ -25,6 +25,8 @@
 
 use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Ftp;
+use Froxlor\UI\Callbacks\Style;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
@@ -51,13 +53,19 @@ return [
 				'label' => lng('panel.shell'),
 				'field' => 'shell',
 				'visible' => Settings::Get('system.allow_customer_shell') == '1'
+			],
+			'login_enabled' => [
+				'label' => lng('panel.active'),
+				'field' => 'login_enabled',
+				'callback' => [Text::class, 'yesno'],
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('ftp_list', [
 			'username',
 			'description',
 			'homedir',
-			'shell'
+			'shell',
+			'login_enabled',
 		]),
 		'actions' => [
 			'edit' => [
@@ -81,6 +89,9 @@ return [
 					'id' => ':id'
 				],
 			]
-		]
+		],
+		'format_callback' => [
+			[Style::class, 'loginDisabled']
+		],
 	]
 ];

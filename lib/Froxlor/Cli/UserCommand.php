@@ -26,15 +26,15 @@
 namespace Froxlor\Cli;
 
 use Exception;
-use Symfony\Component\Console\Input\InputInterface;
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Froxlor;
+use Froxlor\System\Crypt;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Froxlor\Api\Commands\Admins;
-use Froxlor\Api\Commands\Customers;
-use Froxlor\System\Crypt;
-use Froxlor\Froxlor;
 
 final class UserCommand extends CliCommand
 {
@@ -50,11 +50,11 @@ final class UserCommand extends CliCommand
 			->addOption('show-info', 's', InputOption::VALUE_NONE, 'Output information details of given user');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$result = self::SUCCESS;
 
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		require Froxlor::getInstallDir() . '/lib/functions.php';
 

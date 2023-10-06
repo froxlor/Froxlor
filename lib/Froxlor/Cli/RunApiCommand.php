@@ -26,14 +26,12 @@
 namespace Froxlor\Cli;
 
 use Exception;
-use PDO;
-use Symfony\Component\Console\Input\InputInterface;
+use Froxlor\Froxlor;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Froxlor\Database\Database;
-use Froxlor\Froxlor;
 
 final class RunApiCommand extends CliCommand
 {
@@ -48,11 +46,9 @@ final class RunApiCommand extends CliCommand
 		$this->addOption('show-params', 's', InputOption::VALUE_NONE, 'Show possible parameters for given api-command (given command will *not* be called)');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$result = self::SUCCESS;
-
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		require Froxlor::getInstallDir() . '/lib/functions.php';
 
@@ -110,6 +106,9 @@ final class RunApiCommand extends CliCommand
 		return self::SUCCESS;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private function validateCommand(string $command): array
 	{
 		$command = explode(".", $command);

@@ -26,17 +26,19 @@
 namespace Froxlor\UI\Callbacks;
 
 use Froxlor\Settings;
+use Froxlor\System\Markdown;
 
 class Customer
 {
-	public static function isLocked(array $attributes)
+	public static function isLocked(array $attributes): bool
 	{
 		return $attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
 			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'));
 	}
 
-	public static function hasNote(array $attributes)
+	public static function hasNote(array $attributes): bool
 	{
-		return !empty($attributes['fields']['custom_notes']);
+		$cleanNote = Markdown::cleanCustomNotes($attributes['fields']['custom_notes'] ?? "");
+		return !empty($cleanNote);
 	}
 }

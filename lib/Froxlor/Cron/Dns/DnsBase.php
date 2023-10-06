@@ -26,6 +26,7 @@
 namespace Froxlor\Cron\Dns;
 
 use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\PhpHelper;
@@ -210,7 +211,6 @@ abstract class DnsBase
 				`d`.`dkim`,
 				`d`.`dkim_id`,
 				`d`.`dkim_pubkey`,
-				`d`.`ismainbutsubto`,
 				`c`.`loginname`,
 				`c`.`guid`
 			FROM
@@ -219,7 +219,7 @@ abstract class DnsBase
 			WHERE
 				`d`.`isbinddomain` = '1'
 			ORDER BY
-				`d`.`domain` ASC
+				LENGTH(`d`.`domain`), `d`.`domain` ASC
 		");
 
 		$domains = [];
@@ -241,7 +241,6 @@ abstract class DnsBase
 				'bindserial' => date('Ymd') . '00',
 				'dkim' => '0',
 				'iswildcarddomain' => '1',
-				'ismainbutsubto' => '0',
 				'zonefile' => '',
 				'froxlorhost' => '1'
 			];
@@ -257,18 +256,23 @@ abstract class DnsBase
 			if (!isset($domains[$key]['children'])) {
 				$domains[$key]['children'] = [];
 			}
-			if ($domains[$key]['ismainbutsubto'] > 0) {
-				if (isset($domains[$domains[$key]['ismainbutsubto']])) {
-					$domains[$domains[$key]['ismainbutsubto']]['children'][] = $domains[$key]['id'];
-				} else {
-					$domains[$key]['ismainbutsubto'] = 0;
+			if (!isset($domains[$key]['is_child'])) {
+				$domains[$key]['is_child'] = false;
+			}
+			$children = Domain::getMainSubdomainIds($key);
+			if (count($children) > 0) {
+				foreach ($children as $child) {
+					if (isset($domains[$child])) {
+						$domains[$key]['children'][] = $domains[$child]['id'];
+						$domains[$child]['is_child'] = true;
+					}
 				}
 			}
 		}
 
-		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, str_pad('domId', 9, ' ') . str_pad('domain', 40, ' ') . 'ismainbutsubto ' . str_pad('parent domain', 40, ' ') . "list of child domain ids");
+		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, str_pad('domId', 9, ' ') . str_pad('domain', 40, ' ') . "list of child domain ids");
 		foreach ($domains as $domain) {
-			$logLine = str_pad($domain['id'], 9, ' ') . str_pad($domain['domain'], 40, ' ') . str_pad($domain['ismainbutsubto'], 15, ' ') . str_pad(((isset($domains[$domain['ismainbutsubto']])) ? $domains[$domain['ismainbutsubto']]['domain'] : '-'), 40, ' ') . join(', ', $domain['children']);
+			$logLine = str_pad($domain['id'], 9, ' ') . str_pad($domain['domain'], 40, ' ') . join(', ', $domain['children']);
 			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, $logLine);
 		}
 

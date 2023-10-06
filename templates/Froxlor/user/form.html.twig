@@ -31,18 +31,14 @@
 		<div>
 			{% if actions_links is iterable %}
 				{% for link in actions_links %}
-					<a class="btn {{ link.class|default('btn-outline-primary') }}" href="{{ link.href|raw }}">
-						<i class="{{ link.icon|default('fa-solid fa-plus-circle') }}"></i><span class="d-none d-lg-inline ms-lg-1">{{ link.label }}</span>
-					</a>
+					{% if link.visible is not defined or (link.visible is defined and link.visible == true) %}
+						<a class="btn {{ link.class|default('btn-outline-primary') }}" href="{{ link.href|raw }}" {% if link.target is defined %}target="{{ link.target }}"{% endif %}>
+							<i class="{{ link.icon|default('fa-solid fa-plus-circle') }}"></i>
+							{% if link.label is defined and link.label is not empty %}<span class="d-none d-lg-inline ms-lg-1">{{ link.label }}</span>{% endif %}
+						</a>
+					{% endif %}
 				{% endfor %}
 			{% endif %}
-			{# TODO: eventually not used anymore because of using a documentation link
-			{% if entity_info is defined and entity_info is not empty %}
-				<div class="alert alert-info" role="alert">
-					{{ entity_info|raw }}
-				</div>
-			{% endif %}
-			#}
 		</div>
 	{% endif %}
 

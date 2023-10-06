@@ -89,7 +89,18 @@ return [
 						'type' => 'select',
 						'select_var' => $phpconfigs,
 						'selected' => (int)Settings::Get('phpfpm.enabled') == 1 ? Settings::Get('phpfpm.defaultini') : Settings::Get('system.mod_fcgid_defaultini')
-					]
+					],
+					'speciallogfile' => [
+						'label' => lng('admin.speciallogfile.title'),
+						'desc' => lng('admin.speciallogfile.description'),
+						'type' => 'select',
+						'select_var' => [
+							0 => lng('panel.no'),
+							1 => lng('panel.yes'),
+							2 => lng('domain.inherited')
+						],
+						'selected' => 2
+					],
 				]
 			],
 			'section_bssl' => [

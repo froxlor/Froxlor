@@ -211,10 +211,10 @@ class Cronjob
 				'type' => TaskId::DELETE_DOMAIN_SSL,
 				'data' => $data
 			]);
-		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && isset($params[0]) && is_array($params[0])) {
+		} elseif ($type == TaskId::CREATE_CUSTOMER_DATADUMP && isset($params[0]) && is_array($params[0])) {
 			$data = json_encode($params[0]);
 			Database::pexecute($ins_stmt, [
-				'type' => TaskId::CREATE_CUSTOMER_BACKUP,
+				'type' => TaskId::CREATE_CUSTOMER_DATADUMP,
 				'data' => $data
 			]);
 		}
@@ -310,42 +310,37 @@ class Cronjob
 	}
 
 	/**
-	 * Cronjob function to end a cronjob in a critical condition
-	 * but not without sending a notification mail to the admin
+	 * Send notification to system admin via email
 	 *
 	 * @param string $message
 	 * @param string $subject
 	 *
 	 * @return void
 	 */
-	public static function dieWithMail(string $message, string $subject = "[froxlor] Cronjob error")
+	public static function notifyMailToAdmin(string $message, string $subject = "[froxlor] Important notice")
 	{
-		if (Settings::Get('system.send_cron_errors') == '1') {
-			$_mail = new Mailer(true);
-			$_mailerror = false;
-			$mailerr_msg = "";
-			try {
-				$_mail->Subject = $subject;
-				$_mail->AltBody = $message;
-				$_mail->MsgHTML(nl2br($message));
-				$_mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-				$_mail->Send();
-			} catch (\PHPMailer\PHPMailer\Exception $e) {
-				$mailerr_msg = $e->errorMessage();
-				$_mailerror = true;
-			} catch (Exception $e) {
-				$mailerr_msg = $e->getMessage();
-				$_mailerror = true;
-			}
-
-			$_mail->ClearAddresses();
-
-			if ($_mailerror) {
-				echo 'Error sending mail: ' . $mailerr_msg . "\n";
-			}
+		$mail = new Mailer(true);
+		$mailerror = false;
+		$mailerr_msg = "";
+		try {
+			$mail->Subject = $subject;
+			$mail->AltBody = $message;
+			$mail->MsgHTML(nl2br($message));
+			$mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+			$mail->Send();
+		} catch (\PHPMailer\PHPMailer\Exception $e) {
+			$mailerr_msg = $e->errorMessage();
+			$mailerror = true;
+		} catch (Exception $e) {
+			$mailerr_msg = $e->getMessage();
+			$mailerror = true;
 		}
 
-		die($message);
+		$mail->ClearAddresses();
+
+		if ($mailerror) {
+			echo 'Error sending mail: ' . $mailerr_msg . "\n";
+		}
 	}
 
 	/**

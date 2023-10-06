@@ -28,6 +28,7 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Mysqls;
 use Froxlor\Api\Commands\MysqlServer;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
@@ -37,7 +38,6 @@ use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
-use Froxlor\CurrentUser;
 
 // redirect if this customer page is hidden via settings or no resources given
 if (Settings::IsInList('panel.customer_hide_options', 'mysql') || $userinfo['mysqls'] == 0) {
@@ -66,15 +66,20 @@ if ($page == 'overview' || $page == 'mysqls') {
 			Response::dynamicError($e->getMessage());
 		}
 
-		$actions_links = false;
+		$actions_links = [];
 		if (CurrentUser::canAddResource('mysqls')) {
-			$actions_links = [
-				[
-					'href' => $linker->getLink(['section' => 'mysql', 'page' => 'mysqls', 'action' => 'add']),
-					'label' => lng('mysql.database_create')
-				]
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'mysql', 'page' => 'mysqls', 'action' => 'add']),
+				'label' => lng('mysql.database_create')
 			];
 		}
+
+		$actions_links[] = [
+			'href' => 'https://docs.froxlor.org/v2/user-guide/databases/',
+			'target' => '_blank',
+			'icon' => 'fa-solid fa-circle-info',
+			'class' => 'btn-outline-secondary'
+		];
 
 		UI::view('user/table.html.twig', [
 			'listing' => Listing::format($collection, $mysql_list_data, 'mysql_list'),
@@ -179,7 +184,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 					$result_json = MysqlServer::getLocal($userinfo)->listing();
 					$result_decoded = json_decode($result_json, true)['data']['list'];
 					foreach ($result_decoded as $dbserver => $dbdata) {
-						$mysql_servers[$dbserver] = $dbdata['caption'] . ' (' . $dbdata['host'] . (isset($dbdata['port']) && !empty($dbdata['port']) ? ':' . $dbdata['port'] : '').')';
+						$mysql_servers[$dbserver] = $dbdata['caption'] . ' (' . $dbdata['host'] . (isset($dbdata['port']) && !empty($dbdata['port']) ? ':' . $dbdata['port'] : '') . ')';
 					}
 				} catch (Exception $e) {
 					/* just none */

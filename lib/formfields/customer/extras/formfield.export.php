@@ -18,22 +18,26 @@
 use Froxlor\Settings;
 
 return [
-	'backup' => [
-		'title' => lng('extras.backup'),
+	'export' => [
+		'title' => lng('extras.export'),
 		'image' => 'fa-solid fa-server',
 		'sections' => [
 			'section_a' => [
-				'title' => lng('extras.backup'),
-				'image' => 'icons/backup_big.png',
+				'title' => lng('extras.export'),
 				'fields' => [
 					'path' => [
-						'label' => lng('panel.backuppath.title'),
-						'desc' => lng('panel.backuppath.description') . '<br>' . (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescription') : null),
+						'label' => lng('panel.exportpath.title'),
+						'desc' => lng('panel.exportpath.description') . '<br>' . (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescription') : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'selected' => $pathSelect['value'],
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
+					],
+					'pgp_public_key' => [
+						'label' => lng('panel.export_pgp_public_key.title'),
+						'desc' => lng('panel.export_pgp_public_key.description'),
+						'type' => 'textarea',
 					],
 					'path_protection_info' => [
 						'label' => lng('extras.path_protection_label'),
@@ -41,20 +45,20 @@ return [
 						'value' => lng('extras.path_protection_info'),
 						'classes' => 'fw-bold text-danger'
 					],
-					'backup_web' => [
-						'label' => lng('extras.backup_web'),
+					'dump_web' => [
+						'label' => lng('extras.dump_web'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
 					],
-					'backup_mail' => [
-						'label' => lng('extras.backup_mail'),
+					'dump_mail' => [
+						'label' => lng('extras.dump_mail'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
 					],
-					'backup_dbs' => [
-						'label' => lng('extras.backup_dbs'),
+					'dump_dbs' => [
+						'label' => lng('extras.dump_dbs'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true

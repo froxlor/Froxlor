@@ -43,11 +43,9 @@ final class SwitchServerIp extends CliCommand
 			->addOption('list', 'l', InputOption::VALUE_NONE, 'List all IP addresses currently added for this server in froxlor');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$result = self::SUCCESS;
-
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		if ($result == self::SUCCESS && $input->getOption('list') == false && $input->getOption('switch') == false) {
 			$output->writeln('<error>Either --list or --switch option must be provided. Nothing to do, exiting.</>');
@@ -83,6 +81,7 @@ final class SwitchServerIp extends CliCommand
 		$ip_list = $input->getOption('switch');
 
 		$has_error = false;
+		$ips_to_switch = [];
 		foreach ($ip_list as $ips_combo) {
 			$ip_pair = explode(",", $ips_combo);
 			if (count($ip_pair) != 2) {

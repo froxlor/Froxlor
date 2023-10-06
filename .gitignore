@@ -13,6 +13,7 @@ logs/*
 *~
 .well-known
 .idea
+.DS_Store
 *.iml
 img/
 vendor/

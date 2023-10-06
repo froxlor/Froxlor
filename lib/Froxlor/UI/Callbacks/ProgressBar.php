@@ -95,7 +95,7 @@ class ProgressBar
 		$skip_customer_traffic = false;
 		try {
 			$attributes['fields']['deactivated'] = 0;
-			$result = Traffic::getCustomerStats($attributes['fields'], 'currentmonth');
+			$result = Traffic::getCustomerStats($attributes['fields'], 'currentmonth', true);
 		} catch (Exception $e) {
 			if ($e->getCode() === 405) {
 				$skip_customer_traffic = true;

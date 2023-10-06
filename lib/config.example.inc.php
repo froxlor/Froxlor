@@ -11,4 +11,9 @@ return [
 	 * updates the way the providers does it (e.g. automation, etc.)
 	 */
 	'enable_webupdate' => false,
+
+	/**
+	 * @todo description
+	 */
+	'disable_otp_security_check' => false,
 ];

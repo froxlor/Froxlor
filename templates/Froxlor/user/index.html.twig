@@ -41,6 +41,9 @@
 				{{ dashboard.ditem('customer.emails', userinfo.emails, userinfo.emails_used) }}
 				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used, null, false, userinfo.mailspace_used) }}
 				{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, userinfo.email_forwarders_used) }}
+				{% if get_setting('system.mail_quota_enabled') and userinfo.email_quota != '0' %}
+					{{ dashboard.ditem('customer.email_quota', userinfo.email_quota_bytes, userinfo.email_quota_bytes_used, null, true) }}
+				{% endif %}
 				{{ dashboard.ditem('customer.ftps', userinfo.ftps, userinfo.ftps_used) }}
 			</div>
 		{% endif %}
@@ -133,12 +136,12 @@
 					</ul>
 				</div>
 
-				{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+				{% if userinfo.custom_notes|markdown is not empty and userinfo.custom_notes_show == 1 %}
 					<div class="card mb-3">
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
 								<div class="ms-2 me-auto">
-									{{ userinfo.custom_notes|nl2br|raw }}
+									{{ userinfo.custom_notes|markdown|raw }}
 								</div>
 							</li>
 						</ul>
@@ -260,10 +263,10 @@
 								</div>
 							</li>
 						{% endif %}
-						{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+						{% if userinfo.custom_notes|markdown is not empty and userinfo.custom_notes_show == 1 %}
 							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
 								<div class="ms-2 me-auto">
-									{{ userinfo.custom_notes|nl2br|raw }}
+									{{ userinfo.custom_notes|markdown|raw }}
 								</div>
 							</li>
 						{% endif %}

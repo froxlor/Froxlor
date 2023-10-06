@@ -88,8 +88,11 @@ class Emails extends ApiCommand implements ResourceEntity
 			$domain_check = $this->apiCall('SubDomains.get', [
 				'domainname' => $domain
 			], true);
-			if ($domain_check['isemaildomain'] == 0) {
+			if ((int)$domain_check['isemaildomain'] == 0) {
 				Response::standardError('maindomainnonexist', $domain, true);
+			}
+			if ((int)$domain_check['deactivated'] == 1) {
+				Response::standardError('maindomaindeactivated', $domain, true);
 			}
 
 			if (Settings::Get('catchall.catchall_enabled') != '1') {

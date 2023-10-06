@@ -28,6 +28,7 @@ namespace Froxlor\Cron\Http;
 use Froxlor\Cron\Http\LetsEncrypt\AcmeSh;
 use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
@@ -186,5 +187,19 @@ class HttpConfigBase
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Get the filename for the virtualhost
+	 */
+	protected function getVhostFilename(array $domain, bool $ssl_vhost = false, bool $filename_only = false)
+	{
+		// number of dots in a domain specifies its position (and depth of subdomain) starting at 35 going downwards on higher depth
+		$vhost_no = (string)(35 - substr_count($domain['domain'], ".") + 1);
+		$filename = $vhost_no . '_froxlor_' . ($ssl_vhost ? 'ssl' : 'normal') . '_vhost_' . $domain['domain'] . '.conf';
+		if ($filename_only) {
+			return $filename;
+		}
+		return FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $filename);
 	}
 }

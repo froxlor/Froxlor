@@ -265,7 +265,7 @@ return [
 						'extras.directoryprotection' => lng('menue.extras.extras') . " / " . lng('menue.extras.directoryprotection'),
 						'extras.pathoptions' => lng('menue.extras.extras') . " / " . lng('menue.extras.pathoptions'),
 						'extras.logger' => lng('menue.extras.extras') . " / " . lng('menue.logger.logger'),
-						'extras.backup' => lng('menue.extras.extras') . " / " . lng('menue.extras.backup'),
+						'extras.export' => lng('menue.extras.extras') . " / " . lng('menue.extras.export'),
 						'traffic' => lng('menue.traffic.traffic'),
 						'traffic.http' => lng('menue.traffic.traffic') . " / HTTP",
 						'traffic.ftp' => lng('menue.traffic.traffic') . " / FTP",
@@ -337,7 +337,15 @@ return [
 					'image_name' => 'logo_login',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
-				]
+				],
+				'panel_menu_collapsed' => [
+					'label' => lng('serversettings.panel_menu_collapsed'),
+					'settinggroup' => 'panel',
+					'varname' => 'menu_collapsed',
+					'type' => 'checkbox',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+				],
 			]
 		]
 	]

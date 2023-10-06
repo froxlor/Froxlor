@@ -48,15 +48,16 @@ final class ValidateAcmeWebroot extends CliCommand
 		$this->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Do not ask for confirmation, update files if necessary');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	/**
+	 * @throws \Exception
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$result = self::SUCCESS;
-
-		$result = $this->validateRequirements($input, $output, true);
+		$result = $this->validateRequirements($output, true);
 
 		$io = new SymfonyStyle($input, $output);
 
-		if ((int) Settings::Get('system.leenabled') == 0) {
+		if ((int)Settings::Get('system.leenabled') == 0) {
 			$io->info("Let's Encrypt not activated in froxlor settings.");
 			$result = self::INVALID;
 		}
@@ -94,7 +95,7 @@ final class ValidateAcmeWebroot extends CliCommand
 					$acmesh_challenge_dir = $recommended;
 					// need to update the corresponding acme-alias config-file
 					$acme_alias_file = Settings::Get('system.letsencryptacmeconf');
-					$sed_params = "s@".$former_value."@" . $acmesh_challenge_dir . "@";
+					$sed_params = "s@" . $former_value . "@" . $acmesh_challenge_dir . "@";
 					FileDir::safe_exec('sed -i -e "' . $sed_params . '" ' . escapeshellarg($acme_alias_file));
 					$count_changes++;
 				}
@@ -138,8 +139,6 @@ final class ValidateAcmeWebroot extends CliCommand
 								$io->info("Domain '" . $domain . "' Le_Webroot value is correct");
 							}
 							break;
-						} else {
-							continue;
 						}
 					}
 				}

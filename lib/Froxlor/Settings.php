@@ -129,7 +129,8 @@ class Settings
 	{
 		// set defaults
 		self::$conf = [
-			'enable_webupdate' => false
+			'enable_webupdate' => false,
+			'disable_otp_security_check' => false,
 		];
 
 		$configfile = Froxlor::getInstallDir() . '/lib/config.inc.php';

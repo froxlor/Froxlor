@@ -25,6 +25,7 @@
 
 namespace Froxlor\Cli;
 
+use Exception;
 use Froxlor\Config\ConfigParser;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
@@ -40,9 +41,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigServices extends CliCommand
 {
-
 	private $yes_to_all_supported = [
-		/* 'bookworm', */
+		'bookworm',
 		'bionic',
 		'bullseye',
 		'buster',
@@ -62,11 +62,9 @@ final class ConfigServices extends CliCommand
 			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Install packages without asking questions (Debian/Ubuntu only currently)');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$result = self::SUCCESS;
-
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		require Froxlor::getInstallDir() . '/lib/functions.php';
 
@@ -93,7 +91,7 @@ final class ConfigServices extends CliCommand
 		if ($result == self::SUCCESS) {
 			$io = new SymfonyStyle($input, $output);
 			if ($input->getOption('create')) {
-				$result = $this->createConfig($input, $output, $io);
+				$result = $this->createConfig($output, $io);
 			} elseif ($input->getOption('apply')) {
 				$result = $this->applyConfig($input, $output, $io);
 			} elseif ($input->getOption('list') || $input->getOption('daemon')) {
@@ -158,7 +156,10 @@ final class ConfigServices extends CliCommand
 		fclose($fp);
 	}
 
-	private function createConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io)
+	/**
+	 * @throws Exception
+	 */
+	private function createConfig(OutputInterface $output, SymfonyStyle $io): int
 	{
 		$_daemons_config = [
 			'distro' => ""
@@ -285,7 +286,10 @@ final class ConfigServices extends CliCommand
 		return self::SUCCESS;
 	}
 
-	private function applyConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io)
+	/**
+	 * @throws Exception
+	 */
+	private function applyConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io): int
 	{
 		$applyFile = $input->getOption('apply');
 
@@ -429,7 +433,10 @@ final class ConfigServices extends CliCommand
 		}
 	}
 
-	private function getReplacerArray()
+	/**
+	 * @throws Exception
+	 */
+	private function getReplacerArray(): array
 	{
 		$customer_tmpdir = '/tmp/';
 		if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '') {
@@ -438,7 +445,7 @@ final class ConfigServices extends CliCommand
 			$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
 		}
 
-		// try to convert namserver hosts to ip's
+		// try to convert nameserver hosts to ip's
 		$ns_ips = "";
 		$known_ns_ips = [];
 		if (Settings::Get('system.nameservers') != '') {
@@ -484,12 +491,12 @@ final class ConfigServices extends CliCommand
 		Database::needSqlData();
 		$sql = Database::getSqlData();
 
-		$replace_arr = [
+		return [
 			'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 			'<SQL_UNPRIVILEGED_PASSWORD>' => $sql['passwd'],
 			'<SQL_DB>' => $sql['db'],
 			'<SQL_HOST>' => $sql['host'],
-			'<SQL_SOCKET>' => isset($sql['socket']) ? $sql['socket'] : null,
+			'<SQL_SOCKET>' => $sql['socket'] ?? null,
 			'<SERVERNAME>' => Settings::Get('system.hostname'),
 			'<SERVERIP>' => Settings::Get('system.ipaddress'),
 			'<NAMESERVERS>' => Settings::Get('system.nameservers'),
@@ -508,6 +515,5 @@ final class ConfigServices extends CliCommand
 			'<SSL_CERT_FILE>' => Settings::Get('system.ssl_cert_file'),
 			'<SSL_KEY_FILE>' => Settings::Get('system.ssl_key_file'),
 		];
-		return $replace_arr;
 	}
 }

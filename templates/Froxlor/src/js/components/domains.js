@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
 	// disable unusable php-configuration by customer settings
 	$('#customerid').on('change', function () {
@@ -36,7 +36,7 @@ $(function() {
 			$('#speciallogfile').removeClass('is-invalid');
 			$('#speciallogverified').val(0);
 			$.ajax({
-				url: "admin_domains.php?page=overview&action=jqSpeciallogfileNote",
+				url: window.location.pathname.substring(1) + "?page=overview&action=jqSpeciallogfileNote",
 				type: "POST",
 				data: {
 					id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
@@ -82,6 +82,26 @@ $(function() {
 			$('#section_bssl').show();
 			$('#section_c').show();
 			$('#section_d').show();
+		}
+	})
+
+	/**
+	 * ssl enabled domain - hide unnecessary/unused sections
+	 */
+	if ($('#id') && !$('#sslenabled').is(':checked')) {
+		$('#section_bssl>.formfields>.row').not(":first").addClass("d-none");
+	}
+
+	/**
+	 * toggle show/hide of sections in case of ssl enabled flag
+	 */
+	$('#sslenabled').on('click', function () {
+		if ($(this).is(':checked')) {
+			// show sections
+			$('#section_bssl>.formfields>.row').removeClass("d-none");
+		} else {
+			// hide unnecessary sections
+			$('#section_bssl>.formfields>.row').not(":first").addClass("d-none");
 		}
 	})
 });

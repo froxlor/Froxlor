@@ -104,7 +104,18 @@ return [
 						'type' => 'select',
 						'select_var' => $phpconfigs,
 						'selected' => $result['phpsettingid']
-					]
+					],
+					'speciallogfile' => [
+						'label' => lng('admin.speciallogfile.title'),
+						'desc' => lng('admin.speciallogfile.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['speciallogfile']
+					],
+					'speciallogverified' => [
+						'type' => 'hidden',
+						'value' => '0'
+					],
 				]
 			],
 			'section_bssl' => [

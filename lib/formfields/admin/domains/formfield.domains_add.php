@@ -60,12 +60,6 @@ return [
 						'type' => 'select',
 						'select_var' => $domains
 					],
-					'issubof' => [
-						'label' => lng('domains.issubof'),
-						'desc' => lng('domains.issubofinfo'),
-						'type' => 'select',
-						'select_var' => $subtodomains
-					],
 					'caneditdomain' => [
 						'label' => lng('admin.domain_editable.title'),
 						'desc' => lng('admin.domain_editable.desc'),

@@ -25,10 +25,14 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\CurrentUser;
+use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
+use Froxlor\System\Markdown;
 use Froxlor\UI\Panel\UI;
 use Froxlor\User;
+use PDO;
 
 class Text
 {
@@ -37,6 +41,14 @@ class Text
 		return [
 			'macro' => 'boolean',
 			'data' => (bool)$attributes['data']
+		];
+	}
+
+	public static function yesno(array $attributes): array
+	{
+		return [
+			'macro' => 'boolean',
+			'data' => $attributes['data'] == 'Y'
 		];
 	}
 
@@ -82,7 +94,7 @@ class Text
 			'entry' => $attributes['fields']['id'],
 			'id' => 'cnModal' . $attributes['fields']['id'],
 			'title' => lng('usersettings.custom_notes.title') . ': ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
-			'body' => nl2br($note)
+			'body' => nl2br(Markdown::cleanCustomNotes($note))
 		];
 	}
 
@@ -102,6 +114,46 @@ class Text
 			'id' => 'akModal' . $attributes['fields']['id'],
 			'title' => 'API-key ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
 			'action' => 'apikeys',
+			'body' => $body
+		];
+	}
+
+	public static function domainDuplicateModal(array $attributes): array
+	{
+		$linker = UI::getLinker();
+		$result = $attributes['fields'];
+
+		$customers = [
+			0 => lng('panel.please_choose')
+		];
+		$result_customers_stmt = Database::prepare("
+			SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (CurrentUser::getField('customers_see_all') ? '' : " WHERE `adminid` = :adminid ") . "
+			ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC
+		");
+		$params = [];
+		if (CurrentUser::getField('customers_see_all') == '0') {
+			$params['adminid'] = CurrentUser::getField('adminid');
+		}
+		Database::pexecute($result_customers_stmt, $params);
+
+		while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$customers[$row_customer['customerid']] = User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')';
+		}
+
+		$domdup_data = include Froxlor::getInstallDir() . '/lib/formfields/admin/domains/formfield.domains_duplicate.php';
+
+		$body = UI::twig()->render(UI::validateThemeTemplate('/user/inline-form.html.twig'), [
+			'formaction' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'duplicate']),
+			'formdata' => $domdup_data['domain_duplicate'],
+			'editid' => $attributes['fields']['id'],
+			'nosubmit' => 0
+		]);
+		return [
+			'entry' => $attributes['fields']['id'],
+			'id' => 'ddModal' . $attributes['fields']['id'],
+			'title' => lng('admin.domain_duplicate_named', [$attributes['fields']['domain']]),
+			'action' => 'duplicate',
 			'body' => $body
 		];
 	}

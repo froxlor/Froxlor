@@ -40,6 +40,7 @@ return [
 			'p.name' => [
 				'label' => lng('admin.plans.name'),
 				'field' => 'name',
+				'isdefaultsearchfield' => true,
 			],
 			'p.description' => [
 				'label' => lng('admin.plans.description'),

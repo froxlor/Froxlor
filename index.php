@@ -26,6 +26,7 @@
 const AREA = 'login';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\Api\FroxlorRPC;
 use Froxlor\CurrentUser;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
@@ -37,6 +38,7 @@ use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\System\Crypt;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
@@ -732,6 +734,58 @@ if ($action == 'resetpwd') {
 	} else {
 		Response::redirectTo('index.php');
 	}
+}
+
+// one-time link login
+if ($action == 'll') {
+	if (!Froxlor::hasUpdates() && !Froxlor::hasDbUpdates()) {
+		$loginname = Request::get('ln');
+		$hash = Request::get('h');
+		if ($loginname && $hash) {
+			$sel_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_LOGINLINKS . "`
+				WHERE `loginname` = :loginname AND `hash` = :hash
+			");
+			try {
+				$entry = Database::pexecute_first($sel_stmt, ['loginname' => $loginname, 'hash' => $hash]);
+			} catch (Exception $e) {
+				$entry = false;
+			}
+			if ($entry) {
+				// delete entry
+				$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_LOGINLINKS . "` WHERE `loginname` = :loginname AND `hash` = :hash");
+				Database::pexecute($del_stmt, ['loginname' => $loginname, 'hash' => $hash]);
+				if (time() <= $entry['valid_until']) {
+					$valid = true;
+					// validate source ip if specified
+					if (!empty($entry['allowed_from'])) {
+						$valid = false;
+						$ip_list = explode(",", $entry['allowed_from']);
+						if (FroxlorRPC::validateAllowedFrom($ip_list, $_SERVER['REMOTE_ADDR'])) {
+							$valid = true;
+						}
+					}
+					if ($valid) {
+						// login user / select only non-deactivated (in case the user got deactivated after generating the link)
+						$userinfo_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname`= :loginname AND `deactivated` = 0");
+						try {
+							$userinfo = Database::pexecute_first($userinfo_stmt, [
+								"loginname" => $loginname
+							]);
+						} catch (Exception $e) {
+							$userinfo = false;
+						}
+						if ($userinfo) {
+							$userinfo['userid'] = $userinfo['customerid'];
+							$userinfo['adminsession'] = 0;
+							finishLogin($userinfo);
+						}
+					}
+				}
+			}
+		}
+	}
+	Response::redirectTo('index.php');
 }
 
 function finishLogin($userinfo)

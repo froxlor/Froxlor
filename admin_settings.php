@@ -70,14 +70,15 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		// check if the session timeout is too low #815
 		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] < 60) {
-			Response::standardError(lng('error.session_timeout'), lng('error.session_timeout_desc'));
+			Response::standardError(['session_timeout', 'session_timeout_desc']);
 		}
 
 		try {
 			if (Form::processForm($settings_data, $_POST, [
 				'filename' => $filename,
 				'action' => $action,
-				'page' => $page
+				'page' => $page,
+				'part' => $_part,
 			], $_part, $settings_all, $settings_part, $only_enabledisable)) {
 				$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
@@ -132,7 +133,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			}
 		}
 	} else {
-		Response::standardError(lng('error.no_phpinfo'));
+		Response::standardError('error.no_phpinfo');
 	}
 	UI::view('settings/phpinfo.html.twig', [
 		'phpversion' => PHP_VERSION,
