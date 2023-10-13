@@ -1078,10 +1078,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = [];
-			$customer_stdsubs = [];
 			foreach ($custom_list_result as $customer) {
 				$customer_ids[] = $customer['customerid'];
-				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -1089,9 +1087,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			$customer_ids = [
 				$this->getUserDetail('customerid')
-			];
-			$customer_stdsubs = [
-				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			];
 		}
 		if (!empty($customer_ids)) {
@@ -1101,7 +1096,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 				AND `d`.`email_only` = '0'
-				AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")
 			");
 			$result = Database::pexecute_first($domains_stmt, null, true, true);
 			if ($result) {
