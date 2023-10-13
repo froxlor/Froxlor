@@ -696,7 +696,7 @@ opcache.validate_timestamps'),
 	('system', 'distribution', ''),
 	('system', 'update_channel', 'stable'),
 	('system', 'updatecheck_data', ''),
-	('system', 'update_notify_last', '2.1.0-dev1'),
+	('system', 'update_notify_last', '2.1.0-beta1'),
 	('system', 'traffictool', 'goaccess'),
 	('system', 'req_limit_per_interval', 60),
 	('system', 'req_limit_interval', 60),
@@ -744,7 +744,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
-	('panel', 'version', '2.1.0-dev1'),
+	('panel', 'version', '2.1.0-beta1'),
 	('panel', 'db_version', '202305240');
 
 

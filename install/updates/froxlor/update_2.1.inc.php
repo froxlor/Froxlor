@@ -88,3 +88,8 @@ if (Froxlor::isFroxlorVersion('2.0.24')) {
 	Froxlor::updateToDbVersion('202305240');
 	Froxlor::updateToVersion('2.1.0-dev1');
 }
+
+if (Froxlor::isFroxlorVersion('2.1.0-dev1')) {
+	Update::showUpdateStep("Updating from 2.1.0-dev1 to 2.1.0-beta1", false);
+	Froxlor::updateToVersion('2.1.0-beta1');
+}
