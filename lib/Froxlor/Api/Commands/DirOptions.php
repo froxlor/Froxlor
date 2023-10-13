@@ -93,7 +93,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		// validation
 		$path = FileDir::makeCorrectDir(Validate::validate($path, 'path', Validate::REGEX_DIR, '', [], true));
 		$userpath = $path;
-		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 
 		if (!empty($error404path)) {
 			$error404path = $this->correctErrorDocument($error404path, true);

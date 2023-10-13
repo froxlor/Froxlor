@@ -174,7 +174,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			} elseif ($username == $password) {
 				Response::standardError('passwordshouldnotbeusername', '', true);
 			} else {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 				$cryptPassword = Crypt::makeCryptPassword($password, false, true);
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
@@ -469,7 +469,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 
 		// path update?
 		if ($path != '') {
-			$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+			$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 
 			if ($path != $result['homedir']) {
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`

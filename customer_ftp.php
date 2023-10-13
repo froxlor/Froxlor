@@ -59,7 +59,7 @@ if ($page == 'overview' || $page == 'accounts') {
 
 		$actions_links = [];
 		if (CurrentUser::canAddResource('ftps')) {
-			$actions_links = [
+			$actions_links[] = [
 				'href' => $linker->getLink(['section' => 'ftp', 'page' => 'accounts', 'action' => 'add']),
 				'label' => lng('ftp.account_add')
 			];

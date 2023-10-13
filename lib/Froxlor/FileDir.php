@@ -26,10 +26,10 @@
 namespace Froxlor;
 
 use Exception;
-use PDO;
-use RecursiveCallbackFilterIterator;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
+use PDO;
+use RecursiveCallbackFilterIterator;
 
 class FileDir
 {
@@ -51,11 +51,12 @@ class FileDir
 	public static function mkDirWithCorrectOwnership(
 		string $homeDir,
 		string $dirToCreate,
-		int $uid,
-		int $gid,
-		bool $placeindex = false,
-		bool $allow_notwithinhomedir = false
-	): bool {
+		int    $uid,
+		int    $gid,
+		bool   $placeindex = false,
+		bool   $allow_notwithinhomedir = false
+	): bool
+	{
 		if ($homeDir != '' && $dirToCreate != '') {
 			$homeDir = self::makeCorrectDir($homeDir);
 			$dirToCreate = self::makeCorrectDir($dirToCreate);
@@ -107,15 +108,16 @@ class FileDir
 	}
 
 	/**
-	 * Function which returns a correct dirname, means to add slashes at the beginning and at the end if there weren't
-	 * some
+	 * Returns a correct/secure dirname, means to add slashes at the beginning and at the end if there weren't
+	 * some. If $fixes_homedir is specified,
+	 *
 	 *
 	 * @param string $dir the path to correct
 	 *
 	 * @return string the corrected path
 	 * @throws Exception
 	 */
-	public static function makeCorrectDir(string $dir): string
+	public static function makeCorrectDir(string $dir, string $fixed_homedir = ""): string
 	{
 		if (strlen($dir) > 0) {
 			$dir = trim($dir);
@@ -125,6 +127,30 @@ class FileDir
 			if (substr($dir, 0, 1) != '/') {
 				$dir = '/' . $dir;
 			}
+
+			// if given, check that the target path is within the $fixed_homedir
+			// by checking each folder for being a symlink and whether it targets
+			// the customers homedir or points outside of it
+			if (!empty($fixed_homedir)) {
+				$to_check = explode("/", substr($dir, strlen($fixed_homedir) + 1), -1);
+				$check_dir = substr($fixed_homedir, 0, -1);
+				// Symlink check
+				foreach ($to_check as $sub_dir) {
+					$check_dir .= '/' . $sub_dir;
+					if (is_link($check_dir)) {
+						$original_target = $check_dir;
+						$check_dir = readlink($check_dir);
+						if (substr($check_dir, 0, strlen($fixed_homedir)) != $fixed_homedir) {
+							throw new Exception("Found symlink pointing outside of customer home directory: " . substr($original_target, strlen($fixed_homedir)));
+						}
+					}
+				}
+				// check for the path to be within the given homedir
+				if (substr($dir, 0, strlen($fixed_homedir)) != $fixed_homedir) {
+					throw new Exception("Target path not within the required customer home directory");
+				}
+			}
+
 			return self::makeSecurePath($dir);
 		}
 		throw new Exception("Cannot validate directory in " . __FUNCTION__ . " which is very dangerous.");
@@ -245,9 +271,10 @@ class FileDir
 	public static function storeDefaultIndex(
 		string $loginname,
 		string $destination,
-		$logger = null,
-		bool $force = false
-	) {
+			   $logger = null,
+		bool   $force = false
+	)
+	{
 		if ($force || (int)Settings::Get('system.store_index_file_subs') == 1) {
 			$result_stmt = Database::prepare("
 			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`

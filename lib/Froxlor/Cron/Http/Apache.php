@@ -129,7 +129,7 @@ class Apache extends HttpConfigBase
 				if ($row_ipsandports['ssl'] == '0' && Settings::Get('system.le_froxlor_redirect') == '1') {
 					$is_redirect = true;
 					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
-					// or a renew is ongoing - disable redirect
+					// or a renewal is ongoing - disable redirect
 					if (Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
 						$this->virtualhosts_data[$vhosts_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
 						$is_redirect = false;
@@ -1255,7 +1255,7 @@ class Apache extends HttpConfigBase
 					// >=apache-2.4 enabled?
 					if (Settings::Get('system.apache24') == '1') {
 						$mypath_dir = new Directory($row_diroptions['path']);
-						// only create the require all granted if there is not active directory-protection
+						// only create the' require all granted' if there is no active directory-protection
 						// for this path, as this would be the first require and therefore grant all access
 						if ($mypath_dir->isUserProtected() == false) {
 							$this->diroptions_data[$diroptions_filename] .= '  Require all granted' . "\n";

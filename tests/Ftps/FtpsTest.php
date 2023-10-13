@@ -1,9 +1,10 @@
 <?php
-use PHPUnit\Framework\TestCase;
 
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Ftps;
+use Froxlor\Froxlor;
+use PHPUnit\Framework\TestCase;
 
 /**
  *
@@ -164,6 +165,31 @@ class FtpsTest extends TestCase
 		$this->assertEquals($customer_userdata['documentroot'], $result['homedir']);
 	}
 
+	public function testCustomerFtpsAddSymlinkOutsideHomedir()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data']; //
+
+		$customer_userdata['documentroot'] = sys_get_temp_dir() . '/';
+		@unlink($customer_userdata['documentroot'] . '/frx');
+		symlink(Froxlor::getInstallDir(), $customer_userdata['documentroot'] . '/frx');
+
+		$data = [
+			'ftp_password' => 'h4xXx0r',
+			'path' => '/frx/sub',
+			'ftp_description' => 'testing',
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+		];
+
+		$this->expectExceptionMessage('Found symlink pointing outside of customer home directory: /frx');
+		Ftps::getLocal($customer_userdata, $data)->add();
+	}
+
 	public function testCustomerFtpsAddNoMoreResources()
 	{
 		global $admin_userdata;
@@ -178,7 +204,7 @@ class FtpsTest extends TestCase
 
 		$this->expectExceptionCode(406);
 		$this->expectExceptionMessage('No more resources available');
-		$json_result = Ftps::getLocal($customer_userdata)->add();
+		Ftps::getLocal($customer_userdata)->add();
 	}
 
 	public function testAdminFtpsAddCustomerRequired()
@@ -194,7 +220,7 @@ class FtpsTest extends TestCase
 
 		$this->expectExceptionCode(406);
 		$this->expectExceptionMessage('Requested parameter "loginname" is empty where it should not be for "Customers:get"');
-		$json_result = Ftps::getLocal($admin_userdata, $data)->add();
+		Ftps::getLocal($admin_userdata, $data)->add();
 	}
 
 	public function testCustomerFtpsEdit()

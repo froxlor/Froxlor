@@ -84,7 +84,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 
 		// validation
 		$path = FileDir::makeCorrectDir(Validate::validate($path, 'path', Validate::REGEX_DIR, '', [], true));
-		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 		$username = Validate::validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', [], true);
 		$authname = Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', [], true);
 		$password = Validate::validate($password, 'password', '', '', [], true);

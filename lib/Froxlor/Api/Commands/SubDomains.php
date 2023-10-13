@@ -564,9 +564,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 			// set default path to subdomain or domain name
 			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain);
+				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain, $customer['documentroot']);
 			} else {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 			}
 		} else {
 			// no it's not, create a redirect
