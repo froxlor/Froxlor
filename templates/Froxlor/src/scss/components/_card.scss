@@ -14,11 +14,11 @@
 	}
 
 	&.deactivated {
-		@extend .text-muted;
+		@extend .text-body-secondary;
 		background: lighten($light-bg, 3%);
 
 		i {
-			@extend .text-muted;
+			@extend .text-body-secondary;
 		}
 	}
 }

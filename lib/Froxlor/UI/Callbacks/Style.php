@@ -77,8 +77,7 @@ class Style
 		$row_css = '';
 		if ((int)$attributes['fields']['deactivated'] == 1) {
 			$row_css = 'bg-info text-light';
-		} elseif (
-			$attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
+		} elseif ($attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
 			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))
 		) {
 			$row_css = 'bg-warning';

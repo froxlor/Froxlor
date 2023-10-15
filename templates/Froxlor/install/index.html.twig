@@ -74,7 +74,7 @@
 						</p>
 
 						{% if preflight.criticals %}
-							<p class="text-muted">{{ lng('install.critical_error') }}</p>
+							<p class="text-body-secondary">{{ lng('install.critical_error') }}</p>
 							<ul>
 								{% for ctype, critical in preflight.criticals %}
 									{% if ctype == 'wrong_ownership' %}
@@ -94,7 +94,7 @@
 						{% endif %}
 
 						{% if preflight.suggestions %}
-							<p class="text-muted">{{ lng('install.suggestions') }}</p>
+							<p class="text-body-secondary">{{ lng('install.suggestions') }}</p>
 							<ul>
 								{% for ctype, suggestion in preflight.suggestions %}
 									{% if ctype == 'missing_extensions' %}

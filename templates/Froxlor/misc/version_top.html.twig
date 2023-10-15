@@ -1,5 +1,5 @@
 {% import "Froxlor/misc/version_popover.html.twig" as vc %}
-<span id="ucheck" class="nav-link {% if isnewerversion == 0 and aucheck < 0 %}text-muted{% elseif isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}"
+<span id="ucheck" class="nav-link {% if isnewerversion == 0 and aucheck < 0 %}text-body-secondary{% elseif isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}"
 	  data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="hover focus click" data-bs-html="true"
 	  data-bs-content="{{ vc.vpopover(isnewerversion, additional_info, full_version, dbversion, channel, last_update_check, message) }}"
 >

@@ -7,7 +7,7 @@
 		{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title|raw }}
 		{% endif %}
 	</h5>
-	<span class="text-muted">{{ lng('admin.serversettings_desc') }}</span>
+	<span class="text-body-secondary">{{ lng('admin.serversettings_desc') }}</span>
 {% endblock %}
 
 {% block actions %}
@@ -47,7 +47,7 @@
 							</div>
 							{% if not field.activated %}
 								<div class="position-absolute top-0 end-0 p-1">
-									<span class="badge text-muted" style="background: #eee">{{ lng('panel.not_activated') }}</span>
+									<span class="badge text-body-secondary" style="background: #eee">{{ lng('panel.not_activated') }}</span>
 								</div>
 							{% endif %}
 						</div>

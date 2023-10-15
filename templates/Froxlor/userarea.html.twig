@@ -30,7 +30,7 @@
 			<div class="order-0 order-md-1 d-flex flex-grow-0 flex-md-grow-1" id="navbar">
 				<ul class="navbar-nav ms-md-auto me-3 me-lg-5">
 					<a class="nav-link d-md-none" data-bs-toggle="collapse" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseSearch">
-						<i class="fa-solid fa-search text-muted"></i>
+						<i class="fa-solid fa-search text-body-secondary"></i>
 					</a>
 					{% if call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is iterable %}
 						<a class="nav-link text-success" href="{{ linker({'section': 'index', 'action': 'suback'}) }}">
@@ -79,7 +79,7 @@
 			<div class="order-1 order-md-0 collapse navbar-collapse" id="collapseSearch">
 				<form class="ms-3 mt-3 ms-lg-5 my-md-0" id="search" method="post">
 					<div class="d-flex align-items-center">
-						<i class="fa-solid fa-search text-muted"></i>
+						<i class="fa-solid fa-search text-body-secondary"></i>
 						<input tabindex="1" class="search-input" title="search" type="search" placeholder="{{ lng('panel.search') }}...">
 					</div>
 					<div class="search-results-box p-2 shadow" style="display:none;">
