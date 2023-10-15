@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
 	<distribution name="Gentoo" version="3.0"
-		defaulteditor="/usr/bin/nano">
+		defaulteditor="/usr/bin/nano" deprecated="true">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
 			<default settinggroup="system" varname="nssextrausers" value="1"></default>

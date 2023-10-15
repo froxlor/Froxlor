@@ -188,6 +188,10 @@ if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) |
 	$themevariant = "default";
 }
 
+if (array_key_exists('global', $_themeoptions)) {
+	$_themeoptions['variants'][$themevariant] = array_merge_recursive($_themeoptions['variants'][$themevariant], $_themeoptions['global']);
+}
+
 // check for custom header-graphic
 $hl_path = 'templates/' . $theme . '/assets/img';
 
@@ -209,8 +213,11 @@ if (Settings::Get('panel.logo_overridecustom') == 0 && file_exists($hl_path . '/
 	}
 }
 
+$color_scheme = $_themeoptions['variants'][$themevariant]['color-scheme'] ?? 'auto';
+
 UI::twig()->addGlobal('header_logo_login', $header_logo_login);
 UI::twig()->addGlobal('header_logo', $header_logo);
+UI::twig()->addGlobal('color_scheme', $color_scheme);
 
 /**
  * Redirects to index.php (login page) if no session exists
