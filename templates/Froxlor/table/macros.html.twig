@@ -1,5 +1,5 @@
 {% macro progressbar(data) %}
-	<div class="progress progress-thin">
+	<div class="progress progress-thin" role="progressbar" aria-valuenow="{{ data.percent }}">
 		<div class="progress-bar {{ data.style }}" style="width: {{ data.percent }}%;"></div>
 	</div>
 	<div class="text-end small">

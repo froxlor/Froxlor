@@ -31,17 +31,17 @@ class Style
 {
 	public static function deactivated(array $attributes): string
 	{
-		return $attributes['fields']['deactivated'] ? 'bg-danger' : '';
+		return $attributes['fields']['deactivated'] ? 'table-danger' : '';
 	}
 
 	public static function loginDisabled(array $attributes): string
 	{
-		return $attributes['fields']['login_enabled'] == 'N' ? 'bg-danger' : '';
+		return $attributes['fields']['login_enabled'] == 'N' ? 'table-danger' : '';
 	}
 
 	public static function resultIntegrityBad(array $attributes): string
 	{
-		return $attributes['fields']['result'] ? '' : 'bg-warning';
+		return $attributes['fields']['result'] ? '' : 'table-warning';
 	}
 
 	public static function invalidApiKey(array $attributes): string
@@ -53,7 +53,7 @@ class Style
 				$isValid = false;
 			}
 		}
-		return $isValid ? '' : 'bg-danger';
+		return $isValid ? '' : 'table-danger';
 	}
 
 	public static function resultDomainTerminatedOrDeactivated(array $attributes): string
@@ -63,24 +63,24 @@ class Style
 		if (!empty($termination_date)) {
 			$cdate = strtotime($termination_date . " 23:59:59");
 			$today = time();
-			$termination_css = 'bg-warning';
+			$termination_css = 'table-warning';
 			if ($cdate < $today) {
-				$termination_css = 'bg-danger text-light';
+				$termination_css = 'table-danger';
 			}
 		}
 		$deactivated = $attributes['fields']['deactivated'] || $attributes['fields']['customer_deactivated'];
-		return $deactivated ? 'bg-info text-light' : $termination_css;
+		return $deactivated ? 'table-info' : $termination_css;
 	}
 
 	public static function resultCustomerLockedOrDeactivated(array $attributes): string
 	{
 		$row_css = '';
 		if ((int)$attributes['fields']['deactivated'] == 1) {
-			$row_css = 'bg-info text-light';
+			$row_css = 'table-info';
 		} elseif ($attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
 			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))
 		) {
-			$row_css = 'bg-warning';
+			$row_css = 'table-warning';
 		}
 
 		return $row_css;
@@ -96,9 +96,9 @@ class Style
 		$style = '';
 		if ((int)$attributes[$field] >= 0) {
 			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {
-				$style = 'bg-danger';
+				$style = 'table-danger';
 			} elseif (($attributes[$field] / 100) * ($report_max - 15) < $attributes[$field . '_used']) {
-				$style = 'bg-warning';
+				$style = 'table-warning';
 			}
 		}
 		return $style;
