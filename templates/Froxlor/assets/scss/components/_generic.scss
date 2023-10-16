@@ -87,3 +87,9 @@
 a {
 	text-decoration: none;
 }
+
+@include color-mode(dark) {
+	.table>:not(caption)>*>* {
+		background-color: transparent;
+	}
+}

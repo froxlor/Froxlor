@@ -10,3 +10,15 @@
 		}
 	}
 }
+
+@include color-mode(dark) {
+	.dropdown {
+		.dropdown-menu {
+			.dropdown-item {
+				i {
+					color: $body-secondary-color-dark;
+				}
+			}
+		}
+	}
+}

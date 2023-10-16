@@ -11,5 +11,9 @@
 @include color-mode(dark) {
 	.heading {
 		background: $dark-bg;
+		border-top: $heading-border-color-dark solid 1px;
+	}
+	.heading h5 {
+		color: $body-color-dark;
 	}
 }
