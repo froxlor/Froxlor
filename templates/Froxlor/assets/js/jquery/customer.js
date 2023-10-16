@@ -1,4 +1,4 @@
-$(function() {
+export default function() {
 
 	// Make inputs with enabled unlimited checked disabled
 	$("input[name$='_ul']").each(function () {
@@ -73,4 +73,4 @@ $(function() {
 			});
 		}
 	});
-});
+}

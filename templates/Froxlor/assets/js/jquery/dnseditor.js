@@ -1,4 +1,4 @@
-$(function () {
+export default function() {
 
 	// Display helptext to content box according to dns-record type selected
 	$("select[name='dns_type']").on('change', function () {
@@ -16,4 +16,4 @@ $(function () {
 			}
 		});
 	});
-});
+}

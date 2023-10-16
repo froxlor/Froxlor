@@ -2304,7 +2304,7 @@ Atentamente, su administrador'
 		]
 	],
 	'install' => [
-		'slogal' => 'Panel de gestión del servidor froxlor',
+		'slogan' => 'Panel de gestión del servidor froxlor',
 		'preflight' => 'Comprobación del sistema',
 		'critical_error' => 'Error crítico',
 		'suggestions' => 'No requerido pero recomendado',

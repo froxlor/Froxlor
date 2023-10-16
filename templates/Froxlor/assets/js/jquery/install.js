@@ -1,4 +1,4 @@
-$(function () {
+export default function() {
 	/*
 	 * switch between basic and advanced install mode
 	 */
@@ -59,4 +59,4 @@ $(function () {
 		cTimer = setInterval(checkConfigState, 1000);
 	}
 
-});
+}

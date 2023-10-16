@@ -1,4 +1,7 @@
-$(document).ready(function () {
+export default function() {
+	/*
+	 * validation
+	 */
 	$('#customer_add,#customer_edit').each(function () {
 		$(this).validate({
 			rules: {
@@ -34,4 +37,4 @@ $(document).ready(function () {
 			}
 		});
 	});
-});
+}

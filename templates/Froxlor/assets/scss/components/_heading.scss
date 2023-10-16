@@ -8,6 +8,8 @@
 	color: $heading-color;
 }
 
-.heading span {
-
+@include color-mode(dark) {
+	.heading {
+		background: $dark-bg;
+	}
 }

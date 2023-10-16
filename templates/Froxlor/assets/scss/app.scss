@@ -1,8 +1,9 @@
 @charset "UTF-8";
 
 // Bootstrap
-@import "variables/main";
-@import "~bootstrap/scss/bootstrap";
+@import "variables";
+@import "variables-dark";
+@import "bootstrap/scss/bootstrap";
 
 // Theme
 @import "components/generic";

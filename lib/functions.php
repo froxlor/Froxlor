@@ -74,6 +74,7 @@ function old(string $identifier, string $default = null, string $session = null)
  * This file contains the hashed filenames of the assets.
  * It must be always placed in the theme assets folder.
  *
+ * @deprecated since 2.1.x no longer in use
  * @param $filename
  * @return mixed|string
  */
@@ -90,4 +91,46 @@ function mix($filename)
 		}
 	}
 	return $filename;
+}
+
+/**
+ * Loading the vite manifest file from given theme.
+ * This file contains the hashed filenames of the assets.
+ * It must be always placed in the theme assets folder.
+ *
+ * @param string|null $basehref
+ * @param array $filenames
+ * @return string
+ * @throws Exception
+ */
+function vite($basehref, array $filenames): string
+{
+	// Get the hashed filenames from the manifest file
+	$links = [];
+	foreach ($filenames as $filename) {
+		if (preg_match("/templates\/([^\/]+)(.*)/", $filename, $matches)) {
+			$assetDirectory = '/templates/' . $matches[1] . '/build/';
+			$viteManifest = dirname(__DIR__) . $assetDirectory . '/manifest.json';
+			$manifest = json_decode(file_get_contents($viteManifest), true);
+			$links[] = $basehref . ltrim($assetDirectory, '/') . $manifest[$filename]['file'];
+		} else {
+			$links = $filenames;
+		}
+	}
+
+	// Update the links to the correct html tags
+	foreach ($links as $key => $link) {
+		switch (pathinfo($link, PATHINFO_EXTENSION)) {
+			case 'css':
+				$links[$key] = '<link rel="stylesheet" href="'. $link . '">';
+				break;
+			case 'js':
+				$links[$key] = '<script src="' . $link . '" type="module"></script>';
+				break;
+			default:
+				throw new Exception('Unknown file extension for file '. $link .' from manifest.json');
+		}
+	}
+
+	return implode("\n", $links);
 }

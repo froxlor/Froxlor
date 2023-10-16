@@ -92,6 +92,10 @@ class FroxlorTwig extends AbstractExtension
 			new TwigFunction('mix', [
 				$this,
 				'getMix'
+			]),
+			new TwigFunction('vite', [
+				$this,
+				'getVite'
 			])
 		];
 	}
@@ -166,5 +170,10 @@ class FroxlorTwig extends AbstractExtension
 	public function getMix($mix = '')
 	{
 		return mix($mix);
+	}
+
+	public function getVite($basehref = '', $vite = [], $defaults = [])
+	{
+		return vite($basehref, $vite ?? $defaults);
 	}
 }

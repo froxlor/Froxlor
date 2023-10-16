@@ -2357,7 +2357,7 @@ Yours sincerely, your administrator',
 		],
 	],
 	'install' => [
-		'slogal' => 'froxlor Server Management Panel',
+		'slogan' => 'froxlor Server Management Panel',
 		'preflight' => 'System check',
 		'critical_error' => 'Critical error',
 		'suggestions' => 'Not required but recommended',

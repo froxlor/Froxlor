@@ -1,4 +1,4 @@
-$(function () {
+export default function() {
 
 	var timer, delay = 500;
 	$('div[data-action="apikeys"] #allowed_from').on('keyup change', function () {
@@ -57,4 +57,4 @@ $(function () {
 		}, delay);
 	});
 
-});
+}

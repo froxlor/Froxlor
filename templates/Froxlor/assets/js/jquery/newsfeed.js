@@ -1,4 +1,4 @@
-$(function() {
+export default function() {
 	/*
 	 * newsfeed
 	 */
@@ -21,4 +21,4 @@ $(function() {
 			}
 		});
 	}
-});
+}

@@ -2324,7 +2324,7 @@ Atentament, el vostre administrador'
 		]
 	],
 	'install' => [
-		'slogal' => 'Panell de gestió del servidor froxlor',
+		'slogan' => 'Panell de gestió del servidor froxlor',
 		'preflight' => 'Comprovació del sistema',
 		'critical_error' => 'Error crític',
 		'suggestions' => 'No requerit però recomanat',

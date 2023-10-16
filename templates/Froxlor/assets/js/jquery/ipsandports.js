@@ -1,6 +1,7 @@
-$(function() {
-
-	// check for internal ip and output a notice if private-range ip is given
+export default function() {
+	/*
+	 * ipsandports - check for internal ip and output a notice if private-range ip is given
+	 */
 	$('#ip').on('change', function () {
 		var ipval = $(this).val();
 		if (ipval.length > 0) {
@@ -26,4 +27,4 @@ $(function() {
 		}
 	});
 
-});
+}

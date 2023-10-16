@@ -281,29 +281,21 @@ if (AREA == 'admin' || AREA == 'customer') {
 }
 UI::twig()->addGlobal('nav_entries', $navigation);
 
-$js = "";
-$css = "";
-if (is_array($_themeoptions) && array_key_exists('js', $_themeoptions['variants'][$themevariant])) {
-	if (is_array($_themeoptions['variants'][$themevariant]['js'])) {
-		foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
-			if (file_exists('templates/' . $theme . '/assets/js/' . $jsfile)) {
-				$js .= '<script type="text/javascript" src="' . mix('templates/' . $theme . '/assets/js/' . $jsfile) . '"></script>' . "\n";
-			}
-		}
-	}
-	if (is_array($_themeoptions['variants'][$themevariant]['css'])) {
-		foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
-			if (file_exists('templates/' . $theme . '/assets/css/' . $cssfile)) {
-				$css .= '<link href="' . mix('templates/' . $theme . '/assets/css/' . $cssfile) . '" rel="stylesheet" type="text/css" />' . "\n";
+$theme_assets = [];
+foreach (['css', 'js'] as $asset) {
+	if (is_array($_themeoptions) && array_key_exists($asset, $_themeoptions['variants'][$themevariant])) {
+		if (is_array($_themeoptions['variants'][$themevariant][$asset])) {
+			foreach ($_themeoptions['variants'][$themevariant][$asset] as $assetfile) {
+				if (file_exists('templates/' . $theme . '/' . $assetfile)) {
+					$theme_assets[] .= 'templates/' . $theme . '/' . $assetfile;
+				}
 			}
 		}
 	}
 }
 
-UI::twig()->addGlobal('theme_js', $js);
-UI::twig()->addGlobal('theme_css', $css);
-unset($js);
-unset($css);
+UI::twig()->addGlobal('theme_assets', $theme_assets);
+unset($theme_assets);
 
 $action = Request::any('action');
 $page = Request::any('page', 'overview');

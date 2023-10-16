@@ -1,5 +1,7 @@
-$(function () {
-
+export default function() {
+	/*
+	 * global
+	 */
 	$('#historyback').on('click', function (e) {
 		e.preventDefault();
 		history.back(1);
@@ -9,4 +11,4 @@ $(function () {
 		e.preventDefault();
 		navigator.clipboard.writeText($('#ccSysInfo').text().trim());
 	})
-});
+}

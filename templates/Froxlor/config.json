@@ -1,11 +1,12 @@
 {
 	"global": {
 		"css": [
-			"custom.css"
+			"assets/css/custom.css",
+			"assets/scss/app.scss"
 		],
 		"js": [
-			"main.js",
-			"apikey.js"
+			"assets/js/app.js",
+			"assets/js/apikey.js"
 		],
 		"img": {
 			"ui": "logo_white.png",

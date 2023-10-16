@@ -1,4 +1,4 @@
-$(function () {
+export default function() {
 	/*
 	 * config files - select all recommended
 	 */
@@ -49,4 +49,4 @@ $(function () {
 		});
 
 	});
-});
+}

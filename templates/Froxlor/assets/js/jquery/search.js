@@ -1,4 +1,7 @@
-$(function() {
+export default function() {
+	/*
+	 * search
+	 */
 	let search = $('#search')
 
 	search.on('submit', function (e) {
@@ -53,4 +56,4 @@ $(function() {
 			}
 		});
 	});
-});
+}

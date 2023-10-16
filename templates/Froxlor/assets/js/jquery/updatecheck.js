@@ -1,4 +1,4 @@
-$(function() {
+export default function() {
 	/*
 	 * updatecheck
 	 */
@@ -18,4 +18,4 @@ $(function() {
 			}
 		});
 	}
-});
+}

@@ -1,5 +1,7 @@
-$(function () {
-
+export default function() {
+	/*
+	 * domains
+	 */
 	// disable unusable php-configuration by customer settings
 	$('#customerid').on('change', function () {
 		var cid = $(this).val();
@@ -104,4 +106,4 @@ $(function () {
 			$('#section_bssl>.formfields>.row').not(":first").addClass("d-none");
 		}
 	})
-});
+}

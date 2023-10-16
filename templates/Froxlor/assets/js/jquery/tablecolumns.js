@@ -1,4 +1,4 @@
-$(function () {
+export default function() {
 	/*
 	 * table columns - manage columns modal
 	 */
@@ -41,4 +41,4 @@ $(function () {
 	$('.manageColumnsModal form button[data-action="unselect-all"]').on('click', function () {
 		$(this).parents('form:first').find('input:checkbox').prop('checked', false);
 	});
-});
+}
