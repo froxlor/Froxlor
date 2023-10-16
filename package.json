@@ -1,4 +1,5 @@
 {
+	"name": "froxlor",
 	"private": true,
 	"scripts": {
 		"dev": "vite",
