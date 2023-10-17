@@ -33,6 +33,11 @@ use Froxlor\UI\Panel\UI;
 
 class Domain
 {
+	public static function domainLink(array $attributes)
+	{
+		return '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+	}
+
 	public static function domainWithCustomerLink(array $attributes)
 	{
 		$linker = UI::getLinker();

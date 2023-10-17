@@ -50,6 +50,7 @@ return [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
 				'isdefaultsearchfield' => true,
+				'callback' => [Domain::class, 'domainLink'],
 			],
 			'ipsandports' => [
 				'label' => lng('admin.ipsandports.ipsandports'),

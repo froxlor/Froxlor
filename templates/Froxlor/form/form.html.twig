@@ -37,7 +37,7 @@
 				<div class="col-12 text-center mb-2 d-grid gap-2 d-md-block">
 					{% if form_data.buttons is defined and form_data.buttons is iterable %}
 						{% for btn in form_data.buttons %}
-							<button type="{{ btn.type|default("submit") }}" class="btn btn-lg {{ btn.class|default(" btn-primary") }}">{{ btn.label }}</button>
+							<button type="{{ btn.type|default("submit") }}" class="btn btn-lg {{ btn.class|default(" btn-primary") }}{% if not loop.last %} me-md-3{% endif %}">{{ btn.label }}</button>
 						{% endfor %}
 					{% else %}
 						<button type="reset" class="btn btn-lg btn-outline-secondary me-md-3">{{ lng('panel.reset') }}</button>

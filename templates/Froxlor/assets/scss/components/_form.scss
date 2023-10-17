@@ -1,4 +1,11 @@
-// wip
+.form-control-plaintext {
+	outline: none;
+}
+
+.form-control[readonly] {
+	background: $body-tertiary-bg;
+}
+
 @include color-mode(dark) {
 	.formfield {
 		border-bottom: $border-color-dark solid 1px;
