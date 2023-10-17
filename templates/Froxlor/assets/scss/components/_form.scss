@@ -3,7 +3,7 @@
 }
 
 .form-control[readonly] {
-	background: $body-tertiary-bg;
+	background-color: $body-tertiary-bg;
 }
 
 @include color-mode(dark) {
@@ -12,7 +12,7 @@
 	}
 	.form-control,
 	.form-select {
-		background: $dark-bg;
+		background-color: $dark-bg;
 	}
 
 	.form-switch {
@@ -22,7 +22,7 @@
 	}
 
 	.form-control[readonly] {
-		background: $body-tertiary-bg-dark;
+		background-color: $body-tertiary-bg-dark;
 	}
 
 }

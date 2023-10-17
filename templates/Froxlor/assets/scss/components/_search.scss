@@ -32,3 +32,15 @@
 		}
 	}
 }
+
+@include color-mode(dark) {
+	#search {
+		.search-input {
+			color: $body-color-dark;
+		}
+		.search-results-box {
+			background: $dark-bg;
+			border: $border-color-dark solid 1px;
+		}
+	}
+}

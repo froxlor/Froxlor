@@ -88,7 +88,7 @@ td.text-end {
 }
 
 @include color-mode(dark) {
-	.table>:not(caption)>*>* {
+	.table>thead>*>* {
 		background-color: transparent;
 	}
 }
