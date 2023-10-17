@@ -10,7 +10,7 @@
 		</div>
 	{% else %}
 		<div class="d-flex flex-column align-items-end mt-n2">
-			<div class="rounded-top bg-dark small py-1 px-2 me-3 opacity-25 text-white">
+			<div class="rounded-top bg-secondary small py-1 px-2 me-3 opacity-25 text-white">
 				{% if listing.no_search is not defined or (listing.no_search is defined and listing.no_search == false) %}
 					{% if gSearchText is not empty %}
 						<span class="me-2"><a href="{{ linker(listing.self_overview) }}"><i class="fa-solid fa-xmark"></i></a> Filter: <strong>{{ gSearchText }}</strong></span>

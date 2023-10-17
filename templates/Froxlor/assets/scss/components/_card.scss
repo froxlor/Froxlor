@@ -27,4 +27,9 @@
 	.card, .list-group-item {
 		background: $dark-bg;
 	}
+	.card {
+		.card-header {
+			border-bottom: $border-color-dark solid 1px;
+		}
+	}
 }

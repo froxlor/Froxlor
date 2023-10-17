@@ -1,1 +1,21 @@
 // wip
+@include color-mode(dark) {
+	.formfield {
+		border-bottom: $border-color-dark solid 1px;
+	}
+	.form-control,
+	.form-select {
+		background: $dark-bg;
+	}
+
+	.form-switch {
+		.form-check-input:not(:checked):not(:focus) {
+			background-color: $dark-bg;
+		}
+	}
+
+	.form-control[readonly] {
+		background: $body-tertiary-bg-dark;
+	}
+
+}

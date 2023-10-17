@@ -34,7 +34,7 @@
 			{% if actions_links is iterable %}
 				{% for link in actions_links %}
 					{% if link.visible is not defined or (link.visible is defined and link.visible == true) %}
-						<a class="btn {{ link.class|default('btn-outline-primary') }}" href="{{ link.href|raw }}" {% if link.target is defined %}target="{{ link.target }}"{% endif %}>
+						<a class="btn {{ link.class|default('btn-outline-primary') }}{% if not loop.last %} me-1{% endif %}" href="{{ link.href|raw }}" {% if link.target is defined %}target="{{ link.target }}"{% endif %}>
 							<i class="{{ link.icon|default('fa-solid fa-plus-circle') }}"></i>
 							{% if link.label is defined and link.label is not empty %}<span class="d-none d-lg-inline ms-lg-1">{{ link.label }}</span>{% endif %}
 						</a>

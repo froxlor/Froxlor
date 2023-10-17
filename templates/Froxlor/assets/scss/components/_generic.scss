@@ -88,6 +88,13 @@ a {
 	text-decoration: none;
 }
 
+td.text-end {
+	a.btn-sm:not(:last-child),
+	span.btn-sm:not(:last-child){
+		margin-right:.125rem!important;
+	}
+}
+
 @include color-mode(dark) {
 	.table>:not(caption)>*>* {
 		background-color: transparent;
