@@ -20,7 +20,6 @@
 		"resolve-url-loader": "^5.0.0",
 		"sass": "^1.69.3",
 		"vite": "^4.0.0",
-		"vite-require": "^0.2.3",
 		"vue": "^3.2.37"
 	}
 }
