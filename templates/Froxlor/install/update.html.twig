@@ -20,7 +20,7 @@
 						<td class="w-75" scope="row">{{ check.title }}</td>
 						<td class="col-auto text-end{% if check.result == 0 %} text-success{% endif %}">
 							<span class="d-none d-md-inline">{{ check.result_txt }}</span>
-							{% if check.result == 0 %}&nbsp;<i class="fa-solid fa-check-circle" {% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
+							{% if check.result == 0 %}&nbsp;<i class="fa-solid fa-check-circle"></i>{% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
 							{% endif %}
 						</td>
 					</tr>

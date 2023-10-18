@@ -56,7 +56,7 @@ final class UpdateCommand extends CliCommand
 
 		// database update only
 		if ($input->getOption('database')) {
-			$result = $this->validateRequirements($input, $output, true);
+			$result = $this->validateRequirements($output, true);
 			if ($result == self::SUCCESS) {
 				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
 					$output->writeln('<info>' . lng('updates.dbupdate_required') . '</>');
@@ -77,7 +77,7 @@ final class UpdateCommand extends CliCommand
 			return $result;
 		}
 
-		$result = $this->validateRequirements($input, $output);
+		$result = $this->validateRequirements($output);
 
 		if ($result != self::SUCCESS) {
 			// requirements failed, exit

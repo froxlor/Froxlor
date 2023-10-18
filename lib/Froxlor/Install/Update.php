@@ -85,7 +85,7 @@ class Update
 				self::$update_tasks[self::$task_counter]['result'] = 1;
 				break;
 			default:
-			self::$update_tasks[self::$task_counter]['result'] = -1;
+                self::$update_tasks[self::$task_counter]['result'] = -1;
 				break;
 		}
 
