@@ -5,9 +5,6 @@ import { viteRequire } from 'vite-require'
 
 export default defineConfig({
 	build: {
-		rollupOptions: {
-			external: ['extras/install'],
-		},
 		chunkSizeWarningLimit: 1000,
 	},
 	plugins: [

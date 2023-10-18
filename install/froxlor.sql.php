@@ -356,23 +356,6 @@ CREATE TABLE `panel_htpasswds` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-DROP TABLE IF EXISTS `panel_sessions`;
-CREATE TABLE `panel_sessions` (
-  `hash` varchar(32) NOT NULL default '',
-  `userid` int(11) unsigned NOT NULL default '0',
-  `ipaddress` varchar(255) NOT NULL default '',
-  `useragent` varchar(255) NOT NULL default '',
-  `lastactivity` int(11) unsigned NOT NULL default '0',
-  `lastpaging` varchar(255) NOT NULL default '',
-  `formtoken` char(32) NOT NULL default '',
-  `language` varchar(64) NOT NULL default '',
-  `adminsession` tinyint(1) unsigned NOT NULL default '0',
-  `theme` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`hash`),
-  KEY `userid` (`userid`)
-) ENGINE=HEAP;
-
-
 DROP TABLE IF EXISTS `panel_settings`;
 CREATE TABLE `panel_settings` (
   `settingid` int(11) unsigned NOT NULL auto_increment,
