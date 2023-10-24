@@ -65,7 +65,7 @@ class SImExporter
 	public static function export()
 	{
 		$settings_definitions = [];
-		foreach (PhpHelper::loadConfigArrayDir('./actions/admin/settings/')['groups'] as $group) {
+		foreach (PhpHelper::loadConfigArrayDir(Froxlor::getInstallDir() . '/actions/admin/settings/')['groups'] as $group) {
 			foreach ($group['fields'] as $field) {
 				$settings_definitions[$field['settinggroup']][$field['varname']] = $field;
 			}
