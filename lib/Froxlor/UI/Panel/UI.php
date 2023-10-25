@@ -142,8 +142,6 @@ class UI
 		header("X-Content-Security-Policy: " . $csp_content);
 		header("X-WebKit-CSP: " . $csp_content);
 
-		header("X-XSS-Protection: 1; mode=block");
-
 		// Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
 		header("X-Frame-Options: DENY");
 
