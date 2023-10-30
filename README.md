@@ -34,19 +34,13 @@ You may find help in the following places:
 
 The froxlor community discord server can be found here: https://discord.froxlor.org
 
-### IRC
-
-froxlor may be found on libera.chat, channel #froxlor:
-irc://irc.libera.chat/froxlor
-
 ### Forum
 
 The community is located on https://forum.froxlor.org/
 
-### Wiki
+### Documentation
 
-More documentation may be found in the froxlor - documentation:
-https://docs.froxlor.org/
+The documentation may be found at https://docs.froxlor.org/
 
 ## License
 
