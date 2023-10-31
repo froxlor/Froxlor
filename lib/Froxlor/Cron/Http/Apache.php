@@ -515,13 +515,7 @@ class Apache extends HttpConfigBase
 	 */
 	private function createStandardDirectoryEntry()
 	{
-		$vhosts_folder = '';
-		if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-			$vhosts_folder = FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
-		} else {
-			$vhosts_folder = FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
-		}
-		$vhosts_filename = FileDir::makeCorrectFile($vhosts_folder . '/05_froxlor_dirfix_nofcgid.conf');
+		$vhosts_filename = $this->getCustomVhostFilename('05_froxlor_dirfix_nofcgid.conf');
 
 		if (!isset($this->virtualhosts_data[$vhosts_filename])) {
 			$this->virtualhosts_data[$vhosts_filename] = '';
@@ -545,7 +539,7 @@ class Apache extends HttpConfigBase
 		}
 		$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 
-		$ocsp_cache_filename = FileDir::makeCorrectFile($vhosts_folder . '/03_froxlor_ocsp_cache.conf');
+		$ocsp_cache_filename = $this->getCustomVhostFilename('03_froxlor_ocsp_cache.conf');
 		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.apache24') == 1) {
 			$this->virtualhosts_data[$ocsp_cache_filename] = 'SSLStaplingCache ' . Settings::Get('system.apache24_ocsp_cache_path') . "\n";
 		} else {
@@ -562,14 +556,7 @@ class Apache extends HttpConfigBase
 	private function createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
-			$vhosts_folder = '';
-			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				$vhosts_folder = FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
-			} else {
-				$vhosts_folder = FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
-			}
-
-			$vhosts_filename = FileDir::makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
+			$vhosts_filename = $this->getCustomVhostFilename('05_froxlor_default_errorhandler.conf');
 
 			if (!isset($this->virtualhosts_data[$vhosts_filename])) {
 				$this->virtualhosts_data[$vhosts_filename] = '';

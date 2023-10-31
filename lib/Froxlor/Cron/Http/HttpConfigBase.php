@@ -202,4 +202,13 @@ class HttpConfigBase
 		}
 		return FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $filename);
 	}
+
+	protected function getCustomVhostFilename(string $name)
+	{
+		$vhosts_folder = FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
+		if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
+			$vhosts_folder = FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
+		}
+		return FileDir::makeCorrectFile($vhosts_folder . '/' . $name);
+	}
 }

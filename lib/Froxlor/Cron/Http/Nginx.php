@@ -1161,14 +1161,7 @@ class Nginx extends HttpConfigBase
 	private function createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
-			$vhosts_folder = '';
-			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				$vhosts_folder = FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
-			} else {
-				$vhosts_folder = FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
-			}
-
-			$vhosts_filename = FileDir::makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
+			$vhosts_filename = $this->getCustomVhostFilename('05_froxlor_default_errorhandler.conf');
 
 			if (!isset($this->nginx_data[$vhosts_filename])) {
 				$this->nginx_data[$vhosts_filename] = '';

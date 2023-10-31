@@ -52,14 +52,16 @@ return [
 					'mysql_password' => [
 						'label' => lng('changepassword.new_password_ifnotempty'),
 						'type' => 'password',
-						'autocomplete' => 'off'
-					],
-					'mysql_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword(),
-						'readonly' => true
+						'autocomplete' => 'off',
+						'next_to' => [
+							'mysql_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					]
 				]
 			]

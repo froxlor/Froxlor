@@ -55,13 +55,16 @@ return [
 						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'mandatory' => true
-					],
-					'directory_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword()
+						'mandatory' => true,
+						'next_to' => [
+							'directory_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					],
 					'directory_authname' => [
 						'label' => lng('extras.htpasswdauthname'),

@@ -46,14 +46,16 @@ return [
 						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'mandatory' => true
-					],
-					'mysql_password_suggestion' => [
-						'label' => lng('customer.generated_pwd'),
-						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword(),
-						'readonly' => true
+						'mandatory' => true,
+						'next_to' => [
+							'mysql_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
+								'type' => 'text',
+								'visible' => (Settings::Get('panel.password_regex') == ''),
+								'value' => Crypt::generatePassword(),
+								'readonly' => true
+							]
+						]
 					],
 					'sendinfomail' => [
 						'label' => lng('customer.sendinfomail'),
