@@ -50,10 +50,12 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\CurrentUser;
+use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Http\RateLimiter;
 use Froxlor\Idna\IdnaWrapper;
+use Froxlor\Install\Update;
 use Froxlor\Language;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
@@ -63,7 +65,6 @@ use Froxlor\UI\Linker;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
-use Froxlor\Install\Update;
 
 // include MySQL-tabledefinitions
 require Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -107,6 +108,24 @@ require Froxlor::getInstallDir() . '/lib/userdata.inc.php';
 if (!isset($sql) || !is_array($sql)) {
 	UI::twig()->addGlobal('install_mode', '1');
 	echo UI::twig()->render($_deftheme . '/misc/configurehint.html.twig');
+	die();
+}
+
+/**
+ * Show nice note if requested domain is "unknown" to froxlor and thus is being lead to its vhost
+ */
+if ($_SERVER['HTTP_HOST'] != Settings::Get('system.hostname') &&
+		!filter_var($_SERVER['HTTP_HOST'], FILTER_VALIDATE_IP) && (
+		empty(Settings::Get('system.froxloraliases')) ||
+		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['HTTP_HOST'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
+)) {
+	// not the froxlor system-hostname, show info page for domains not configured in froxlor
+	$unconfiguredPath = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/templates/misc/unconfigured/index.html');
+	if (file_exists($unconfiguredPath)) {
+		echo file_get_contents($unconfiguredPath);
+	} else {
+		echo "This domain requires configuration via the froxlor server management panel, as it is currently not assigned to any customer.";
+	}
 	die();
 }
 
@@ -182,9 +201,9 @@ if (@file_exists('templates/' . $theme . '/config.json')) {
 
 // check for existence of variant in theme
 if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists(
-    $themevariant,
-    $_themeoptions['variants']
-))) {
+			$themevariant,
+			$_themeoptions['variants']
+		))) {
 	$themevariant = "default";
 }
 
@@ -242,7 +261,7 @@ if (CurrentUser::hasSession()) {
 	$log = FroxlorLogger::getInstanceOf($userinfo);
 	if ((CurrentUser::isAdmin() && AREA != 'admin') || (!CurrentUser::isAdmin() && AREA != 'customer')) {
 		// user tries to access an area not meant for him -> redirect to corresponding index
-		Response::redirectTo((CurrentUser::isAdmin() ? 'admin' : 'customer') . '_index.php', $params);
+		Response::redirectTo((CurrentUser::isAdmin() ? 'admin' : 'customer') . '_index.php');
 		exit();
 	}
 }
