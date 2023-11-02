@@ -320,12 +320,15 @@ class Domain
 	 * @throws \Exception
 	 */
 	public static function triggerLetsEncryptCSRForAliasDestinationDomain(
-		int $aliasDestinationDomainID,
+		int           $aliasDestinationDomainID,
 		FroxlorLogger $log
 	) {
 		if ($aliasDestinationDomainID > 0) {
-			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO,
-				"LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
+			$log->logAction(
+				FroxlorLogger::ADM_ACTION,
+				LOG_INFO,
+				"LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID
+			);
 			$upd_stmt = Database::prepare("UPDATE
 					`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 				SET
@@ -349,15 +352,20 @@ class Domain
 		$acmesh = AcmeSh::getAcmeSh();
 		if (file_exists($acmesh)) {
 			$certificate_folder = AcmeSh::getWorkingDirFromEnv($domainname);
-			if (file_exists($certificate_folder)) {
+			$certificate_ecc_folder = AcmeSh::getWorkingDirFromEnv($domainname, true);
+			if (file_exists($certificate_folder) || file_exists($certificate_ecc_folder)) {
 				$params = " --remove -d " . $domainname;
-				if (Settings::Get('system.leecc') > 0) {
+				if (file_exists($certificate_ecc_folder)) {
 					$params .= " --ecc";
 				}
 				// run remove command
 				FileDir::safe_exec($acmesh . $params);
 				// remove certificates directory
-				FileDir::safe_exec('rm -rf ' . $certificate_folder);
+				if (file_exists($certificate_folder)) {
+					FileDir::safe_exec('rm -rf ' . $certificate_folder);
+				} elseif (file_exists($certificate_ecc_folder)) {
+					FileDir::safe_exec('rm -rf ' . $certificate_ecc_folder);
+				}
 			}
 		}
 		return true;
