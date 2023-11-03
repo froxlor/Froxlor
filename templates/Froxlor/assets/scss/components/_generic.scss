@@ -92,3 +92,10 @@ td.text-end {
 		background-color: transparent;
 	}
 }
+
+// Table
+@include color-mode(light) {
+	.table {
+		--bs-table-bg: white;
+	}
+}
