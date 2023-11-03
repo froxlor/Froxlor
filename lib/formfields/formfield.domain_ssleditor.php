@@ -44,7 +44,8 @@ return [
 						'cols' => 100,
 						'rows' => 15,
 						'value' => $result['ssl_cert_file'],
-						'placeholder' => lng('domain.ssl_certificate_placeholder')
+						'placeholder' => lng('domain.ssl_certificate_placeholder'),
+						'mandatory' => true
 					],
 					'ssl_key_file' => [
 						'label' => lng('admin.ipsandports.ssl_key_file_content'),
@@ -53,7 +54,8 @@ return [
 						'cols' => 100,
 						'rows' => 15,
 						'value' => $result['ssl_key_file'],
-						'placeholder' => lng('domain.ssl_key_placeholder')
+						'placeholder' => lng('domain.ssl_key_placeholder'),
+						'mandatory' => true
 					],
 					'ssl_cert_chainfile' => [
 						'label' => lng('admin.ipsandports.ssl_cert_chainfile_content'),
