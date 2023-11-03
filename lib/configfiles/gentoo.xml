@@ -100,7 +100,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
-				<daemon name="lighttpd" title="LigHTTPd">
+				<daemon name="lighttpd" title="LigHTTPd (deprecated)">
 					<install><![CDATA[emerge www-servers/lighttpd]]></install>
 					<file name="/etc/lighttpd/lighttpd.conf">
 						<content><![CDATA[
