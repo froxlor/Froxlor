@@ -103,3 +103,8 @@ if (Froxlor::isFroxlorVersion('2.1.0-beta1')) {
 
 	Froxlor::updateToVersion('2.1.0-beta2');
 }
+
+if (Froxlor::isFroxlorVersion('2.1.0-beta2')) {
+	Update::showUpdateStep("Updating from 2.1.0-beta2 to 2.1.0-rc1", false);
+	Froxlor::updateToVersion('2.1.0-rc1');
+}
