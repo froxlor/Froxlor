@@ -1423,6 +1423,7 @@ Yours sincerely, your administrator',
 		'dnsentry_reallydelete' => 'Do you really want to delete this zone entry?',
 		'certificate_reallydelete' => 'Do you really want to delete this certificate?',
 		'cache_reallydelete' => 'Do you really want to clear the cache?',
+		'please_enter_otp' => 'Please enter 2FA code',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'default',

@@ -1308,6 +1308,7 @@ Vielen Dank, Ihr Administrator',
 		'dnsentry_reallydelete' => 'Wollen Sie den DNS-Eintrag wirklich löschen?',
 		'certificate_reallydelete' => 'Wollen Sie diese Zertifikat wirklich löschen?',
 		'cache_reallydelete' => 'Wollen Sie den Cache wirklich leeren?',
+		'please_enter_otp' => 'Bitte 2FA Code eingeben',
 	],
 	'serversettings' => [
 		'session_timeout' => [
