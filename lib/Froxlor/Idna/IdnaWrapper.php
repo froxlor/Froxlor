@@ -64,7 +64,7 @@ class IdnaWrapper
 	 */
 	public function encode(string $to_encode): string
 	{
-		$to_encode = $this->isUtf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+		$to_encode = $this->isUtf8($to_encode) ? $to_encode : mb_convert_encoding($to_encode, 'UTF-8');
 		try {
 			return $this->idna_converter->encode($to_encode);
 		} catch (InvalidArgumentException $iae) {
