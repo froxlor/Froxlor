@@ -327,11 +327,12 @@ if ($action == '2fa_entercode') {
 			if ($userinfo['type_2fa'] == 1) {
 				// generate code
 				$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
-				$code = $tfa->getCode($tfa->createSecret());
+				$secret = $tfa->createSecret();
+				$code = $tfa->getCode($secret);
 				// set code for user
 				$stmt = Database::prepare("UPDATE $table SET `data_2fa` = :d2fa WHERE `$uid` = :uid");
 				Database::pexecute($stmt, [
-					"d2fa" => $code,
+					"d2fa" => $secret,
 					"uid" => $userinfo[$uid]
 				]);
 				// build up & send email
