@@ -1667,6 +1667,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| $hsts_sub != $result['hsts_sub']
 				|| $hsts_preload != $result['hsts_preload']
 				|| $ocsp_stapling != $result['ocsp_stapling']
+				|| $sslenabled != $result['ssl_enabled']
 			) {
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
@@ -1815,7 +1816,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$update_data['wwwserveralias'] = $wwwserveralias;
 			$update_data['iswildcarddomain'] = $iswildcarddomain;
 			$update_data['phpenabled'] = $phpenabled;
-			$update_data['openbasedir'] = $openbasedir;;
+			$update_data['openbasedir'] = $openbasedir;
 			$update_data['openbasedir_path'] = $openbasedir_path;
 			$update_data['speciallogfile'] = $speciallogfile;
 			$update_data['phpsettingid'] = $phpsettingid;
