@@ -187,7 +187,8 @@ class CurrentUser
 		if (self::getField('type_2fa') == 1) {
 			// generate code
 			$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
-			$code = $tfa->getCode($tfa->createSecret());
+			$secret = $tfa->createSecret();
+			$code = $tfa->getCode($secret);
 			// set code for user
 			$table = TABLE_PANEL_CUSTOMERS;
 			$uid = 'customerid';
@@ -197,7 +198,7 @@ class CurrentUser
 			}
 			$stmt = Database::prepare("UPDATE $table SET `data_2fa` = :d2fa WHERE `$uid` = :uid");
 			Database::pexecute($stmt, [
-				"d2fa" => $code,
+				"d2fa" => $secret,
 				"uid" => self::getField($uid)
 			]);
 			// build up & send email
