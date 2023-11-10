@@ -35,6 +35,8 @@ Only reproducible issues on a default/clean setup from the latest stable release
 - Theoretical attacks without proof of exploitability
 - Attacks that are the result of a third party library should be reported to the library maintainers
 - Social engineering
+- Attacks that require disabling security features or reducing the security level of the environment
+- Exploits by an admin user itself (privileged user and implicitly trusted)
 - Reflected file download
 - Physical attacks
 - Weak SSL/TLS/SSH algorithms or protocols
