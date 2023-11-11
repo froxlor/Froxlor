@@ -17,7 +17,8 @@
 		position: absolute;
 		top: 2.75rem;
 		z-index: 50;
-		width: 70vh;
+		width: 90vw;
+		max-width: 750px;
 		max-height: 50vh;
 
 		background: $search-bg;
