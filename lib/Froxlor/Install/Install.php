@@ -304,7 +304,7 @@ class Install
 			throw new Exception(lng('error.invalidip', [$serveripv4]));
 		} elseif (!empty($serveripv6) && (!Validate::validate_ip2($serveripv6, true, '', false, true) || IPTools::is_ipv6($serveripv6) == false)) {
 			throw new Exception(lng('error.invalidip', [$serveripv6]));
-		} elseif (!Validate::validateDomain($servername) && !Validate::validateLocalHostname($servername)) {
+		} elseif (!Validate::validateDomain($servername)) {
 			throw new Exception(lng('install.errors.servernameneedstobevalid'));
 		} elseif (posix_getpwnam($httpuser) === false) {
 			throw new Exception(lng('install.errors.websrvuserdoesnotexist'));

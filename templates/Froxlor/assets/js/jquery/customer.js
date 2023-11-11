@@ -31,6 +31,9 @@ export default function () {
 						planid: pid
 					},
 					dataType: "json",
+					beforeSend: function(request) {
+						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+					},
 					success: function (json) {
 						for (var i in json) {
 							if (i == 'email_imap' || i == 'email_pop3' || i == 'perlenabled' || i == 'phpenabled' || i == 'dnsenabled' || i == 'logviewenabled') {

@@ -45,13 +45,13 @@
 						<input type="hidden" name="page" value="{{ page }}"/>
 						<input type="hidden" name="send" value="send"/>
 						{% if userinfo.type_2fa == 0 %}
-							<button class="btn btn-primary rounded-top-0" type="submit" name="preadd">
+							<button class="btn btn-primary" type="submit" name="preadd">
 								{{ lng('2fa.2fa_add') }}</button>
 						{% elseif userinfo['2fa_unsaved'] is defined and userinfo['2fa_unsaved'] %}
-							<button class="btn btn-primary rounded-top-0" type="submit" name="add">
+							<button class="btn btn-primary" type="submit" name="add">
 								{{ lng('2fa.2fa_add') }}</button>
 						{% else %}
-							<button class="btn btn-warning rounded-top-0" type="submit" name="delete">
+							<button class="btn btn-warning" type="submit" name="delete">
 								{{ lng('2fa.2fa_delete') }}</button>
 						{% endif %}
 					</div>

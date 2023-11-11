@@ -193,10 +193,14 @@ class Form
 				if (!$do_show) {
 					$fielddata['note'] = lng('serversettings.option_requires_otp');
 					if (!$otp_enabled_system) {
+						$fielddata['disabled'] = true;
 						$fielddata['note'] .= '<br>' . lng('2fa.2fa_not_activated');
 					} elseif (!$otp_enabled_user) {
+						$fielddata['disabled'] = true;
 						$fielddata['note'] .= '<br>' . lng('2fa.2fa_not_activated_for_user');
 					}
+					// show field in any case
+					$do_show = true;
 				}
 			}
 

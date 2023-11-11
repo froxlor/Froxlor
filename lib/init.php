@@ -114,10 +114,10 @@ if (!isset($sql) || !is_array($sql)) {
 /**
  * Show nice note if requested domain is "unknown" to froxlor and thus is being lead to its vhost
  */
-if ($_SERVER['HTTP_HOST'] != Settings::Get('system.hostname') &&
-		!filter_var($_SERVER['HTTP_HOST'], FILTER_VALIDATE_IP) && (
+if ($_SERVER['SERVER_NAME'] != Settings::Get('system.hostname') &&
+		!filter_var($_SERVER['SERVER_NAME'], FILTER_VALIDATE_IP) && (
 		empty(Settings::Get('system.froxloraliases')) ||
-		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['HTTP_HOST'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
+		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['SERVER_NAME'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
 )) {
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
 	$unconfiguredPath = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/templates/misc/unconfigured/index.html');
@@ -346,6 +346,7 @@ if (CurrentUser::hasSession()) {
 	if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH', 'DELETE'])) {
 		$current_token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
 		if ($current_token != CurrentUser::getField('csrf_token')) {
+			http_response_code(403);
 			Response::dynamicError('CSRF validation failed');
 		}
 	}
