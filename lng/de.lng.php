@@ -920,6 +920,7 @@ return [
 		'dns_duplicate_entry' => 'Eintrag existiert bereits',
 		'dns_notfoundorallowed' => 'Domain nicht gefunden oder keine Berechtigung',
 		'domain_nopunycode' => 'Die Eingabe von Punycode (IDNA) ist nicht notwendig. Die Domain wird automatisch konvertiert.',
+		'domain_noipaddress' => 'Eine IP-Adresse kann nicht als Domain angelegt werden',
 		'dns_record_toolong' => 'Records/Labels können maximal 63 Zeichen lang sein',
 		'noipportgiven' => 'Keine IP/Port angegeben',
 		'nosslippportgiven' => 'Wenn SSL aktiviert ist, muss eine SSL IP/Port angegeben werden',

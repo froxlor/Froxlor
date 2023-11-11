@@ -349,6 +349,8 @@ class Domains extends ApiCommand implements ResourceEntity
 
 				if (substr($p_domain, 0, 4) == 'xn--') {
 					Response::standardError('domain_nopunycode', '', true);
+				} elseif (Validate::validate_ip2($p_domain, true, '', true, true)) {
+					Response::standardError('domain_noipaddress', '', true);
 				}
 
 				$idna_convert = new IdnaWrapper();

@@ -992,6 +992,7 @@ return [
 		'dns_duplicate_entry' => 'Record already exists',
 		'dns_notfoundorallowed' => 'Domain not found or no permission',
 		'domain_nopunycode' => 'You must not specify punycode (IDNA). The domain will automatically be converted',
+		'domain_noipaddress' => 'Cannot add an IP address as domain',
 		'dns_record_toolong' => 'Records/labels can only be up to 63 characters',
 		'noipportgiven' => 'No IP/port given',
 		'nosslippportgiven' => 'When enabling SSL you need to select a SSL IP/port',

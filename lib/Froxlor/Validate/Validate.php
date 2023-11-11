@@ -224,7 +224,7 @@ class Validate
 	 * Check if the submitted string is a valid domainname
 	 *
 	 * @param string $domainname The domainname which should be checked.
-	 * @param bool $allow_underscore optional if true, allowes the underscore character in a domain label (DKIM etc.)
+	 * @param bool $allow_underscore optional if true, allows the underscore character in a domain label (DKIM etc.)
 	 *
 	 * @return string|boolean the domain-name if the domain is valid, false otherwise
 	 */
