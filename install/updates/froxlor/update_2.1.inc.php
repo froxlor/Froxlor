@@ -108,3 +108,18 @@ if (Froxlor::isFroxlorVersion('2.1.0-beta2')) {
 	Update::showUpdateStep("Updating from 2.1.0-beta2 to 2.1.0-rc1", false);
 	Froxlor::updateToVersion('2.1.0-rc1');
 }
+
+if (Froxlor::isFroxlorVersion('2.1.0-rc1')) {
+	Update::showUpdateStep("Updating from 2.1.0-rc1 to 2.1.0-rc2", false);
+
+	Update::showUpdateStep("Adjusting setting spf_entry");
+	$spf_entry = Settings::Get('spf.spf_entry');
+	if (!preg_match('/^v=spf[a-z0-9:~?\s.-]+$/i', $spf_entry)) {
+		Settings::Set('spf.spf_entry', 'v=spf1 a mx -all');
+		Update::lastStepStatus(1, 'corrected');
+	} else {
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToVersion('2.1.0-rc2');
+}
