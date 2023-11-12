@@ -175,7 +175,7 @@ final class UpdateCommand extends CliCommand
 								$result = self::SUCCESS;
 								$question = new ConfirmationQuestion('Update database? [no] ', false, '/^(y|j)/i');
 								if ($yestoall || $helper->ask($input, $output, $question)) {
-									$result = $this->updateDatabase();
+									$result = $this->runUpdate($output, true);
 								}
 							} else {
 								$errmsg = 'error.autoupdate_' . $auex;

@@ -410,7 +410,7 @@ class Install
 			} else {
 				$osrf = explode("\n", file_get_contents('/etc/os-release'));
 				foreach ($osrf as $line) {
-					$osrfline = explode("\n", $line);
+					$osrfline = explode("=", $line);
 					if ($osrfline[0] == 'VERSION_CODENAME') {
 						$os_dist['VERSION_CODENAME'] = $osrfline[1];
 					} else if ($osrfline[0] == 'ID') {
