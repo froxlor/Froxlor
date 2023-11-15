@@ -259,7 +259,7 @@ class Data
 			if (preg_match($fielddata['string_regexp'], $newfieldvalue)) {
 				$returnvalue = true;
 			}
-		} else if (preg_match('/^[^\0]*$/', $newfieldvalue)) {
+		} elseif (preg_match('/^[^\0]*$/', $newfieldvalue)) {
 			$returnvalue = true;
 		}
 
