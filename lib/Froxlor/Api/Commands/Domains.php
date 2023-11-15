@@ -349,6 +349,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 				if (substr($p_domain, 0, 4) == 'xn--') {
 					Response::standardError('domain_nopunycode', '', true);
+					Response::standardError('domain_nopunycode', '', true);
 				} elseif (Validate::validate_ip2($p_domain, true, '', true, true)) {
 					Response::standardError('domain_noipaddress', '', true);
 				}
@@ -1652,6 +1653,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| $iswildcarddomain != $result['iswildcarddomain']
 				|| $phpenabled != $result['phpenabled']
 				|| $openbasedir != $result['openbasedir']
+				|| $openbasedir_path != $result['openbasedir_path']
 				|| $phpsettingid != $result['phpsettingid']
 				|| $mod_fcgid_starter != $result['mod_fcgid_starter']
 				|| $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests']
