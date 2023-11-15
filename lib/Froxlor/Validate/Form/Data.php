@@ -35,6 +35,11 @@ class Data
 		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
 	}
 
+	public static function validateFormFieldPassword($fieldname, $fielddata, $newfieldvalue)
+	{
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
+	}
+
 	public static function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 	{
 		if (isset($fielddata['string_delimiter']) && $fielddata['string_delimiter'] != '') {
@@ -207,75 +212,6 @@ class Data
 			return true;
 		} else {
 			return 'hiddenfieldvaluechanged';
-		}
-	}
-
-	public static function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
-	{
-		if (isset($fielddata['string_delimiter']) && $fielddata['string_delimiter'] != '') {
-			$newfieldvalues = explode($fielddata['string_delimiter'], $newfieldvalue);
-			unset($fielddata['string_delimiter']);
-
-			$returnvalue = true;
-			foreach ($newfieldvalues as $single_newfieldvalue) {
-				/**
-				 * don't use tabs in value-fields, #81
-				 */
-				$single_newfieldvalue = str_replace("\t", " ", $single_newfieldvalue);
-				$single_returnvalue = Data::validateFormFieldString($fieldname, $fielddata, $single_newfieldvalue);
-				if ($single_returnvalue !== true) {
-					$returnvalue = $single_returnvalue;
-					break;
-				}
-			}
-		} else {
-			$returnvalue = false;
-
-			/**
-			 * don't use tabs in value-fields, #81
-			 */
-			$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
-
-			if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-				$returnvalue = Validate::validateEmail($newfieldvalue);
-			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
-				$returnvalue = Validate::validateUrl($newfieldvalue);
-			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
-				// add trailing slash to validate path if needed
-				// refs #331
-				if (substr($newfieldvalue, -1) != '/') {
-					$newfieldvalue .= '/';
-				}
-				$returnvalue = ($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue));
-			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'file') {
-				$returnvalue = ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue));
-			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir') {
-				$returnvalue = (($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue)));
-			} elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
-				$returnvalue = true;
-			}
-
-			if (isset($fielddata['string_regexp']) && $fielddata['string_regexp'] != '') {
-				if (preg_match($fielddata['string_regexp'], $newfieldvalue)) {
-					$returnvalue = true;
-				} else {
-					$returnvalue = false;
-				}
-			}
-
-			if (isset($fielddata['string_emptyallowed']) && $fielddata['string_emptyallowed'] === true && $newfieldvalue === '') {
-				$returnvalue = true;
-			} elseif (isset($fielddata['string_emptyallowed']) && $fielddata['string_emptyallowed'] === false && $newfieldvalue === '') {
-				$returnvalue = 'stringmustntbeempty';
-			}
-		}
-
-		if ($returnvalue === true) {
-			return true;
-		} elseif ($returnvalue === false) {
-			return 'stringformaterror';
-		} else {
-			return $returnvalue;
 		}
 	}
 
