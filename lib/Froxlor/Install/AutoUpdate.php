@@ -51,13 +51,13 @@ class AutoUpdate
 
 	/**
 	 * returns status about whether there is a newer version
-	 * 
+	 *
 	 * 0 = no new version available
 	 * 1 = new version available
 	 * -1 = remote error message
 	 * >1 = local error message
 	 *
-	 * @return int 
+	 * @return int
 	 */
 	public static function checkVersion(): int
 	{
@@ -68,6 +68,12 @@ class AutoUpdate
 				$channel = '';
 				if (Settings::Get('system.update_channel') == 'testing') {
 					$channel = '/testing';
+				} elseif (Settings::Get('system.update_channel') == 'nightly') {
+					if (empty(Froxlor::BRANDING)) {
+						$channel = '/nightly.0000000';
+					} else {
+						$channel = '/' . substr(Froxlor::BRANDING, 1);
+					}
 				}
 				$latestversion = HttpClient::urlGet(self::UPDATE_URI . Froxlor::VERSION . $channel, true, 3);
 			} catch (Exception $e) {
@@ -81,7 +87,7 @@ class AutoUpdate
 				if (!empty(self::$latestversion['error']) && self::$latestversion['error']) {
 					$result = -1;
 					self::$lasterror = self::$latestversion['message'];
-				} else if (isset(self::$latestversion['has_latest']) && self::$latestversion['has_latest'] == false) {
+				} elseif (isset(self::$latestversion['has_latest']) && self::$latestversion['has_latest'] == false) {
 					$result = 1;
 				}
 			}

@@ -130,7 +130,8 @@ return [
 					'default' => 'stable',
 					'select_var' => [
 						'stable' => lng('serversettings.uc_stable'),
-						'testing' => lng('serversettings.uc_testing')
+						'testing' => lng('serversettings.uc_testing'),
+						'nightly' => lng('serversettings.uc_nightly')
 					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true

@@ -2210,6 +2210,7 @@ Yours sincerely, your administrator',
 		],
 		'uc_stable' => 'stable',
 		'uc_testing' => 'testing',
+		'uc_nightly' => 'nightly',
 		'traffictool' => [
 			'toolselect' => 'Traffic analyzer',
 			'webalizer' => 'Webalizer',

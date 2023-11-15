@@ -100,7 +100,7 @@ final class UpdateCommand extends CliCommand
 					}
 					// there is a new version
 					if ($input->getOption('check-only')) {
-						$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+						$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') != 'stable' ? Settings::Get('system.update_channel').' ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
 					} else {
 						$text = lng('admin.newerversionavailable') . ' ' . lng('admin.newerversiondetails', [AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
 					}
@@ -199,7 +199,7 @@ final class UpdateCommand extends CliCommand
 		if ($input->getOption('mail-notify')) {
 			$last_check_version = Settings::Get('system.update_notify_last');
 			if (Update::versionInUpdate($last_check_version, AutoUpdate::getFromResult('version'))) {
-				$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+				$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') != 'stable' ? Settings::Get('system.update_channel').' ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
 				$mail = new Mailer(true);
 				$mail->Body = $text;
 				$mail->Subject = "[froxlor] " . lng('update.notify_subject');

@@ -82,7 +82,7 @@ class Froxlor extends ApiCommand
 				if ($aucheck == 1) {
 					// anzeige über version-status mit ggfls. formular
 					// zum update schritt #1 -> download
-					$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), $this->version]);
+					$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') != 'stable' ? Settings::Get('system.update_channel').' ' : ''), AutoUpdate::getFromResult('version'), $this->version]);
 					$response = [
 						'isnewerversion' => (int) !AutoUpdate::getFromResult('has_latest'),
 						'version' => $this->version,
@@ -91,7 +91,7 @@ class Froxlor extends ApiCommand
 						'additional_info' => AutoUpdate::getFromResult('info'),
 						'aucheck' => $aucheck
 					];
-				} else if ($aucheck < 0 || $aucheck > 1) {
+				} elseif ($aucheck < 0 || $aucheck > 1) {
 					// errors
 					if ($aucheck < 0) {
 						$errmsg = AutoUpdate::getLastError();

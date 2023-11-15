@@ -1,5 +1,5 @@
 name: Froxlor-CI-MariaDB
-on: ['push', 'pull_request', 'create']
+on: [ 'push', 'pull_request', 'create' ]
 
 jobs:
   froxlor:
@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.2']
-        mariadb-version: [10.11, 10.5]
+        php-versions: [ '7.4', '8.2' ]
+        mariadb-version: [ 10.11, 10.5 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,33 +49,76 @@ jobs:
       - name: Run testing
         run: ant quick-build
 
-#      - name: irc push
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'push'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} pushed ${{ github.event.ref }} ${{ github.event.compare }}
-#            ${{ join(github.event.commits.*.message) }}
+  nightly:
+    name: Create nightly/testing tarball
+    runs-on: ubuntu-latest
+    needs: froxlor
+    if: ${{ github.event_name == 'push' }}
 
-#      - name: irc pull request
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'pull_request'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} opened PR ${{ github.event.pull_request.html_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-#      - name: irc tag created
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'create' && github.event.ref_type == 'tag'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} tagged ${{ github.repository }} ${{ github.event.ref }}
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build assets
+        run: npm run build
+        working-directory: .
+
+      - name: Setting file/directory permissions
+        run: |
+          find -exec chmod ugo+r,u+w,go-w {} \;
+          find -type f -exec chmod ugo-x {} \;
+          find -type d -exec chmod ugo+x {} \;
+          chmod 0755 bin/froxlor-cli
+
+      - name: Remove vcs and unneeded files
+        run: |
+          rm .gitignore
+          rm .editorconfig
+          rm -rf node_modules
+          rm composer.json
+          rm composer.lock
+          rm package.json
+          rm package-lock.json
+          rm *.xml
+          rm vite.config.js
+
+      - name: Create empty index.html in built assets directory
+        run: |
+          touch templates/Froxlor/build/index.html
+          touch templates/Froxlor/build/assets/index.html
+
+      - name: Set outputs
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Set nightly branding
+        run: |
+          sed -i "s/const BRANDING = '';/const BRANDING = '+nightly.${{steps.vars.outputs.sha_short}}';/" lib/Froxlor/Froxlor.php
+          zip -r froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip . -x "*.git*"
+          sha256sum froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip > froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip.sha256
+          mkdir dist
+          mv froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip dist/
+          mv froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip.sha256 dist/
+
+      - name: Deploy nightly to server
+        uses: easingthemes/ssh-deploy@v3.4.3
+        env:
+          ARGS: "-rltDzvO --chown=${{ secrets.WEB_USER }}:${{ secrets.WEB_USER }}"
+          SOURCE: "dist/"
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: "${{ secrets.REMOTE_TARGET }}"
