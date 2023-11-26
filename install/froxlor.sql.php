@@ -750,6 +750,7 @@ CREATE TABLE `panel_templates` (
   `templategroup` varchar(255) NOT NULL default '',
   `varname` varchar(255) NOT NULL default '',
   `value` longtext NOT NULL,
+  `file_extension` varchar(50) NOT NULL default 'html'
   PRIMARY KEY  (id),
   KEY adminid (adminid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
