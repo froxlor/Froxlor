@@ -65,6 +65,7 @@ use Froxlor\UI\Linker;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\Install\Requirements;
 
 // include MySQL-tabledefinitions
 require Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -123,6 +124,24 @@ if ($_SERVER['SERVER_NAME'] != Settings::Get('system.hostname') &&
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
 	$redirect_file = FileDir::getUnknownDomainTemplate($_SERVER['SERVER_NAME']);
 	header('Location: '.$redirect_file);
+	die();
+}
+
+// validate php-extensions requirements
+$loadedExtensions = get_loaded_extensions();
+$missingExtensions = [];
+foreach (Requirements::REQUIRED_EXTENSIONS as $requiredExtension) {
+	if (in_array($requiredExtension, $loadedExtensions)) {
+		continue;
+	}
+	$missingExtensions[] = $requiredExtension;
+}
+if (!empty($missingExtensions)) {
+	UI::twig()->addGlobal('install_mode', '1');
+	echo UI::twig()->render($_deftheme . '/misc/missingextensionhint.html.twig', [
+		'phpversion' => phpversion(),
+		'missing_extensions' => implode(", ", $missingExtensions),
+	]);
 	die();
 }
 

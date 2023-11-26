@@ -26,13 +26,13 @@
 namespace Froxlor\Install;
 
 use Exception;
-use PDO;
+use Froxlor\Config\ConfigParser;
 use Froxlor\Install\Install\Core;
+use Froxlor\System\IPTools;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
-use Froxlor\Config\ConfigParser;
 use Froxlor\Validate\Validate;
-use Froxlor\System\IPTools;
+use PDO;
 
 class Install
 {
@@ -41,9 +41,6 @@ class Install
 	public $maxSteps;
 	public $phpVersion;
 	public $formfield;
-	public string $requiredVersion = '7.4.0';
-	public array $requiredExtensions = ['session', 'ctype', 'xml', 'filter', 'posix', 'mbstring', 'curl', 'gmp', 'json', 'gd'];
-	public array $suggestedExtensions = ['bcmath', 'zip', 'gnupg'];
 	public array $suggestions = [];
 	public array $criticals = [];
 	public array $loadedExtensions;
@@ -99,7 +96,7 @@ class Install
 			}
 
 			// check for url manipulation or wrong step
-			if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > ($_SESSION['installation']['stepCompleted'] ?? 0))
+			if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > $_SESSION['installation']['stepCompleted'])
 				|| (!isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > 0)
 			) {
 				$this->currentStep = isset($_SESSION['installation']['stepCompleted']) ? $_SESSION['installation']['stepCompleted'] + 1 : 1;
@@ -151,16 +148,14 @@ class Install
 		if ($this->currentStep <= $this->maxSteps) {
 			// Validate user data
 			$validatedData = $this->validateRequest($formfield['sections']['step' . $this->currentStep]['fields']);
-			// Check database connection (
 			if ($this->currentStep == 1) {
+				// Check database connection
 				$this->checkDatabase($validatedData);
-			}
-			// Check validity of admin user data
-			elseif ($this->currentStep == 2) {
+			} elseif ($this->currentStep == 2) {
+				// Check validity of admin user data
 				$this->checkAdminUser($validatedData);
-			}
-			// Check validity of system data
-			elseif ($this->currentStep == 3) {
+			} elseif ($this->currentStep == 3) {
+				// Check validity of system data
 				$this->checkSystem($validatedData);
 			}
 			$validatedData['stepCompleted'] = ($this->currentStep < $this->maxSteps) ? $this->currentStep : ($this->maxSteps - 1);
@@ -192,7 +187,7 @@ class Install
 	private function checkInstallStateFinished(): bool
 	{
 		$core = new Core($_SESSION['installation']);
-		if (isset($_SESSION['installation']['manual_config']) && (int) $_SESSION['installation']['manual_config'] == 1) {
+		if (isset($_SESSION['installation']['manual_config']) && (int)$_SESSION['installation']['manual_config'] == 1) {
 			$core->createUserdataConf();
 			return true;
 		}
@@ -200,7 +195,7 @@ class Install
 		$stmt = $pdo->prepare("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'panel' AND `varname` = 'is_configured'");
 		$stmt->execute();
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-		if ($result && (int) $result['value'] == 1) {
+		if ($result && (int)$result['value'] == 1) {
 			$core->createUserdataConf();
 			return true;
 		}
@@ -223,7 +218,7 @@ class Install
 		}
 
 		// check for required extensions
-		foreach ($this->requiredExtensions as $requiredExtension) {
+		foreach (Requirements::REQUIRED_EXTENSIONS as $requiredExtension) {
 			if (in_array($requiredExtension, $this->loadedExtensions)) {
 				continue;
 			}
@@ -231,7 +226,7 @@ class Install
 		}
 
 		// check for suggested extensions
-		foreach ($this->suggestedExtensions as $suggestedExtension) {
+		foreach (Requirements::SUGGESTED_EXTENSIONS as $suggestedExtension) {
 			if (in_array($suggestedExtension, $this->loadedExtensions)) {
 				continue;
 			}
@@ -250,11 +245,11 @@ class Install
 	 */
 	private function getInformationText(): string
 	{
-		if (version_compare($this->requiredVersion, PHP_VERSION, "<")) {
+		if (version_compare(Requirements::REQUIRED_VERSION, PHP_VERSION, "<")) {
 			$text = lng('install.phpinfosuccess', [$this->phpVersion]);
 		} else {
-			$text = lng('install.phpinfowarn', [$this->requiredVersion]);
-			$this->criticals[] = lng('install.phpinfoupdate', [$this->phpVersion, $this->requiredVersion]);
+			$text = lng('install.phpinfowarn', [Requirements::REQUIRED_VERSION]);
+			$this->criticals[] = lng('install.phpinfoupdate', [$this->phpVersion, Requirements::REQUIRED_VERSION]);
 		}
 		return $text;
 	}
@@ -302,7 +297,7 @@ class Install
 			throw new Exception(lng('install.errors.nov4andnov6ip'));
 		} elseif (!empty($serveripv4) && (!Validate::validate_ip2($serveripv4, true, '', false, true) || IPTools::is_ipv6($serveripv4))) {
 			throw new Exception(lng('error.invalidip', [$serveripv4]));
-		} elseif (!empty($serveripv6) && (!Validate::validate_ip2($serveripv6, true, '', false, true) || IPTools::is_ipv6($serveripv6) == false)) {
+		} elseif (!empty($serveripv6) && (!Validate::validate_ip2($serveripv6, true, '', false, true) || !IPTools::is_ipv6($serveripv6))) {
 			throw new Exception(lng('error.invalidip', [$serveripv6]));
 		} elseif (!Validate::validateDomain($servername)) {
 			throw new Exception(lng('install.errors.servernameneedstobevalid'));
