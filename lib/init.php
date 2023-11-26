@@ -188,7 +188,7 @@ if (Update::versionInUpdate(Settings::Get('panel.version'), '2.0.0-beta1')) {
 
 // Check if a different variant of the theme is used
 $themevariant = "default";
-if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
+if (preg_match("/([a-z0-9.\-]+)_([a-z0-9.\-]+)/i", $theme, $matches)) {
 	$theme = $matches[1];
 	$themevariant = $matches[2];
 }

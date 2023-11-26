@@ -321,6 +321,10 @@ class UI
 				}
 			}
 		}
+		// check for template-variant
+		if (preg_match("/([a-z0-9.\-]+)_([a-z0-9.\-]+)/i", $theme, $matches)) {
+			$theme = $matches[1];
+		}
 		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $theme)) {
 			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__);
 			$theme = self::$default_theme;

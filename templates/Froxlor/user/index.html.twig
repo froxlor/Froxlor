@@ -174,16 +174,16 @@
 							<div class="ms-2 me-auto">
 								<div class="fw-bold">{{ lng('customer.services') }}</div>
 								{% if userinfo.imap == 1 %}
-									<span class="badge bg-success">IMAP</span>
+									<span class="badge bg-success me-1">IMAP</span>
 								{% endif %}
 								{% if userinfo.pop3 == 1 %}
-									<span class="badge bg-success">POP3</span>
+									<span class="badge bg-success me-1">POP3</span>
 								{% endif %}
 								{% if userinfo.phpenabled == 1 %}
-									<span class="badge bg-success">PHP</span>
+									<span class="badge bg-success me-1">PHP</span>
 								{% endif %}
 								{% if userinfo.perlenabled == 1 %}
-									<span class="badge bg-success">Perl/CGI</span>
+									<span class="badge bg-success me-1">Perl/CGI</span>
 								{% endif %}
 								{% if userinfo.api_allowed == 1 %}
 									<a href="{{ linker({'section':'index','page':'apikeys'}) }}">
