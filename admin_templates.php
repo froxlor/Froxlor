@@ -60,7 +60,8 @@ if (Settings::Get('panel.sendalternativemail') == 1) {
 }
 
 $file_templates = [
-	'index_html'
+	'index_html',
+	'unconfigured_html'
 ];
 
 $languages = Language::getLanguages();

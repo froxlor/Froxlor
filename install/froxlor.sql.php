@@ -562,7 +562,6 @@ opcache.validate_timestamps'),
 	('system', 'mod_fcgid_wrapper', '1'),
 	('system', 'mod_fcgid_starter', '0'),
 	('system', 'mod_fcgid_peardir', '/usr/share/php/:/usr/share/php5/'),
-	('system', 'index_file_extension', 'html'),
 	('system', 'mod_fcgid_maxrequests', '250'),
 	('system', 'ssl_key_file','/etc/ssl/froxlor_selfsigned.key'),
 	('system', 'ssl_ca_file', ''),
@@ -728,7 +727,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.1.0-rc2'),
-	('panel', 'db_version', '202305240');
+	('panel', 'db_version', '202311260');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

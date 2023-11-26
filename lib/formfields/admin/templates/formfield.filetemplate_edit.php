@@ -39,12 +39,21 @@ return [
 						'value' => lng('admin.templates.' . $row['varname']),
 						'display' => lng('admin.templates.' . $row['varname'])
 					],
+					'file_extension' => [
+						'label' => lng('admin.templates.file_extension'),
+						'type' => 'text',
+						'string_regexp' => '/^[a-zA-Z0-9]{1,6}$/',
+						'value' => $row['file_extension'],
+						'default' => 'html',
+						'mandatory' => true
+					],
 					'filecontent' => [
 						'label' => lng('admin.templates.filecontent'),
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,
-						'value' => $row['value']
+						'value' => $row['value'],
+						'mandatory' => true
 					],
 					'filesend' => [
 						'type' => 'hidden',

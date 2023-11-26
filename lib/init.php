@@ -121,12 +121,8 @@ if ($_SERVER['SERVER_NAME'] != Settings::Get('system.hostname') &&
 		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['SERVER_NAME'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
 )) {
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
-	$unconfiguredPath = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/templates/misc/unconfigured/index.html');
-	if (file_exists($unconfiguredPath)) {
-		echo file_get_contents($unconfiguredPath);
-	} else {
-		echo "This domain requires configuration via the froxlor server management panel, as it is currently not assigned to any customer.";
-	}
+	$output = FileDir::getUnknownDomainTemplate($_SERVER['SERVER_NAME']);
+	echo $output;
 	die();
 }
 

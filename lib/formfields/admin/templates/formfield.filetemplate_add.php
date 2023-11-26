@@ -38,11 +38,20 @@ return [
 						'type' => 'select',
 						'select_var' => $free_templates
 					],
+					'file_extension' => [
+						'label' => lng('admin.templates.file_extension'),
+						'type' => 'text',
+						'string_regexp' => '/^[a-zA-Z0-9]{1,6}$/',
+						'default' => 'html',
+						'value' => 'html',
+						'mandatory' => true
+					],
 					'filecontent' => [
 						'label' => lng('admin.templates.filecontent'),
 						'type' => 'textarea',
 						'cols' => 60,
-						'rows' => 12
+						'rows' => 12,
+						'mandatory' => true
 					],
 					'filesend' => [
 						'type' => 'hidden',

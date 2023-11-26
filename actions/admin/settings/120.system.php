@@ -172,16 +172,6 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				],
-				'system_index_file_extension' => [
-					'label' => lng('serversettings.index_file_extension'),
-					'settinggroup' => 'system',
-					'varname' => 'index_file_extension',
-					'type' => 'text',
-					'string_regexp' => '/^[a-zA-Z0-9]{1,6}$/',
-					'default' => 'html',
-					'save_method' => 'storeSettingField',
-					'advanced_mode' => true
-				],
 				'system_store_index_file_subs' => [
 					'label' => lng('serversettings.system_store_index_file_subs'),
 					'settinggroup' => 'system',

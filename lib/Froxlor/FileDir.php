@@ -258,6 +258,36 @@ class FileDir
 	}
 
 	/**
+	 * Read unconfigured-domain template from database if exists or fallback to default
+	 *
+	 * @param string $servername
+	 *
+	 * @return string
+	 */
+	public static function getUnknownDomainTemplate(string $servername = "")
+	{
+		$result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `templategroup` = 'files' AND `varname` = 'unconfigured_html'
+		");
+		Database::pexecute($result_stmt);
+		if (Database::num_rows() > 0) {
+			$template = $result_stmt->fetch(PDO::FETCH_ASSOC);
+			$replace_arr = [
+				'SERVERNAME' => $servername,
+			];
+			$tpl_content = PhpHelper::replaceVariables($template['value'], $replace_arr);
+		} else {
+			$unconfiguredPath = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/templates/misc/unconfigured/index.html');
+			if (file_exists($unconfiguredPath)) {
+				$tpl_content = file_get_contents($unconfiguredPath);
+			} else {
+				$tpl_content = lng('admin.templates.unconfigured_content_fallback');
+			}
+		}
+		return $tpl_content;
+	}
+
+	/**
 	 * store the default index-file in a given destination folder
 	 *
 	 * @param string $loginname customers loginname
@@ -277,7 +307,7 @@ class FileDir
 	{
 		if ($force || (int)Settings::Get('system.store_index_file_subs') == 1) {
 			$result_stmt = Database::prepare("
-			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
+			SELECT `t`.`value`, `t`.`file_extension`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c` INNER JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
 			ON `c`.`adminid` = `a`.`adminid`
 			INNER JOIN `" . TABLE_PANEL_TEMPLATES . "` AS `t`
@@ -300,7 +330,7 @@ class FileDir
 
 				// replaceVariables
 				$htmlcontent = PhpHelper::replaceVariables($template['value'], $replace_arr);
-				$indexhtmlpath = self::makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
+				$indexhtmlpath = self::makeCorrectFile($destination . '/index.' . $template['file_extension']);
 				$index_html_handler = fopen($indexhtmlpath, 'w');
 				fwrite($index_html_handler, $htmlcontent);
 				fclose($index_html_handler);
@@ -308,7 +338,7 @@ class FileDir
 					$logger->logAction(
 						FroxlorLogger::CRON_ACTION,
 						LOG_NOTICE,
-						'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath)
+						'Creating \'index.' . $template['file_extension'] . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath)
 					);
 				}
 			} else {

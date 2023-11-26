@@ -123,3 +123,18 @@ if (Froxlor::isFroxlorVersion('2.1.0-rc1')) {
 
 	Froxlor::updateToVersion('2.1.0-rc2');
 }
+
+if (Froxlor::isDatabaseVersion('202305240')) {
+
+	Update::showUpdateStep("Adjusting file-template file extension setttings");
+	$current_fileextension = Settings::Get('system.index_file_extension');
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup`= 'system' AND `varname`= 'index_file_extension'");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_TEMPLATES . "` ADD `file_extension` varchar(50) NOT NULL default 'html';");
+	if (strtolower(trim($current_fileextension)) != 'html') {
+		$stmt = Database::prepare("UPDATE TABLE `" . TABLE_PANEL_TEMPLATES . "` SET `file_extension` = :ext WHERE `templategroup` = 'files'");
+		Database::pexecute($stmt, ['ext' => strtolower(trim($current_fileextension))]);
+	}
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202311260');
+}
