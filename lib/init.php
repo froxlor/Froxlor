@@ -121,8 +121,8 @@ if ($_SERVER['SERVER_NAME'] != Settings::Get('system.hostname') &&
 		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['SERVER_NAME'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
 )) {
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
-	$output = FileDir::getUnknownDomainTemplate($_SERVER['SERVER_NAME']);
-	echo $output;
+	$redirect_file = FileDir::getUnknownDomainTemplate($_SERVER['SERVER_NAME']);
+	header('Location: '.$redirect_file);
 	die();
 }
 

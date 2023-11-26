@@ -263,6 +263,7 @@ class FileDir
 	 * @param string $servername
 	 *
 	 * @return string
+	 * @throws Exception
 	 */
 	public static function getUnknownDomainTemplate(string $servername = "")
 	{
@@ -276,7 +277,9 @@ class FileDir
 				'SERVERNAME' => $servername,
 			];
 			$tpl_content = PhpHelper::replaceVariables($template['value'], $replace_arr);
+			$tpl_ext = $template['file_extension'];
 		} else {
+			$tpl_ext = 'html';
 			$unconfiguredPath = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/templates/misc/unconfigured/index.html');
 			if (file_exists($unconfiguredPath)) {
 				$tpl_content = file_get_contents($unconfiguredPath);
@@ -284,7 +287,9 @@ class FileDir
 				$tpl_content = lng('admin.templates.unconfigured_content_fallback');
 			}
 		}
-		return $tpl_content;
+		$redirect_file = FileDir::makeCorrectFile(Froxlor::getInstallDir().'/notice.'.$tpl_ext);
+		file_put_contents($redirect_file, $tpl_content);
+		return basename($redirect_file);
 	}
 
 	/**
