@@ -27,6 +27,7 @@ namespace Froxlor\Install;
 
 use Exception;
 use Froxlor\Config\ConfigParser;
+use Froxlor\Froxlor;
 use Froxlor\Install\Install\Core;
 use Froxlor\System\IPTools;
 use Froxlor\UI\Panel\UI;
@@ -133,6 +134,7 @@ class Install
 			'section' => $this->formfield['install']['sections']['step' . $this->currentStep] ?? [],
 			'error' => $error ?? null,
 			'extended' => $this->extendedView,
+			'csrf_token' => Froxlor::genSessionId(20),
 		]);
 
 		// output view

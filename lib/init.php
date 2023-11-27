@@ -376,4 +376,6 @@ if (CurrentUser::hasSession()) {
 		'samesite' => 'Strict'
 	];
 	setcookie(session_name(), $_COOKIE[session_name()], $cookie_params);
+} else {
+	UI::twig()->addGlobal('csrf_token', Froxlor::genSessionId(20));
 }
