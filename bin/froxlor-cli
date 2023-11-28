@@ -24,20 +24,8 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-declare(strict_types=1);
-
-use Froxlor\Cli\ConfigDiff;
-use Symfony\Component\Console\Application;
-use Froxlor\Cli\RunApiCommand;
-use Froxlor\Cli\ConfigServices;
-use Froxlor\Cli\PhpSessionclean;
-use Froxlor\Cli\SwitchServerIp;
-use Froxlor\Cli\UpdateCommand;
-use Froxlor\Cli\InstallCommand;
-use Froxlor\Cli\MasterCron;
-use Froxlor\Cli\UserCommand;
-use Froxlor\Cli\ValidateAcmeWebroot;
 use Froxlor\Froxlor;
+use Symfony\Component\Console\Application;
 
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
@@ -53,14 +41,26 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
 $application = new Application('froxlor-cli', Froxlor::getFullVersion());
-$application->add(new RunApiCommand());
-$application->add(new ConfigServices());
-$application->add(new PhpSessionclean());
-$application->add(new SwitchServerIp());
-$application->add(new UpdateCommand());
-$application->add(new InstallCommand());
-$application->add(new MasterCron());
-$application->add(new UserCommand());
-$application->add(new ValidateAcmeWebroot());
-$application->add(new ConfigDiff());
+
+// files that are no commands
+$fileIgnoreList = ['CliCommand.php', 'index.html', 'install.functions.php'];
+// directory of commands to include
+$cmd_files = glob(Froxlor::getInstallDir() . '/lib/Froxlor/Cli/*.php');
+
+// include and add commands
+foreach ($cmd_files as $cmdFile) {
+	// check ignore-list
+	if (!in_array(basename($cmdFile), $fileIgnoreList)) {
+		// include class-file
+		require $cmdFile;
+		// create class-name including namespace
+		$cmdClass = "\\Froxlor\\Cli\\" . substr(basename($cmdFile), 0, -4);
+		// check whether it exists
+		if (class_exists($cmdClass)) {
+			// add to cli application
+			$application->add(new $cmdClass());
+		}
+	}
+}
+
 $application->run();
