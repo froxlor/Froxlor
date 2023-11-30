@@ -2379,7 +2379,7 @@ Yours sincerely, your administrator',
 		'database' => [
 			'top' => 'Database',
 			'title' => 'Create database and user',
-			'description' => 'Froxlor requires a database and additionally a privileged user to be able to create users and databases (GRANT option). The given database and unprivileged database-user will be created in this process. The privileged user must exist.',
+			'description' => 'Froxlor requires a database and additionally <a href="https://docs.froxlor.org/latest/general/installation/tarball.html#_3-create-privileged-database-user" target="_blank">a privileged user</a> to be able to create users and databases (GRANT option). The given database and unprivileged database-user will be created in this process. The privileged user must exist.',
 			'user' => 'Unprivileged database user',
 			'dbname' => 'Database name',
 			'force_create' => 'Backup and overwrite database if exists?',

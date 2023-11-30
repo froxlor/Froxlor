@@ -26,6 +26,7 @@
 namespace Froxlor\Cron\Http\LetsEncrypt;
 
 use Froxlor\Cron\FroxlorCron;
+use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
@@ -83,7 +84,7 @@ class AcmeSh extends FroxlorCron
 			$renew_domains = self::renewDomains(true);
 			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
-				Cronjob::inserttask(1);
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 			return 0;
 		}
@@ -203,7 +204,7 @@ class AcmeSh extends FroxlorCron
 		// This is easiest done by just creating a new task ;)
 		if ($changedetected) {
 			if (self::$no_inserttask == false) {
-				Cronjob::inserttask(1);
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
 		} else {

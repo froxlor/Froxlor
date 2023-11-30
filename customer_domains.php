@@ -72,7 +72,7 @@ if ($page == 'overview' || $page == 'domains') {
 		}
 
 		$actions_links[] = [
-			'href' => 'https://docs.froxlor.org/v2/user-guide/domains/',
+			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/domains/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'

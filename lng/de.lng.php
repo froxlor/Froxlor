@@ -2243,7 +2243,7 @@ Vielen Dank, Ihr Administrator',
 		'database' => [
 			'top' => 'Datenbank',
 			'title' => 'Datenbank und Benutzer erstellen',
-			'description' => 'Froxlor benötigt eine Datenbank und zusätzlich einen Benutzer mit privilegierten Rechten, welcher Benutzer und Datenbanken erstellen darf (GRANT Option). Die angegebene Datenbank und der unprivilegierte Benutzer werden automatisch in diesem Prozess erstellt. Der privilegierte Benutzer muss existieren.',
+			'description' => 'Froxlor benötigt eine Datenbank und zusätzlich <a href="https://docs.froxlor.org/latest/general/installation/tarball.html#_3-create-privileged-database-user" target="_blank">einen Benutzer mit privilegierten Rechten</a>, welcher Benutzer und Datenbanken erstellen darf (GRANT Option). Die angegebene Datenbank und der unprivilegierte Benutzer werden automatisch in diesem Prozess erstellt. Der privilegierte Benutzer muss existieren.',
 			'user' => 'Unprivilegierter Datenbank Benutzer',
 			'dbname' => 'Datenbank Name',
 			'force_create' => 'Sichern und überschreiben, sofern Datenbank existiert?',

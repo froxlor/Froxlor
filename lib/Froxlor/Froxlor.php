@@ -39,6 +39,8 @@ final class Froxlor
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';
 
+	const DOCS_URL = 'https://docs.froxlor.org/v2.1/';
+
 	/**
 	 * return path to where froxlor is installed, e.g.
 	 * /var/www/froxlor/

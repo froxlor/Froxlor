@@ -48,25 +48,31 @@ class Install
 	public array $supportedOS = [];
 	public array $webserverBackend = [
 		'php-fpm' => 'PHP-FPM',
-		'fcgid' => 'FCGID',
+		'fcgid' => 'FCGID (apache2 only)',
 		'mod_php' => 'mod_php (not recommended)',
 	];
 
 	public function __construct(array $cliData = [])
 	{
+		// set actual php version and extensions
+		$this->phpVersion = phpversion();
+		$this->loadedExtensions = get_loaded_extensions();
+
 		// get all supported OS
 		// show list of available distro's
 		$distros = glob(dirname(__DIR__, 3) . '/lib/configfiles/*.xml');
 		$distributions_select[''] = '-';
-		// read in all the distros
-		foreach ($distros as $distribution) {
-			// get configparser object
-			$dist = new ConfigParser($distribution);
-			// store in tmp array
-			$this->supportedOS[str_replace(".xml", "", strtolower(basename($distribution)))] = $dist->getCompleteDistroName();
+		if (in_array('xml', $this->loadedExtensions)) {
+			// read in all the distros
+			foreach ($distros as $distribution) {
+				// get configparser object
+				$dist = new ConfigParser($distribution);
+				// store in tmp array
+				$this->supportedOS[str_replace(".xml", "", strtolower(basename($distribution)))] = $dist->getCompleteDistroName();
+			}
+			// sort by distribution name
+			asort($this->supportedOS);
 		}
-		// sort by distribution name
-		asort($this->supportedOS);
 
 		// guess distribution and webserver to preselect in formfield
 		$webserverBackend = $this->webserverBackend;
@@ -81,10 +87,6 @@ class Install
 		$this->currentStep = $cliData['step'] ?? Request::any('step', 0);
 		$this->extendedView = $cliData['extended'] ?? Request::any('extended', 0);
 		$this->maxSteps = count($this->formfield['install']['sections']);
-
-		// set actual php version and extensions
-		$this->phpVersion = phpversion();
-		$this->loadedExtensions = get_loaded_extensions();
 
 		if (empty($cliData)) {
 			// set global variables

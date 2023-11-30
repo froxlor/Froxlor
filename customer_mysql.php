@@ -75,7 +75,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		}
 
 		$actions_links[] = [
-			'href' => 'https://docs.froxlor.org/v2/user-guide/databases/',
+			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/databases/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
