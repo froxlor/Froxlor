@@ -22,6 +22,9 @@
 		}
 	}
 }
+.list-group-item {
+	background: $white;
+}
 
 @include color-mode(dark) {
 	.card, .list-group-item {

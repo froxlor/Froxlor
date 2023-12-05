@@ -43,7 +43,19 @@ require dirname(__DIR__) . '/lib/tables.inc.php';
 $application = new Application('froxlor-cli', Froxlor::getFullVersion());
 
 // files that are no commands
-$fileIgnoreList = ['CliCommand.php', 'index.html', 'install.functions.php'];
+$fileIgnoreList = [
+	// Current non-command files
+	'CliCommand.php',
+	'index.html',
+	'install.functions.php',
+	// older files not used anymore (should be removed by the updater), but take care of it just in case
+	'Action.php',
+	'CmdLineHandler.php',
+	'ConfigServicesCmd.php',
+	'PhpSessioncleanCmd.php',
+	'SwitchServerIpCmd.php',
+	'UpdateCliCmd.php',
+];
 // directory of commands to include
 $cmd_files = glob(Froxlor::getInstallDir() . '/lib/Froxlor/Cli/*.php');
 

@@ -2,7 +2,8 @@ name: build-documentation
 
 on:
   release:
-    types: [published]
+    # only run for stable releases
+    types: [released]
 
 jobs:
   build_docs:

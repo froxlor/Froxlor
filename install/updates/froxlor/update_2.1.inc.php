@@ -130,8 +130,8 @@ if (Froxlor::isDatabaseVersion('202305240')) {
 	$current_fileextension = Settings::Get('system.index_file_extension');
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup`= 'system' AND `varname`= 'index_file_extension'");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_TEMPLATES . "` ADD `file_extension` varchar(50) NOT NULL default 'html';");
-	if (strtolower(trim($current_fileextension)) != 'html') {
-		$stmt = Database::prepare("UPDATE TABLE `" . TABLE_PANEL_TEMPLATES . "` SET `file_extension` = :ext WHERE `templategroup` = 'files'");
+	if (!empty(trim($current_fileextension)) && strtolower(trim($current_fileextension)) != 'html') {
+		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET `file_extension` = :ext WHERE `templategroup` = 'files'");
 		Database::pexecute($stmt, ['ext' => strtolower(trim($current_fileextension))]);
 	}
 	Update::lastStepStatus(0);
@@ -142,4 +142,61 @@ if (Froxlor::isDatabaseVersion('202305240')) {
 if (Froxlor::isFroxlorVersion('2.1.0-rc2')) {
 	Update::showUpdateStep("Updating from 2.1.0-rc2 to 2.1.0-rc3", false);
 	Froxlor::updateToVersion('2.1.0-rc3');
+}
+
+if (Froxlor::isDatabaseVersion('202311260')) {
+	Update::showUpdateStep("Cleaning up old files");
+	$to_clean = array(
+		"install/updates/froxlor/update_2.x.inc.php",
+		"install/updates/preconfig/preconfig_2.x.inc.php",
+		"lib/Froxlor/Api/Commands/CustomerBackups.php",
+		"lib/Froxlor/Cli/Action",
+		"lib/Froxlor/Cli/Action.php",
+		"lib/Froxlor/Cli/CmdLineHandler.php",
+		"lib/Froxlor/Cli/ConfigServicesCmd.php",
+		"lib/Froxlor/Cli/PhpSessioncleanCmd.php",
+		"lib/Froxlor/Cli/SwitchServerIpCmd.php",
+		"lib/Froxlor/Cli/UpdateCliCmd.php",
+		"lib/Froxlor/Cron/System/BackupCron.php",
+		"lib/formfields/customer/extras/formfield.backup.php",
+		"lib/tablelisting/customer/tablelisting.backups.php",
+		"templates/Froxlor/assets/mix-manifest.json",
+		"templates/Froxlor/assets/css",
+		"templates/Froxlor/assets/webfonts",
+		"templates/Froxlor/assets/js/main.js",
+		"templates/Froxlor/assets/js/main.js.LICENSE.txt",
+		"templates/Froxlor/src",
+		"templates/Froxlor/user/change_language.html.twig",
+		"templates/Froxlor/user/change_password.html.twig",
+		"templates/Froxlor/user/change_theme.html.twig",
+		"tests/Backup/CustomerBackupsTest.php"
+	);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = !in_array('exec', $disabled);
+	$del_list = "";
+	foreach ($to_clean as $filedir) {
+		$complete_filedir = Froxlor::getInstallDir() . $filedir;
+		if (file_exists($complete_filedir)) {
+			if ($exec_allowed) {
+				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			} else {
+				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+			}
+		}
+	}
+	if ($exec_allowed) {
+		Update::lastStepStatus(0);
+	} else {
+		if (empty($del_list)) {
+			// none of the files existed
+			Update::lastStepStatus(0);
+		} else {
+			Update::lastStepStatus(
+                1,
+                'manual commands needed',
+                'Please run the following commands manually:<br><pre>' . $del_list . '</pre>'
+            );
+		}
+	}
+	Froxlor::updateToDbVersion('202312050');
 }
