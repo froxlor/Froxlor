@@ -67,15 +67,18 @@ if (Froxlor::isFroxlorVersion('2.0.24')) {
 	}
 
 	Update::showUpdateStep("Adjusting cronjobs");
-	Database::query("
+	$cfupd_stmt = Database::prepare("
         UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET
         `module`= 'froxlor/export',
         `cronfile` = 'export',
-        `cronclass` = '\\Froxlor\\Cron\\System\\ExportCron',
+        `cronclass` = :cc,
         `interval` = '1 HOUR',
         `desc_lng_key` = 'cron_export'
         WHERE `module` = 'froxlor/backup'
     ");
+	Database::pexecute($cfupd_stmt, [
+		'cc' => '\\Froxlor\\Cron\\System\\ExportCron'
+	]);
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting system for data-export function");

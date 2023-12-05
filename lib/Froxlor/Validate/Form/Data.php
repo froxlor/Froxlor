@@ -265,4 +265,10 @@ class Data
 
 		return $returnvalue;
 	}
+
+	public static function validateFormFieldImage($fieldname, $fielddata, $newfieldvalue)
+	{
+		// validation is handled in \Froxlor\Settings\Store::storeSettingImage()
+		return true;
+	}
 }
