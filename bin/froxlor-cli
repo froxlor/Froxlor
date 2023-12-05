@@ -48,13 +48,6 @@ $fileIgnoreList = [
 	'CliCommand.php',
 	'index.html',
 	'install.functions.php',
-	// older files not used anymore (should be removed by the updater), but take care of it just in case
-	'Action.php',
-	'CmdLineHandler.php',
-	'ConfigServicesCmd.php',
-	'PhpSessioncleanCmd.php',
-	'SwitchServerIpCmd.php',
-	'UpdateCliCmd.php',
 ];
 // directory of commands to include
 $cmd_files = glob(Froxlor::getInstallDir() . '/lib/Froxlor/Cli/*.php');
@@ -68,7 +61,7 @@ foreach ($cmd_files as $cmdFile) {
 		// create class-name including namespace
 		$cmdClass = "\\Froxlor\\Cli\\" . substr(basename($cmdFile), 0, -4);
 		// check whether it exists
-		if (class_exists($cmdClass)) {
+		if (class_exists($cmdClass) && is_subclass_of($cmdClass, '\Froxlor\Cli\CliCommand')) {
 			// add to cli application
 			$application->add(new $cmdClass());
 		}
