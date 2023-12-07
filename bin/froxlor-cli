@@ -61,7 +61,7 @@ foreach ($cmd_files as $cmdFile) {
 		// create class-name including namespace
 		$cmdClass = "\\Froxlor\\Cli\\" . substr(basename($cmdFile), 0, -4);
 		// check whether it exists
-		if (class_exists($cmdClass) && is_subclass_of($cmdClass, '\Froxlor\Cli\CliCommand')) {
+		if (class_exists($cmdClass) && is_subclass_of($cmdClass, '\Symfony\Component\Console\Command\Command')) {
 			// add to cli application
 			$application->add(new $cmdClass());
 		}
