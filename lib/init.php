@@ -115,14 +115,15 @@ if (!isset($sql) || !is_array($sql)) {
 /**
  * Show nice note if requested domain is "unknown" to froxlor and thus is being lead to its vhost
  */
-if ($_SERVER['SERVER_NAME'] != Settings::Get('system.hostname') &&
+$req_host = UI::getCookieHost();
+if ($req_host != Settings::Get('system.hostname') &&
 	    Settings::Get('panel.is_configured') == 1 &&
-		!filter_var($_SERVER['SERVER_NAME'], FILTER_VALIDATE_IP) && (
+		!filter_var($req_host, FILTER_VALIDATE_IP) && (
 		empty(Settings::Get('system.froxloraliases')) ||
-		(!empty(Settings::Get('system.froxloraliases')) && !in_array($_SERVER['SERVER_NAME'], array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
+		(!empty(Settings::Get('system.froxloraliases')) && !in_array($req_host, array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
 )) {
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
-	$redirect_file = FileDir::getUnknownDomainTemplate($_SERVER['SERVER_NAME']);
+	$redirect_file = FileDir::getUnknownDomainTemplate($req_host);
 	header('Location: '.$redirect_file);
 	die();
 }

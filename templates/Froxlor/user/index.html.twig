@@ -51,8 +51,16 @@
 
 	<div class="row">
 		{% if userinfo.adminsession == 1 %}
-			<div
-				class="col-12 col-lg-6">
+			<div class="col-12 col-lg-6">
+
+				{% if userinfo.custom_notes|markdown is not empty and userinfo.custom_notes_show == 1 %}
+					<div class="card mb-3">
+						<div class="card-body">
+							{{ userinfo.custom_notes|markdown|raw }}
+						</div>
+					</div>
+				{% endif %}
+
 				{# system infos #}
 				<div class="card mb-3">
 					<div class="card-header">
@@ -135,22 +143,9 @@
 						{% endif %}
 					</ul>
 				</div>
-
-				{% if userinfo.custom_notes|markdown is not empty and userinfo.custom_notes_show == 1 %}
-					<div class="card mb-3">
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
-								<div class="ms-2 me-auto">
-									{{ userinfo.custom_notes|markdown|raw }}
-								</div>
-							</li>
-						</ul>
-					</div>
-				{% endif %}
 			</div>
 		{% else %}
-			<div
-				class="col-12 col-md-6 col-lg-4">
+			<div class="col-12 col-md-6 col-lg-4">
 				{# account info #}
 				<div class="card mb-3">
 					<div class="card-header">
@@ -212,8 +207,7 @@
 					</ul>
 				</div>
 			</div>
-			<div
-				class="col-12 col-md-6 col-lg-4">
+			<div class="col-12 col-md-6 col-lg-4">
 				{# customer details #}
 				<div class="card">
 					<div class="card-header">
