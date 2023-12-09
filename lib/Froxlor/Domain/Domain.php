@@ -256,7 +256,7 @@ class Domain
 		]);
 		$result = [];
 		while ($entry = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$result = $entry['id'];
+			$result[] = $entry['id'];
 		}
 		return $result;
 	}
