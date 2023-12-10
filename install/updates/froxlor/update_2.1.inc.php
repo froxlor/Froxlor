@@ -213,3 +213,43 @@ if (Froxlor::isFroxlorVersion('2.1.0')) {
 	Update::showUpdateStep("Updating from 2.1.0 to 2.1.1", false);
 	Froxlor::updateToVersion('2.1.1');
 }
+
+if (Froxlor::isDatabaseVersion('202312050')) {
+	Update::showUpdateStep("Cleaning up old files");
+	$to_clean = array(
+		"lib/configfiles/centos7.xml",
+		"lib/configfiles/centos8.xml",
+		"lib/configfiles/stretch.xml",
+		"lib/configfiles/xenial.xml",
+		"lib/configfiles/buster.xml",
+		"lib/configfiles/bionic.xml",
+	);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = !in_array('exec', $disabled);
+	$del_list = "";
+	foreach ($to_clean as $filedir) {
+		$complete_filedir = Froxlor::getInstallDir() . $filedir;
+		if (file_exists($complete_filedir)) {
+			if ($exec_allowed) {
+				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			} else {
+				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+			}
+		}
+	}
+	if ($exec_allowed) {
+		Update::lastStepStatus(0);
+	} else {
+		if (empty($del_list)) {
+			// none of the files existed
+			Update::lastStepStatus(0);
+		} else {
+			Update::lastStepStatus(
+				1,
+				'manual commands needed',
+				'Please run the following commands manually:<br><pre>' . $del_list . '</pre>'
+			);
+		}
+	}
+	Froxlor::updateToDbVersion('202312100');
+}
