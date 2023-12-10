@@ -60,7 +60,9 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	if (!empty($distribution)) {
 		if (!file_exists($config_dir . '/' . $distribution . ".xml")) {
-			Response::dynamicError("Unknown distribution");
+			// unknown distribution -> redirect to select a valid distribution for config-templates
+			Settings::Set('system.distribution', '');
+			Response::redirectTo('admin_configfiles.php', ['reselect' => 1]);
 		}
 
 		// update setting if different
