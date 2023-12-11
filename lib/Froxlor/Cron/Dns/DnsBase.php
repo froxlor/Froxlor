@@ -244,7 +244,7 @@ abstract class DnsBase
 				'zonefile' => '',
 				'froxlorhost' => '1'
 			];
-			$domains['none'] = $hostname_arr;
+			$domains[0] = $hostname_arr;
 		}
 
 		if (empty($domains)) {
