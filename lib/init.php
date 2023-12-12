@@ -225,7 +225,7 @@ if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) |
 }
 
 if (array_key_exists('global', $_themeoptions)) {
-	$_themeoptions['variants'][$themevariant] = array_merge_recursive($_themeoptions['variants'][$themevariant], $_themeoptions['global']);
+	$_themeoptions['variants'][$themevariant] = PhpHelper::array_merge_recursive_distinct($_themeoptions['global'], $_themeoptions['variants'][$themevariant]);
 }
 
 // check for custom header-graphic

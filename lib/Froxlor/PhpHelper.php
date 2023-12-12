@@ -220,8 +220,11 @@ class PhpHelper
 			if (is_dir($data_dirname)) {
 				$data_dirhandle = opendir($data_dirname);
 				while (false !== ($data_filename = readdir($data_dirhandle))) {
-					if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename,
-							-4) == '.php') {
+					if ($data_filename != '.'
+						&& $data_filename != '..'
+						&& $data_filename != ''
+						&& substr($data_filename, -4) == '.php'
+					) {
 						$data_files[] = $data_dirname . $data_filename;
 					}
 				}
@@ -415,8 +418,8 @@ class PhpHelper
 	 */
 	public static function recursive_array_search(
 		string $needle,
-		array $haystack,
-		array &$keys = [],
+		array  $haystack,
+		array  &$keys = [],
 		string $currentKey = ''
 	): bool {
 		foreach ($haystack as $key => $value) {
@@ -556,5 +559,18 @@ class PhpHelper
 			$tab .= "\t";
 		}
 		return $tab . $str;
+	}
+
+	public static function array_merge_recursive_distinct(array &$array1, array &$array2)
+	{
+		$merged = $array1;
+		foreach ($array2 as $key => &$value) {
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+				$merged[$key] = self::array_merge_recursive_distinct($merged[$key], $value);
+			} else {
+				$merged[$key] = $value;
+			}
+		}
+		return $merged;
 	}
 }
