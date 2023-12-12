@@ -184,7 +184,7 @@
 			</label>
 		</div>
 	{% endif %}
-	{% set field = field|merge({'type':'file'}) %}
+	{% set field = field|merge({'type':'file'})|merge({'value':''}) %}
 	{{ _self.input(id, field) }}
 {% endmacro %}
 
