@@ -461,6 +461,10 @@ class PhpHelper
 			'directory_password',
 			'ftp_password',
 			'mysql_password',
+			'mysql_root_pass',
+			'mysql_unprivileged_pass',
+			'admin_pass',
+			'admin_pass_confirm',
 		];
 		if (!empty($global)) {
 			$tmp = $global;
