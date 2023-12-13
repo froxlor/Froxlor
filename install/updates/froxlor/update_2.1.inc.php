@@ -38,6 +38,7 @@ if (!defined('_CRON_UPDATE')) {
 
 if (Froxlor::isFroxlorVersion('2.0.24')) {
 	Update::showUpdateStep("Cleaning domains table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ROW_FORMAT=DYNAMIC;");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP COLUMN `ismainbutsubto`;");
 	Update::lastStepStatus(0);
 
@@ -252,4 +253,14 @@ if (Froxlor::isDatabaseVersion('202312050')) {
 		}
 	}
 	Froxlor::updateToDbVersion('202312100');
+}
+
+if (Froxlor::isDatabaseVersion('202312100')) {
+
+	Update::showUpdateStep("Adjusting table row format of larger tables");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ROW_FORMAT=DYNAMIC;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ROW_FORMAT=DYNAMIC;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202312120');
 }

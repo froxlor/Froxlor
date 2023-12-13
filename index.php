@@ -74,27 +74,26 @@ if ($action == '2fa_entercode') {
 	$code = isset($_POST['2fa_code']) ? $_POST['2fa_code'] : null;
 	// verify entered code
 	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
-	$result = ($_SESSION['secret_2fa'] == 'email' ? true : $tfa->verifyCode($_SESSION['secret_2fa'], $code, 3));
 	// get user-data
 	$table = $_SESSION['uidtable_2fa'];
 	$field = $_SESSION['uidfield_2fa'];
 	$uid = $_SESSION['uid_2fa'];
 	$isadmin = $_SESSION['unfo_2fa'];
+	if ($_SESSION['secret_2fa'] == 'email') {
+		// verify code set to user's data_2fa field
+		$sel_stmt = Database::prepare("SELECT `data_2fa` FROM " . $table . " WHERE `" . $field . "` = :uid");
+		$userinfo_code = Database::pexecute_first($sel_stmt, ['uid' => $uid]);
+		$result = $tfa->verifyCode($userinfo_code['data_2fa'], $code);
+	} else {
+		$result = $tfa->verifyCode($_SESSION['secret_2fa'], $code, 3);
+	}
 	// either the code is valid when using authenticator-app, or we will select userdata by id and entered code
 	// which is temporarily stored for the customer when using email-2fa
 	if ($result) {
 		$sel_param = [
 			'uid' => $uid
 		];
-		if ($_SESSION['secret_2fa'] == 'email') {
-			// verify code by selecting user by id and the temp. stored code,
-			// so only if it's the correct code, we get the user-data
-			$sel_stmt = Database::prepare("SELECT * FROM " . $table . " WHERE `" . $field . "` = :uid AND `data_2fa` = :code");
-			$sel_param['code'] = $code;
-		} else {
-			// Authenticator-verification has already happened at this point, so just get the user-data
-			$sel_stmt = Database::prepare("SELECT * FROM " . $table . " WHERE `" . $field . "` = :uid");
-		}
+		$sel_stmt = Database::prepare("SELECT * FROM " . $table . " WHERE `" . $field . "` = :uid");
 		$userinfo = Database::pexecute_first($sel_stmt, $sel_param);
 		// whoops, no (valid) user? Start again
 		if (empty($userinfo)) {

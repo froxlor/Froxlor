@@ -157,7 +157,7 @@ CREATE TABLE `panel_admins` (
   `api_allowed` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
 
 
 DROP TABLE IF EXISTS `panel_customers`;
@@ -299,7 +299,7 @@ CREATE TABLE `panel_domains` (
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
   KEY `domain` (`domain`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
 
 
 DROP TABLE IF EXISTS `panel_ipsandports`;
@@ -727,7 +727,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.1.1'),
-	('panel', 'db_version', '202312100');
+	('panel', 'db_version', '202312120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
