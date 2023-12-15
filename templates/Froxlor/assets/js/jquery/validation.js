@@ -8,18 +8,18 @@ export default function () {
 				rules: {
 					'name': {
 						required: function () {
-							return $('#company').val().length === 0 || $('#firstname').val().length > 0;
+							return $('#company').val().trim().length === 0 || $('#firstname').val().trim().length > 0;
 						}
 					},
 					'firstname': {
 						required: function () {
-							return $('#company').val().length === 0 || $('#name').val().length > 0;
+							return $('#company').val().trim().length === 0 || $('#name').val().trim().length > 0;
 						}
 					},
 					'company': {
 						required: function () {
-							return $('#name').val().length === 0
-								&& $('#firstname').val().length === 0;
+							return $('#name').val().trim().length === 0
+								&& $('#firstname').val().trim().length === 0;
 						}
 					}
 				},
