@@ -273,8 +273,10 @@ final class InstallCommand extends Command
 					$cmdfield['label'],
 					$cmdfield['value']
 				]);
-				if (!empty($decoded_input) ? (!isset($decoded_input['manual_config']) || !filter_var($decoded_input['manual_config'], FILTER_VALIDATE_BOOLEAN)) : $this->io->confirm('Execute command now?', false)) {
-					passthru($cmdfield['value']);
+				if (!isset($decoded_input['manual_config']) || (bool)$decoded_input['manual_config'] === false) {
+					if (!empty($decoded_input) || $this->io->confirm('Execute command now?', false)) {
+						passthru($cmdfield['value']);
+					}
 				}
 				break;
 		}
