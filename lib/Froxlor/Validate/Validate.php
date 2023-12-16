@@ -176,7 +176,7 @@ class Validate
 		}
 
 		// special case where localhost ip is allowed (mysql-access-hosts for example)
-		if ($allow_localhost && $ip == '127.0.0.1') {
+		if ($allow_localhost && ($ip == '127.0.0.1' || $ip == '::1')) {
 			return $ip . $cidr;
 		}
 

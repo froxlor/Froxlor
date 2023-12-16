@@ -211,7 +211,7 @@ final class InstallCommand extends Command
 						$ask_field = false;
 					}
 					$fielddata['value'] = $this->formfielddata[$fieldname] ?? ($fielddata['value'] ?? null);
-					$fielddata['label'] = strip_tags(str_replace("<br>", " ", $fielddata['label']));
+					$fielddata['label'] = $this->cliTextFormat($fielddata['label'], " ");
 					if ($ask_field) {
 						if ($fielddata['type'] == 'password') {
 							$this->formfielddata[$fieldname] = $this->io->askHidden($fielddata['label'], function ($value) use ($fielddata) {
@@ -267,7 +267,7 @@ final class InstallCommand extends Command
 			case 4:
 				$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
 				$this->io->section($section['title']);
-				$this->io->note($section['description']);
+				$this->io->note($this->cliTextFormat($section['description']));
 				$cmdfield = $section['fields']['system'];
 				$this->io->success([
 					$cmdfield['label'],
@@ -320,7 +320,7 @@ final class InstallCommand extends Command
 					$fieldval = '******';
 				} elseif ($field['type'] == 'select') {
 					$fieldval = implode("|", array_keys($field['select_var']));
-				} else if ($field['type'] == 'checkbox') {
+				} elseif ($field['type'] == 'checkbox') {
 					$fieldval = "1|0";
 				} else {
 					$fieldval = "?";
@@ -347,5 +347,11 @@ final class InstallCommand extends Command
 		curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
+	}
+
+	private function cliTextFormat(string $text, string $nl_char = "\n"): string
+	{
+		$text = str_replace(['<br>', '<br/>', '<br />'], [$nl_char, $nl_char, $nl_char], $text);
+		return strip_tags($text);
 	}
 }

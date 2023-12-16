@@ -47,7 +47,7 @@ class TrafficCron extends FroxlorCron
 
 	public static function run()
 	{
-		self::runFork([self::class, 'handle']);
+		self::runFork([self::class, 'handle'], [true]);
 	}
 
 	public static function handle()
