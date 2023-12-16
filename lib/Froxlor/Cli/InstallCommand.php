@@ -273,7 +273,7 @@ final class InstallCommand extends Command
 					$cmdfield['label'],
 					$cmdfield['value']
 				]);
-				if (!empty($decoded_input) || $this->io->confirm('Execute command now?', false)) {
+				if (!empty($decoded_input) ? (!isset($decoded_input['manual_config']) || !filter_var($decoded_input['manual_config'], FILTER_VALIDATE_BOOLEAN)) : $this->io->confirm('Execute command now?', false)) {
 					passthru($cmdfield['value']);
 				}
 				break;
@@ -305,7 +305,7 @@ final class InstallCommand extends Command
 		$json_output = [];
 		foreach ($fields['install']['sections'] as $section => $section_fields) {
 			foreach ($section_fields['fields'] as $name => $field) {
-				if ($name == 'system' || $name == 'manual_config' || $name == 'target_servername') {
+				if ($name == 'system' || $name == 'target_servername') {
 					continue;
 				}
 				if ($field['type'] == 'text' || $field['type'] == 'email') {
