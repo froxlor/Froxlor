@@ -265,15 +265,15 @@ final class InstallCommand extends Command
 				return $this->showStep(++$step, $extended, $decoded_input);
 				break;
 			case 4:
-				$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
-				$this->io->section($section['title']);
-				$this->io->note($this->cliTextFormat($section['description']));
-				$cmdfield = $section['fields']['system'];
-				$this->io->success([
-					$cmdfield['label'],
-					$cmdfield['value']
-				]);
 				if (!isset($decoded_input['manual_config']) || (bool)$decoded_input['manual_config'] === false) {
+					$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
+					$this->io->section($section['title']);
+					$this->io->note($this->cliTextFormat($section['description']));
+					$cmdfield = $section['fields']['system'];
+					$this->io->success([
+						$cmdfield['label'],
+						$cmdfield['value']
+					]);
 					if (!empty($decoded_input) || $this->io->confirm('Execute command now?', false)) {
 						passthru($cmdfield['value']);
 					}
