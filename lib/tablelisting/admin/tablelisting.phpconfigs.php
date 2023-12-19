@@ -49,6 +49,7 @@ return [
 				'field' => 'domains',
 				'callback' => [PHPConf::class, 'domainList'],
 				'searchable' => false,
+				'sortable' => false,
 			],
 			'fpmdesc' => [
 				'label' => lng('admin.phpsettings.fpmdesc'),
