@@ -217,7 +217,7 @@ class Form
 	{
 		$returnvalue = [];
 		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] == 'select') {
-			if ((!isset($fielddata['select_var']) || !is_array($fielddata['select_var']) || empty($fielddata['select_var'])) && (isset($fielddata['option_options_method']))) {
+			if ((!is_array($fielddata['select_var']) || empty($fielddata['select_var'])) && (isset($fielddata['option_options_method']))) {
 				$returnvalue['select_var'] = call_user_func($fielddata['option_options_method']);
 			}
 		}
@@ -236,8 +236,8 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
-								$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
+							if (!$only_enabledisable || isset($fielddetails['overview_option'])) {
+								$groupdetails['fields'][$fieldname] = array_merge($fielddetails, self::prefetchFormFieldData($fieldname, $fielddetails));
 								$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 							}
 						}
@@ -347,7 +347,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Save fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
+							if (!$only_enabledisable || (isset($fielddetails['overview_option']))) {
 								if (isset($changed_fields[$fieldname])) {
 									if (($saved_field = self::saveFormField($fieldname, $fielddetails, self::manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
 										$saved_fields = array_merge($saved_fields, $saved_field);
@@ -364,24 +364,7 @@ class Form
 			// Save form
 			return self::saveForm($form, $saved_fields);
 		}
-	}
-
-	private static function arrayMergePrefix($array1, $key_prefix, $array2)
-	{
-		if (is_array($array1) && is_array($array2)) {
-			if ($key_prefix != '') {
-				foreach ($array2 as $key => $value) {
-					$array1[$key_prefix . '_' . $key] = $value;
-					unset($array2[$key]);
-				}
-				unset($array2);
-				return $array1;
-			} else {
-				return array_merge($array1, $array2);
-			}
-		} else {
-			return $array1;
-		}
+		return false;
 	}
 
 	public static function getFormFieldData($fieldname, $fielddata, &$input)
