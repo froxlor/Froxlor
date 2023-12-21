@@ -112,9 +112,14 @@ function vite($basehref, array $filenames): string
 			$assetDirectory = '/templates/' . $matches[1] . '/build/';
 			$viteManifest = dirname(__DIR__) . $assetDirectory . '/manifest.json';
 			$manifest = json_decode(file_get_contents($viteManifest), true);
-			$links[] = $basehref . ltrim($assetDirectory, '/') . $manifest[$filename]['file'];
+			if (!empty($manifest[$filename]['file'])) {
+				$links[] = $basehref . ltrim($assetDirectory, '/') . $manifest[$filename]['file'];
+			} else {
+				// additional asset from config.json that was not prebuilt on release (e.g. custom.css)
+				$links[] = $filename;
+			}
 		} else {
-			$links = $filenames;
+			$links[] = $filename;
 		}
 	}
 
