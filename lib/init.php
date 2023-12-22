@@ -123,7 +123,7 @@ if ($req_host != Settings::Get('system.hostname') &&
 		(!empty(Settings::Get('system.froxloraliases')) && !in_array($req_host, array_map('trim', explode(',', Settings::Get('system.froxloraliases')))))
 )) {
 	// not the froxlor system-hostname, show info page for domains not configured in froxlor
-	$redirect_file = FileDir::getUnknownDomainTemplate($req_host);
+	$redirect_file = FileDir::getUnknownDomainTemplate($req_host ?? "non-detectable http-host");
 	header('Location: '.$redirect_file);
 	die();
 }

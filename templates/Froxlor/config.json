@@ -1,8 +1,8 @@
 {
 	"global": {
 		"css": [
-			"assets/css/custom.css",
-			"assets/scss/app.scss"
+			"assets/scss/app.scss",
+			"assets/css/custom.css"
 		],
 		"js": [
 			"assets/js/app.js",
