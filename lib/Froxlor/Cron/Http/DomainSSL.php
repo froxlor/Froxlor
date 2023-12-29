@@ -43,23 +43,29 @@ class DomainSSL
 	 *            domain-array as reference so we can set the corresponding array-indices
 	 *
 	 * @return null
+	 * @throws \Exception
 	 */
 	public function setDomainSSLFilesArray(array &$domain = null)
 	{
 		// check if the domain itself has a certificate defined
 		$dom_certs_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domid
+			SELECT s.*, d.domain
+			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON d.id = s.domainid
+			WHERE s.`domainid` = :domid
 		");
 		$dom_certs = Database::pexecute_first($dom_certs_stmt, [
 			'domid' => $domain['id']
 		]);
 
+		$parent_certificate = false;
 		if (!is_array($dom_certs) || !isset($dom_certs['ssl_cert_file']) || $dom_certs['ssl_cert_file'] == '') {
 			// maybe its parent?
 			if (isset($domain['parentdomainid']) && $domain['parentdomainid'] != 0) {
 				$dom_certs = Database::pexecute_first($dom_certs_stmt, [
 					'domid' => $domain['parentdomainid']
 				]);
+				$parent_certificate = true;
 			}
 		}
 
@@ -73,8 +79,8 @@ class DomainSSL
 			}
 			// make correct files for the certificates
 			$ssl_files = [
-				'ssl_cert_file' => FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.crt'),
-				'ssl_key_file' => FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.key')
+				'ssl_cert_file' => FileDir::makeCorrectFile($sslcertpath . '/' . ($parent_certificate ? $dom_certs['domain'] : $domain['domain']) . '.crt'),
+				'ssl_key_file' => FileDir::makeCorrectFile($sslcertpath . '/' . ($parent_certificate ? $dom_certs['domain'] : $domain['domain']) . '.key')
 			];
 
 			if (!$this->validateCertificate($dom_certs)) {
@@ -93,19 +99,19 @@ class DomainSSL
 			$ssl_files['ssl_cert_chainfile'] = '';
 			// set them if they are != empty
 			if ($dom_certs['ssl_ca_file'] != '') {
-				$ssl_files['ssl_ca_file'] = FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_CA.pem');
+				$ssl_files['ssl_ca_file'] = FileDir::makeCorrectFile($sslcertpath . '/' . ($parent_certificate ? $dom_certs['domain'] : $domain['domain']) . '_CA.pem');
 			}
 			if ($dom_certs['ssl_cert_chainfile'] != '') {
 				if (Settings::Get('system.webserver') == 'nginx') {
 					// put ca.crt in my.crt, as nginx does not support a separate chain file.
 					$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file']) . "\n" . trim($dom_certs['ssl_cert_chainfile']) . "\n";
 				} else {
-					$ssl_files['ssl_cert_chainfile'] = FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_chain.pem');
+					$ssl_files['ssl_cert_chainfile'] = FileDir::makeCorrectFile($sslcertpath . '/' . ($parent_certificate ? $dom_certs['domain'] : $domain['domain']) . '_chain.pem');
 				}
 			}
 			// will only be generated to be used externally, froxlor does not need this
 			if ($dom_certs['ssl_fullchain_file'] != '') {
-				$ssl_files['ssl_fullchain_file'] = FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_fullchain.pem');
+				$ssl_files['ssl_fullchain_file'] = FileDir::makeCorrectFile($sslcertpath . '/' . ($parent_certificate ? $dom_certs['domain'] : $domain['domain']) . '_fullchain.pem');
 			}
 			// create them on the filesystem
 			foreach ($ssl_files as $type => $filename) {
@@ -131,7 +137,7 @@ class DomainSSL
 		return;
 	}
 
-	private function validateCertificate($dom_certs = [])
+	private function validateCertificate($dom_certs = []): bool
 	{
 		return openssl_x509_check_private_key($dom_certs['ssl_cert_file'], $dom_certs['ssl_key_file']);
 	}

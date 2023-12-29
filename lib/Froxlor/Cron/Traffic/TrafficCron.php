@@ -193,6 +193,8 @@ class TrafficCron extends FroxlorCron
 							} else {
 								$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 							}
+							// kind of a keep-alive-call as this unsets the link which leads to a new connection to the database
+							Database::needRoot();
 						}
 					}
 				}
@@ -210,6 +212,8 @@ class TrafficCron extends FroxlorCron
 				} else {
 					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
+				// kind of a keep-alive-call as this unsets the link which leads to a new connection to the database
+				Database::needRoot();
 
 				// make the stuff readable for the customer, #258
 				Statistics::makeChownWithNewStats($row);
@@ -618,7 +622,7 @@ class TrafficCron extends FroxlorCron
 			$format = Settings::Get('system.logfiles_type') == '2' ? 'VCOMBINED' : 'COMBINED';
 			$monthyear = $monthyear_arr['month'] . '/' . $monthyear_arr['year'];
 			$return_value = false;
-			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess " . $keep_params . " --db-path=" . escapeshellarg($outputdir) . " -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " - ", $return_value, ['|']);
+			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess " . $keep_params . " --db-path=" . escapeshellarg($outputdir) . " -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " --no-parsing-spinner --no-progress - ", $return_value, ['|']);
 
 			if (file_exists($outputdir . '.tmp.json')) {
 				// need jq here because of potentially LARGE json files
@@ -787,6 +791,8 @@ class TrafficCron extends FroxlorCron
 			// 'real' domains and no subdomains which are aliases in the
 			// model-config-file.
 			$returnval += self::awstatsDoSingleDomain($singledomain, $outputdir, $current_stamp);
+			// kind of a keep-alive-call as this unsets the link which leads to a new connection to the database
+			Database::needRoot();
 		}
 
 		/**

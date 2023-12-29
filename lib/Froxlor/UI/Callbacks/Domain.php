@@ -81,7 +81,7 @@ class Domain
 		return lng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
 	}
 
-	public static function domainExternalLinkInfo(array $attributes)
+	public static function domainExternalLinkInfo(array $attributes): string
 	{
 		$result = '';
 		if ($attributes['fields']['parentdomainid'] != 0) {
@@ -89,7 +89,11 @@ class Domain
 		}
 		$result .= '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
-		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0 && $attributes['fields']['deactivated'] == 0) {
+		if ((int)UI::getCurrentUser()['adminsession'] == 0
+			&& $attributes['fields']['parentdomainid'] == 0
+			&& $attributes['fields']['deactivated'] == 0
+			&& preg_match('/^https?:\/\/(.*)/i', $attributes['fields']['documentroot']) == false
+		) {
 			$statsapp = Settings::Get('system.traffictool');
 			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" target="_blank" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
 		}
