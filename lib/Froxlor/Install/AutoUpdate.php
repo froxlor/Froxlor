@@ -151,6 +151,8 @@ class AutoUpdate
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);
+			// reset cached version check
+			Settings::Set('system.updatecheck_data', '');
 			// wait a bit before we redirect to be sure
 			sleep(3);
 			return 0;
