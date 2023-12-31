@@ -163,14 +163,14 @@ class TrafficCron extends FroxlorCron
 
 			if (isset($domainlist[$row['customerid']]) && is_array($domainlist[$row['customerid']]) && count($domainlist[$row['customerid']]) != 0) {
 				// Examining which caption to use for default webalizer stats...
-				if ($row['standardsubdomain'] != '0') {
+				if ($row['standardsubdomain'] != '0' && isset($domainlist[$row['customerid']][$row['standardsubdomain']])) {
 					// ... of course we'd prefer to use the standardsubdomain ...
 					$caption = $domainlist[$row['customerid']][$row['standardsubdomain']];
 				} else {
 					// ... but if there is no standardsubdomain, we have to use the loginname ...
 					$caption = $row['loginname'];
 
-					// ... which results in non-usable links to files in the stats, so lets have a look if we find a domain which is not speciallogfiledomain
+					// ... which results in non-usable links to files in the stats, so let's have a look if we find a domain which is not speciallogfiledomain
 					foreach ($domainlist[$row['customerid']] as $domainid => $domain) {
 						if (!isset($speciallogfile_domainlist[$row['customerid']]) || !isset($speciallogfile_domainlist[$row['customerid']][$domainid])) {
 							$caption = $domain;
