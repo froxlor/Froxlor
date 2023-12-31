@@ -59,7 +59,7 @@ return [
 						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'placeholder' => lng('admin.username_default_msg'),
+						'placeholder' => lng('admin.password_default_msg'),
 						'next_to' => [
 							'new_customer_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',

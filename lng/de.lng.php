@@ -67,6 +67,7 @@ return [
 		'customer_add' => 'Kunden anlegen',
 		'customer_edit' => 'Kunden bearbeiten',
 		'username_default_msg' => 'Leer lassen für automatische Benutzername-Vergabe',
+		'password_default_msg' => 'Leer lassen für Passwortgenerierung',
 		'domains' => 'Domains',
 		'domain_add' => 'Domain anlegen',
 		'domain_edit' => 'Domain bearbeiten',
