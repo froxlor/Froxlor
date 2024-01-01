@@ -43,9 +43,6 @@ class IpAddr
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (!isset($system_ipaddress_array[$row['ip']]) && !in_array($row['ip'], $system_ipaddress_array)) {
-				if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-					$row['ip'] = '[' . $row['ip'] . ']';
-				}
 				$system_ipaddress_array[$row['ip']] = $row['ip'];
 			}
 		}
