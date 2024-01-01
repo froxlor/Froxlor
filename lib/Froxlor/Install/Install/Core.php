@@ -301,23 +301,10 @@ class Core
 				/* continue */
 			}
 		}
-		if (version_compare($db_root->getAttribute(PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
-			// mariadb compatibility
+		if (version_compare($db_root->getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+			// mariadb & mysql8
 			// create user
 			$stmt = $db_root->prepare("CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password");
-			$stmt->execute([
-				"password" => $password
-			]);
-			// grant privileges
-			$stmt = $db_root->prepare("GRANT ALL ON `" . $database . "`.* TO :username@:host");
-			$stmt->execute([
-				"username" => $username,
-				"host" => $access_host
-			]);
-		} elseif (version_compare($db_root->getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
-			// mysql8 compatibility
-			// create user
-			$stmt = $db_root->prepare("CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password BY :password");
 			$stmt->execute([
 				"password" => $password
 			]);
