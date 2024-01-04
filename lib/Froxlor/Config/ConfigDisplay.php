@@ -117,7 +117,7 @@ class ConfigDisplay
 			'<SQL_UNPRIVILEGED_PASSWORD>' => 'FROXLOR_MYSQL_PASSWORD',
 			'<SQL_DB>' => $sql['db'],
 			'<SQL_HOST>' => $sql['host'],
-			'<SQL_SOCKET>' => isset($sql['socket']) ? $sql['socket'] : null,
+			'<SQL_SOCKET>' => $sql['socket'] ?? null,
 			'<SERVERNAME>' => Settings::Get('system.hostname'),
 			'<SERVERIP>' => Settings::Get('system.ipaddress'),
 			'<NAMESERVERS>' => Settings::Get('system.nameservers'),
@@ -127,12 +127,15 @@ class ConfigDisplay
 			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 			'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
 			'<CUSTOMER_TMP>' => FileDir::makeCorrectDir($customer_tmpdir),
-			'<BASE_PATH>' => FileDir::makeCorrectDir(Froxlor::getInstallDir()),
+			'<BASE_PATH>' => Froxlor::getInstallDir(),
 			'<BIND_CONFIG_PATH>' => FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
 			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
 			'<CUSTOMER_LOGS>' => FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
 			'<FPM_IPCDIR>' => FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
-			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
+			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup'),
+			'<SSL_CERT_FILE>' => Settings::Get('system.ssl_cert_file'),
+			'<SSL_KEY_FILE>' => Settings::Get('system.ssl_key_file'),
+			'<ADMIN_MAIL>' => Settings::Get('panel.adminmail'),
 		];
 
 		$commands_pre = "";

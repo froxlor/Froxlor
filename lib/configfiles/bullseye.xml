@@ -1556,7 +1556,7 @@ noc: root
 security: root
 
 # change this to a valid e-mail address you can access
-root:               root@<SERVERNAME>
+root:               <ADMIN_MAIL>
 ]]>
 							</content>
 						</file>

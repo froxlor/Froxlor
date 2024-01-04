@@ -365,7 +365,14 @@ class Core
 
 		$mainip = !empty($this->validatedData['serveripv6']) ? $this->validatedData['serveripv6'] : $this->validatedData['serveripv4'];
 
-		$this->updateSetting($upd_stmt, 'admin@' . $this->validatedData['servername'], 'panel', 'adminmail');
+		if ($this->validatedData['use_admin_email_as_sender'] == '1') {
+			$adminmail_value = $this->validatedData['admin_email'];
+		} elseif ($this->validatedData['use_admin_email_as_sender'] == '0' && !empty($this->validatedData['sender_email'])) {
+			$adminmail_value = $this->validatedData['sender_email'];
+		} else {
+			$adminmail_value = 'admin@' . $this->validatedData['servername'];
+		}
+		$this->updateSetting($upd_stmt, $adminmail_value, 'panel', 'adminmail');
 		$this->updateSetting($upd_stmt, $mainip, 'system', 'ipaddress');
 		if ($this->validatedData['use_ssl']) {
 			$this->updateSetting($upd_stmt, 1, 'system', 'use_ssl');
@@ -563,7 +570,7 @@ class Core
 			'password' => password_hash($this->validatedData['admin_pass'], PASSWORD_DEFAULT),
 			'adminname' => $this->validatedData['admin_name'],
 			'email' => $this->validatedData['admin_email'],
-			'deflang' => 'en' // TODO: set lanuage
+			'deflang' => 'en' // TODO: set language
 		];
 		$ins_stmt = $db_user->prepare("
 			INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET

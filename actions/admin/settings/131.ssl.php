@@ -248,7 +248,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'le_domain_dnscheck_resolver',
 					'type' => 'text',
-					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
+					'string_type' => 'validate_ip',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'

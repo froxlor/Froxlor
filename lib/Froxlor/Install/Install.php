@@ -99,7 +99,7 @@ class Install
 			}
 
 			// check for url manipulation or wrong step
-			if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > $_SESSION['installation']['stepCompleted'])
+			if ((isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > $_SESSION['installation']['stepCompleted'])
 				|| (!isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > 0)
 			) {
 				$this->currentStep = isset($_SESSION['installation']['stepCompleted']) ? $_SESSION['installation']['stepCompleted'] + 1 : 1;
@@ -322,6 +322,8 @@ class Install
 		$email = $validatedData['admin_email'] ?? '';
 		$password = $validatedData['admin_pass'] ?? '';
 		$password_confirm = $validatedData['admin_pass_confirm'] ?? '';
+		$useadminmailassender = $validatedData['use_admin_email_as_sender'] ?? '1';
+		$senderemail = $validatedData['sender_email'] ?? '';
 
 		if (!preg_match('/^[^\r\n\t\f\0]*$/D', $name)) {
 			throw new Exception(lng('error.stringformaterror', ['admin_name']));
@@ -329,6 +331,8 @@ class Install
 			throw new Exception(lng('error.loginnameiswrong', [$loginname]));
 		} elseif (empty(trim($email)) || !Validate::validateEmail($email)) {
 			throw new Exception(lng('error.emailiswrong', [$email]));
+		} elseif ((int)$useadminmailassender == 0 && !empty(trim($senderemail)) && !Validate::validateEmail($senderemail)) {
+			throw new Exception(lng('error.emailiswrong', [$senderemail]));
 		} elseif (empty($password) || $password != $password_confirm) {
 			throw new Exception(lng('error.newpasswordconfirmerror'));
 		} elseif ($password == $loginname) {

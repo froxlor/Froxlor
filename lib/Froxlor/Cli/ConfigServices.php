@@ -514,6 +514,7 @@ final class ConfigServices extends CliCommand
 			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup'),
 			'<SSL_CERT_FILE>' => Settings::Get('system.ssl_cert_file'),
 			'<SSL_KEY_FILE>' => Settings::Get('system.ssl_key_file'),
+			'<ADMIN_MAIL>' => Settings::Get('panel.adminmail'),
 		];
 	}
 }
