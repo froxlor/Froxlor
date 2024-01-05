@@ -1431,6 +1431,7 @@ Yours sincerely, your administrator',
 		'certificate_reallydelete' => 'Do you really want to delete this certificate?',
 		'cache_reallydelete' => 'Do you really want to clear the cache?',
 		'please_enter_otp' => 'Please enter 2FA code',
+		'admin_mysqlserver_reallydelete' => 'Do you really want to delete this MySQL-server?',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'default',

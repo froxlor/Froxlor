@@ -1316,6 +1316,7 @@ Vielen Dank, Ihr Administrator',
 		'certificate_reallydelete' => 'Wollen Sie diese Zertifikat wirklich löschen?',
 		'cache_reallydelete' => 'Wollen Sie den Cache wirklich leeren?',
 		'please_enter_otp' => 'Bitte 2FA Code eingeben',
+		'admin_mysqlserver_reallydelete' => 'Wollen Sie wirklich diesen MySQL-Server löschen?',
 	],
 	'serversettings' => [
 		'session_timeout' => [
