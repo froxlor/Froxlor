@@ -23,31 +23,55 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-return [
-	'groups' => [
-		'spf' => [
-			'title' => lng('admin.spfsettings'),
-			'icon' => 'fa-solid fa-clipboard-check',
-			'fields' => [
-				'spf_use_spf' => [
-					'label' => lng('spf.use_spf'),
-					'settinggroup' => 'spf',
-					'varname' => 'use_spf',
-					'type' => 'checkbox',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'overview_option' => true
-				],
-				'spf_spf_entry' => [
-					'label' => lng('spf.spf_entry'),
-					'settinggroup' => 'spf',
-					'varname' => 'spf_entry',
-					'type' => 'text',
-					'string_regexp' => '/^v=spf[a-z0-9:~?\s.-]+$/i',
-					'default' => 'v=spf1 a mx -all',
-					'save_method' => 'storeSettingField'
-				]
-			]
-		]
-	]
-];
+namespace Froxlor;
+
+use Exception;
+
+/**
+ * Class to manage the current user / session
+ */
+class ErrorBag
+{
+
+	/**
+	 * returns whether there are errors stored
+	 *
+	 * @return bool
+	 */
+	public static function hasErrors(): bool
+	{
+		return !empty($_SESSION) && !empty($_SESSION['_errors']);
+	}
+
+	/**
+	 * add error
+	 *
+	 * @param string $data
+	 *
+	 * @return void
+	 */
+	public static function addError(string $data): void
+	{
+		if (!is_array($_SESSION['_errors'])) {
+			$_SESSION['_errors'] = [];
+		}
+		$_SESSION['_errors'][] = $data;
+	}
+
+	/**
+	 * Return errors and clear session
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function getErrors(): array
+	{
+		$errors = $_SESSION['_errors'] ?? [];
+		unset($_SESSION['_errors']);
+		if (Settings::Config('display_php_errors')) {
+			return $errors;
+		}
+		return [];
+	}
+
+}

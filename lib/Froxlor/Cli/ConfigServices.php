@@ -43,9 +43,7 @@ final class ConfigServices extends CliCommand
 {
 	private $yes_to_all_supported = [
 		'bookworm',
-		'bionic',
 		'bullseye',
-		'buster',
 		'focal',
 		'jammy',
 	];
@@ -172,8 +170,8 @@ final class ConfigServices extends CliCommand
 		$distributions_select_data = [];
 
 		//set default os.
-		$os_dist = ['ID' => 'bullseye'];
-		$os_version = ['0' => '11'];
+		$os_dist = ['ID' => 'bookworm'];
+		$os_version = ['0' => '12'];
 		$os_default = $os_dist['ID'];
 
 		//read os-release

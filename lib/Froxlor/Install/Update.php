@@ -25,6 +25,7 @@
 
 namespace Froxlor\Install;
 
+use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
@@ -85,7 +86,7 @@ class Update
 				self::$update_tasks[self::$task_counter]['result'] = 1;
 				break;
 			default:
-                self::$update_tasks[self::$task_counter]['result'] = -1;
+				self::$update_tasks[self::$task_counter]['result'] = -1;
 				break;
 		}
 
@@ -135,5 +136,37 @@ class Update
 	public static function getTaskCounter(): int
 	{
 		return self::$task_counter;
+	}
+
+	public static function cleanOldFiles(array $to_clean)
+	{
+		self::showUpdateStep("Cleaning up old files");
+		$disabled = explode(',', ini_get('disable_functions'));
+		$exec_allowed = !in_array('exec', $disabled);
+		$del_list = "";
+		foreach ($to_clean as $filedir) {
+			$complete_filedir = Froxlor::getInstallDir() . $filedir;
+			if (file_exists($complete_filedir)) {
+				if ($exec_allowed) {
+					FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+				} else {
+					$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+				}
+			}
+		}
+		if ($exec_allowed) {
+			self::lastStepStatus(0);
+		} else {
+			if (empty($del_list)) {
+				// none of the files existed
+				self::lastStepStatus(0);
+			} else {
+				self::lastStepStatus(
+					1,
+					'manual commands needed',
+					'Please run the following commands manually:<br><pre>' . $del_list . '</pre>'
+				);
+			}
+		}
 	}
 }

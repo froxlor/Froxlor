@@ -660,41 +660,6 @@ return [
 		'services' => 'Servizi',
 	],
 	'diskquota' => 'Quota',
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefisso',
-			'description' => 'Si prega di specificare il percorso della DKIM RSA-files, nonch¸ i file di configurazione per il plugin Milter',
-		],
-		'dkim_domains' => [
-			'title' => 'Domini nomefile',
-			'description' => '<em>Nome file</em> del parametro DKIM Domains specificata nella configurazione dkim-milter',
-		],
-		'dkim_dkimkeys' => [
-			'title' => 'Nome file del KeyList',
-			'description' => '<em>Nome file</em> del parametro DKIM KeyList specificata nella configurazione dkim-milter',
-		],
-		'dkimrestart_command' => [
-			'title' => 'Milter commando riavvio',
-			'description' => 'Si prega di specificare il comando per riavviare il servizio DKIM milter',
-		],
-		'use_dkim' => [
-			'title' => 'Attivare il supporto DKIM?',
-			'description' => 'Vuoi utilizzare il sistema Domain Keys (DKIM)?',
-		],
-		'dkim_algorithm' => [
-			'title' => 'Ammessi Algoritmi Hash',
-			'description' => 'Definire gli algoritmi di hash permessi, scegliere "Tutti" per permettere tutti gli algoritmi oppure uno o più tra gli altri algoritmi disponibili',
-		],
-		'dkim_servicetype' => 'Tipi di Servizio',
-		'dkim_keylength' => [
-			'title' => 'Lunghezza Chiave',
-			'description' => 'Attenzione: Se si modifica questo valore è necessario eliminare tutte le chiavi private/pubbliche in "%s"',
-		],
-		'dkim_notes' => [
-			'title' => 'Note DKIM',
-			'description' => 'Nota potrebbe essere di interesse, es. un URL come http://www.dnswatch.info. Nessuna interpretazione è fatta da nessun programma. Questo tag deve essere usato con parsimonia per ragioni di spazio nel DNS. Questo è destinato ad essere utilizzato dagli amministratori e non dagli utenti finali.',
-		],
-	],
 	'dns' => [
 		'destinationip' => 'Dominio IP',
 		'a_record' => 'A-Record (IPv6 optionale)',

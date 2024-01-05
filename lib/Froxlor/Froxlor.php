@@ -31,15 +31,15 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '2.1.4';
+	const VERSION = '2.2.0-dev1';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202312120';
+	const DBVERSION = '202312230';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';
 
-	const DOCS_URL = 'https://docs.froxlor.org/v2.1/';
+	const DOCS_URL = 'https://docs.froxlor.org/v2.2/';
 
 	/**
 	 * return path to where froxlor is installed, e.g.

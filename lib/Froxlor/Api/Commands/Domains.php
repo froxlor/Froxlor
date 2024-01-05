@@ -1407,7 +1407,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$zonefile = $result['zonefile'];
 				}
 
-				if (Settings::Get('dkim.use_dkim') != '1') {
+				if (Settings::Get('antispam.activated') != '1') {
 					$dkim = $result['dkim'];
 				}
 

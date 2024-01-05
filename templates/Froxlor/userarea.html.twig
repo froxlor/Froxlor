@@ -20,7 +20,7 @@
 	<nav class="navbar navbar-expand-md navbar-light p-0 {% if not block('heading') %}shadow-sm{% endif %}">
 		<div class="container-fluid gx-0">
 			<div>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar"  aria-expanded="false" aria-label="Toggle sidebar">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle sidebar">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
@@ -51,20 +51,30 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarOpts">
 							<li>
-								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'profile'}) }}"><i class="fa-solid fa-user-gear"></i> {{ lng('panel.profile') }}</a>
+								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'profile'}) }}">
+									<i class="fa-solid fa-user-gear"></i> {{ lng('panel.profile') }}
+								</a>
 							</li>
 							{% if get_setting('2fa.enabled') == 1 %}
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': '2fa'}) }}"><i class="fa-solid fa-shield"></i> {{ lng('2fa.2fa') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': '2fa'}) }}">
+										<i class="fa-solid fa-shield"></i> {{ lng('2fa.2fa') }}
+									</a>
 								</li>
 							{% endif %}
 							{% if get_setting('api.enabled') == 1 and userinfo.api_allowed == 1 %}
-								<li><hr class="dropdown-divider"></li>
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'apikeys'}) }}"><i class="fa-solid fa-key"></i> {{ lng('menue.main.apikeys') }}</a>
+									<hr class="dropdown-divider">
 								</li>
 								<li>
-									<a class="dropdown-item" href="https://docs.froxlor.org/latest/api-guide/" rel="external" target="_blank"><i class="fa-solid fa-circle-info"></i> {{ lng('menue.main.apihelp') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'apikeys'}) }}">
+										<i class="fa-solid fa-key"></i> {{ lng('menue.main.apikeys') }}
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="https://docs.froxlor.org/latest/api-guide/" rel="external" target="_blank">
+										<i class="fa-solid fa-circle-info"></i> {{ lng('menue.main.apihelp') }}
+									</a>
 								</li>
 							{% endif %}
 						</ul>
@@ -104,6 +114,14 @@
 						<div>{% block actions %}{% endblock %}</div>
 					</section>
 				{% endif %}
+
+				{% block errors %}
+					{% if call_static('\\Froxlor\\ErrorBag', 'hasErrors') %}
+						{% for error in call_static('\\Froxlor\\ErrorBag', 'getErrors') %}
+							{{ error|raw }}
+						{% endfor %}
+					{% endif %}
+				{% endblock %}
 
 				<section class="flex-grow-1 p-3 p-lg-5">
 					{% block content %}{% endblock %}

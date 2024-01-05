@@ -34,27 +34,6 @@ use voku\helper\AntiXSS;
 
 class PhpHelper
 {
-	private static $sort_key = 'id';
-	private static $sort_type = SORT_STRING;
-
-	/**
-	 * sort an array by either natural or string sort and a given index where the value for comparison is found
-	 *
-	 * @param array $list
-	 * @param string $key
-	 *
-	 * @return bool
-	 */
-	public static function sortListBy(array &$list, string $key = 'id'): bool
-	{
-		self::$sort_type = Settings::Get('panel.natsorting') == 1 ? SORT_NATURAL : SORT_STRING;
-		self::$sort_key = $key;
-		return usort($list, [
-			'self',
-			'sortListByGivenKey'
-		]);
-	}
-
 	/**
 	 * Wrapper around htmlentities to handle arrays, with the advantage that you
 	 * can select which fields should be handled by htmlentities
@@ -102,35 +81,6 @@ class PhpHelper
 	}
 
 	/**
-	 * Replaces Strings in an array, with the advantage that you
-	 * can select which fields should be str_replace'd
-	 *
-	 * @param string|array $search String or array of strings to search for
-	 * @param string|array $replace String or array to replace with
-	 * @param string|array $subject String or array The subject array
-	 * @param string|array $fields string The fields which should be checked for, separated by spaces
-	 *
-	 * @return string|array The str_replace'd array
-	 */
-	public static function strReplaceArray($search, $replace, $subject, $fields = '')
-	{
-		if (is_array($subject)) {
-			if (!is_array($fields)) {
-				$fields = self::arrayTrim(explode(' ', $fields));
-			}
-			foreach ($subject as $field => $value) {
-				if ((!is_array($fields) || empty($fields)) || (in_array($field, $fields))) {
-					$subject[$field] = str_replace($search, $replace, $value);
-				}
-			}
-		} else {
-			$subject = str_replace($search, $replace, $subject);
-		}
-
-		return $subject;
-	}
-
-	/**
 	 * froxlor php error handler
 	 *
 	 * @param int $errno
@@ -170,9 +120,8 @@ class PhpHelper
 			$err_display .= '</pre></p>';
 			// end later
 			$err_display .= '</div>';
-			// check for more existing errors
-			$errors = isset(UI::twig()->getGlobals()['global_errors']) ? UI::twig()->getGlobals()['global_errors'] : "";
-			UI::twig()->addGlobal('global_errors', $errors . $err_display);
+			// set errors to session
+			ErrorBag::addError($err_display);
 			// return true to ignore php standard error-handler
 			return true;
 		}
@@ -338,7 +287,8 @@ class PhpHelper
 		?string $max = '',
 		string $system = 'si',
 		string $retstring = '%01.2f %s'
-	): string {
+	): string
+	{
 		// Pick units
 		$systems = [
 			'si' => [
@@ -421,7 +371,8 @@ class PhpHelper
 		array  $haystack,
 		array  &$keys = [],
 		string $currentKey = ''
-	): bool {
+	): bool
+	{
 		foreach ($haystack as $key => $value) {
 			$pathkey = empty($currentKey) ? $key : $currentKey . '.' . $key;
 			if (is_array($value)) {
@@ -474,19 +425,6 @@ class PhpHelper
 				}
 			}
 		}
-	}
-
-	/**
-	 * @param array $a
-	 * @param array $b
-	 * @return int
-	 */
-	private static function sortListByGivenKey(array $a, array $b): int
-	{
-		if (self::$sort_type == SORT_NATURAL) {
-			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
-		}
-		return strcasecmp($a[self::$sort_key], $b[self::$sort_key]);
 	}
 
 	/**

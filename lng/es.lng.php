@@ -628,45 +628,6 @@ return [
 		'mysqlserver' => 'Servidor mysql utilizable'
 	],
 	'diskquota' => 'Cuota',
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefijo',
-			'description' => 'Especifique la ruta a los archivos DKIM RSA y a los archivos de configuración del plugin Milter'
-		],
-		'dkim_domains' => [
-			'title' => 'Nombre de archivo de los dominios',
-			'description' => '<em>Nombre de</em> archivo del parámetro DKIM Domains especificado en la configuración de dkim-milter'
-		],
-		'dkim_dkimkeys' => [
-			'title' => 'KeyList filename',
-			'description' => '<em>Nombre</em> de archivo del parámetro DKIM KeyList especificado en la configuración de dkim-milter'
-		],
-		'dkimrestart_command' => [
-			'title' => 'Comando de reinicio del filtro',
-			'description' => 'Especifique el comando de reinicio del servicio DKIM milter'
-		],
-		'privkeysuffix' => [
-			'title' => 'Sufijo de claves privadas',
-			'description' => 'Puede especificar una extensión/sufijo de nombre de archivo (opcional) para las claves privadas dkim generadas. Algunos servicios como dkim-filter requieren que esté vacío.'
-		],
-		'use_dkim' => [
-			'title' => '¿Activar soporte DKIM?',
-			'description' => '¿Desea utilizar el sistema de claves de dominio (DKIM)?<br/><em class="text-danger">Nota: DKIM sólo es compatible con dkim-filter, no con opendkim (todavía)</em>'
-		],
-		'dkim_algorithm' => [
-			'title' => 'Algoritmos Hash permitidos',
-			'description' => 'Defina los algoritmos hash permitidos, elija "Todos" para todos los algoritmos o uno o más de los otros algoritmos disponibles'
-		],
-		'dkim_servicetype' => 'Tipos de servicio',
-		'dkim_keylength' => [
-			'title' => 'Longitud de clave',
-			'description' => 'Atención: Si cambia estos valores, deberá eliminar todas las claves privadas/públicas de "%s".'
-		],
-		'dkim_notes' => [
-			'title' => 'Notas DKIM',
-			'description' => 'Notas que podrían ser de interés para un humano, por ejemplo, una URL como http://www.dnswatch.info. Ningún programa realiza ninguna interpretación. Esta etiqueta debe utilizarse con moderación debido a las limitaciones de espacio en DNS. Está pensada para que la utilicen los administradores, no los usuarios finales.'
-		]
-	],
 	'dns' => [
 		'destinationip' => 'IP(s) del dominio',
 		'standardip' => 'IP estándar del servidor',

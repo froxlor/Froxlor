@@ -99,7 +99,6 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 	}
 	Update::lastStepStatus(0);
 
-	Update::showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"install/lib",
 		"install/lng",
@@ -121,30 +120,7 @@ if (Froxlor::isFroxlorVersion('0.10.38.3')) {
 		"lng/swedish.lng.php",
 		"scripts",
 	);
-	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = !in_array('exec', $disabled);
-	$del_list = "";
-	foreach ($to_clean as $filedir) {
-		$complete_filedir = Froxlor::getInstallDir() . $filedir;
-		if (file_exists($complete_filedir)) {
-			if ($exec_allowed) {
-				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
-			} else {
-				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
-			}
-		}
-	}
-	if ($exec_allowed) {
-		Update::lastStepStatus(0);
-	} else {
-		if (empty($del_list)) {
-			// none of the files existed
-			Update::lastStepStatus(0);
-		} else {
-			Update::lastStepStatus(1, 'manual commands needed',
-				'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
-		}
-	}
+	Update::cleanOldFiles($to_clean);
 
 	Update::showUpdateStep("Adding new settings");
 	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int)$_POST['panel_settings_mode'] : 0;

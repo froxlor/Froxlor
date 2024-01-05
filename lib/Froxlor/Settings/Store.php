@@ -225,6 +225,17 @@ class Store
 		return $returnvalue;
 	}
 
+	public static function storeSettingFieldInsertAntispamTask($fieldname, $fielddata, $newfieldvalue)
+	{
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
+		}
+		return $returnvalue;
+	}
+
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);

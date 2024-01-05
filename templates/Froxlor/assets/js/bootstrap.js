@@ -14,6 +14,9 @@ window.bootstrap = bootstrap;
 import Chart from 'chart.js/auto';
 window.Chart = Chart;
 
+// set a default theme
+window.$theme = 'Froxlor';
+
 // Axios
 import axios from 'axios';
 window.axios = axios;

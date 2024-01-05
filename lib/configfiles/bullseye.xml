@@ -1657,7 +1657,7 @@ data_directory = /var/lib/postfix
 # for the case of a subdomain, $mydomain *must* be equal to $myhostname,
 # otherwise you cannot use the main domain for virtual transport.
 # also check the note about $mydomain below.
-myhostname = mail.$mydomain
+myhostname = $mydomain
 #myhostname = virtual.domain.tld
 
 # The mydomain parameter specifies the local internet domain name.
@@ -1751,8 +1751,8 @@ inet_interfaces = all
 #
 # See also below, section "REJECTING MAIL FOR UNKNOWN LOCAL USERS".
 #
-#mydestination = $myhostname, localhost.$mydomain, localhost
-mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+mydestination = $myhostname, localhost.$mydomain, localhost
+#mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,
 #	mail.$mydomain, www.$mydomain, ftp.$mydomain
 
@@ -4128,6 +4128,106 @@ plugin {
 					<include>//service[@type='mail']/general/files[@index=1]
 					</include>
 					<include>//service[@type='mail']/general/commands[@index=1]
+					</include>
+				</daemon>
+			</service>
+			<!-- Antispam services -->
+			<service type="antispam" title="Antispam">
+				<!-- general RSpamd commands -->
+				<general>
+					<commands index="1">
+						<command><![CDATA[mkdir -p /etc/apt/keyrings]]></command>
+						<command><![CDATA[wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/rspamd.gpg > /dev/null]]></command>
+						<command><![CDATA[echo "deb [signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list]]></command>
+						<command><![CDATA[echo "deb-src [signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ bullseye main" >> /etc/apt/sources.list.d/rspamd.list]]></command>
+						<command><![CDATA[apt-get update]]></command>
+					</commands>
+					<installs index="1">
+						<install><![CDATA[DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install rspamd]]></install>
+					</installs>
+					<commands index="2">
+						<command><![CDATA[mkdir -p /etc/rspamd/local.d/]]></command>
+						<command><![CDATA[mkdir -p /etc/rspamd/override.d/]]></command>
+						<command><![CDATA[mkdir -p mkdir /var/lib/rspamd/dkim/]]></command>
+					</commands>
+					<files index="1">
+						<file name="/etc/rspamd/local.d/actions.conf"
+							  chown="root:root" chmod="0644">
+							<content><![CDATA[
+# Set rewrite subject to this value (%s is replaced by the original subject)
+subject = "***SPAM*** %s"
+]]>
+							</content>
+						</file>
+						<file name="/etc/rspamd/local.d/arc.conf"
+							  chown="root:root" chmod="0644">
+							<content><![CDATA[
+try_fallback = true;
+### Enable DKIM signing for alias sender addresses
+allow_username_mismatch = true;
+path = "/var/lib/rspamd/dkim/$domain.$selector.key";
+selector_map = "/etc/rspamd/dkim_selectors.map";
+]]>
+							</content>
+						</file>
+						<file name="/etc/rspamd/local.d/milter_headers.conf"
+							  chown="root:root" chmod="0644">
+							<content><![CDATA[
+use = ["x-spamd-bar", "x-spam-level", "authentication-results"];
+authenticated_headers = ["authentication-results"];
+extended_spam_headers = true
+skip_local = false
+skip_authenticated = false
+]]>
+							</content>
+						</file>
+						<file name="/etc/rspamd/local.d/replies.conf"
+							  chown="root:root" chmod="0644">
+							<content><![CDATA[
+## If a user has replied to an email, don’t mark other emails in the same thread as spam
+action = "no action";
+]]>
+							</content>
+						</file>
+						<file name="/etc/rspamd/local.d/settings.conf"
+							  chown="root:root" chmod="0644" backup="true">
+							<content><![CDATA[
+## Feel free to include your own settings or adjustments here, for example:
+#whitelist {
+#  priority = low;
+#  rcpt = "postmaster@example.com";
+#  want_spam = yes;
+#}
+
+## Include froxlor generated settings
+.include(try=true,priority=1,duplicate=merge) "{{settings.antispam.config_file}}"
+]]>
+							</content>
+						</file>
+					</files>
+					<commands index="3">
+						<command><![CDATA[cp /etc/rspamd/local.d/arc.conf /etc/rspamd/local.d/dkim_signing.conf]]></command>
+						<command><![CDATA[postconf -e "milter_protocol = 6"]]></command>
+						<command><![CDATA[postconf -e "milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen}"]]></command>
+						<command><![CDATA[postconf -e "milter_default_action = accept"]]></command>
+						<command><![CDATA[postconf -e "smtpd_milters = inet:127.0.0.1:11332"]]></command>
+						<command><![CDATA[postconf -e "non_smtpd_milters = inet:127.0.0.1:11332"]]></command>
+						<command><![CDATA[chown -R _rspamd:_rspamd /var/lib/rspamd/dkim]]></command>
+						<command><![CDATA[chmod 440 /var/lib/rspamd/dkim/*]]></command>
+						<command><![CDATA[service rspamd restart]]></command>
+					</commands>
+				</general>
+				<!-- rspamd -->
+				<daemon name="rspamd" title="Rspamd" default="true">
+					<include>//service[@type='antispam']/general/commands[@index=1]
+					</include>
+					<include>//service[@type='antispam']/general/installs[@index=1]
+					</include>
+					<include>//service[@type='antispam']/general/commands[@index=2]
+					</include>
+					<include>//service[@type='antispam']/general/files[@index=1]
+					</include>
+					<include>//service[@type='antispam']/general/commands[@index=3]
 					</include>
 				</daemon>
 			</service>

@@ -32,7 +32,7 @@ class Customer
 {
 
 	/**
-	 * Get value of a a specific field from a given customer
+	 * Get value of a specific field from a given customer
 	 *
 	 * @param int $customerid
 	 * @param string $varname

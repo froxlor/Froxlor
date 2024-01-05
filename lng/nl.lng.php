@@ -328,41 +328,6 @@ return [
 		'mail_quota' => 'Mailquotum',
 		'sendinfomail' => 'Stuur gegevens naar mij via e-mail',
 	],
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefix',
-			'description' => 'Geef het pad naar de DKIM RSA-files alsook naar de configuratie van de Milter-plugin',
-		],
-		'dkim_domains' => [
-			'title' => 'Bestandsnaam domeinen',
-			'description' => '<em>Bestandsnaam</em> van het DKIM Domains-parameter zoals aangegeven in de configuratie van dkim-milter',
-		],
-		'dkim_dkimkeys' => [
-			'title' => 'KeyList filename',
-			'description' => '<em>Bestandsnaam</em> van het DKIM KeyList-parameter zoals aangegeven in de configuratie van dkim-milter',
-		],
-		'dkimrestart_command' => [
-			'title' => 'Herstart-commando voor Milter',
-			'description' => 'Geef het commando om de milter-plugin te herstarten',
-		],
-		'use_dkim' => [
-			'title' => 'Activeer ondersteuning voor DKIM?',
-			'description' => 'Wilt u gebruikmaken van Domain Keys (DKIM) systeem?',
-		],
-		'dkim_algorithm' => [
-			'title' => 'Toegestane hash-algoritmen',
-			'description' => 'Toegestane hash-algoritmen, kies "Alle" voor alle algoritmen of 1 of meerdere van onderstaande',
-		],
-		'dkim_servicetype' => 'Type services',
-		'dkim_keylength' => [
-			'title' => 'Lengte sleutel',
-			'description' => 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "%s" te verwijderen',
-		],
-		'dkim_notes' => [
-			'title' => 'Notities voor DKIM',
-			'description' => 'Notities die van belang kunnen zijn voor mensen, bijvoorbeeld een URL als http://www.dnswatch.info. Geen enkel programma zal deze informatie verwerken. Deze informatie dient schaars te zijn gezien de beperkte ruimte in DNS. Dit is bedoeld voor beheerders, niet voor eindgebruikers.',
-		],
-	],
 	'dns' => [
 		'destinationip' => 'IP domein',
 		'standardip' => 'Standaard server IP',

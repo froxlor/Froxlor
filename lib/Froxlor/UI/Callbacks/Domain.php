@@ -25,6 +25,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain as DDomain;
 use Froxlor\FileDir;
@@ -33,23 +34,36 @@ use Froxlor\UI\Panel\UI;
 
 class Domain
 {
-	public static function domainLink(array $attributes)
+	public static function domainEditLink(array $attributes): array
 	{
-		return '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+		$linker = UI::getLinker();
+		return [
+			'macro' => 'link',
+			'data' => [
+				'text' => $attributes['data'],
+				'href' => $linker->getLink([
+					'section' => 'domains',
+					'page' => 'domains',
+					'action' => 'edit',
+					'id' => $attributes['fields']['id'],
+				]),
+				'target' => '_blank'
+			]
+		];
 	}
 
-	public static function domainWithCustomerLink(array $attributes)
+	public static function domainWithCustomerLink(array $attributes): string
 	{
 		$linker = UI::getLinker();
 		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		if ((int)UI::getCurrentUser()['adminsession'] == 1 && $attributes['fields']['customerid']) {
 			$result .= ' (<a href="' . $linker->getLink([
-				'section' => 'customers',
-				'page' => 'customers',
-				'action' => 'su',
-				'sort' => $attributes['fields']['loginname'],
-				'id' => $attributes['fields']['customerid'],
-			]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'su',
+					'sort' => $attributes['fields']['loginname'],
+					'id' => $attributes['fields']['customerid'],
+				]) . '">' . $attributes['fields']['loginname'] . '</a>)';
 		}
 		return $result;
 	}
@@ -108,12 +122,12 @@ class Domain
 
 	public static function canEdit(array $attributes): bool
 	{
-		return (bool)($attributes['fields']['caneditdomain'] && !$attributes['fields']['deactivated']);
+		return $attributes['fields']['caneditdomain'] && !$attributes['fields']['deactivated'];
 	}
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		if ((int)$attributes['fields']['email_only'] == 0 && !$attributes['fields']['deactivated']) {
+		if ((!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)) && !$attributes['fields']['deactivated']) {
 			if ((int)UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
 				return true;
 			} elseif ((int)UI::getCurrentUser()['adminsession'] == 1) {
@@ -155,17 +169,19 @@ class Domain
 
 	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		return ((bool)$attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
+		return ((bool)$attributes['fields']['letsencrypt'] && (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)));
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public static function canEditSSL(array $attributes): bool
 	{
-		if (
-			Settings::Get('system.use_ssl') == '1'
+		if (Settings::Get('system.use_ssl') == '1'
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
 			&& (int)$attributes['fields']['caneditdomain'] == 1
 			&& (int)$attributes['fields']['letsencrypt'] == 0
-			&& (int)$attributes['fields']['email_only'] == 0
+			&& (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0))
 			&& !$attributes['fields']['deactivated']
 		) {
 			return true;
@@ -196,15 +212,15 @@ class Domain
 			],
 		];
 
-		// specified certificate for domain
 		if ($attributes['fields']['domain_hascert'] == 1) {
+			// specified certificate for domain
 			$result['icon'] .= ' text-success';
-		} // shared certificates (e.g. subdomain of domain where certificate is specified)
-		elseif ($attributes['fields']['domain_hascert'] == 2) {
+		} elseif ($attributes['fields']['domain_hascert'] == 2) {
+			// shared certificates (e.g. subdomain of domain where certificate is specified)
 			$result['icon'] .= ' text-warning';
 			$result['title'] .= "\n" . lng('panel.ssleditor_infoshared');
-		} // no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
-		elseif ($attributes['fields']['domain_hascert'] == 0) {
+		} elseif ($attributes['fields']['domain_hascert'] == 0) {
+			// no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
 			$result['icon'] .= ' text-danger';
 			$result['title'] .= "\n" . lng('panel.ssleditor_infoglobal');
 		}
@@ -216,7 +232,7 @@ class Domain
 
 	public static function listIPs(array $attributes): string
 	{
-		if (isset($attributes['fields']['ipsandports']) && !empty($attributes['fields']['ipsandports'])) {
+		if (!empty($attributes['fields']['ipsandports'])) {
 			$iplist = "";
 			foreach ($attributes['fields']['ipsandports'] as $ipport) {
 				$iplist .= $ipport['ip'] . ':' . $ipport['port'] . '<br>';
@@ -226,6 +242,9 @@ class Domain
 		return lng('panel.empty');
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public static function getPhpConfigName(array $attributes): string
 	{
 		$sel_stmt = Database::prepare("SELECT `description` FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id");
@@ -233,11 +252,11 @@ class Domain
 		if ((int)UI::getCurrentUser()['adminsession'] == 1) {
 			$linker = UI::getLinker();
 			$result = '<a href="' . $linker->getLink([
-				'section' => 'phpsettings',
-				'page' => 'overview',
-				'searchfield' => 'c.id',
-				'searchtext' => $attributes['data'],
-			]) . '">' . $phpconfig['description'] . '</a>';
+					'section' => 'phpsettings',
+					'page' => 'overview',
+					'searchfield' => 'c.id',
+					'searchtext' => $attributes['data'],
+				]) . '">' . $phpconfig['description'] . '</a>';
 		} else {
 			$result = $phpconfig['description'];
 		}

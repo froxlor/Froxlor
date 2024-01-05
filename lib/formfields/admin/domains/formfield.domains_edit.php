@@ -129,7 +129,7 @@ return [
 						'selected' => $result['subcanemaildomain']
 					],
 					'dkim' => [
-						'visible' => Settings::Get('dkim.use_dkim') == '1',
+						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => 'DomainKeys',
 						'type' => 'checkbox',
 						'value' => '1',

@@ -149,7 +149,6 @@ if (Froxlor::isFroxlorVersion('2.1.0-rc2')) {
 }
 
 if (Froxlor::isDatabaseVersion('202311260')) {
-	Update::showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"install/updates/froxlor/update_2.x.inc.php",
 		"install/updates/preconfig/preconfig_2.x.inc.php",
@@ -175,33 +174,8 @@ if (Froxlor::isDatabaseVersion('202311260')) {
 		"templates/Froxlor/user/change_theme.html.twig",
 		"tests/Backup/CustomerBackupsTest.php"
 	);
-	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = !in_array('exec', $disabled);
-	$del_list = "";
-	foreach ($to_clean as $filedir) {
-		$complete_filedir = Froxlor::getInstallDir() . $filedir;
-		if (file_exists($complete_filedir)) {
-			if ($exec_allowed) {
-				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
-			} else {
-				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
-			}
-		}
-	}
-	if ($exec_allowed) {
-		Update::lastStepStatus(0);
-	} else {
-		if (empty($del_list)) {
-			// none of the files existed
-			Update::lastStepStatus(0);
-		} else {
-			Update::lastStepStatus(
-                1,
-                'manual commands needed',
-                'Please run the following commands manually:<br><pre>' . $del_list . '</pre>'
-            );
-		}
-	}
+	Update::cleanOldFiles($to_clean);
+
 	Froxlor::updateToDbVersion('202312050');
 }
 
@@ -216,7 +190,6 @@ if (Froxlor::isFroxlorVersion('2.1.0')) {
 }
 
 if (Froxlor::isDatabaseVersion('202312050')) {
-	Update::showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"lib/configfiles/centos7.xml",
 		"lib/configfiles/centos8.xml",
@@ -225,33 +198,8 @@ if (Froxlor::isDatabaseVersion('202312050')) {
 		"lib/configfiles/buster.xml",
 		"lib/configfiles/bionic.xml",
 	);
-	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = !in_array('exec', $disabled);
-	$del_list = "";
-	foreach ($to_clean as $filedir) {
-		$complete_filedir = Froxlor::getInstallDir() . $filedir;
-		if (file_exists($complete_filedir)) {
-			if ($exec_allowed) {
-				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
-			} else {
-				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
-			}
-		}
-	}
-	if ($exec_allowed) {
-		Update::lastStepStatus(0);
-	} else {
-		if (empty($del_list)) {
-			// none of the files existed
-			Update::lastStepStatus(0);
-		} else {
-			Update::lastStepStatus(
-				1,
-				'manual commands needed',
-				'Please run the following commands manually:<br><pre>' . $del_list . '</pre>'
-			);
-		}
-	}
+	Update::cleanOldFiles($to_clean);
+
 	Froxlor::updateToDbVersion('202312100');
 }
 

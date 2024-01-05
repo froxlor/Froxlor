@@ -116,6 +116,12 @@ return [
 						'type' => 'hidden',
 						'value' => '0'
 					],
+					'dkim_entry' => [
+						'visible' => (Settings::Get('system.bind_enable') == '0' && Settings::Get('antispam.activated') == '1' && $result['dkim'] == '1' && $result['dkim_pubkey'] != ''),
+						'label' => lng('antispam.required_dkim_dns'),
+						'type' => 'longtext',
+						'value' => (string)(new \Froxlor\Dns\DnsEntry('dkim' . $result['dkim_id'] . '._domainkey', 'TXT', '"v=DKIM1; k=rsa; p='.trim($result['dkim_pubkey']).'"'))
+					],
 				]
 			],
 			'section_bssl' => [

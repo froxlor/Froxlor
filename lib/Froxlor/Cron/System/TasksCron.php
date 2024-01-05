@@ -25,9 +25,11 @@
 
 namespace Froxlor\Cron\System;
 
+use Exception;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Cron\Http\ConfigIO;
 use Froxlor\Cron\Http\HttpConfigBase;
+use Froxlor\Cron\Mail\Rspamd;
 use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\Dns\PowerDNS;
@@ -40,6 +42,9 @@ use PDO;
 class TasksCron extends FroxlorCron
 {
 
+	/**
+	 * @throws Exception
+	 */
 	public static function run()
 	{
 		/**
@@ -98,6 +103,11 @@ class TasksCron extends FroxlorCron
 				 * refs #293
 				 */
 				self::deleteFtpData($row);
+			} elseif ($row['type'] == TaskId::REBUILD_RSPAMD && (int)Settings::Get('antispam.activated') != 0) {
+				/**
+				 * TYPE=9 Rebuild antispam config
+				 */
+				self::rebuildAntiSpamConfigs();
 			} elseif ($row['type'] == TaskId::CREATE_QUOTA && (int)Settings::Get('system.diskquota_enabled') != 0) {
 				/**
 				 * TYPE=10 Set the filesystem - quota
@@ -266,13 +276,7 @@ class TasksCron extends FroxlorCron
 	private static function rebuildDnsConfigs()
 	{
 		$dnssrv = '\\Froxlor\\Cron\\Dns\\' . Settings::Get('system.dns_server');
-
 		$nameserver = new $dnssrv(FroxlorLogger::getInstanceOf());
-
-		if (Settings::Get('dkim.use_dkim') == '1') {
-			$nameserver->writeDKIMconfigs();
-		}
-
 		$nameserver->writeConfigs();
 	}
 
@@ -447,5 +451,14 @@ class TasksCron extends FroxlorCron
 				}
 			}
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private static function rebuildAntiSpamConfigs()
+	{
+		$antispam = new Rspamd(FroxlorLogger::getInstanceOf());
+		$antispam->writeConfigs();
 	}
 }

@@ -674,6 +674,7 @@ class Core
 			'http' => $this->validatedData['webserver'],
 			'smtp' => 'postfix_dovecot',
 			'mail' => 'dovecot_postfix2',
+			'antispam' => 'rspamd',
 			'ftp' => 'proftpd',
 			'system' => $system_params
 		];

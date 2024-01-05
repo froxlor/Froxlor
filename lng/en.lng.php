@@ -268,7 +268,7 @@ return [
 		'text' => 'Message',
 		'sslsettings' => 'SSL settings',
 		'specialsettings_replacements' => 'You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (if applicable)<br/>',
-		'dkimsettings' => 'DomainKey settings',
+		'antispam_settings' => 'Antispam settings',
 		'caneditphpsettings' => 'Can change php-related domain settings?',
 		'allips' => 'All IP\'s',
 		'awstatssettings' => 'AWstats settings',
@@ -644,43 +644,38 @@ return [
 		'mysqlserver' => 'Usable mysql-server',
 	],
 	'diskquota' => 'Quota',
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefix',
-			'description' => 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin',
+	'antispam' => [
+		'config_file' => [
+			'title' => 'Antispam settings file',
+			'description' => 'Please specify the filename for the email-antispam rules',
 		],
-		'dkim_domains' => [
-			'title' => 'Domains filename',
-			'description' => '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration',
-		],
-		'dkim_dkimkeys' => [
-			'title' => 'KeyList filename',
-			'description' => '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration',
-		],
-		'dkimrestart_command' => [
+		'reload_command' => [
 			'title' => 'Milter restart command',
-			'description' => 'Please specify the restart command for the DKIM milter service',
+			'description' => 'Please specify the restart command for the rspamd service',
 		],
-		'privkeysuffix' => [
-			'title' => 'Private keys suffix',
-			'description' => 'You can specify an (optional) filename extension/suffix for the generate dkim private keys. Some services like dkim-filter requires this to be empty',
+		'activated' => [
+			'title' => 'Activate antispam?',
+			'description' => 'Would you like to use rspamd as antispam service?',
 		],
-		'use_dkim' => [
-			'title' => 'Activate DKIM support?',
-			'description' => 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="text-danger">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>',
-		],
-		'dkim_algorithm' => [
-			'title' => 'Allowed Hash Algorithms',
-			'description' => 'Define allowed hash algorithms, chose "All" for all algorithms or one or more from the other available algorithms',
-		],
-		'dkim_servicetype' => 'Service Types',
 		'dkim_keylength' => [
-			'title' => 'Key-length',
-			'description' => 'Attention: If you change this values, you need to delete all the private/public keys in "%s"',
+			'title' => 'DKIM Key-length',
+			'description' => 'Attention: Changes will only apply for new keys<br/><br/>Requires a specific dns entry for the domain. If you are not using the nameserver feature, you will have to manually manage these entries.',
 		],
-		'dkim_notes' => [
-			'title' => 'DKIM Notes',
-			'description' => 'Notes that might be of interest to a human, e.g. a URL like http://www.dnswatch.info. No interpretation is made by any program. This tag should be used sparingly due to space limitations in DNS. This is intended for use by administrators, not end users.',
+		'spam_tag_level' => [
+			'title' => 'Spam tag level',
+			'description' => 'Score that is required to mark an email as spam<br/>Default: 7.0'
+		],
+		'spam_kill_level' => [
+			'title' => 'Spam kill level',
+			'description' => 'Score that is required to discard an email entirely<br/>Default: 14.0'
+		],
+		'bypass_spam' => [
+			'title' => 'Bypass spamfilter',
+			'description' => 'Activate to bypass/disable spamfiltering for this address.<br/>Default: no'
+		],
+		'policy_greylist' => [
+			'title' => 'Use greylisting',
+			'description' => 'Incoming emails will be protected by <a href="https://en.wikipedia.org/wiki/Greylisting_(email)" target="_blank">greylisting</a>.<br/>Default: yes'
 		],
 	],
 	'dns' => [
@@ -2236,8 +2231,18 @@ Yours sincerely, your administrator',
 		],
 	],
 	'spf' => [
-		'use_spf' => 'Activate SPF for domains?',
+		'use_spf' => [
+			'title' => 'Activate SPF for domains?',
+			'description' => 'Requires a specific dns entry for the domain. If you are not using the nameserver feature, you will have to manually manage these entries.',
+		],
 		'spf_entry' => 'SPF entry for all domains',
+	],
+	'dmarc' => [
+		'use_dmarc' => [
+			'title' => 'Activate DMARC for domains?',
+			'description' => 'Requires a specific dns entry for the domain. If you are not using the nameserver feature, you will have to manually manage these entries.',
+		],
+		'dmarc_entry' => 'DMARC entry for all domains',
 	],
 	'ssl_certificates' => [
 		'certificate_for' => 'Certificate for',

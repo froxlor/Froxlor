@@ -42,7 +42,7 @@ class Traffic
 	{
 		$trafficCollectionObj = (new Collection(TrafficAPI::class, $userinfo,
 			self::getParamsByRange($range, ['customer_traffic' => true])));
-		if ($userinfo['adminsession'] == 1) {
+		if (($userinfo['adminsession'] ?? 0) == 1) {
 			$trafficCollectionObj->has('customer', Customers::class, 'customerid', 'customerid');
 		}
 		$trafficCollection = $trafficCollectionObj->get();
@@ -58,8 +58,17 @@ class Traffic
 			$mail = $item['mail'];
 			$total = $http + $ftp + $mail;
 
+			if (empty($users[$item['customerid']])) {
+				$users[$item['customerid']] = [
+					'total' => 0.00,
+					'http' => 0.00,
+					'ftp' => 0.00,
+					'mail' => 0.00,
+				];
+			}
+
 			// per user total
-			if ($userinfo['adminsession'] == 1) {
+			if (($userinfo['adminsession'] ?? 0) == 1) {
 				$users[$item['customerid']]['loginname'] = $item['customer']['loginname'];
 			}
 			$users[$item['customerid']]['total'] += $total;
@@ -67,6 +76,30 @@ class Traffic
 			$users[$item['customerid']]['ftp'] += $ftp;
 			$users[$item['customerid']]['mail'] += $mail;
 			if (!$overview) {
+				if (empty($years[$item['year']])) {
+					$years[$item['year']] = [
+						'total' => 0.00,
+						'http' => 0.00,
+						'ftp' => 0.00,
+						'mail' => 0.00,
+					];
+				}
+				if (empty($months[$item['month'] . '/' . $item['year']])) {
+					$months[$item['month'] . '/' . $item['year']] = [
+						'total' => 0.00,
+						'http' => 0.00,
+						'ftp' => 0.00,
+						'mail' => 0.00,
+					];
+				}
+				if (empty($days[$item['day'] . '.' . $item['month'] . '.' . $item['year']])) {
+					$days[$item['day'] . '.' . $item['month'] . '.' . $item['year']] = [
+						'total' => 0.00,
+						'http' => 0.00,
+						'ftp' => 0.00,
+						'mail' => 0.00,
+					];
+				}
 				// per year
 				$years[$item['year']]['total'] += $total;
 				$years[$item['year']]['http'] += $http;
@@ -86,7 +119,12 @@ class Traffic
 		}
 
 		// calculate overview for given range from users
-		$metrics = [];
+		$metrics = [
+			'total' => 0.00,
+			'http' => 0.00,
+			'ftp' => 0.00,
+			'mail' => 0.00,
+		];
 		foreach ($users as $user) {
 			$metrics['total'] += $user['total'];
 			$metrics['http'] += $user['http'];

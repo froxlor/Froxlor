@@ -28,10 +28,12 @@ namespace Froxlor\Api\Commands;
 use Exception;
 use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
+use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\Idna\IdnaWrapper;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 use PDO;
@@ -49,6 +51,14 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *            name of the address before @
 	 * @param string $domain
 	 *            domain-name for the email-address
+	 * @param float $spam_tag_level
+	 *            optional, score which is required to tag emails as spam, default: 7.0
+	 * @param float $spam_kill_level
+	 *            optional, score which is required to discard emails, default: 14.0
+	 * @param boolean $bypass_spam
+	 *            optional, disable spam-filter entirely, default: no
+	 * @param boolean $policy_greylist
+	 *            optional, enable grey-listing, default: yes
 	 * @param boolean $iscatchall
 	 *            optional, make this address a catchall address, default: no
 	 * @param int $customerid
@@ -74,6 +84,10 @@ class Emails extends ApiCommand implements ResourceEntity
 			$domain = $this->getParam('domain');
 
 			// parameters
+			$spam_tag_level = $this->getParam('spam_tag_level', true, '7.0');
+			$spam_kill_level = $this->getParam('spam_kill_level', true, '14.0');
+			$bypass_spam = $this->getBoolParam('bypass_spam', true, 0);
+			$policy_greylist = $this->getBoolParam('policy_greylist', true, 1);
 			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
 			$description = $this->getParam('description', true, '');
 
@@ -140,11 +154,19 @@ class Emails extends ApiCommand implements ResourceEntity
 				}
 			}
 
+			$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1,2})?$/', '', [7.0], true);
+			$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1,2})?$/', '', [14.0], true);
+			$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_MAIL_VIRTUAL . "` SET
 				`customerid` = :cid,
 				`email` = :email,
 				`email_full` = :email_full,
+				`spam_tag_level` = :spam_tag_level,
+				`spam_kill_level` = :spam_kill_level,
+				`bypass_spam` = :bypass_spam,
+				`policy_greylist` = :policy_greylist,
 				`iscatchall` = :iscatchall,
 				`domainid` = :domainid,
 				`description` = :description
@@ -153,6 +175,10 @@ class Emails extends ApiCommand implements ResourceEntity
 				"cid" => $customer['customerid'],
 				"email" => $email,
 				"email_full" => $email_full,
+				"spam_tag_level" => $spam_tag_level,
+				"spam_kill_level" => $spam_kill_level,
+				"bypass_spam" => $bypass_spam,
+				"policy_greylist" => $policy_greylist,
 				"iscatchall" => $iscatchall,
 				"domainid" => $domain_check['id'],
 				"description" => $description
@@ -162,6 +188,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			// update customer usage
 			Customers::increaseUsage($customer['customerid'], 'emails_used');
 
+			Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added email address '" . $email_full . "'");
 
 			$result = $this->apiCall('Emails.get', [
@@ -194,7 +221,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 
-		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, v.`description`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
+		$result_stmt = Database::prepare("SELECT v.*, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
@@ -220,6 +247,14 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *            optional, required when called as admin (if $customerid is not specified)
+	 * @param float $spam_tag_level
+	 *            optional, score which is required to tag emails as spam, default: 7.0
+	 * @param float $spam_kill_level
+	 *            optional, score which is required to discard emails, default: 14.0
+	 * @param boolean $bypass_spam
+	 *            optional, disable spam-filter entirely, default: no
+	 * @param boolean $policy_greylist
+	 *            optional, enable grey-listing, default: yes
 	 * @param boolean $iscatchall
 	 *            optional
 	 * @param string $description
@@ -255,6 +290,10 @@ class Emails extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		// parameters
+		$spam_tag_level = $this->getParam('spam_tag_level', true, $result['spam_tag_level']);
+		$spam_kill_level = $this->getParam('spam_kill_level', true, $result['spam_kill_level']);
+		$bypass_spam = $this->getBoolParam('bypass_spam', true, $result['bypass_spam']);
+		$policy_greylist = $this->getBoolParam('policy_greylist', true, $result['policy_greylist']);
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
 		$description = $this->getParam('description', true, $result['description']);
 
@@ -284,19 +323,34 @@ class Emails extends ApiCommand implements ResourceEntity
 			$email = $result['email_full'];
 		}
 
+		$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1,2})?$/', '', [7.0], true);
+		$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1,2})?$/', '', [14.0], true);
+		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
 		$stmt = Database::prepare("
-			UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-			SET `email` = :email , `iscatchall` = :caflag, `description` = :description
+			UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET
+			`email` = :email ,
+			`spam_tag_level` = :spam_tag_level,
+			`spam_kill_level` = :spam_kill_level,
+			`bypass_spam` = :bypass_spam,
+			`policy_greylist` = :policy_greylist,
+			`iscatchall` = :caflag,
+			`description` = :description
 			WHERE `customerid`= :cid AND `id`= :id
 		");
 		$params = [
 			"email" => $email,
+			"spam_tag_level" => $spam_tag_level,
+			"spam_kill_level" => $spam_kill_level,
+			"bypass_spam" => $bypass_spam,
+			"policy_greylist" => $policy_greylist,
 			"caflag" => $iscatchall,
 			"description" => $description,
 			"cid" => $customer['customerid'],
 			"id" => $id
 		];
 		Database::pexecute($stmt, $params, true, true);
+		Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
 
 		$result = $this->apiCall('Emails.get', [
@@ -334,7 +388,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$result = [];
 		$query_fields = [];
 		$result_stmt = Database::prepare("
-			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, m.`destination`, m.`popaccountid`, d.`domain`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
+			SELECT m.*, d.`domain`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)

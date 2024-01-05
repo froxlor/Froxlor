@@ -79,7 +79,8 @@
 												(dtype == 'bind' and get_setting('system.bind_enable') == '1' and get_setting('system.dns_server') == 'Bind') or
 												(dtype == 'powerdns' and get_setting('system.bind_enable') == '1' and get_setting('system.dns_server') == 'PowerDNS') or
 												(dtype == 'proftpd' and get_setting('system.ftpserver') == 'proftpd') or
-												(dtype == 'pureftpd' and get_setting('system.ftpserver') == 'pureftpd')
+												(dtype == 'pureftpd' and get_setting('system.ftpserver') == 'pureftpd') or
+												(dtype == 'rspamd' and get_setting('antispam.activated') == '1')
 											%}
 												{% set recommended = true %}
 											{% endif %}

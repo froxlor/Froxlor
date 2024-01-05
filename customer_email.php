@@ -245,6 +245,15 @@ if ($page == 'email_domain') {
 
 		if (isset($result['email']) && $result['email'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				try {
+					Emails::getLocal($userinfo, [
+						'id' => $id,
+						'spam_tag_level' => $_POST['spam_tag_level'] ?? \Froxlor\Cron\Mail\Rspamd::DEFAULT_MARK_LVL,
+						'spam_kill_level' => $_POST['spam_kill_level'] ?? \Froxlor\Cron\Mail\Rspamd::DEFAULT_REJECT_LVL
+					])->update();
+				} catch (Exception $e) {
+					Response::dynamicError($e->getMessage());
+				}
 				Response::redirectTo($filename, [
 					'page' => $page
 				]);
@@ -291,6 +300,54 @@ if ($page == 'email_domain') {
 				'editid' => $id
 			]);
 		}
+	} elseif ($action == 'togglebypass' && $id != 0) {
+		try {
+			$json_result = Emails::getLocal($userinfo, [
+				'id' => $id
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
+		try {
+			Emails::getLocal($userinfo, [
+				'id' => $id,
+				'bypass_spam' => ($result['bypass_spam'] == '1' ? 0 : 1)
+			])->update();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		Response::redirectTo($filename, [
+			'page' => $page,
+			'domainid' => $email_domainid,
+			'action' => 'edit',
+			'id' => $id,
+		]);
+	} elseif ($action == 'togglegreylist' && $id != 0) {
+		try {
+			$json_result = Emails::getLocal($userinfo, [
+				'id' => $id
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
+		try {
+			Emails::getLocal($userinfo, [
+				'id' => $id,
+				'policy_greylist' => ($result['policy_greylist'] == '1' ? 0 : 1)
+			])->update();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		Response::redirectTo($filename, [
+			'page' => $page,
+			'domainid' => $email_domainid,
+			'action' => 'edit',
+			'id' => $id,
+		]);
 	} elseif ($action == 'togglecatchall' && $id != 0) {
 		try {
 			$json_result = Emails::getLocal($userinfo, [

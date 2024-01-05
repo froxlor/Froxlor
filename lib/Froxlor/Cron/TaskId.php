@@ -67,6 +67,12 @@ final class TaskId
 	const DELETE_FTP_DATA = 8;
 
 	/**
+	 * TYPE=9 MEANS THAT SOMETHING ANTISPAM RELATED HAS CHANGED.
+	 * REBUILD froxlor_settings.conf IF ANTISPAM IS ENABLED
+	 */
+	const REBUILD_RSPAMD = 9;
+
+	/**
 	 * TYPE=10 Set the filesystem - quota
 	 */
 	const CREATE_QUOTA = 10;

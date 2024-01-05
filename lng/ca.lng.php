@@ -629,45 +629,6 @@ return [
 		'mysqlserver' => 'Servidor mysql utilitzable'
 	],
 	'diskquota' => 'Quota',
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefix',
-			'description' => 'Especifiqueu la ruta als fitxers DKIM RSA i als fitxers de configuració del plugin Milter'
-		],
-		'dkim_domains' => [
-			'title' => 'Nom del fitxer dels dominis',
-			'description' => '<em>Nom de fitxer</em> del paràmetre DKIM Domains especificat a la configuració dkim-milter'
-		],
-		'dkim_dkimkeys' => [
-			'title' => 'Nom de l\'arxiu KeyList',
-			'description' => '<em>Nom de fitxer</em> del paràmetre DKIM KeyList especificat a la configuració de dkim-milter'
-		],
-		'dkimrestart_command' => [
-			'title' => 'Ordre de reinici del filtre',
-			'description' => 'Especifiqui l\'ordre de reinici del servei DKIM milter'
-		],
-		'privkeysuffix' => [
-			'title' => 'Sufix de claus privades',
-			'description' => 'Pot especificar una extensió/sufix de nom de fitxer (opcional) per a les claus privades dkim generades. Alguns serveis com dkim-filter requereixen que estigui buit.'
-		],
-		'use_dkim' => [
-			'title' => 'Activar suport DKIM?',
-			'description' => 'Voleu utilitzar el sistema de claus de domini (DKIM)?<br/><em class="text-danger">Nota: DKIM només és compatible amb dkim-filter, no amb opendkim (de moment)</em>'
-		],
-		'dkim_algorithm' => [
-			'title' => 'Algorismes Hash permesos',
-			'description' => 'Defineix els algorismes hash permesos, escull "Tots" per a tots els algorismes o un o més dels altres algorismes disponibles'
-		],
-		'dkim_servicetype' => 'Tipus de servei',
-		'dkim_keylength' => [
-			'title' => 'Longitud de clau',
-			'description' => 'Atenció: Si canvia aquests valors, haurà d\'eliminar totes les claus privades/públiques de "%s".'
-		],
-		'dkim_notes' => [
-			'title' => 'Notes DKIM',
-			'description' => 'Notes que podrien ser d\'interès per a un humà, per exemple, una URL com http://www.dnswatch.info. Cap programa no realitza cap interpretació. Aquesta etiqueta s\'ha de fer servir amb moderació a causa de les limitacions d\'espai al DNS. Està pensada perquè la facin servir els administradors, no els usuaris finals.'
-		]
-	],
 	'dns' => [
 		'destinationip' => 'IP(s) del domini',
 		'standardip' => 'IP estàndard del servidor',

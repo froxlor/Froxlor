@@ -139,7 +139,7 @@ class Response
 		exit;
 	}
 
-	public static function dynamicError($message)
+	public static function dynamicError($message, bool $nosession = false)
 	{
 		$_SESSION['requestData'] = $_POST;
 		$link_ref = '';
@@ -147,7 +147,8 @@ class Response
 			$link_ref = htmlentities($_SERVER['HTTP_REFERER']);
 		}
 
-		UI::view('misc/alert.html.twig', [
+		$tpl = $nosession ? 'misc/alert_nosession.html.twig' : 'misc/alert.html.twig';
+		UI::view($tpl, [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => lng('error.error'),

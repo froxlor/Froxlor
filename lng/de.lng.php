@@ -264,7 +264,7 @@ return [
 		'text' => 'Nachricht',
 		'sslsettings' => 'SSL-Einstellungen',
 		'specialsettings_replacements' => 'Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (wenn zutreffend)<br/>',
-		'dkimsettings' => 'DomainKey-Einstellungen',
+		'antispam_settings' => 'Antispam-Einstellungen',
 		'caneditphpsettings' => 'Kann PHP-bezogene Domaineinstellungen vornehmen?',
 		'allips' => 'Alle IP-Adressen',
 		'awstatssettings' => 'AWstats-Einstellungen',
@@ -595,43 +595,38 @@ return [
 		'mysqlserver' => 'Erlaubte MySQL-Server',
 	],
 	'diskquota' => 'Quota',
-	'dkim' => [
-		'dkim_prefix' => [
-			'title' => 'Prefix',
-			'description' => 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?',
+	'antispam' => [
+		'config_file' => [
+			'title' => 'Antispam Konfigurationsdatei',
+			'description' => 'Pfad + Dateiname der Antispam-Regel Konfigurationsdatei',
 		],
-		'dkim_domains' => [
-			'title' => 'Domains-Dateiname',
-			'description' => 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.',
+		'reload_command' => [
+			'title' => 'Milter-Restart-Befehl',
+			'description' => 'Wie lautet der Befehl zum Neustarten des rspamd-Dienstes?',
 		],
-		'dkim_dkimkeys' => [
-			'title' => 'KeyList Dateiname',
-			'description' => 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.',
+		'activated' => [
+			'title' => 'Antispam aktivieren?',
+			'description' => 'Aktivieren, um rspamd als Antispam Dienst zu verwenden.',
 		],
-		'dkimrestart_command' => [
-			'title' => 'Milter-Restart-Kommando',
-			'description' => 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?',
-		],
-		'privkeysuffix' => [
-			'title' => 'Suffix für Private Keys',
-			'description' => 'Hier kann eine (optionale) Dateiendung für die generierten Private Keys angegeben werden. Manche Dienste, wie dkim-filter, erwarten, dass die Schlüssel keine Dateiendung haben (leer).',
-		],
-		'use_dkim' => [
-			'title' => 'DKIM-Support aktivieren?',
-			'description' => 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em class="text-danger">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim.</em>',
-		],
-		'dkim_algorithm' => [
-			'title' => 'Gültige Hash-Algorithmen',
-			'description' => 'Wählen Sie einen Algorithmus, "All" für alle Algorithmen oder einen oder mehrere von den verfügbaren Algorithmen.',
-		],
-		'dkim_servicetype' => 'Service Typen',
 		'dkim_keylength' => [
-			'title' => 'Schlüssel-Länge',
-			'description' => 'Achtung: Bei Änderung dieser Einstellung müssen alle private/public Schlüssel in "%s" gelöscht werden.',
+			'title' => 'DKIM Schlüssel-Länge',
+			'description' => 'Achtung: Änderungen sind nur für neue Schlüssel gültig.<br/><br/>Erfordert einen speziellen DNS Eintrag für die Domain. Wenn das Nameserver-Feature nicht genutzt wird, muss dieser Eintrag manuell verwaltet werden.',
 		],
-		'dkim_notes' => [
-			'title' => 'DKIM Notiz',
-			'description' => 'Eine Notiz, welche für Menschen interessant sein könnte, z.B. eine URL wie http://www.dnswatch.info. Es gibt keine programmgesteuerte Interpretation für dieses Feld. Gehen Sie sparsam mit der Anzahl der Zeichen um, da es Einschränkungen seitens des DNS-Dienstes gibt. Dieses Feld ist für Administratoren gedacht, nicht für Benutzer.',
+		'spam_tag_level' => [
+			'title' => 'Spam Markierungs-Level',
+			'description' => 'Erforderliche Punktzahl zum Markieren einer E-Mail als Spam<br/>Standard: 7.0'
+		],
+		'spam_kill_level' => [
+			'title' => 'Spam Ignorier-Level',
+			'description' => 'Erforderliche Punktzahl für das Ablehnen einer E-Mail<br/>Standard: 14.0'
+		],
+		'bypass_spam' => [
+			'title' => 'Spamfilter umgehen',
+			'description' => 'Aktivieren, um den Spamfilter für diese Adresse zu umgehen/deaktivieren.<br/>Standard: Nein'
+		],
+		'policy_greylist' => [
+			'title' => 'Verwende greylisting',
+			'description' => 'Eingehende E-Mails mittels <a href="https://de.wikipedia.org/wiki/Greylisting" target="_blank">Greylisting</a> schützen.<br/>Standard: Ja'
 		],
 	],
 	'dns' => [
@@ -2108,8 +2103,18 @@ Vielen Dank, Ihr Administrator',
 		],
 	],
 	'spf' => [
-		'use_spf' => 'Aktiviere SPF für Domains?',
+		'use_spf' => [
+			'title' => 'Aktiviere SPF für Domains?',
+			'description' => 'Erfordert einen speziellen DNS Eintrag für die Domain. Wenn das Nameserver-Feature nicht genutzt wird, muss dieser Eintrag manuell verwaltet werden.',
+		],
 		'spf_entry' => 'SPF-Eintrag für alle Domains',
+	],
+	'dmarc' => [
+		'use_dmarc' => [
+			'title' => 'Aktiviere DMARC für Domains?',
+			'description' => 'Erfordert einen speziellen DNS Eintrag für die Domain. Wenn das Nameserver-Feature nicht genutzt wird, muss dieser Eintrag manuell verwaltet werden.',
+		],
+		'dmarc_entry' => 'DMARC-Eintrag für alle Domains',
 	],
 	'success' => [
 		'messages_success' => 'Nachricht erfolgreich an "%s" Empfänger gesendet',

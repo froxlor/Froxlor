@@ -23,4 +23,12 @@ return [
 	 * Default: false
 	 */
 	'disable_otp_security_check' => false,
+
+	/**
+	 * For debugging/development purposes only.
+	 * Enable to display all php related issue (notices, warnings, etc.; depending on php.ini) for froxlor itself
+	 *
+	 * Default: false
+	 */
+	'display_php_errors' => false,
 ];

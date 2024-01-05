@@ -25,6 +25,7 @@
 
 namespace Froxlor;
 
+use Exception;
 use Froxlor\Database\Database;
 use PDO;
 use PDOStatement;
@@ -131,6 +132,7 @@ class Settings
 		self::$conf = [
 			'enable_webupdate' => false,
 			'disable_otp_security_check' => false,
+			'display_php_errors' => false,
 		];
 
 		$configfile = Froxlor::getInstallDir() . '/lib/config.inc.php';
@@ -330,7 +332,7 @@ class Settings
 		}
 	}
 
-	public static function getAll() : array
+	public static function getAll(): array
 	{
 		self::init();
 		return self::$data;
@@ -338,17 +340,14 @@ class Settings
 
 	/**
 	 * get value from config by identifier
+	 * @throws Exception
 	 */
 	public static function Config(string $config)
 	{
 		self::init();
-		$sstr = explode(".", $config);
-		$result = self::$conf;
-		foreach ($sstr as $key) {
-			$result = $result[$key] ?? null;
-			if (empty($result)) {
-				break;
-			}
+		$result = self::$conf[$config] ?? null;
+		if (is_null($result)) {
+			throw new Exception('Unknown local config name "' . $config . '"');
 		}
 		return $result;
 	}

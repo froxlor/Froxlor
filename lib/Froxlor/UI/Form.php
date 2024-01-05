@@ -217,7 +217,8 @@ class Form
 	{
 		$returnvalue = [];
 		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] == 'select') {
-			if ((!is_array($fielddata['select_var']) || empty($fielddata['select_var'])) && (isset($fielddata['option_options_method']))) {
+			if ((empty($fielddata['select_var']) || !is_array($fielddata['select_var'])) && (isset($fielddata['option_options_method']))
+			) {
 				$returnvalue['select_var'] = call_user_func($fielddata['option_options_method']);
 			}
 		}

@@ -90,9 +90,10 @@ class Text
 	public static function customerNoteDetailModal(array $attributes): array
 	{
 		$note = $attributes['fields']['custom_notes'] ?? '';
+		$key = $attributes['fields']['customerid'] ?? $attributes['fields']['adminid'];
 		return [
-			'entry' => $attributes['fields']['id'],
-			'id' => 'cnModal' . $attributes['fields']['id'],
+			'entry' => $key,
+			'id' => 'cnModal' . $key,
 			'title' => lng('usersettings.custom_notes.title') . ': ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
 			'body' => nl2br(Markdown::cleanCustomNotes($note))
 		];

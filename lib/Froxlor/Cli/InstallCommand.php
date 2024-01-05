@@ -27,10 +27,13 @@ namespace Froxlor\Cli;
 
 use Exception;
 use Froxlor\Config\ConfigParser;
+use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\Install\Install;
 use Froxlor\Install\Install\Core;
+use Froxlor\Settings;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,7 +53,8 @@ final class InstallCommand extends Command
 		$this->setDescription('Installation process to use instead of web-ui');
 		$this->addArgument('input-file', InputArgument::OPTIONAL, 'Optional JSON array file to use for unattended installations');
 		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter')
-			->addOption('create-userdata-from-str', 'c', InputOption::VALUE_REQUIRED, 'Creates lib/userdata.inc.php file from string created by web-install process');
+			->addOption('create-userdata-from-str', 'c', InputOption::VALUE_REQUIRED, 'Creates lib/userdata.inc.php file from string created by web-install process')
+			->addOption('show-sysinfo', 's', InputOption::VALUE_NONE, 'Outputs system information about your froxlor installation');
 	}
 
 	/**
@@ -70,6 +74,15 @@ final class InstallCommand extends Command
 			}
 			$output->writeln("<error>Invalid parameter value.</>");
 			return self::INVALID;
+		}
+
+		if ($input->getOption('show-sysinfo') !== false) {
+			if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+				$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You can use this parameter only with an installed froxlor system.</>");
+				return self::INVALID;
+			}
+			$this->printSysInfo($output);
+			return self::SUCCESS;
 		}
 
 		session_start();
@@ -347,6 +360,57 @@ final class InstallCommand extends Command
 		curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
+	}
+
+	private function printSysInfo(OutputInterface $output)
+	{
+
+		$php_sapi = 'mod_php';
+		$php_version = phpversion();
+		if (Settings::Get('system.mod_fcgid') == '1') {
+			$php_sapi = 'FCGID';
+			if (Settings::Get('system.mod_fcgid_ownvhost') == '1') {
+				$php_sapi .= ' (+ froxlor)';
+			}
+		} elseif (Settings::Get('phpfpm.enabled') == '1') {
+			$php_sapi = 'PHP-FPM';
+			if (Settings::Get('phpfpm.enabled_ownvhost') == '1') {
+				$php_sapi .= ' (+ froxlor)';
+			}
+		}
+
+		$kernel = 'unknown';
+		if (function_exists('posix_uname')) {
+			$kernel_nfo = posix_uname();
+			$kernel = $kernel_nfo['release'] . ' (' . $kernel_nfo['machine'] . ')';
+		}
+
+		$ips = [];
+		$ips_stmt = Database::query("SELECT CONCAT(`ip`, ' (', `port`, ')') as ipaddr FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `id`");
+		while ($ip = $ips_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$ips[] = $ip['ipaddr'];
+		}
+
+		$table = new Table($output);
+		$table
+			->setHeaders([
+				'Key', 'Value'
+			])
+			->setRows([
+				['Froxlor', Froxlor::getVersionString()],
+				['Update-channel', Settings::Get('system.update_channel')],
+				['Hostname', Settings::Get('system.hostname')],
+				['Install-dir', Froxlor::getInstallDir()],
+				['PHP CLI', $php_version],
+				['PHP SAPI', $php_sapi],
+				['Webserver', Settings::Get('system.webserver')],
+				['Kernel', $kernel],
+				['Database', Database::getAttribute(\PDO::ATTR_SERVER_VERSION)],
+				['Distro config', Settings::Get('system.distribution')],
+				['IP addresses', implode("\n", $ips)],
+			]);
+		$table->setStyle('box');
+		$table->render();
 	}
 
 	private function cliTextFormat(string $text, string $nl_char = "\n"): string
