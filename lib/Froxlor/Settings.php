@@ -137,7 +137,7 @@ class Settings
 
 		$configfile = Froxlor::getInstallDir() . '/lib/config.inc.php';
 		if (@file_exists($configfile) && is_readable($configfile)) {
-			self::$conf = include $configfile;
+			self::$conf = array_merge(self::$conf, include $configfile);
 		}
 		return true;
 	}

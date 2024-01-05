@@ -26,6 +26,7 @@
 			<default for="nginx" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/nginx/"></default>
 			<default settinggroup="system" varname="bindreload_command" value="/etc/init.d/named restart"></default>
 			<default settinggroup="system" varname="crondreload" value="/etc/init.d/cronie restart"></default>
+			<default settinggroup="antispam" varname="reload_command" value="/etc/init.d/rspamd restart"></default>
 		</defaults>
 		<services>
 			<!-- HTTP -->
@@ -2229,7 +2230,7 @@ plugin {
 					</commands>
 					<files index="1">
 						<file name="/etc/rspamd/local.d/actions.conf"
-							  chown="root:root" chmod="0644">
+							  chown="root:root" chmod="0644" backup="true">
 							<content><![CDATA[
 # Set rewrite subject to this value (%s is replaced by the original subject)
 subject = "***SPAM*** %s"
@@ -2237,7 +2238,7 @@ subject = "***SPAM*** %s"
 							</content>
 						</file>
 						<file name="/etc/rspamd/local.d/arc.conf"
-							  chown="root:root" chmod="0644">
+							  chown="root:root" chmod="0644" backup="true">
 							<content><![CDATA[
 try_fallback = true;
 ### Enable DKIM signing for alias sender addresses
@@ -2248,7 +2249,7 @@ selector_map = "/etc/rspamd/dkim_selectors.map";
 							</content>
 						</file>
 						<file name="/etc/rspamd/local.d/milter_headers.conf"
-							  chown="root:root" chmod="0644">
+							  chown="root:root" chmod="0644" backup="true">
 							<content><![CDATA[
 use = ["x-spamd-bar", "x-spam-level", "authentication-results"];
 authenticated_headers = ["authentication-results"];
@@ -2259,7 +2260,7 @@ skip_authenticated = false
 							</content>
 						</file>
 						<file name="/etc/rspamd/local.d/replies.conf"
-							  chown="root:root" chmod="0644">
+							  chown="root:root" chmod="0644" backup="true">
 							<content><![CDATA[
 ## If a user has replied to an email, don’t mark other emails in the same thread as spam
 action = "no action";
@@ -2290,7 +2291,6 @@ action = "no action";
 						<command><![CDATA[postconf -e "smtpd_milters = inet:127.0.0.1:11332"]]></command>
 						<command><![CDATA[postconf -e "non_smtpd_milters = inet:127.0.0.1:11332"]]></command>
 						<command><![CDATA[chown -R _rspamd:_rspamd /var/lib/rspamd/dkim]]></command>
-						<command><![CDATA[chmod 440 /var/lib/rspamd/dkim/*]]></command>
 						<command><![CDATA[rc-update add rspamd default]]></command>
 						<command><![CDATA[/etc/init.d/rspamd restart]]></command>
 					</commands>

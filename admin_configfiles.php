@@ -94,7 +94,7 @@ if ($userinfo['change_serversettings'] == '1') {
 	}
 
 	if ($distribution != "" && isset($_POST['finish'])) {
-		$valid_keys = ['http', 'dns', 'smtp', 'mail', 'ftp', 'system', 'distro'];
+		$valid_keys = ['http', 'dns', 'smtp', 'mail', 'antispam', 'ftp', 'system', 'distro'];
 		unset($_POST['finish']);
 		unset($_POST['csrf_token']);
 		$params = $_POST;

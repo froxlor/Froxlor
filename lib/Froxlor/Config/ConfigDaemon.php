@@ -409,7 +409,7 @@ class ConfigDaemon
 			}
 			$return[] = [
 				'type' => 'command',
-				'content' => $cmd . ' "' . $this->parseContent($attributes['name']) . '" "' . $this->parseContent($attributes['name']) . '.frx.bak"',
+				'content' => '[ -f ' . $this->parseContent($attributes['name']) . ' ] && ' . $cmd . ' "' . $this->parseContent($attributes['name']) . '" "' . $this->parseContent($attributes['name']) . '.frx.bak"',
 				'execute' => "pre"
 			];
 		}

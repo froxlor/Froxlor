@@ -24,7 +24,6 @@
  */
 
 use Froxlor\Database\Database;
-use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
@@ -36,7 +35,7 @@ if (!defined('_CRON_UPDATE')) {
 	}
 }
 
-if (Froxlor::isFroxlorVersion('2.1.x')) {
+if (Froxlor::isFroxlorVersion('2.1.4')) {
 	Update::showUpdateStep("Enhancing virtual email table");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` ADD `spam_tag_level` float(4,1) NOT NULL DEFAULT 7.0;");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` ADD `spam_kill_level` float(4,1) NOT NULL DEFAULT 14.0;");
@@ -45,8 +44,9 @@ if (Froxlor::isFroxlorVersion('2.1.x')) {
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting settings");
-	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam', `varname` = 'activated' WHERE `settinggroup` = 'dkim' AND `varname` = 'use_dkim';");
-	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam', `varname` = 'reload_command' WHERE `settinggroup` = 'dkim' AND `varname` = 'dkimrestart_command';");
+	$antispam_activated = $_POST['antispam_activated'] ?? 0;
+	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam', `varname` = 'activated', `value` = '" . (int)$antispam_activated . "' WHERE `settinggroup` = 'dkim' AND `varname` = 'use_dkim';");
+	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam', `varname` = 'reload_command', `value` = 'service rspamd restart' WHERE `settinggroup` = 'dkim' AND `varname` = 'dkimrestart_command';");
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam', `varname` = 'config_file', `value` = '/etc/rspamd/local.d/froxlor_settings.conf' WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_prefix';");
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `settinggroup` = 'antispam' WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_keylength';");
 	Settings::AddNew("dmarc.use_dmarc", "0");
@@ -55,6 +55,7 @@ if (Froxlor::isFroxlorVersion('2.1.x')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_domains';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_algorithm';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_notes';");
+
 	Update::lastStepStatus(0);
 
 	$to_clean = [
