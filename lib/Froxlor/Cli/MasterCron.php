@@ -263,6 +263,8 @@ final class MasterCron extends CliCommand
 		if ($jobcount > 0) {
 			if (Settings::Get('system.nssextrausers') == 1) {
 				Extrausers::generateFiles($this->cronLog);
+				// reload crond as shell users might use crontab and the user is only known to crond if reloaded
+				FileDir::safe_exec(escapeshellcmd(Settings::Get('system.crondreload')));
 				return;
 			}
 
@@ -275,6 +277,8 @@ final class MasterCron extends CliCommand
 				FileDir::safe_exec('nscd -i group 1> /dev/null', $false_val, [
 					'>'
 				]);
+				// reload crond as shell users might use crontab and the user is only known to crond if reloaded
+				FileDir::safe_exec(escapeshellcmd(Settings::Get('system.crondreload')));
 			}
 		}
 	}
