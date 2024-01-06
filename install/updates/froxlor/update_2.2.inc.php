@@ -55,8 +55,28 @@ if (Froxlor::isFroxlorVersion('2.1.4')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_domains';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_algorithm';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_notes';");
-
 	Update::lastStepStatus(0);
+
+	if ($antispam_activated) {
+		Update::showUpdateStep("Converting existing domainkeys");
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `dkim` = '1' AND `dkim_pubkey` <> ''");
+		Database::pexecute($sel_stmt);
+		$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `dkim_pubkey` = :pkey WHERE `id` = :did");
+		while ($domain = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$pubkey = trim(preg_replace(
+				'/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s',
+				'$1',
+				str_replace("\n", '', $domain['dkim_pubkey'])
+			));
+			Database::pexecute($upd_stmt, ['pkey' => $pubkey, 'did' => $domain['id']]);
+		}
+		Update::lastStepStatus(0);
+	} else {
+		Update::showUpdateStep("Removing existing domainkeys because antispam is disabled");
+		Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `dkim` = '0', `dkim_id` = '0', `dkim_privkey` = '', `dkim_pubkey` = '' WHERE `dkim` = '1';");
+		Update::lastStepStatus(1, '!!!');
+	}
+
 
 	$to_clean = [
 		'actions/admin/settings/180.dkim.php',
