@@ -2547,6 +2547,7 @@ plugin {
 						</file>
 					</files>
 					<commands index="1">
+						<command><![CDATA[sed -i.bak 's/^!include auth-system.conf.ext/#!include auth-system.conf.ext/' /etc/dovecot/conf.d/10-auth.conf]]></command>
 						<command><![CDATA[service dovecot restart]]></command>
 					</commands>
 				</general>
