@@ -2366,6 +2366,10 @@ Yours sincerely, your administrator',
 			'description' => 'When enabled in the settings, this user can create API keys and access the froxlor API',
 			'notice' => 'API access is not allowed for your account.',
 		],
+		'gui_access' => [
+			'title' => 'Allow WebUI login',
+			'description' => 'When disabled, the user cannot log in to the froxlor web-ui but all the services (web, ftp, mail, databases, api-access, etc.) will work normally.',
+		],
 	],
 	'install' => [
 		'slogan' => 'froxlor Server Management Panel',

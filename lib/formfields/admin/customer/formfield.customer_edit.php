@@ -80,6 +80,13 @@ return [
 						'select_var' => Language::getLanguages(),
 						'selected' => $result['def_language']
 					],
+					'gui_access' => [
+						'label' => lng('usersettings.gui_access.title'),
+						'desc' => lng('usersettings.gui_access.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['gui_access'],
+					],
 					'api_allowed' => [
 						'label' => lng('usersettings.api_allowed.title'),
 						'desc' => lng('usersettings.api_allowed.description'),

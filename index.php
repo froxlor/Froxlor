@@ -165,27 +165,33 @@ if ($action == '2fa_entercode') {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$password = Validate::validate($_POST['password'], 'password');
 
-		$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `loginname`= :loginname");
+		$stmt = Database::prepare("
+			SELECT `loginname` AS `customer`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `loginname`= :loginname
+			AND `gui_access` = 1
+		");
 		Database::pexecute($stmt, [
 			"loginname" => $loginname
 		]);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
+		$is_admin = false;
 		if ($row && $row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
 			$adminsession = '0';
-			$is_admin = false;
 		} else {
-			$is_admin = true;
 			if ((int)Settings::Get('login.domain_login') == 1) {
 				$domainname = $idna_convert->encode(preg_replace([
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
 				], '', $loginname));
-				$stmt = Database::prepare("SELECT `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `domain` = :domain");
+				$stmt = Database::prepare("
+					SELECT `customerid`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `domain` = :domain
+				");
 				Database::pexecute($stmt, [
 					"domain" => $domainname
 				]);
@@ -194,8 +200,11 @@ if ($action == '2fa_entercode') {
 				if (isset($row2['customerid']) && $row2['customerid'] > 0) {
 					$loginname = Customer::getCustomerDetail($row2['customerid'], 'loginname');
 					if ($loginname !== false) {
-						$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
-							WHERE `loginname`= :loginname");
+						$stmt = Database::prepare("
+							SELECT `loginname` AS `customer`
+							FROM `" . TABLE_PANEL_CUSTOMERS . "`
+							WHERE `loginname`= :loginname
+						");
 						Database::pexecute($stmt, [
 							"loginname" => $loginname
 						]);
@@ -204,10 +213,11 @@ if ($action == '2fa_entercode') {
 							$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 							$uid = 'customerid';
 							$adminsession = '0';
-							$is_admin = false;
 						}
 					}
 				}
+			} else {
+				$is_admin = true;
 			}
 		}
 
@@ -218,9 +228,11 @@ if ($action == '2fa_entercode') {
 
 		if ($is_admin) {
 			if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
-				$stmt = Database::prepare("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
+				$stmt = Database::prepare("
+					SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
 					WHERE `loginname`= :loginname
-					AND `change_serversettings` = '1'");
+					AND `change_serversettings` = '1'
+				");
 				Database::pexecute($stmt, [
 					"loginname" => $loginname
 				]);
@@ -231,8 +243,12 @@ if ($action == '2fa_entercode') {
 					exit();
 				}
 			} else {
-				$stmt = Database::prepare("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
-					WHERE `loginname`= :loginname");
+				$stmt = Database::prepare("
+					SELECT `loginname` AS `admin`
+					FROM `" . TABLE_PANEL_ADMINS . "`
+					WHERE `loginname`= :loginname
+					AND `gui_access` = 1
+				");
 				Database::pexecute($stmt, [
 					"loginname" => $loginname
 				]);
@@ -257,8 +273,9 @@ if ($action == '2fa_entercode') {
 			}
 		}
 
-		$userinfo_stmt = Database::prepare("SELECT * FROM $table
-			WHERE `loginname`= :loginname");
+		$userinfo_stmt = Database::prepare("
+			SELECT * FROM $table WHERE `loginname`= :loginname
+		");
 		Database::pexecute($userinfo_stmt, [
 			"loginname" => $loginname
 		]);
@@ -281,9 +298,11 @@ if ($action == '2fa_entercode') {
 			} else {
 				// login correct
 				// reset loginfail_counter, set lastlogin_succ
-				$stmt = Database::prepare("UPDATE $table
-					  SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
-					  WHERE `$uid`= :uid");
+				$stmt = Database::prepare("
+					UPDATE $table
+					SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
+					WHERE `$uid`= :uid
+				");
 				Database::pexecute($stmt, [
 					"lastlogin_succ" => time(),
 					"uid" => $userinfo[$uid]
@@ -293,9 +312,11 @@ if ($action == '2fa_entercode') {
 			}
 		} else {
 			// login incorrect
-			$stmt = Database::prepare("UPDATE $table
+			$stmt = Database::prepare("
+				UPDATE $table
 				SET `lastlogin_fail`= :lastlogin_fail, `loginfail_count`=`loginfail_count`+1
-				WHERE `$uid`= :uid");
+				WHERE `$uid`= :uid
+			");
 			Database::pexecute($stmt, [
 				"lastlogin_fail" => time(),
 				"uid" => $userinfo[$uid]

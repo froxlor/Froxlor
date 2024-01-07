@@ -82,6 +82,13 @@ return [
 						'select_var' => Language::getLanguages(),
 						'selected' => Settings::Get('panel.standardlanguage')
 					],
+					'gui_access' => [
+						'label' => lng('usersettings.gui_access.title'),
+						'desc' => lng('usersettings.gui_access.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => 1
+					],
 					'api_allowed' => [
 						'label' => lng('usersettings.api_allowed.title'),
 						'desc' => lng('usersettings.api_allowed.description'),

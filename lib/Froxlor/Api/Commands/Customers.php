@@ -191,6 +191,8 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional
 	 * @param string $def_language ,
 	 *                             optional, default is system-default language
+	 * @param bool $gui_access
+	 *                             optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
 	 *                             optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
@@ -297,6 +299,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$fax = $this->getParam('fax', true, '');
 				$customernumber = $this->getParam('customernumber', true, '');
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+				$gui_access = $this->getBoolParam('gui_access', true, 1);
 				$api_allowed = $this->getBoolParam('api_allowed', true, (Settings::Get('api.enabled') && Settings::Get('api.customer_default')));
 				$gender = (int)$this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
@@ -515,6 +518,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						'email' => $email,
 						'customerno' => $customernumber,
 						'lang' => $def_language,
+						'gui_access' => $gui_access,
 						'api_allowed' => $api_allowed,
 						'docroot' => $documentroot,
 						'guid' => $guid,
@@ -557,6 +561,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						`email` = :email,
 						`customernumber` = :customerno,
 						`def_language` = :lang,
+						`gui_access` = :gui_access,
 						`api_allowed` = :api_allowed,
 						`documentroot` = :docroot,
 						`guid` = :guid,
@@ -948,6 +953,8 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional
 	 * @param string $def_language ,
 	 *                             optional, default is system-default language
+	 * @param bool $gui_access
+	 *                             optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
 	 *                             optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
@@ -1062,6 +1069,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$fax = $this->getParam('fax', true, $result['fax']);
 			$customernumber = $this->getParam('customernumber', true, $result['customernumber']);
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
+			$gui_access = $this->getBoolParam('gui_access', true, $result['gui_access']);
 			$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 			$gender = (int)$this->getParam('gender', true, $result['gender']);
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
@@ -1396,6 +1404,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				'logviewenabled' => $logviewenabled,
 				'custom_notes' => $custom_notes,
 				'custom_notes_show' => $custom_notes_show,
+				'gui_access' => $gui_access,
 				'api_allowed' => $api_allowed,
 				'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver)
 			];
@@ -1439,6 +1448,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				`logviewenabled` = :logviewenabled,
 				`custom_notes` = :custom_notes,
 				`custom_notes_show` = :custom_notes_show,
+				`gui_access` = :gui_access,
 				`api_allowed` = :api_allowed,
 				`allowed_mysqlserver` = :allowed_mysqlserver";
 			$upd_query .= $admin_upd_query;

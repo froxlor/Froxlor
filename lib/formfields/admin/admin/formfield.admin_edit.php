@@ -71,6 +71,14 @@ return [
 						'selected' => $result['def_language'],
 						'visible' => $result['adminid'] != $userinfo['userid']
 					],
+					'gui_access' => [
+						'label' => lng('usersettings.gui_access.title'),
+						'desc' => lng('usersettings.gui_access.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['gui_access'],
+						'visible' => $result['adminid'] != $userinfo['userid']
+					],
 					'api_allowed' => [
 						'label' => lng('usersettings.api_allowed.title'),
 						'desc' => lng('usersettings.api_allowed.description'),
@@ -78,7 +86,7 @@ return [
 						'value' => '1',
 						'checked' => $result['api_allowed'],
 						'visible' => Settings::Get('api.enabled') == '1'
-					]
+					],
 				]
 			],
 			'section_b' => [

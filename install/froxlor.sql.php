@@ -159,6 +159,7 @@ CREATE TABLE `panel_admins` (
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(25) NOT NULL default '',
   `api_allowed` tinyint(1) NOT NULL default '1',
+  `gui_access` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;
@@ -227,6 +228,7 @@ CREATE TABLE `panel_customers` (
   `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
   `allowed_mysqlserver` text NOT NULL,
+  `gui_access` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=DYNAMIC;

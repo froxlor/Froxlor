@@ -613,11 +613,11 @@ return [
 			'description' => 'Achtung: Änderungen sind nur für neue Schlüssel gültig.<br/><br/>Erfordert einen speziellen DNS Eintrag für die Domain. Wenn das Nameserver-Feature nicht genutzt wird, muss dieser Eintrag manuell verwaltet werden.',
 		],
 		'spam_tag_level' => [
-			'title' => 'Spam Markierungs-Level',
+			'title' => 'Spam Level',
 			'description' => 'Erforderliche Punktzahl zum Markieren einer E-Mail als Spam<br/>Standard: 7.0'
 		],
 		'spam_kill_level' => [
-			'title' => 'Spam Ignorier-Level',
+			'title' => 'Ablehnungs Level',
 			'description' => 'Erforderliche Punktzahl für das Ablehnen einer E-Mail<br/>Standard: 14.0'
 		],
 		'bypass_spam' => [
@@ -2230,6 +2230,10 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Erlaube API Zugriff',
 			'description' => 'Wenn in den Einstellungen aktiviert, kann der Benutzer API Schlüssel erstellen und auf die froxlor API Zugreifen',
 			'notice' => 'API Zugriff ist für dieses Konto deaktiviert.',
+		],
+		'gui_access' => [
+			'title' => 'WebUI-Anmeldung zulassen',
+			'description' => 'Wenn diese Option deaktiviert ist, kann sich der Benutzer nicht bei der Froxlor-Weboberfläche anmelden, aber alle Dienste (Web, FTP, E-Mail, Datenbanken, API-Zugriff, usw.) funktionieren normal.',
 		],
 	],
 	'install' => [

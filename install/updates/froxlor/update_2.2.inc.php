@@ -77,6 +77,10 @@ if (Froxlor::isFroxlorVersion('2.1.4')) {
 		Update::lastStepStatus(1, '!!!');
 	}
 
+	Update::showUpdateStep("Enhancing admin and user table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `gui_access` tinyint(1) NOT NULL default '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `gui_access` tinyint(1) NOT NULL default '1';");
+	Update::lastStepStatus(0);
 
 	$to_clean = [
 		'actions/admin/settings/180.dkim.php',

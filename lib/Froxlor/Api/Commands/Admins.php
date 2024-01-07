@@ -146,6 +146,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *            optional, default auto-generated
 	 * @param string $def_language
 	 *            optional, default is system-default language
+	 * @param bool $gui_access
+	 *            optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
 	 *            optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
@@ -219,6 +221,7 @@ class Admins extends ApiCommand implements ResourceEntity
 
 			// parameters
 			$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+			$gui_access = $this->getBoolParam('gui_access', true, true);
 			$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
@@ -316,6 +319,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					'name' => $name,
 					'email' => $email,
 					'lang' => $def_language,
+					'gui_access' => $gui_access,
 					'api_allowed' => $api_allowed,
 					'change_serversettings' => $change_serversettings,
 					'customers' => $customers,
@@ -344,6 +348,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					`name` = :name,
 					`email` = :email,
 					`def_language` = :lang,
+					`gui_access` = :gui_access,
 					`api_allowed` = :api_allowed,
 					`change_serversettings` = :change_serversettings,
 					`customers` = :customers,
@@ -431,6 +436,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *            optional, default auto-generated
 	 * @param string $def_language
 	 *            optional, default is system-default language
+	 * @param bool $gui_access
+	 * *            optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
 	 *            optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
@@ -524,6 +531,7 @@ class Admins extends ApiCommand implements ResourceEntity
 
 				// you cannot edit some of the details of yourself
 				if ($result['adminid'] == $this->getUserDetail('adminid')) {
+					$gui_access = $result['gui_access'];
 					$api_allowed = $result['api_allowed'];
 					$deactivated = $result['deactivated'];
 					$customers = $result['customers'];
@@ -542,6 +550,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$traffic = $result['traffic'];
 					$ipaddress = ($result['ip'] != -1 ? json_decode($result['ip'], true) : -1);
 				} else {
+					$gui_access = $this->getBoolParam('gui_access', true, $result['gui_access']);
 					$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 					$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 
@@ -665,6 +674,7 @@ class Admins extends ApiCommand implements ResourceEntity
 						'name' => $name,
 						'email' => $email,
 						'lang' => $def_language,
+						'gui_access' => $gui_access,
 						'api_allowed' => $api_allowed,
 						'change_serversettings' => $change_serversettings,
 						'customers' => $customers,
@@ -694,6 +704,7 @@ class Admins extends ApiCommand implements ResourceEntity
 						`name` = :name,
 						`email` = :email,
 						`def_language` = :lang,
+						`gui_access` = :gui_access,
 						`api_allowed` = :api_allowed,
 						`change_serversettings` = :change_serversettings,
 						`customers` = :customers,
