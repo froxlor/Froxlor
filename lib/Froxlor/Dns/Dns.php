@@ -120,18 +120,8 @@ class Dns
 		if ($domain['isemaildomain'] == '1') {
 			self::addRequiredEntry('@', 'MX', $required_entries);
 			if (Settings::Get('system.dns_createmailentry')) {
-				foreach ([
-						'imap',
-						'pop3',
-						'mail',
-						'smtp'
-					] as $record
-				) {
-					foreach ([
-							'AAAA',
-							'A'
-						] as $type
-					) {
+				foreach (['imap', 'pop3', 'mail', 'smtp' ] as $record ) {
+					foreach (['AAAA', 'A' ] as $type ) {
 						self::addRequiredEntry($record, $type, $required_entries);
 					}
 				}
@@ -179,6 +169,10 @@ class Dns
 						// check for SPF content later
 						self::addRequiredEntry('@SPF@.' . $sub_record, 'TXT', $required_entries);
 					}
+					if (Settings::Get('dmarc.use_dmarc') == '1') {
+						// check for DMARC content later
+						self::addRequiredEntry('@DMARC@.' . $sub_record, 'TXT', $required_entries);
+					}
 					if (Settings::Get('antispam.activated') == '1' && $domain['dkim'] == '1') {
 						// check for DKIM content later
 						self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey.' . $sub_record, 'TXT', $required_entries);
@@ -216,6 +210,10 @@ class Dns
 				// check for SPF content later
 				self::addRequiredEntry('@SPF@', 'TXT', $required_entries);
 			}
+			if (Settings::Get('dmarc.use_dmarc') == '1') {
+				// check for DMARC content later
+				self::addRequiredEntry('@DMARC@.' . $sub_record, 'TXT', $required_entries);
+			}
 			if (Settings::Get('antispam.activated') == '1' && $domain['dkim'] == '1') {
 				// check for DKIM content later
 				self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
@@ -227,63 +225,55 @@ class Dns
 
 		// now generate all records and unset the required entries we have
 		foreach ($dom_entries as $entry) {
-			if (array_key_exists($entry['type'], $required_entries) && array_key_exists(
-                md5($entry['record']),
-                $required_entries[$entry['type']]
-            )) {
+			if (array_key_exists($entry['type'], $required_entries)
+				&& array_key_exists( md5($entry['record']), $required_entries[$entry['type']])
+			) {
 				unset($required_entries[$entry['type']][md5($entry['record'])]);
 			}
-			if (Settings::Get('system.dns_createcaaentry') == '1' && $entry['type'] == 'CAA' && strtolower(substr(
-                $entry['content'],
-                0,
-                7
-            )) == '"v=caa1') {
+			if (Settings::Get('system.dns_createcaaentry') == '1'
+				&& $entry['type'] == 'CAA'
+				&& strtolower(substr($entry['content'], 0, 7 )) == '"v=caa1'
+			) {
 				// unset special CAA required-entry
 				unset($required_entries[$entry['type']][md5("@CAA@")]);
 			}
-			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr(
-                $entry['content'],
-                0,
-                7
-            )) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')) {
+			if (Settings::Get('spf.use_spf') == '1'
+				&& $entry['type'] == 'TXT'
+				&& $entry['record'] == '@'
+				&& (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')
+			) {
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
+			}
+			if (Settings::Get('dmarc.use_dmarc') == '1'
+				&& $entry['type'] == 'TXT'
+				&& $entry['record'] == '@'
+				&& (strtolower(substr($entry['content'], 0, 9)) == '"v=dmarc1' || strtolower(substr($entry['content'], 0, 8)) == 'v=dmarc1')
+			) {
+				// unset special dmarc required-entry
+				unset($required_entries[$entry['type']][md5("@DMARC@")]);
 			}
 			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
 				// use the first NS entry pertaining to the current domain as primary ns
 				$primary_ns = $entry['content'];
 			}
 			// check for CNAME on @, www- or wildcard-Alias and remove A/AAAA record accordingly
-			foreach ([
-					'@',
-					'www',
-					'*'
-				] as $crecord
-			) {
-				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(
-                    md5($crecord),
-                    $required_entries['A']
-                ) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+			foreach (['@', 'www', '*'] as $crecord) {
+				if ($entry['type'] == 'CNAME'
+					&& $entry['record'] == '@'
+					&& (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))
+				) {
 					unset($required_entries['A'][md5($crecord)]);
 					unset($required_entries['AAAA'][md5($crecord)]);
 				}
 			}
 			// also allow overriding of auto-generated values (imap,pop3,mail,smtp) if enabled in the settings
 			if (Settings::Get('system.dns_createmailentry')) {
-				foreach ([
-						'imap',
-						'pop3',
-						'mail',
-						'smtp'
-					] as $crecord
-				) {
-					if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(
-                        md5($crecord),
-                        $required_entries['A']
-                    ) || array_key_exists(
-                        md5($crecord),
-                        $required_entries['AAAA']
-                    ))) {
+				foreach (['imap', 'pop3', 'mail', 'smtp'] as $crecord) {
+					if ($entry['type'] == 'CNAME'
+						&& $entry['record'] == $crecord
+						&& (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))
+					) {
 						unset($required_entries['A'][md5($crecord)]);
 						unset($required_entries['AAAA'][md5($crecord)]);
 					}
@@ -320,11 +310,7 @@ class Dns
 						foreach ($records as $record) {
 							if ($type == 'A' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
 								$zonerecords[] = new DnsEntry($record, 'A', $ip['ip']);
-							} elseif ($type == 'AAAA' && filter_var(
-                                $ip['ip'],
-                                FILTER_VALIDATE_IP,
-                                FILTER_FLAG_IPV6
-                            ) !== false) {
+							} elseif ($type == 'AAAA' && filter_var($ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) !== false) {
 								$zonerecords[] = new DnsEntry($record, 'AAAA', $ip['ip']);
 							}
 						}
@@ -403,6 +389,15 @@ class Dns
 								$txt_content = Settings::Get('spf.spf_entry');
 								$sub_record = substr($record, 6);
 								$zonerecords[] = new DnsEntry($sub_record, 'TXT', self::encloseTXTContent($txt_content));
+							} elseif ($record == '@DMARC@') {
+								// dmarc for main-domain
+								$txt_content = Settings::Get('dmarc.dmarc_entry');
+								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
+							} elseif (strlen($record) > 8 && substr($record, 0, 8) == '@DMARC@.') {
+								// dmarc for subdomain
+								$txt_content = Settings::Get('dmarc.dmarc_entry');
+								$sub_record = substr($record, 8);
+								$zonerecords[] = new DnsEntry($sub_record, 'TXT', self::encloseTXTContent($txt_content));
 							} elseif (!empty($dkim_entries)) {
 								// DKIM entries
 								$dkim_record = 'dkim' . $domain['dkim_id'] . '._domainkey';
@@ -414,7 +409,7 @@ class Dns
 										$multiline = true;
 									}
 									$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
-								} elseif (strlen($record) > strlen($dkim_record) && substr($record, 0, strlen($dkim_record)+1) == $dkim_record . '.') {
+								} elseif (strlen($record) > strlen($dkim_record) && substr($record, 0, strlen($dkim_record) + 1) == $dkim_record . '.') {
 									// dkim for subdomain-domain
 									// check for multiline entry
 									$multiline = false;
@@ -482,10 +477,7 @@ class Dns
 
 		if (!$isMainButSubTo) {
 			$date = date('Ymd');
-			$domain['bindserial'] = (preg_match(
-                '/^' . $date . '/',
-                $domain['bindserial']
-            ) ? $domain['bindserial'] + 1 : $date . '00');
+			$domain['bindserial'] = (preg_match('/^' . $date . '/', $domain['bindserial']) ? $domain['bindserial'] + 1 : $date . '00');
 			if (!$froxlorhostname) {
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -513,11 +505,11 @@ class Dns
 		}
 
 		$zone = new DnsZone(
-            (int)Settings::Get('system.defaultttl'),
-            $domain['domain'],
-            $domain['bindserial'],
-            $zonerecords
-        );
+			(int)Settings::Get('system.defaultttl'),
+			$domain['domain'],
+			$domain['bindserial'],
+			$zonerecords
+		);
 
 		return $zone;
 	}
