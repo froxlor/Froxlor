@@ -638,6 +638,8 @@ opcache.validate_timestamps'),
 	('system', 'available_shells', ''),
 	('system', 'le_froxlor_enabled', '0'),
 	('system', 'le_froxlor_redirect', '0'),
+	('system', 'le_renew_hook', 'systemctl restart postfix dovecot proftpd'),
+	('system', 'le_renew_services', ''),
 	('system', 'letsencryptacmeconf', '/etc/apache2/conf-enabled/acme.conf'),
 	('system', 'mail_use_smtp', '0'),
 	('system', 'mail_smtp_host', 'localhost'),
@@ -729,7 +731,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.2.0-dev1'),
-	('panel', 'db_version', '202312230');
+	('panel', 'db_version', '202401090');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

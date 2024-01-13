@@ -91,3 +91,13 @@ if (Froxlor::isFroxlorVersion('2.1.4')) {
 	Froxlor::updateToDbVersion('202312230');
 	Froxlor::updateToVersion('2.2.0-dev1');
 }
+
+if (Froxlor::isDatabaseVersion('202312230')) {
+
+	Update::showUpdateStep("Adding new settings");
+	Settings::AddNew("system.le_renew_services", "");
+	Settings::AddNew("system.le_renew_hook", "systemctl restart postfix dovecot proftpd");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202401090');
+}

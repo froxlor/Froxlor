@@ -251,8 +251,37 @@ return [
 					'string_type' => 'validate_ip',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
-				]
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
+				'system_le_renew_services' => [
+					'label' => lng('serversettings.le_renew_services'),
+					'settinggroup' => 'system',
+					'varname' => 'le_renew_services',
+					'type' => 'select',
+					'default' => '',
+					'select_mode' => 'multiple',
+					'option_emptyallowed' => true,
+					'select_var' => [
+						'' => lng('panel.none_value'),
+						'postfix' => 'postfix (smtp)',
+						'dovecot' => 'dovecot (imap/pop3)',
+						'proftpd' => 'proftpd (ftp)',
+					],
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
+				'system_le_renew_hook' => [
+					'label' => lng('serversettings.le_renew_hook'),
+					'settinggroup' => 'system',
+					'varname' => 'le_renew_hook',
+					'type' => 'text',
+					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
+					'default' => 'systemctl restart postfix dovecot proftpd',
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true,
+					'required_otp' => true
+				],
 			]
 		]
 	]

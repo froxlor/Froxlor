@@ -273,6 +273,10 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Check fields for plausibility
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+							if (!isset($submitted_fields[$fieldname])) {
+								// skip unset fields due to unavailability for this system/settings-set
+								continue;
+							}
 							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								if (($plausibility_check = self::checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
 									if (is_array($plausibility_check) && isset($plausibility_check[0])) {

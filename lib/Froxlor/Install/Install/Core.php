@@ -115,7 +115,7 @@ class Core
 		// create entries
 		$this->doDataEntries($pdo);
 		// create JSON array for config-services
-		$this->createJsonArray();
+		$this->createJsonArray($pdo);
 		if ($create_ud_str) {
 			$this->createUserdataParamStr();
 		}
@@ -660,9 +660,16 @@ class Core
 		@umask($umask);
 	}
 
-	private function createJsonArray()
+	private function createJsonArray(&$db_user)
 	{
-		$system_params = ["cron", "libnssextrausers", "logrotate", "goaccess"];
+		// use traffic analyzer from settings as we could define defaults in the lib/configfiles/*.xml templates
+		// which can be useful for third-party package-maintainer (e.g. other distros) to have more control
+		// over the installation defaults (less hardcoded values)
+		$traffic_analyzer = $db_user->query("
+			SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'traffictool'
+		");
+		$ta_result = $traffic_analyzer->fetch(\PDO::FETCH_ASSOC);
+		$system_params = ["cron", "libnssextrausers", "logrotate", $ta_result['value']];
 		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
 			$system_params[] = 'php-fpm';
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
