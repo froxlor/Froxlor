@@ -1702,7 +1702,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					</include>
 				</daemon>
 				<!-- postfix with dovecot -->
-				<daemon name="postfix_dovecot"
+				<daemon name="postfix_dovecot" version="3"
 					title="Postfix 3 with dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
