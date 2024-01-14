@@ -621,6 +621,7 @@ EOC;
 					$certificate_folder = self::getCertificateFolder(strtolower(Settings::Get('system.hostname')));
 					$fullchain = FileDir::makeCorrectFile($certificate_folder . '/fullchain.cer');
 					$keyfile = FileDir::makeCorrectFile($certificate_folder . '/' . strtolower(Settings::Get('system.hostname')) . '.key');
+					$ca_file = FileDir::makeCorrectFile($certificate_folder . '/ca.cer');
 
 					if (Settings::IsInList('system.le_renew_services', 'postfix')) {
 						// "postconf -e" for postfix
@@ -641,7 +642,23 @@ EOSSL;
 						file_put_contents($dovecot_conf, $ssl_content);
 					}
 					if (Settings::IsInList('system.le_renew_services', 'proftpd')) {
-						// @todo
+						$proftpd_conf = '/etc/proftpd/tls.conf'; // @fixme setting?
+						if (strpos($certificate_folder, '_ecc') === false) {
+							// comment out RSA related settings
+							FileDir::safe_exec("sed -i.bak 's|^TLSRSACertificateFile|# TLSRSACertificateFile|' " . escapeshellarg($proftpd_conf));
+							FileDir::safe_exec("sed -i.bak 's|^TLSRSACertificateKeyFile|# TLSRSACertificateKeyFile|' " . escapeshellarg($proftpd_conf));
+							// add ECC directives
+							FileDir::safe_exec("sed -i.bak 's|^#\?\s\?TLSECCertificateFile.*|TLSECCertificateFile " . $fullchain . "|' " . escapeshellarg($proftpd_conf));
+							FileDir::safe_exec("sed -i.bak 's|^#\?\s\?TLSECCertificateKeyFile.*|TLSECCertificateKeyFile " . $keyfile . "|' " . escapeshellarg($proftpd_conf));
+						} else {
+							// comment out ECC related settings
+							FileDir::safe_exec("sed -i.bak 's|^TLSECCertificateFile|# TLSECCertificateFile|' " . escapeshellarg($proftpd_conf));
+							FileDir::safe_exec("sed -i.bak 's|^TLSECCertificateKeyFile|# TLSECCertificateKeyFile|' " . escapeshellarg($proftpd_conf));
+							// add RSA directives
+							FileDir::safe_exec("sed -i.bak 's|^#\?\s\?TLSRSACertificateFile.*|TLSRSACertificateFile " . $fullchain . "|' " . escapeshellarg($proftpd_conf));
+							FileDir::safe_exec("sed -i.bak 's|^#\?\s\?TLSRSACertificateKeyFile.*|TLSRSACertificateKeyFile " . $keyfile . "|' " . escapeshellarg($proftpd_conf));
+						}
+						FileDir::safe_exec("sed -i.bak 's|^#\?\s\?TLSCACertificateFile.*|TLSCACertificateFile " . $ca_file . "|' " . escapeshellarg($proftpd_conf));
 					}
 					// reload the services
 					FileDir::safe_exec(Settings::Get('system.le_renew_hook'));

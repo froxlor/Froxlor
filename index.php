@@ -165,12 +165,16 @@ if ($action == '2fa_entercode') {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$password = Validate::validate($_POST['password'], 'password');
 
+		$select_additional = '';
+		if (Settings::Get('panel.db_version') >= 202312230) {
+			$select_additional = ' AND `gui_access` = 1';
+		}
 		$stmt = Database::prepare("
 			SELECT `loginname` AS `customer`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `loginname`= :loginname
-			AND `gui_access` = 1
-		");
+			WHERE `loginname`= :loginname" .
+			$select_additional
+		);
 		Database::pexecute($stmt, [
 			"loginname" => $loginname
 		]);
@@ -243,12 +247,16 @@ if ($action == '2fa_entercode') {
 					exit();
 				}
 			} else {
+				$select_additional = '';
+				if (Settings::Get('panel.db_version') >= 202312230) {
+					$select_additional = ' AND `gui_access` = 1';
+				}
 				$stmt = Database::prepare("
 					SELECT `loginname` AS `admin`
 					FROM `" . TABLE_PANEL_ADMINS . "`
-					WHERE `loginname`= :loginname
-					AND `gui_access` = 1
-				");
+					WHERE `loginname`= :loginname" .
+					$select_additional
+				);
 				Database::pexecute($stmt, [
 					"loginname" => $loginname
 				]);

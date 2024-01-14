@@ -3835,6 +3835,7 @@ TLSRSACertificateFile                   /etc/ssl/certs/proftpd.crt
 TLSRSACertificateKeyFile                /etc/ssl/private/proftpd.key
 TLSECCertificateFile                    /etc/ssl/certs/proftpd_ec.crt
 TLSECCertificateKeyFile                 /etc/ssl/private/proftpd_ec.key
+# TLSCACertificateFile
 TLSOptions                              NoSessionReuseRequired
 TLSVerifyClient                         off
 
