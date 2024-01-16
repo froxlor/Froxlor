@@ -157,10 +157,10 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 
 			// prefix hash-algo
 			switch (Settings::Get('system.passwordcryptfunc')) {
-				case PASSWORD_ARGON2I:
+				case defined('PASSWORD_ARGON2I') && PASSWORD_ARGON2I:
 					$cpPrefix = '{ARGON2I}';
 					break;
-				case PASSWORD_ARGON2ID:
+				case defined('PASSWORD_ARGON2ID') && PASSWORD_ARGON2ID:
 					$cpPrefix = '{ARGON2ID}';
 					break;
 				default:
@@ -404,10 +404,10 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$password = Crypt::validatePassword($password, true);
 			// prefix hash-algo
 			switch (Settings::Get('system.passwordcryptfunc')) {
-				case PASSWORD_ARGON2I:
+				case defined('PASSWORD_ARGON2I') && PASSWORD_ARGON2I:
 					$cpPrefix = '{ARGON2I}';
 					break;
-				case PASSWORD_ARGON2ID:
+				case defined('PASSWORD_ARGON2ID') && PASSWORD_ARGON2ID:
 					$cpPrefix = '{ARGON2ID}';
 					break;
 				default:
