@@ -152,7 +152,7 @@
 		{% if userinfo.adminsession == 1 %}
 			const labelsC = [];
 			const dataValues = [];
-			{% for user in users|sort((a, b) => a.total <=> b.total)|slice(0, 5) %}
+			{% for user in users|slice(0, 5) %}
 				labelsC.push('{{ user.loginname }}');
 				dataValues.push({value: '{{ user.total|default(0) }}', formatted: '{{ user.total|formatBytes }}'});
 			{% endfor %}
