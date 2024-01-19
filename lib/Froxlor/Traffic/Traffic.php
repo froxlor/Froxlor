@@ -102,6 +102,14 @@ class Traffic
 			$years_avail = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		}
 
+		// sort users by total traffic
+		usort($users, function ($user_a, $user_b) {
+			if ($user_a['total'] == $user_b['total']) {
+				return 0;
+			}
+			return ($user_a['total'] < $user_b['total']) ? 1 : -1;
+		});
+
 		return [
 			'metrics' => $metrics,
 			'users' => $users,
