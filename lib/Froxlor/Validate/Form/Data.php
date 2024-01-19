@@ -241,7 +241,7 @@ class Data
 			$returnvalue = isset($fielddata['select_var'][$newfieldvalue]);
 		}
 
-		if ($returnvalue === true || $fielddata['visible'] == false) {
+		if ($returnvalue === true || (isset($fielddata['visible']) && $fielddata['visible'] == false)) {
 			return true;
 		} else {
 			if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {

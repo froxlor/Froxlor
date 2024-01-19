@@ -2229,6 +2229,14 @@ Yours sincerely, your administrator',
 			'title' => 'Collapse menu-sections',
 			'description' => 'If deactivated, the left-side menu sections will always be expanded.',
 		],
+		'le_renew_services' => [
+			'title' => 'Use froxlor Let\'s Encrypt certificate for these services',
+			'description' => 'If set to none (or the renew-hook command below is empty), no configuration adjustments regarding ssl will be made to the selected services.<br><br>The reload-command for the services selected should be added in the renew-hook command or the configuration changes or renewed certificates may not be applied correctly.',
+		],
+		'le_renew_hook' => [
+			'title' => 'Let\'s Encrypt renew-hook command',
+			'description' => 'Set this to a command that restarts the services selected above in order for renewed certificates to be used correctly by the service.',
+		],
 	],
 	'spf' => [
 		'use_spf' => [

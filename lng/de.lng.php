@@ -2101,6 +2101,14 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Menüabschnitte einklappen',
 			'description' => 'Bei Deaktivierung werden die Menübereiche auf der linken Seite immer aufgeklappt angezeigt.',
 		],
+		'le_renew_services' => [
+			'title' => 'Verwende das froxlor Let\'s Encrypt Zertifikat für folgende Dienste',
+			'description' => 'Wenn auf "Keine" gesetzt (oder der Renew-Hook-Befehl unten leer ist), werden keine Konfigurationsanpassungen bezüglich SSL an den ausgewählten Diensten vorgenommen.<br><br>Der Reload-Befehl für die ausgewählten Dienste sollte im Renew-Hook-Befehl hinzugefügt werden, da sonst die Konfigurationsänderungen oder erneuerten Zertifikate möglicherweise nicht korrekt angewendet werden.',
+		],
+		'le_renew_hook' => [
+			'title' => 'Let\'s Encrypt Renew-Hook Befehl',
+			'description' => 'Lege den Befehl fest, der die oben ausgewählten Dienste neu startet, damit erneuerte Zertifikate vom Dienst ordnungsgemäß verwendet werden.',
+		],
 	],
 	'spf' => [
 		'use_spf' => [
