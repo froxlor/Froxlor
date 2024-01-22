@@ -46,10 +46,9 @@ class Nginx extends HttpConfigBase
 
 	// protected
 	protected $needed_htpasswds = [];
-	protected $auth_backend_loaded = false;
+	protected $http2_on_directive = false;
 	protected $htpasswds_data = [];
 	protected $known_htpasswdsfilenames = [];
-	protected $mod_accesslog_loaded = '0';
 	protected $vhost_root_autoindex = false;
 
 	/**
@@ -59,6 +58,18 @@ class Nginx extends HttpConfigBase
 	 * @var bool
 	 */
 	private $deactivated = false;
+
+	public function __construct()
+	{
+		$nores = false;
+		$res = FileDir::safe_exec('nginx -v 2>&1', $nores, ['>', '&']);
+		$ver_str = array_shift($res);
+		$cNginxVer = substr($ver_str, strrpos($ver_str, "/") + 1);
+		if (version_compare($cNginxVer, '1.25.1', '>=')) {
+			// at least 1.25.1
+			$this->http2_on_directive = true;
+		}
+	}
 
 	public function createVirtualHosts()
 	{
@@ -162,8 +173,10 @@ class Nginx extends HttpConfigBase
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
-
+				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 && !$this->http2_on_directive ? ' http2' : '') . ';' . "\n";
+				if ($http2 && $this->http2_on_directive) {
+					$this->nginx_data[$vhost_filename] .= "\t" . 'http2 on;' . "\n";
+				}
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 
 				$aliases = "";
@@ -481,6 +494,7 @@ class Nginx extends HttpConfigBase
 
 		$vhost_content = '';
 		$_vhost_content = '';
+		$has_http2_on = false;
 
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`, `" . TABLE_DOMAINTOIP . "` `dip`
 			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
@@ -531,7 +545,11 @@ class Nginx extends HttpConfigBase
 			}
 			$http2 = $ssl_vhost == true && (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1');
 
-			$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
+			$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 && !$this->http2_on_directive ? ' http2' : '') . ';' . "\n";
+			if ($http2 && $this->http2_on_directive && !$has_http2_on) {
+				$vhost_content .= "\t" . 'http2 on;' . "\n";
+				$has_http2_on = true;
+			}
 		}
 
 		// get all server-names

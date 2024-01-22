@@ -179,7 +179,7 @@ class Domain
 	{
 		if (Settings::Get('system.use_ssl') == '1'
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
-			&& (int)$attributes['fields']['caneditdomain'] == 1
+			&& (CurrentUser::isAdmin() || (!CurrentUser::isAdmin() && (int)$attributes['fields']['caneditdomain'] == 1))
 			&& (int)$attributes['fields']['letsencrypt'] == 0
 			&& (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0))
 			&& !$attributes['fields']['deactivated']
