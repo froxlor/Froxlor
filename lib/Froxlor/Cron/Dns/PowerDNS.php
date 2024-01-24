@@ -45,18 +45,16 @@ class PowerDNS extends DnsBase
 		$this->clearZoneTables($domains);
 
 		if (empty($domains)) {
-			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
-			return;
-		}
-
-		foreach ($domains as $domain) {
-			if ($domain['is_child']) {
-				// domains that are subdomains to other main domains are handled by recursion within walkDomainList()
-				continue;
+			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, not creating any zones...');
+		} else {
+			foreach ($domains as $domain) {
+				if ($domain['is_child']) {
+					// domains that are subdomains to other main domains are handled by recursion within walkDomainList()
+					continue;
+				}
+				$this->walkDomainList($domain, $domains);
 			}
-			$this->walkDomainList($domain, $domains);
 		}
-
 		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
 		$this->reloadDaemon();
 		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
