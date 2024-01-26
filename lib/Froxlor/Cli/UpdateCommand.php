@@ -110,7 +110,7 @@ final class UpdateCommand extends CliCommand
 					$newversionavail = true;
 					$output->writeln('<comment>' . $text . '</>');
 					$result = self::SUCCESS;
-				} else if ($aucheck < 0 || $aucheck > 1) {
+				} elseif ($aucheck < 0 || $aucheck > 1) {
 					if ($input->getOption('integer-return')) {
 						$output->write(-1);
 						return self::INVALID;

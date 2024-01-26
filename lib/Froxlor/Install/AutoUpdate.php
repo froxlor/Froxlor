@@ -69,7 +69,7 @@ class AutoUpdate
 				if (Settings::Get('system.update_channel') == 'testing') {
 					$channel = '/testing';
 				} elseif (Settings::Get('system.update_channel') == 'nightly') {
-					if (empty(Froxlor::BRANDING)) {
+					if (empty(Froxlor::BRANDING) || substr(Froxlor::BRANDING, 0, 1) == '-') {
 						$channel = '/nightly.0000000';
 					} else {
 						$channel = '/' . substr(Froxlor::BRANDING, 1);
