@@ -108,7 +108,7 @@ class Rspamd
 				$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Generating DKIM keys for "' . $domain['domain'] . '"');
 				$rsret = [];
 				FileDir::safe_exec(
-					'rspamadm dkim_keygen -d ' . escapeshellarg($domain['domain']) . ' -k ' . $privkey_filename . ' -s dkim' . $domain['dkim_id'] . ' -b ' . Settings::Get('dkim.dkim_keylength') . ' -o plain > ' . escapeshellarg($pubkey_filename),
+					'rspamadm dkim_keygen -d ' . escapeshellarg($domain['domain']) . ' -k ' . $privkey_filename . ' -s dkim' . $domain['dkim_id'] . ' -b ' . Settings::Get('antispam.dkim_keylength') . ' -o plain > ' . escapeshellarg($pubkey_filename),
 					$rsret,
 					['>']
 				);
