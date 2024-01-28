@@ -171,6 +171,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * create a new customer with default ftp-user and standard-subdomain (if wanted)
 	 *
 	 * @param string $email
+	 *                             required, email address of new customer
 	 * @param string $name
 	 *                             optional if company is set, else required
 	 * @param string $firstname
@@ -189,8 +190,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional
 	 * @param int $customernumber
 	 *                             optional
-	 * @param string $def_language ,
-	 *                             optional, default is system-default language
+	 * @param string $def_language
+	 *                             optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
+	 *                             default is system-default language
 	 * @param bool $gui_access
 	 *                             optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
@@ -273,7 +275,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional, specify a hosting-plan to set certain resource-values from the plan
 	 *                             instead of specifying them
 	 * @param array $allowed_mysqlserver
-	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
+	 *                             optional, array of IDs of defined mysql-servers the customer is allowed to use,
 	 *                             default is to allow the default dbserver (id=0)
 	 *
 	 * @access admin
@@ -407,7 +409,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				}
 
 				$allowed_mysqlserver = array();
-				if (! empty($p_allowed_mysqlserver) && is_array($p_allowed_mysqlserver)) {
+				if (!empty($p_allowed_mysqlserver) && is_array($p_allowed_mysqlserver)) {
 					foreach ($p_allowed_mysqlserver as $allowed_ms) {
 						$allowed_ms = intval($allowed_ms);
 						$allowed_mysqlserver[] = $allowed_ms;
@@ -933,6 +935,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $loginname
 	 *                             optional, the loginname
 	 * @param string $email
+	 *                             optional
 	 * @param string $name
 	 *                             optional if company is set, else required
 	 * @param string $firstname
@@ -951,8 +954,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional
 	 * @param int $customernumber
 	 *                             optional
-	 * @param string $def_language ,
-	 *                             optional, default is system-default language
+	 * @param string $def_language
+	 * *                           optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
+	 * *                           default is system-default language
 	 * @param bool $gui_access
 	 *                             optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
@@ -965,7 +969,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional, whether to show the content of custom_notes to the customer, default 0
 	 *                             (false)
 	 * @param string $new_customer_password
-	 *                             optional, iset new password
+	 *                             optional, set new password
 	 * @param bool $sendpassword
 	 *                             optional, whether to send the password to the customer after creation, default 0
 	 *                             (false)
@@ -1033,7 +1037,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $theme
 	 *                             optional, change theme
 	 * @param array $allowed_mysqlserver
-	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
+	 *                             optional, array of IDs of defined mysql-servers the customer is allowed to use,
 	 *                             default is to allow the default dbserver (id=0)
 	 *
 	 * @access admin, customer
@@ -1129,7 +1133,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($result['mysqls'] == 0 && ($mysqls == -1 || $mysqls > 0)) {
 				$allowed_mysqlserver = $this->getParam('allowed_mysqlserver', true, [0]);
 			}
-			if (! empty($allowed_mysqlserver)) {
+			if (!empty($allowed_mysqlserver)) {
 				$allowed_mysqlserver = array_map('intval', $allowed_mysqlserver);
 			}
 
