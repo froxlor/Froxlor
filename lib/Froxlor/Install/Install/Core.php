@@ -653,14 +653,18 @@ class Core
 
 	private function createJsonArray(&$db_user)
 	{
-		// use traffic analyzer from settings as we could define defaults in the lib/configfiles/*.xml templates
+		// use traffic analyzer and ftpserver from settings as we could define defaults in the lib/configfiles/*.xml templates
 		// which can be useful for third-party package-maintainer (e.g. other distros) to have more control
 		// over the installation defaults (less hardcoded values)
-		$traffic_analyzer = $db_user->query("
-			SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'traffictool'
+		$custom_dependency = $db_user->query("
+			SELECT `varname`, `value` FROM `" . TABLE_PANEL_SETTINGS . "`
+			WHERE `settinggroup` = 'system' AND (`varname` = 'traffictool' OR `varname` = 'ftpserver')
 		");
-		$ta_result = $traffic_analyzer->fetch(\PDO::FETCH_ASSOC);
-		$system_params = ["cron", "libnssextrausers", "logrotate", $ta_result['value']];
+		$cd_result = $custom_dependency->fetchAll(\PDO::FETCH_KEY_PAIR);
+		$system_params = ["cron", "libnssextrausers", "logrotate"];
+		if (isset($cd_result['traffictool'])) {
+			$system_params[] = $cd_result['traffictool'];
+		}
 		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
 			$system_params[] = 'php-fpm';
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
@@ -673,7 +677,7 @@ class Core
 			'smtp' => 'postfix_dovecot',
 			'mail' => 'dovecot_postfix2',
 			'antispam' => 'rspamd',
-			'ftp' => 'proftpd',
+			'ftp' => $cd_result['ftpserver'] ?? 'x',
 			'system' => $system_params
 		];
 		$_SESSION['installation']['json_params'] = json_encode($json_params);
