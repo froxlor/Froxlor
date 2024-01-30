@@ -400,7 +400,10 @@ class Customers extends ApiCommand implements ResourceEntity
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 
 				if (empty($allowed_phpconfigs) && $phpenabled == 1) {
-					Response::standardError('customerphpenabledbutnoconfig', '', true);
+					// only required if not using mod_php
+					if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+						Response::standardError('customerphpenabledbutnoconfig', '', true);
+					}
 				}
 
 				$allowed_mysqlserver = array();
@@ -1114,7 +1117,10 @@ class Customers extends ApiCommand implements ResourceEntity
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}
 			if (empty($allowed_phpconfigs) && $phpenabled == 1) {
-				Response::standardError('customerphpenabledbutnoconfig', '', true);
+				// only required if not using mod_php
+				if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+					Response::standardError('customerphpenabledbutnoconfig', '', true);
+				}
 			}
 
 			// add permission for allowed mysql usage if customer was not allowed to use mysql prior
