@@ -2287,7 +2287,7 @@ Vielen Dank, Ihr Administrator',
 		'install' => [
 			'top' => 'Abschluss',
 			'title' => 'Ein letzter Schritt...',
-			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.<br><br><span class="text-danger">Führe die gezeigten Befehle als <b>root</b> in der Shell/Konsole des Servers aus.</span>',
+			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.<br><br><span class="text-danger">Führe die gezeigten Befehle als <b>root</b> in der Shell/Konsole des Servers aus. <b>Beachte bitte</b> das dieser Befehl vorhandene Konfigurationen <b>überschreibt</b> (Sicherungsdateien werden erstellt)!<br>Sollte dies nicht gewünscht sein, wähle <i>Ich werden die Dienste manuell konfigurieren</i> am Ende dieser Seite.</span>',
 			'runcmd' => 'Folgende Befehle ausführen, um die Installation abzuschließen:',
 			'manual_config' => 'Ich werden die Dienste manuell konfigurieren, direkt zum Login umleiten',
 			'waitforconfig' => 'Warte auf Abschluss der Dienstkonfiguration...',

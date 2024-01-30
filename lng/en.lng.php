@@ -2423,7 +2423,7 @@ Yours sincerely, your administrator',
 		'install' => [
 			'top' => 'Finish setup',
 			'title' => 'One last step...',
-			'description' => 'The command below will download, install and configure required services on your system according to the data you have given in this installation process.<br><br><span class="text-danger">Be sure to run the following command as <b>root</b> on the server\'s shell/terminal.</span>',
+			'description' => 'The command below will download, install and configure required services on your system according to the data you have given in this installation process.<br><br><span class="text-danger">Be sure to run the following command as <b>root</b> on the server\'s shell/terminal and <b>be aware</b> that this command will <b>overwrite</b> any existing configuration for the used services (backups will be created)!.<br>If you do not want to overwrite any configurations, select <i>I will manually configure the services</i> at the bottom of this page!</span>',
 			'runcmd' => 'Run the following command to finish the installation:',
 			'manual_config' => 'I will manually configure the services, just take me to the login',
 			'waitforconfig' => 'Waiting for services to be configured...',
