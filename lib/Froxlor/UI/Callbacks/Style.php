@@ -25,6 +25,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\CurrentUser;
 use Froxlor\Settings;
 
 class Style
@@ -68,7 +69,7 @@ class Style
 				$termination_css = 'table-danger';
 			}
 		}
-		$deactivated = $attributes['fields']['deactivated'] || $attributes['fields']['customer_deactivated'];
+		$deactivated = $attributes['fields']['deactivated'] || (CurrentUser::isAdmin() && $attributes['fields']['customer_deactivated']);
 		return $deactivated ? 'table-info' : $termination_css;
 	}
 

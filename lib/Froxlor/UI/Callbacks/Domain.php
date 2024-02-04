@@ -25,6 +25,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain as DDomain;
 use Froxlor\FileDir;
@@ -113,7 +114,7 @@ class Domain
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		if ((int)$attributes['fields']['email_only'] == 0 && !$attributes['fields']['deactivated']) {
+		if ((!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)) && !$attributes['fields']['deactivated']) {
 			if ((int)UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
 				return true;
 			} elseif ((int)UI::getCurrentUser()['adminsession'] == 1) {
@@ -155,7 +156,7 @@ class Domain
 
 	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		return ((bool)$attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
+		return ((bool)$attributes['fields']['letsencrypt'] && (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)));
 	}
 
 	public static function canEditSSL(array $attributes): bool
@@ -165,7 +166,7 @@ class Domain
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
 			&& (int)$attributes['fields']['caneditdomain'] == 1
 			&& (int)$attributes['fields']['letsencrypt'] == 0
-			&& (int)$attributes['fields']['email_only'] == 0
+			&& (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0))
 			&& !$attributes['fields']['deactivated']
 		) {
 			return true;
