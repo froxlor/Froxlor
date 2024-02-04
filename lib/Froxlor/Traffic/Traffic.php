@@ -103,7 +103,7 @@ class Traffic
 		}
 
 		// sort users by total traffic
-		usort($users, function ($user_a, $user_b) {
+		uasort($users, function ($user_a, $user_b) {
 			if ($user_a['total'] == $user_b['total']) {
 				return 0;
 			}
