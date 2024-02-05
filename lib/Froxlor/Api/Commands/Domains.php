@@ -519,7 +519,8 @@ class Domains extends ApiCommand implements ResourceEntity
 						$mod_fcgid_maxrequests = '-1';
 					}
 				} else {
-					$phpenabled = '1';
+					// set default to whether the customer has php enabled or not
+					$phpenabled = $customer['phpenabled'];
 					$openbasedir = '1';
 
 					if ((int)Settings::Get('phpfpm.enabled') == 1) {

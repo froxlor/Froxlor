@@ -25,19 +25,19 @@
 
 namespace Froxlor\Cron\Http;
 
-use Froxlor\Froxlor;
 use Froxlor\Cron\Http\Php\PhpInterface;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Http\Directory;
 use Froxlor\Http\Statistics;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
-use Froxlor\Validate\Validate;
 use Froxlor\System\Crypt;
+use Froxlor\Validate\Validate;
 use PDO;
 
 class Apache extends HttpConfigBase
@@ -159,7 +159,7 @@ class Apache extends HttpConfigBase
 					if (Settings::Get('system.froxlordirectlyviahostname')) {
 						$relpath = "/";
 					} else {
-						$relpath = "/".basename(Froxlor::getInstallDir());
+						$relpath = "/" . basename(Froxlor::getInstallDir());
 					}
 					// protect lib/userdata.inc.php
 					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim($relpath, "/") . '/lib/">' . "\n";
@@ -842,24 +842,26 @@ class Apache extends HttpConfigBase
 			}
 			$vhost_content .= $this->getLogfiles($domain);
 
-			if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
-				$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
-			}
+			if ($this->deactivated == false) {
+				if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
+					$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+				}
 
-			if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
-				$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
-			}
+				if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+					$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+				}
 
-			if ($_vhost_content != '') {
-				$vhost_content .= $_vhost_content;
-			}
+				if ($_vhost_content != '') {
+					$vhost_content .= $_vhost_content;
+				}
 
-			if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
-				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
-			}
+				if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
+					$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+				}
 
-			if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
-				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+				if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+					$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+				}
 			}
 		}
 
@@ -964,8 +966,8 @@ class Apache extends HttpConfigBase
 			if ($domain['openbasedir'] == '1') {
 				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
 					$_phpappendopenbasedir = Domain::appendOpenBasedirPath($domain['customerroot'], true);
-				} else if ($domain['openbasedir_path'] == '2' && strpos(dirname($domain['documentroot']).'/', $domain['customerroot']) !== false) {
-					$_phpappendopenbasedir = Domain::appendOpenBasedirPath(dirname($domain['documentroot']).'/', true);
+				} else if ($domain['openbasedir_path'] == '2' && strpos(dirname($domain['documentroot']) . '/', $domain['customerroot']) !== false) {
+					$_phpappendopenbasedir = Domain::appendOpenBasedirPath(dirname($domain['documentroot']) . '/', true);
 				} else {
 					$_phpappendopenbasedir = Domain::appendOpenBasedirPath($domain['documentroot'], true);
 				}
@@ -1013,10 +1015,10 @@ class Apache extends HttpConfigBase
 		}
 		$statDocroot = FileDir::makeCorrectFile($domain['customerroot'] . '/' . $statTool . $statDomain);
 
-		$stats_text .= '  Alias /'.$statTool.' "' . $statDocroot . '"' . "\n";
+		$stats_text .= '  Alias /' . $statTool . ' "' . $statDocroot . '"' . "\n";
 		// awstats special requirement for icons
 		if ($statTool == 'awstats') {
-				$stats_text .= '  Alias /awstats-icon "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
+			$stats_text .= '  Alias /awstats-icon "' . FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 		}
 
 		return $stats_text;
