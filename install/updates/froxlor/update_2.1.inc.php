@@ -227,3 +227,13 @@ if (Froxlor::isFroxlorVersion('2.1.3')) {
 	Update::showUpdateStep("Updating from 2.1.3 to 2.1.4", false);
 	Froxlor::updateToVersion('2.1.4');
 }
+
+if (Froxlor::isFroxlorVersion('2.1.4')) {
+	Update::showUpdateStep("Updating from 2.1.4 to 2.1.5", false);
+	Froxlor::updateToVersion('2.1.5');
+}
+
+if (Froxlor::isFroxlorVersion('2.1.5')) {
+	Update::showUpdateStep("Updating from 2.1.5 to 2.1.6", false);
+	Froxlor::updateToVersion('2.1.6');
+}

@@ -296,21 +296,24 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				// assign default config
 				$phpsid_result['phpsettingid'] = 1;
 			}
-			// check whether the customer has chosen its own php-config
-			if ($phpsettingid > 0 && $phpsettingid != $phpsid_result['phpsettingid']) {
-				$phpsid_result['phpsettingid'] = intval($phpsettingid);
-			}
 
-			$allowed_phpconfigs = $customer['allowed_phpconfigs'];
-			if (!empty($allowed_phpconfigs)) {
-				$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
-			} else {
-				$allowed_phpconfigs = [];
-			}
-			// only with fcgid/fpm enabled will it be possible to select a php-setting
-			if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
-				if (!in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
-					Response::standardError('notallowedphpconfigused', '', true);
+			if ($domain_check['phpenabled'] == 1) {
+				// check whether the customer has chosen its own php-config
+				if ($phpsettingid > 0 && $phpsettingid != $phpsid_result['phpsettingid']) {
+					$phpsid_result['phpsettingid'] = intval($phpsettingid);
+				}
+
+				$allowed_phpconfigs = $customer['allowed_phpconfigs'];
+				if (!empty($allowed_phpconfigs)) {
+					$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
+				} else {
+					$allowed_phpconfigs = [];
+				}
+				// only with fcgid/fpm enabled will it be possible to select a php-setting
+				if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+					if (!in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
+						Response::standardError('notallowedphpconfigused', '', true);
+					}
 				}
 			}
 
@@ -797,7 +800,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$allowed_phpconfigs = [];
 		}
 		// only with fcgid/fpm enabled will it be possible to select a php-setting
-		if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+		if ((int)$result['phpenabled'] == 1 && ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1)) {
 			if (!in_array($phpsettingid, $allowed_phpconfigs)) {
 				Response::standardError('notallowedphpconfigused', '', true);
 			}
