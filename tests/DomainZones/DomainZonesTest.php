@@ -63,6 +63,33 @@ class DomainZonesTest extends TestCase
 		DomainZones::getLocal($customer_userdata, $data)->get();
 	}
 
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGet
+	 */
+	public function testCustomerDomainZonesGetWithDMARC()
+	{
+		global $admin_userdata;
+
+		Settings::Set('dmarc.use_dmarc', 1, true);
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'domainname' => 'test2.local'
+		];
+		$json_result = DomainZones::getLocal($customer_userdata, $data)->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$resstr = preg_replace('/\s+/', '', $result[count($result)-2]);
+		$against = preg_replace('/\s+/', '', '_dmarc	604800	IN	TXT	v=DMARC1; p=none;');
+		$this->assertEquals($against, $resstr);
+	}
+
 	public function testAdminDomainZonesUpdate()
 	{
 		global $admin_userdata;
@@ -870,6 +897,37 @@ class DomainZonesTest extends TestCase
 		}
 		$this->assertTrue($found);
 		$this->assertEquals('_test1	18000	IN	TXT	aw yeah', $entry);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGetWithDMARC
+	 */
+	public function testAdminDomainZonesAddTXTCustomDMARC()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => '_dmarc',
+			'type' => 'TXT',
+			'content' => 'v=DMARC1;p=none;sp=quarantine;pct=100'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$foundCnt = 0;
+		$foundStr = '';
+		foreach ($result as $entry) {
+			if (substr($entry, 0, 6) == '_dmarc') {
+				$foundCnt++;
+				$foundStr = $entry;
+			}
+		}
+		$this->assertEquals(1, $foundCnt);
+		$resstr = preg_replace('/\s+/', '', $foundStr);
+		$against = preg_replace('/\s+/', '', '_dmarc	18000	IN	TXT	v=DMARC1;p=none;sp=quarantine;pct=100');
+		$this->assertEquals($against, $resstr);
 	}
 
 	public function testAdminDomainZonesAddSRV()
