@@ -239,19 +239,28 @@ class Dns
 			}
 			if (Settings::Get('spf.use_spf') == '1'
 				&& $entry['type'] == 'TXT'
-				&& $entry['record'] == '@'
 				&& (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')
 			) {
 				// unset special spf required-entry
-				unset($required_entries[$entry['type']][md5("@SPF@")]);
+				if ($entry['record'] == '@') {
+					unset($required_entries[$entry['type']][md5("@SPF@")]);
+				} else {
+					// subdomain
+					unset($required_entries[$entry['type']][md5("@SPF@." . $entry['record'])]);
+				}
 			}
 			if (Settings::Get('dmarc.use_dmarc') == '1'
 				&& $entry['type'] == 'TXT'
-				&& $entry['record'] == '_dmarc'
+				&& ($entry['record'] == '_dmarc' || substr($entry['record'], 0, 7) == '_dmarc.')
 				&& (strtolower(substr($entry['content'], 0, 9)) == '"v=dmarc1' || strtolower(substr($entry['content'], 0, 8)) == 'v=dmarc1')
 			) {
 				// unset special dmarc required-entry
-				unset($required_entries[$entry['type']][md5("@DMARC@")]);
+				if ($entry['record'] == '_dmarc') {
+					unset($required_entries[$entry['type']][md5("@DMARC@")]);
+				} else {
+					// subdomain
+					unset($required_entries[$entry['type']][md5("@DMARC@" . substr($entry['record'], 6))]);
+				}
 			}
 			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
 				// use the first NS entry pertaining to the current domain as primary ns
