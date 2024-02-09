@@ -212,7 +212,7 @@ class Dns
 			}
 			if (Settings::Get('dmarc.use_dmarc') == '1') {
 				// check for DMARC content later
-				self::addRequiredEntry('@DMARC@.' . $sub_record, 'TXT', $required_entries);
+				self::addRequiredEntry('@DMARC@', 'TXT', $required_entries);
 			}
 			if (Settings::Get('antispam.activated') == '1' && $domain['dkim'] == '1') {
 				// check for DKIM content later
@@ -239,19 +239,28 @@ class Dns
 			}
 			if (Settings::Get('spf.use_spf') == '1'
 				&& $entry['type'] == 'TXT'
-				&& $entry['record'] == '@'
 				&& (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')
 			) {
 				// unset special spf required-entry
-				unset($required_entries[$entry['type']][md5("@SPF@")]);
+				if ($entry['record'] == '@') {
+					unset($required_entries[$entry['type']][md5("@SPF@")]);
+				} else {
+					// subdomain
+					unset($required_entries[$entry['type']][md5("@SPF@." . $entry['record'])]);
+				}
 			}
 			if (Settings::Get('dmarc.use_dmarc') == '1'
 				&& $entry['type'] == 'TXT'
-				&& $entry['record'] == '@'
+				&& ($entry['record'] == '_dmarc' || substr($entry['record'], 0, 7) == '_dmarc.')
 				&& (strtolower(substr($entry['content'], 0, 9)) == '"v=dmarc1' || strtolower(substr($entry['content'], 0, 8)) == 'v=dmarc1')
 			) {
 				// unset special dmarc required-entry
-				unset($required_entries[$entry['type']][md5("@DMARC@")]);
+				if ($entry['record'] == '_dmarc') {
+					unset($required_entries[$entry['type']][md5("@DMARC@")]);
+				} else {
+					// subdomain
+					unset($required_entries[$entry['type']][md5("@DMARC@" . substr($entry['record'], 6))]);
+				}
 			}
 			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
 				// use the first NS entry pertaining to the current domain as primary ns
@@ -392,12 +401,12 @@ class Dns
 							} elseif ($record == '@DMARC@') {
 								// dmarc for main-domain
 								$txt_content = Settings::Get('dmarc.dmarc_entry');
-								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
+								$zonerecords[] = new DnsEntry('_dmarc', 'TXT', self::encloseTXTContent($txt_content));
 							} elseif (strlen($record) > 8 && substr($record, 0, 8) == '@DMARC@.') {
 								// dmarc for subdomain
 								$txt_content = Settings::Get('dmarc.dmarc_entry');
 								$sub_record = substr($record, 8);
-								$zonerecords[] = new DnsEntry($sub_record, 'TXT', self::encloseTXTContent($txt_content));
+								$zonerecords[] = new DnsEntry('_dmarc.' . $sub_record, 'TXT', self::encloseTXTContent($txt_content));
 							} elseif (!empty($dkim_entries)) {
 								// DKIM entries
 								$dkim_record = 'dkim' . $domain['dkim_id'] . '._domainkey';

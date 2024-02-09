@@ -2,9 +2,11 @@
 use PHPUnit\Framework\TestCase;
 
 use Froxlor\Settings;
+use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\DomainZones;
 use Froxlor\Api\Commands\Domains;
+use Froxlor\Api\Commands\SubDomains;
 
 /**
  *
@@ -61,6 +63,89 @@ class DomainZonesTest extends TestCase
 		$this->expectExceptionCode(406);
 		$this->expectExceptionMessage("DNS zones can only be generated for the main domain, not for subdomains");
 		DomainZones::getLocal($customer_userdata, $data)->get();
+	}
+
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGet
+	 */
+	public function testCustomerDomainZonesGetWithDMARC()
+	{
+		global $admin_userdata;
+
+		Settings::Set('dmarc.use_dmarc', 1, true);
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'domainname' => 'test2.local'
+		];
+		$json_result = DomainZones::getLocal($customer_userdata, $data)->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$foundCnt = 0;
+		$foundStr = '';
+		foreach ($result as $entry) {
+			if (substr($entry, 0, 7) == '_dmarc	') {
+				$foundCnt++;
+				$foundStr = $entry;
+			}
+		}
+		$this->assertEquals(1, $foundCnt);
+		$resstr = preg_replace('/\s+/', '', $foundStr);
+		$against = preg_replace('/\s+/', '', '_dmarc	604800	IN	TXT	v=DMARC1;p=none;');
+		$this->assertEquals($against, $resstr);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGetWithDMARC
+	 */
+	public function testCustomerDomainZonesGetWithDMARCSubdomain()
+	{
+		global $admin_userdata;
+
+		// enable isemaildomain for subdomain
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$data = [
+			'domainname' => 'mysub2.test2.local',
+			'isemaildomain' => 1,
+			'customerid' => 1
+		];
+		$json_result = SubDomains::getLocal($reseller_userdata, $data)->update();
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'domainname' => 'test2.local'
+		];
+		$json_result = DomainZones::getLocal($customer_userdata, $data)->get();
+		$result = json_decode($json_result, true)['data'];
+		$foundCnt = 0;
+		$foundStr = '';
+		$this->assertTrue(count($result) > 1);
+		foreach ($result as $entry) {
+			if (substr($entry, 0, 14) == '_dmarc.mysub2	') {
+				$foundCnt++;
+				$foundStr = $entry;
+			}
+		}
+		$this->assertEquals(1, $foundCnt);
+		$resstr = preg_replace('/\s+/', '', $foundStr);
+		$against = preg_replace('/\s+/', '', '_dmarc.mysub2	604800	IN	TXT	v=DMARC1;p=none;');
+		$this->assertEquals($against, $resstr);
 	}
 
 	public function testAdminDomainZonesUpdate()
@@ -870,6 +955,68 @@ class DomainZonesTest extends TestCase
 		}
 		$this->assertTrue($found);
 		$this->assertEquals('_test1	18000	IN	TXT	aw yeah', $entry);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGetWithDMARC
+	 */
+	public function testAdminDomainZonesAddTXTCustomDMARC()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => '_dmarc',
+			'type' => 'TXT',
+			'content' => 'v=DMARC1;p=none;overwrite=TRUE'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$foundCnt = 0;
+		$foundStr = '';
+		foreach ($result as $entry) {
+			if (substr($entry, 0, 7) == '_dmarc	') {
+				$foundCnt++;
+				$foundStr = $entry;
+			}
+		}
+		$this->assertEquals(1, $foundCnt);
+		$resstr = preg_replace('/\s+/', '', $foundStr);
+		$against = preg_replace('/\s+/', '', '_dmarc	18000	IN	TXT	v=DMARC1;p=none;overwrite=TRUE');
+		$this->assertEquals($against, $resstr);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerDomainZonesGetWithDMARCSubdomain
+	 */
+	public function testAdminDomainZonesAddTXTCustomDMARCSubdomain()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => '_dmarc.mysub2',
+			'type' => 'TXT',
+			'content' => 'v=DMARC1;p=none;overwrite=TRUE'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$foundCnt = 0;
+		$foundStr = '';
+		foreach ($result as $entry) {
+			if (substr($entry, 0, 14) == '_dmarc.mysub2	') {
+				$foundCnt++;
+				$foundStr = $entry;
+			}
+		}
+		$this->assertEquals(1, $foundCnt);
+		$resstr = preg_replace('/\s+/', '', $foundStr);
+		$against = preg_replace('/\s+/', '', '_dmarc.mysub2	18000	IN	TXT	v=DMARC1;p=none;overwrite=TRUE');
+		$this->assertEquals($against, $resstr);
 	}
 
 	public function testAdminDomainZonesAddSRV()
