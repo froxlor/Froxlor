@@ -30,6 +30,7 @@ use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Cron\TaskId;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
+use Froxlor\Database\DbManager;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Language;
@@ -214,6 +215,22 @@ if ($page == 'overview') {
 					];
 					Database::pexecute($stmt, $params);
 					Cronjob::inserttask(TaskId::REBUILD_VHOST);
+				}
+
+				// Update global myqsl user password
+				if ($userinfo['mysqls'] != 0 && isset($_POST['change_global_mysql']) && $_POST['change_global_mysql'] == 'true') {
+					$allowed_mysqlservers = json_decode($userinfo['allowed_mysqlserver'] ?? '[]', true);
+					foreach ($allowed_mysqlservers as $dbserver) {
+						// require privileged access for target db-server
+						Database::needRoot(true, $dbserver, false);
+						// get DbManager
+						$dbm = new DbManager($log);
+						// give permission to the user on every access-host we have
+						foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+							$dbm->getManager()->grantPrivilegesTo($userinfo['loginname'], $new_password, $mysql_access_host, false, true);
+						}
+						$dbm->getManager()->flushPrivileges();
+					}
 				}
 
 				Response::redirectTo($filename);

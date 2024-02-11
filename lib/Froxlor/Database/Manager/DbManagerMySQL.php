@@ -76,9 +76,11 @@ class DbManagerMySQL
 	 *            optional, whether the password is encrypted or not, default false
 	 * @param bool $update
 	 *            optional, whether to update the password only (not create user)
+	 * @param bool $grant_access_prefix
+	 *            optional, whether the given user will have access to all databases starting with the username, default false
 	 * @throws \Exception
 	 */
-	public function grantPrivilegesTo(string $username, $password, string $access_host = null, bool $p_encrypted = false, bool $update = false)
+	public function grantPrivilegesTo(string $username, $password, string $access_host = null, bool $p_encrypted = false, bool $update = false, bool $grant_access_prefix = false)
 	{
 		$pwd_plugin = 'mysql_native_password';
 		if (is_array($password) && count($password) == 2) {
@@ -108,7 +110,7 @@ class DbManagerMySQL
 			]);
 			// grant privileges
 			$stmt = Database::prepare("
-				GRANT ALL ON `" . $username . "`.* TO :username@:host
+				GRANT ALL ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO :username@:host
 			");
 			Database::pexecute($stmt, [
 				"username" => $username,
@@ -219,17 +221,31 @@ class DbManagerMySQL
 	 *
 	 * @param string $username
 	 * @param string $host
+	 * @param bool $grant_access_prefix
 	 * @throws \Exception
 	 */
-	public function enableUser(string $username, string $host)
+	public function enableUser(string $username, string $host, bool $grant_access_prefix = false)
 	{
 		// check whether user exists to avoid errors
+		if ($this->userExistsOnHost($username, $host)) {
+			Database::query('GRANT ALL PRIVILEGES ON `' . $username . ($grant_access_prefix ? '%' : '') . '`.* TO `' . $username . '`@`' . $host . '`');
+			Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . ($grant_access_prefix ? '%' : '') . '` . * TO `' . $username . '`@`' . $host . '`');
+		}
+	}
+
+	/**
+	 * Check whether a given username exists for the given host
+	 *
+	 * @param string $username
+	 * @param string $host
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function userExistsOnHost(string $username, string $host): bool
+	{
 		$exist_check_stmt = Database::prepare("SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $username . "' AND host = '" . $host . "')");
 		$exist_check = Database::pexecute_first($exist_check_stmt);
-		if ($exist_check && array_pop($exist_check) == '1') {
-			Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
-			Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
-		}
+		return ($exist_check && array_pop($exist_check) == '1');
 	}
 
 	/**

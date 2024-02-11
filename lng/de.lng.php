@@ -519,6 +519,7 @@ return [
 		'new_password_ifnotempty' => 'Neues Passwort (leer für keine Änderung)',
 		'also_change_ftp' => 'Auch Passwort des Haupt-FTP-Zugangs ändern',
 		'also_change_stats' => ' Auch Passwort der Statistikseite ändern',
+		'also_change_global_mysql' => 'Auch Passwort des globalen MySQL-Zugangs ändern',
 	],
 	'cron' => [
 		'cronname' => 'Cronjob-Name',
@@ -1143,7 +1144,9 @@ Vielen Dank, Ihr Administrator',
 		'privileged_passwd' => 'Passwort für privilegierten Benutzer',
 		'unprivileged_passwd' => 'Passwort für nicht privilegierten Benutzer',
 		'mysql_ssl_ca_file' => 'SSL-Serverzertifikat',
-		'mysql_ssl_verify_server_certificate' => 'Verifizieren des SSL-Serverzertifikats'
+		'mysql_ssl_verify_server_certificate' => 'Verifizieren des SSL-Serverzertifikats',
+		'globaluserinfo' => 'Um auf Datenbanken zuzugreifen, kann zusätzlich der Froxlor-Login (Benutzer: %s) verwendet werden, dieser hat automatisch Zugriff auf alle Datenbanken.<br />Es wird empfohlen diesen <b>nicht</b> für Applikationen zu nutzen, lediglich zur Administration (z.B. via phpMyAdmin).',
+		'edit_global_user' => 'Admin Benutzer bearbeiten',
 	],
 	'panel' => [
 		'edit' => 'bearbeiten',

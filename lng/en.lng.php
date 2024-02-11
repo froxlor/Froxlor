@@ -566,6 +566,7 @@ return [
 		'new_password_ifnotempty' => 'New password (empty = no change)',
 		'also_change_ftp' => ' also change password of the main FTP account',
 		'also_change_stats' => ' also change password for the statistics page',
+		'also_change_global_mysql' => 'also change password for global MySQL account',
 	],
 	'cron' => [
 		'cronname' => 'cronjob-name',
@@ -1215,7 +1216,9 @@ Yours sincerely, your administrator',
 		'privileged_passwd' => 'Password for privileged user',
 		'unprivileged_passwd' => 'Password for unprivileged user',
 		'mysql_ssl_ca_file' => 'SSL server certificate',
-		'mysql_ssl_verify_server_certificate' => 'Verify SSL server certificate'
+		'mysql_ssl_verify_server_certificate' => 'Verify SSL server certificate',
+		'globaluserinfo' => 'To access your databases, you can additionally use your froxlor login (user: %s) which automatically has access to all your databases.<br />It is recommended <b>not</b> to use this for applications, only for administration (e.g. via phpMyAdmin).',
+		'edit_global_user' => 'Edit admin user',
 	],
 	'opcacheinfo' => [
 		'generaltitle' => 'General Information',

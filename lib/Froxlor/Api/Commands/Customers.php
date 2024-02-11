@@ -739,6 +739,21 @@ class Customers extends ApiCommand implements ResourceEntity
 						}
 					}
 
+					// Create default mysql-user if enabled
+					if ($mysqls != 0) {
+						foreach ($allowed_mysqlserver as $dbserver) {
+							// require privileged access for target db-server
+							Database::needRoot(true, $dbserver, false);
+							// get DbManager
+							$dbm = new DbManager($this->logger());
+							// give permission to the user on every access-host we have
+							foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false);
+							}
+							$dbm->getManager()->flushPrivileges();
+						}
+					}
+
 					if ($sendpassword == '1') {
 						$srv_hostname = Settings::Get('system.hostname');
 						if (Settings::Get('system.froxlordirectlyviahostname') == '0') {
@@ -1297,11 +1312,31 @@ class Customers extends ApiCommand implements ResourceEntity
 				]);
 
 				$upd_stmt = Database::prepare("
-							UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`= :deactivated WHERE `customerid` = :customerid");
+					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `deactivated`= :deactivated WHERE `customerid` = :customerid
+				");
 				Database::pexecute($upd_stmt, [
 					'deactivated' => $deactivated,
 					'customerid' => $id
 				]);
+
+				// enable/disable global mysql-user (loginname)
+				foreach ($result['allowed_mysqlserver'] as $dbserver) {
+					// require privileged access for target db-server
+					Database::needRoot(true, $dbserver, false);
+					// get DbManager
+					$dbm = new DbManager($this->logger());
+					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+						// Prevent access, if deactivated
+						if ($deactivated) {
+							// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
+							$dbm->getManager()->disableUser($result['loginname'], $mysql_access_host);
+						} else {
+							// Otherwise grant access
+							$dbm->getManager()->enableUser($result['loginname'], $mysql_access_host, true);
+						}
+					}
+					$dbm->getManager()->flushPrivileges();
+				}
 
 				// Retrieve customer's databases
 				$databases_stmt = Database::prepare("SELECT * FROM " . TABLE_PANEL_DATABASES . " WHERE customerid = :customerid ORDER BY `dbserver`");
@@ -1323,9 +1358,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						$last_dbserver = $row_database['dbserver'];
 					}
 
-					foreach (array_unique(explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-						$mysql_access_host = trim($mysql_access_host);
-
+					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 						// Prevent access, if deactivated
 						if ($deactivated) {
 							// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
@@ -1616,6 +1649,19 @@ class Customers extends ApiCommand implements ResourceEntity
 			]);
 			$id = $result['customerid'];
 
+			// remove global mysql-user (loginname)
+			foreach ($result['allowed_mysqlserver'] as $dbserver) {
+				// require privileged access for target db-server
+				Database::needRoot(true, $dbserver, false);
+				// get DbManager
+				$dbm = new DbManager($this->logger());
+				foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+					$dbm->getManager()->deleteUser($result['loginname'], $mysql_access_host);
+				}
+				$dbm->getManager()->flushPrivileges();
+			}
+
+			// remove all databases
 			$databases_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 				WHERE `customerid` = :id ORDER BY `dbserver`
@@ -1631,8 +1677,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			$priv_changed = false;
 			while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {
-					Database::needRoot(true, $row_database['dbserver']);
 					$dbm->getManager()->flushPrivileges();
+					Database::needRoot(true, $row_database['dbserver']);
 					$last_dbserver = $row_database['dbserver'];
 				}
 				$dbm->getManager()->deleteDatabase($row_database['databasename']);

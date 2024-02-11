@@ -57,6 +57,18 @@
 								</div>
 							</div>
 
+							{% if userinfo.mysqls != 0 %}
+								<div class="mb-3">
+									<label for="change_global_mysql"
+										   class="col-form-label">{{ lng('changepassword.also_change_global_mysql') }}</label>
+									<div class="form-check form-switch">
+										<input type="hidden" name="change_global_mysql" value="false">
+										<input class="form-check-input" type="checkbox" name="change_global_mysql"
+											   id="change_global_mysql" value="true" checked>
+									</div>
+								</div>
+							{% endif %}
+
 						{% endif %}
 					</div>
 
