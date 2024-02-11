@@ -35,7 +35,7 @@ if (!defined('_CRON_UPDATE')) {
 	}
 }
 
-if (Froxlor::isFroxlorVersion('2.1.4')) {
+if (Froxlor::isFroxlorVersion('2.1.6')) {
 	Update::showUpdateStep("Enhancing virtual email table");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` ADD `spam_tag_level` float(4,1) NOT NULL DEFAULT 7.0;");
 	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` ADD `spam_kill_level` float(4,1) NOT NULL DEFAULT 14.0;");
