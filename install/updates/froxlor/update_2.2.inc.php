@@ -97,6 +97,10 @@ if (Froxlor::isDatabaseVersion('202312230')) {
 	Update::showUpdateStep("Adding new settings");
 	Settings::AddNew("system.le_renew_services", "");
 	Settings::AddNew("system.le_renew_hook", "systemctl restart postfix dovecot proftpd");
+	Settings::AddNew("system.mda_reload_command", "service dovecot reload");
+	Settings::AddNew("system.mda_conf_dir", "/etc/dovecot/conf.d");
+	Settings::AddNew("system.mta_reload_command", "service postfix reload");
+	Settings::AddNew("system.mta_conf_dir", "/etc/postfix");
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToDbVersion('202401090');

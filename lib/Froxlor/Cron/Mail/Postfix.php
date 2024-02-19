@@ -84,7 +84,7 @@ class Postfix
 	public function writeConfigs()
 	{
 		if($this->content !== "") {
-			$vhosts_filename = '/etc/postfix/'.$this->postFixMapFile;
+			$vhosts_filename = Settings::Get('system.mta_conf_dir') .'/'.$this->postFixMapFile;
 			FileDir::safe_exec('postconf -e tls_server_sni_maps=hash:'.$vhosts_filename);
 			$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $this->content;
 			$vhosts_file_handler = fopen($vhosts_filename, 'w');
@@ -97,7 +97,7 @@ class Postfix
 	public function reload()
 	{
 		if($this->content !== "") {
-			//FileDir::safe_exec(escapeshellcmd(Settings::Get('system.dovecotreload_command')));
+			FileDir::safe_exec(escapeshellcmd(Settings::Get('system.mta_reload_command')));
 		}
 	}
 

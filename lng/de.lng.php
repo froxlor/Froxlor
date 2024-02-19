@@ -1862,6 +1862,14 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Logdatei des MDA',
 			'description' => 'Die Logdatei des Mail Delivery Server',
 		],
+        'mda_conf_dir' => [
+            'title' => 'MDA Konfigurations Verzeichnis',
+            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein',
+        ],
+        'mda_reload_command' => [
+            'title' => 'MDA-Daemon reload Befehl',
+            'description' => 'Geben Sie hier den Befehl zum Neuladen des MDA-Daemons an',
+        ],
 		'mtaserver' => [
 			'title' => 'Typ des MTA',
 			'description' => 'Der eingesetzte Mail Transfer Agent',
@@ -1870,6 +1878,14 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Logdatei des MTA',
 			'description' => 'Die Logdatei des Mail Transfer Agent',
 		],
+		'mta_reload_command' => [
+			'title' => 'MTA-Daemon reload Befehl',
+			'description' => 'Geben Sie hier den Befehl zum Neuladen des MTA-Daemons an',
+		],
+        'mta_conf_dir' => [
+            'title' => 'MTA Konfigurations Verzeichnis',
+            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein',
+        ],
 		'system_cronconfig' => [
 			'title' => 'Cron-Konfigurationsdatei',
 			'description' => 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von Froxlor automatisch aktualisiert.<br />Hinweis: Bitte verwenden Sie <strong>exakt</strong> die gleiche Datei wie für den Froxlor-Haupt-Cronjob (Standard: /etc/cron.d/froxlor)!<br><br>Wird <b>FreeBSD</b> verwendet, sollte hier <i>/etc/crontab</i> angegeben werden!',

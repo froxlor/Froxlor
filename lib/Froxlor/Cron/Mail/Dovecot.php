@@ -89,7 +89,7 @@ class Dovecot
 	public function writeConfigs()
 	{
 		if($this->content !== "") {
-			$vhosts_filename = '/etc/dovecot/conf.d/99-froxlor-vhost.ssl.conf';
+			$vhosts_filename = Settings::Get('system.mda_conf_dir') .'/99-froxlor-vhost.ssl.conf';
 			$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $this->content;
 			$vhosts_file_handler = fopen($vhosts_filename, 'w');
 			fwrite($vhosts_file_handler, $vhosts_file);
@@ -100,7 +100,7 @@ class Dovecot
 	public function reload()
 	{
 		if($this->content !== "") {
-			//FileDir::safe_exec(escapeshellcmd(Settings::Get('system.dovecotreload_command')));
+			FileDir::safe_exec(escapeshellcmd(Settings::Get('system.mda_reload_command')));
 		}
 	}
 

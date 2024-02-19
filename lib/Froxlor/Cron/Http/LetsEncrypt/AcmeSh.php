@@ -85,6 +85,7 @@ class AcmeSh extends FroxlorCron
 			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
+				Cronjob::inserttask(TaskId::REBUILD_MAIL_CONF);
 			}
 			return 0;
 		}
@@ -205,6 +206,7 @@ class AcmeSh extends FroxlorCron
 		if ($changedetected) {
 			if (self::$no_inserttask == false) {
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
+				Cronjob::inserttask(TaskId::REBUILD_MAIL_CONF);
 			}
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
 		} else {
