@@ -1976,6 +1976,10 @@ Yours sincerely, your administrator',
 			'title' => 'Analyse mail traffic',
 			'description' => 'Enable analysing of mailserver logs to calculate the traffic',
 		],
+		'mail_sni_enabled' => [
+			'title' => 'Create SNI entrys for mail services',
+			'description' => 'If in domain settings email and ssl activated, sni entrys for mail services created.',
+		],
 		'mdaserver' => [
 			'title' => 'MDA type',
 			'description' => 'Type of the Mail Delivery Server',

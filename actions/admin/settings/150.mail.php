@@ -115,6 +115,14 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
+				'system_mail_sni_enabled' => [
+					'label' => lng('serversettings.mail_sni_enabled'),
+					'settinggroup' => 'system',
+					'varname' => 'mail_sni_enabled',
+					'type' => 'checkbox',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+				],
 				'system_mdaserver' => [
 					'label' => lng('serversettings.mdaserver'),
 					'settinggroup' => 'system',
@@ -146,8 +154,7 @@ return [
                     'type' => 'text',
                     'string_type' => 'confdir',
                     'default' => '/etc/dovecot/conf.d/',
-                    'save_method' => 'storeSettingField',
-                    'requires_reconf' => ['mail']
+                    'save_method' => 'storeSettingField'
                 ],
                 'system_mda_reload_command' => [
                     'label' => lng('serversettings.mda_reload_command'),
@@ -190,8 +197,7 @@ return [
                     'type' => 'text',
                     'string_type' => 'confdir',
                     'default' => '/etc/postfix/',
-                    'save_method' => 'storeSettingField',
-                    'requires_reconf' => ['mail']
+                    'save_method' => 'storeSettingField'
                 ],
                 'system_mta_reload_command' => [
                     'label' => lng('serversettings.mta_reload_command'),

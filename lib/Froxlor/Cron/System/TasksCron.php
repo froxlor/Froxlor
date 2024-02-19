@@ -471,20 +471,22 @@ class TasksCron extends FroxlorCron
 
 	private static function rebuildMailConfigs()
 	{
-		$toBeConfigure = [];
-		if (Settings::Get('system.mdaserver') == "dovecot") {
-			$toBeConfigure[] = Dovecot::class;
-		}
-		if (Settings::Get('system.mtaserver') == "postfix") {
-			$toBeConfigure[] = Postfix::class;
-		}
+		if (Settings::Get("system.mail_sni_enabled")) {
+			$toBeConfigure = [];
+			if (Settings::Get('system.mdaserver') == "dovecot") {
+				$toBeConfigure[] = Dovecot::class;
+			}
+			if (Settings::Get('system.mtaserver') == "postfix") {
+				$toBeConfigure[] = Postfix::class;
+			}
 
-		foreach($toBeConfigure as $class_name) {
-			$conf = new $class_name();
-			$conf->init();
-			$conf->createVirtualSSLHost();
-			$conf->writeConfigs();
-			$conf->reload();
+			foreach ($toBeConfigure as $class_name) {
+				$conf = new $class_name();
+				$conf->init();
+				$conf->createVirtualSSLHost();
+				$conf->writeConfigs();
+				$conf->reload();
+			}
 		}
 	}
 }

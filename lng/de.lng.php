@@ -1854,6 +1854,10 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Analysiere Mailtraffic',
 			'description' => 'Aktiviere das Analysieren der Logdateien des Mailsystems, um den verbrauchten Traffic zu berechnen.',
 		],
+		'mail_sni_enabled' => [
+			'title' => 'Erzeuge SNI Einträge für die Mail-Dienste',
+			'description' => 'Wenn Email und SSL für Domains aktiviert, werden SNI Einträge für die Mail-Dienste erzeugt.',
+		],
 		'mdaserver' => [
 			'title' => 'Typ des MDA',
 			'description' => 'Der eingesetzte Mail Delivery Server',
@@ -1864,7 +1868,7 @@ Vielen Dank, Ihr Administrator',
 		],
         'mda_conf_dir' => [
             'title' => 'MDA Konfigurations Verzeichnis',
-            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein',
+            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein. Sollte nur in Ausnahmen angepasst werden müssen.',
         ],
         'mda_reload_command' => [
             'title' => 'MDA-Daemon reload Befehl',
@@ -1884,7 +1888,7 @@ Vielen Dank, Ihr Administrator',
 		],
         'mta_conf_dir' => [
             'title' => 'MTA Konfigurations Verzeichnis',
-            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein',
+            'description' => 'Geben Sie hier den Pfad zur Konfigurationverzeichniss ein. Sollte nur in Ausnahmen angepasst werden müssen.',
         ],
 		'system_cronconfig' => [
 			'title' => 'Cron-Konfigurationsdatei',
