@@ -144,8 +144,8 @@ return [
                     'settinggroup' => 'system',
                     'varname' => 'mda_conf_dir',
                     'type' => 'text',
-                    'string_type' => 'filedir',
-                    'default' => '/etc/dovecot/conf.d',
+                    'string_type' => 'confdir',
+                    'default' => '/etc/dovecot/conf.d/',
                     'save_method' => 'storeSettingField',
                     'requires_reconf' => ['mail']
                 ],
@@ -188,8 +188,8 @@ return [
                     'settinggroup' => 'system',
                     'varname' => 'mta_conf_dir',
                     'type' => 'text',
-                    'string_type' => 'filedir',
-                    'default' => '/etc/postfix',
+                    'string_type' => 'confdir',
+                    'default' => '/etc/postfix/',
                     'save_method' => 'storeSettingField',
                     'requires_reconf' => ['mail']
                 ],
