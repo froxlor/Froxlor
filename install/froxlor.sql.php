@@ -735,7 +735,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.2.0-dev1'),
-	('panel', 'db_version', '202401090');
+	('panel', 'db_version', '202402190');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
