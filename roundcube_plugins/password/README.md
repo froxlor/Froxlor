@@ -5,7 +5,9 @@ This configuration of the password plugin for roundcube allows froxlor users to 
 You only have to edit three values:
 
 ```php
-$config['password_algorithm'] = 'hash-bcrypt'; // alternatively hash-argon2i or hash-argon2id; don't use 'clear'
+$config['password_minimum_length'] = 12; // set to corresponding Froxlor password length value
+$config['password_algorithm'] = 'blowfish-crypt';
+$config['password_algorithm_prefix'] = '{BLF-CRYPT}';
 $config['password_db_dsn'] = 'mysql://froxlor:MYSQL_PASSWORD@localhost/froxlor';
 $config['password_query'] = 'UPDATE `mail_users` SET `password_enc` = %P WHERE `username` = %u';
 ```
