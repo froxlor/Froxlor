@@ -16,7 +16,7 @@ $config['password_confirm_current'] = true;
 
 // Require the new password to be a certain length.
 // set to blank to allow passwords of any length
-$config['password_minimum_length'] = 8;
+$config['password_minimum_length'] = 12; // set to corresponding Froxlor password length value
 
 // Require the new password to have at least the specified strength score.
 // Note: Password strength is scored from 1 (week) to 5 (strong).
@@ -48,7 +48,7 @@ $config['password_force_new_user'] = false;
 // Also supported are password_hash() algoriths: hash-bcrypt, hash-argon2i, hash-argon2id.
 // Default: 'clear' (no hashing)
 // For details see password::hash_password() method.
-$config['password_algorithm'] = 'hash-bcrypt';
+$config['password_algorithm'] = 'blowfish-crypt';
 
 // Additional options for password hashing function(s).
 // For password_hash()-based passwords see https://www.php.net/manual/en/function.password-hash.php
@@ -57,7 +57,7 @@ $config['password_algorithm_options'] = [];
 
 // Password prefix (e.g. {CRYPT}, {SHA}) for passwords generated
 // using password_algorithm above. Default: empty.
-$config['password_algorithm_prefix'] = '';
+$config['password_algorithm_prefix'] = '{BLF-CRYPT}';
 
 // Path for dovecotpw/doveadm-pw (if not in the $PATH).
 // Used for password_algorithm = 'dovecot'.
