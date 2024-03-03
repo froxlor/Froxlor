@@ -413,7 +413,10 @@ return [
 			'description' => 'Specify a custom RSS-feed that will be shown to your customers on their dashboard.<br /><small>Leave this empty to use the official froxlor newsfeed (https://inside.froxlor.org/news/).</small>',
 		],
 		'movetoadmin' => 'Move customer',
-		'movecustomertoadmin' => 'Move customer to the selected admin/reseller<br /><small>Leave this empty for no change.<br />If the desired admin does not show up in the list, his customer-limit has been reached.</small>',
+		'movecustomertoadmin' => [
+			'title' => 'Move customer to the selected admin/reseller',
+			'description' => 'Leave this empty for no change.<br />If the desired admin does not show up in the list, his customer-limit has been reached.',
+		],
 		'note' => 'Note',
 		'mod_fcgid_umask' => [
 			'title' => 'Umask (default: 022)',
@@ -440,8 +443,8 @@ return [
 			'description' => 'The optional "includeSubDomains" directive, if present, signals the UA that the HSTS Policy applies to this HSTS Host as well as any subdomains of the host\'s domain name.',
 		],
 		'domain_hsts_preload' => [
-			'title' => 'Include domain in <a href="https://hstspreload.org/" target="_blank">HSTS preload list</a>',
-			'description' => 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> before sending the header with "preload".',
+			'title' => 'Include domain in HSTS preload list',
+			'description' => 'If you would like this domain to be included in the <a href="https://hstspreload.org/" target="_blank">HSTS preload list</a> maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> before sending the header with "preload".',
 		],
 		'domain_ocsp_stapling' => [
 			'title' => 'OCSP stapling',
@@ -882,6 +885,7 @@ return [
 		'stringformaterror' => 'The value for the field "%s" is not in the expected format.',
 		'loginnameisusingprefix' => 'You cannot create accounts that begin with "%s", as this prefix is set to be used for the automatic account-naming. Please enter another account name.',
 		'loginnameissystemaccount' => 'The account "%s" already exists on the system and cannot be used. Please enter another account name.',
+		'loginnameisreservedname' => 'The account-name "%s" is reserved for system internals and cannot be used.',
 		'youcantdeleteyourself' => 'You cannot delete yourself for security reasons.',
 		'youcanteditallfieldsofyourself' => 'Note: You cannot edit all fields of your own account for security reasons.',
 		'documentrootexists' => 'The directory "%s" already exists for this customer. Please remove this before adding the customer again.',

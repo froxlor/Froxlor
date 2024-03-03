@@ -460,6 +460,28 @@ class Customers extends ApiCommand implements ResourceEntity
 						if (function_exists('posix_getpwnam') && !in_array("posix_getpwnam", explode(",", ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
 							Response::standardError('loginnameissystemaccount', $loginname, true);
 						}
+
+						// blacklist some system-internal names that might lead to issues
+						Database::needSqlData();
+						$sqldata = Database::getSqlData();
+						Database::needRoot(true);
+						Database::needSqlData();
+						$sqlrdata = Database::getSqlData();
+						$login_blacklist = [
+							'root',
+							'admin',
+							'froxroot',
+							'froxlor',
+							$sqldata['user'],
+							$sqldata['db'],
+							$sqlrdata['user'],
+						];
+						unset($sqldata);
+						usnet($sqlrdata);
+						$login_blacklist = array_unique($login_blacklist);
+						if (in_array($loginname, $login_blacklist)) {
+							Response::standardError('loginnameisreservedname', $loginname, true);
+						}
 					} else {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
 						$loginname = Settings::Get('customer.accountprefix') . $accountnumber;
