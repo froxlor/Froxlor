@@ -773,6 +773,7 @@ class Customers extends ApiCommand implements ResourceEntity
 								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false);
 							}
 							$dbm->getManager()->flushPrivileges();
+							Database::needRoot(false);
 						}
 					}
 
@@ -1358,6 +1359,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						}
 					}
 					$dbm->getManager()->flushPrivileges();
+					Database::needRoot(false);
 				}
 
 				// Retrieve customer's databases
@@ -1681,6 +1683,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					$dbm->getManager()->deleteUser($result['loginname'], $mysql_access_host);
 				}
 				$dbm->getManager()->flushPrivileges();
+				Database::needRoot(false);
 			}
 
 			// remove all databases
