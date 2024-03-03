@@ -465,6 +465,7 @@ class PhpHelper
 			'mysql_unprivileged_pass',
 			'admin_pass',
 			'admin_pass_confirm',
+			'panel_password_special_char',
 		];
 		if (!empty($global)) {
 			$tmp = $global;
