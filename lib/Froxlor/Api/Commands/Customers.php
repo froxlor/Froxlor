@@ -1343,7 +1343,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				]);
 
 				// enable/disable global mysql-user (loginname)
-				foreach ($result['allowed_mysqlserver'] as $dbserver) {
+				$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
+				foreach ($current_allowed_mysqlserver as $dbserver) {
 					// require privileged access for target db-server
 					Database::needRoot(true, $dbserver, false);
 					// get DbManager
@@ -1674,7 +1675,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $result['customerid'];
 
 			// remove global mysql-user (loginname)
-			foreach ($result['allowed_mysqlserver'] as $dbserver) {
+			$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
+			foreach ($current_allowed_mysqlserver as $dbserver) {
 				// require privileged access for target db-server
 				Database::needRoot(true, $dbserver, false);
 				// get DbManager
