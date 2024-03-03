@@ -477,7 +477,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							$sqlrdata['user'],
 						];
 						unset($sqldata);
-						usnet($sqlrdata);
+						unset($sqlrdata);
 						$login_blacklist = array_unique($login_blacklist);
 						if (in_array($loginname, $login_blacklist)) {
 							Response::standardError('loginnameisreservedname', $loginname, true);
