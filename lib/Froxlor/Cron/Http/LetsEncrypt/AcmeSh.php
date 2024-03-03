@@ -521,6 +521,8 @@ EOC;
 				self::runAcmeSh($certrow, $domains, $cronlog, $do_force);
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
+				// we need another reconfigure in order to get the certificate
+				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
 		}
 	}
