@@ -460,6 +460,28 @@ class Customers extends ApiCommand implements ResourceEntity
 						if (function_exists('posix_getpwnam') && !in_array("posix_getpwnam", explode(",", ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
 							Response::standardError('loginnameissystemaccount', $loginname, true);
 						}
+
+						// blacklist some system-internal names that might lead to issues
+						Database::needSqlData();
+						$sqldata = Database::getSqlData();
+						Database::needRoot(true);
+						Database::needSqlData();
+						$sqlrdata = Database::getSqlData();
+						$login_blacklist = [
+							'root',
+							'admin',
+							'froxroot',
+							'froxlor',
+							$sqldata['user'],
+							$sqldata['db'],
+							$sqlrdata['user'],
+						];
+						unset($sqldata);
+						unset($sqlrdata);
+						$login_blacklist = array_unique($login_blacklist);
+						if (in_array($loginname, $login_blacklist)) {
+							Response::standardError('loginnameisreservedname', $loginname, true);
+						}
 					} else {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
 						$loginname = Settings::Get('customer.accountprefix') . $accountnumber;
@@ -748,9 +770,10 @@ class Customers extends ApiCommand implements ResourceEntity
 							$dbm = new DbManager($this->logger());
 							// give permission to the user on every access-host we have
 							foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false);
+								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false, true);
 							}
 							$dbm->getManager()->flushPrivileges();
+							Database::needRoot(false);
 						}
 					}
 
@@ -1320,7 +1343,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				]);
 
 				// enable/disable global mysql-user (loginname)
-				foreach ($result['allowed_mysqlserver'] as $dbserver) {
+				$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
+				foreach ($current_allowed_mysqlserver as $dbserver) {
 					// require privileged access for target db-server
 					Database::needRoot(true, $dbserver, false);
 					// get DbManager
@@ -1336,6 +1360,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						}
 					}
 					$dbm->getManager()->flushPrivileges();
+					Database::needRoot(false);
 				}
 
 				// Retrieve customer's databases
@@ -1650,7 +1675,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $result['customerid'];
 
 			// remove global mysql-user (loginname)
-			foreach ($result['allowed_mysqlserver'] as $dbserver) {
+			$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
+			foreach ($current_allowed_mysqlserver as $dbserver) {
 				// require privileged access for target db-server
 				Database::needRoot(true, $dbserver, false);
 				// get DbManager
@@ -1659,6 +1685,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					$dbm->getManager()->deleteUser($result['loginname'], $mysql_access_host);
 				}
 				$dbm->getManager()->flushPrivileges();
+				Database::needRoot(false);
 			}
 
 			// remove all databases

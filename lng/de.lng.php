@@ -408,7 +408,10 @@ return [
 			'description' => 'Hier kann ein eigenes RSS-Feed angegeben werden, welches den Kunden auf dem Dashboard angezeigt wird.<br /><small>Leerlassen um das offizielle Froxlor Newsfeed (https://inside.froxlor.org/news/) zu verwenden.</small>',
 		],
 		'movetoadmin' => 'Kunde verschieben',
-		'movecustomertoadmin' => 'Verschiebe den Kunden zum angegebenen Admin/Reseller<br /><small>Leerlassen für keine Änderung.<br />Wird der gewünschte Admin/Reseller hier nicht aufgelistet, hat er sein Kunden-Kontigent erreicht.</small>',
+		'movecustomertoadmin' => [
+			'title' => 'Verschiebe den Kunden zum angegebenen Admin/Reseller',
+			'description' => 'Leerlassen für keine Änderung.<br />Wird der gewünschte Admin/Reseller hier nicht aufgelistet, hat er sein Kunden-Kontigent erreicht.',
+		],
 		'note' => 'Hinweis',
 		'mod_fcgid_umask' => [
 			'title' => 'Umask (Standard: 022)',
@@ -432,8 +435,8 @@ return [
 			'description' => 'Die optionale "includeSubDomains" Direktive, wenn vorhanden, signalisiert dem UA, dass die HSTS Regel für diese Domain und auch jede Subdomain dieser gilt.',
 		],
 		'domain_hsts_preload' => [
-			'title' => 'Füge Domain in die <a href="https://hstspreload.org/" target="_blank">HSTS preload Liste</a> hinzu',
-			'description' => 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktivieren Sie diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachten Sie die Details unter <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> bevor ein Header mit "preload" gesendet wird.',
+			'title' => 'Füge Domain in die HSTS preload Liste hinzu',
+			'description' => 'Wenn die Domain in die <a href="https://hstspreload.org/" target="_blank">HSTS preload Liste</a>, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktivieren Sie diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachten Sie die Details unter <a href="https://hstspreload.org/#removal" target="_blank">https://hstspreload.org/#removal</a> bevor ein Header mit "preload" gesendet wird.',
 		],
 		'domain_ocsp_stapling' => [
 			'title' => 'OCSP stapling',
@@ -810,6 +813,7 @@ return [
 		'stringformaterror' => 'Der Wert des Feldes "%s" hat nicht das erwartete Format.',
 		'loginnameisusingprefix' => 'Sie können keinen Account anlegen, der mit "%s" beginnt, da dieser Prefix für die automatische Namensvergabe eingestellt ist. Bitte wählen Sie einen anderen Accountnamen.',
 		'loginnameissystemaccount' => 'Der Account "%s" existiert bereits auf dem System und kann daher nicht verwendet werden. Bitte wählen Sie einen anderen Accountnamen.',
+		'loginnameisreservedname' => 'Der Account-Name "%s" ist systemseitig reserviert und kann nicht verwenden werden.',
 		'youcantdeleteyourself' => 'Aus Sicherheitsgründen können Sie sich nicht selbst löschen.',
 		'youcanteditallfieldsofyourself' => 'Hinweis: Aus Sicherheitsgründen können Sie nicht alle Felder Ihres eigenen Accounts bearbeiten.',
 		'documentrootexists' => 'Es existiert noch ein Verzeichnis "%s" für diesen Kunden. Bitte löschen Sie dieses vorher.',

@@ -12,7 +12,7 @@ jobs:
         mariadb-version: [ 10.11, 10.5 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
@@ -70,7 +70,7 @@ jobs:
         run: composer install --no-dev
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
@@ -119,7 +119,7 @@ jobs:
           mv froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip.sha256 dist/
 
       - name: Deploy nightly to server
-        uses: easingthemes/ssh-deploy@v3.4.3
+        uses: easingthemes/ssh-deploy@main
         env:
           ARGS: "-rltDzvO --chown=${{ secrets.WEB_USER }}:${{ secrets.WEB_USER }}"
           SOURCE: "dist/"

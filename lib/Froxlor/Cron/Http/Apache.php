@@ -26,6 +26,7 @@
 namespace Froxlor\Cron\Http;
 
 use Froxlor\Cron\Http\Php\PhpInterface;
+use Froxlor\Cron\TaskId;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
@@ -36,6 +37,7 @@ use Froxlor\Http\Directory;
 use Froxlor\Http\Statistics;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
 use Froxlor\System\Crypt;
 use Froxlor\Validate\Validate;
 use PDO;
@@ -133,6 +135,7 @@ class Apache extends HttpConfigBase
 					if (Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
 						$this->virtualhosts_data[$vhosts_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
 						$is_redirect = false;
+						Cronjob::inserttask(TaskId::REBUILD_VHOST);
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
 

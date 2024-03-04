@@ -1528,13 +1528,12 @@ class Domains extends ApiCommand implements ResourceEntity
 				// enabled ssl for the domain but no ssl ip/port is selected
 				Response::standardError('nosslippportgiven', '', true);
 			}
-			if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
+			if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports) || !$sslenabled) {
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
-				// we need this for the json_encode
-				// if ssl is disabled or no ssl-ip/port exists
-				$ssl_ipandports[] = -1;
+				// act like $remove_ssl_ipandport
+				$ssl_ipandports = [];
 
 				// HSTS
 				$hsts_maxage = 0;

@@ -180,18 +180,6 @@ return [
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				],
-				'system_httpuser' => [
-					'settinggroup' => 'system',
-					'varname' => 'httpuser',
-					'type' => 'hidden',
-					'default' => 'www-data'
-				],
-				'system_httpgroup' => [
-					'settinggroup' => 'system',
-					'varname' => 'httpgroup',
-					'type' => 'hidden',
-					'default' => 'www-data'
-				],
 				'system_report_enable' => [
 					'label' => lng('serversettings.report.report'),
 					'settinggroup' => 'system',
