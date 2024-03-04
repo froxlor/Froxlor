@@ -770,7 +770,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							$dbm = new DbManager($this->logger());
 							// give permission to the user on every access-host we have
 							foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false);
+								$dbm->getManager()->grantPrivilegesTo($loginname, $password, $mysql_access_host, false, false, true);
 							}
 							$dbm->getManager()->flushPrivileges();
 							Database::needRoot(false);
