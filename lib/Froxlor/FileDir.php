@@ -140,6 +140,12 @@ class FileDir
 					if (is_link($check_dir)) {
 						$original_target = $check_dir;
 						$check_dir = readlink($check_dir);
+						$link_dir = dirname($original_target);
+						// check whether the link is relative or absolute
+						if (substr($check_dir, 0, 1) != '/') {
+							// relative directory, prepend link_dir
+							$check_dir = $link_dir . '/' . $check_dir;
+						}
 						if (substr($check_dir, 0, strlen($fixed_homedir)) != $fixed_homedir) {
 							throw new Exception("Found symlink pointing outside of customer home directory: " . substr($original_target, strlen($fixed_homedir)));
 						}
@@ -287,7 +293,7 @@ class FileDir
 				$tpl_content = lng('admin.templates.unconfigured_content_fallback');
 			}
 		}
-		$redirect_file = FileDir::makeCorrectFile(Froxlor::getInstallDir().'/notice.'.$tpl_ext);
+		$redirect_file = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/notice.' . $tpl_ext);
 		file_put_contents($redirect_file, $tpl_content);
 		return basename($redirect_file);
 	}
