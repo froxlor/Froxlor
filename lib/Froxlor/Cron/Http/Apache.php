@@ -208,7 +208,9 @@ class Apache extends HttpConfigBase
 							];
 							$php = new PhpInterface($domain);
 							$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
-
+							if ($phpconfig['pass_authorizationheader'] == '1') {
+								$this->virtualhosts_data[$vhosts_filename] .= '  FcgidPassHeader     Authorization' . "\n";
+							}
 							$starter_filename = FileDir::makeCorrectFile($configdir . '/php-fcgi-starter');
 							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";

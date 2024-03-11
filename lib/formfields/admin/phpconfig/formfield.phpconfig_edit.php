@@ -106,7 +106,7 @@ return [
 						'maxlength' => 10,
 						'value' => $result['fpm_reqslow']
 					],
-					'phpfpm_pass_authorizationheader' => [
+					'pass_authorizationheader' => [
 						'visible' => Settings::Get('system.webserver') == "apache2",
 						'label' => lng('admin.phpsettings.pass_authorizationheader'),
 						'type' => 'checkbox',
