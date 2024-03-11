@@ -222,8 +222,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *            optional request terminate timeout if FPM is used, default is '60s'
 	 * @param string $phpfpm_reqslowtimeout
 	 *            optional request slowlog timeout if FPM is used, default is '5s'
-	 * @param bool $phpfpm_pass_authorizationheader
-	 *            optional whether to pass authorization header to webserver if FPM is used, default is 0 (false)
+	 * @param bool $pass_authorizationheader
+	 *            optional whether to pass authorization header to webserver if FPM/FCGID is used, default is 0 (false)
 	 * @param bool $override_fpmconfig
 	 *            optional whether to override fpm-daemon-config value for the following settings if FPM is used,
 	 *            default is 0 (false)
@@ -276,7 +276,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$fpm_enableslowlog = $this->getBoolParam('phpfpm_enable_slowlog', true, 0);
 			$fpm_reqtermtimeout = $this->getParam('phpfpm_reqtermtimeout', true, "60s");
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, "5s");
-			$fpm_pass_authorizationheader = $this->getBoolParam('phpfpm_pass_authorizationheader', true, 0);
+			$pass_authorizationheader = $this->getBoolParam('pass_authorizationheader', true, 0);
 
 			$override_fpmconfig = $this->getBoolParam('override_fpmconfig', true, 0);
 			$def_fpmconfig = $this->apiCall('FpmDaemons.get', [
@@ -312,7 +312,6 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$fpm_enableslowlog = 0;
 				$fpm_reqtermtimeout = 0;
 				$fpm_reqslowtimeout = 0;
-				$fpm_pass_authorizationheader = 0;
 				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_reqtermtimeout = Validate::validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', [], true);
@@ -377,7 +376,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				'fpmreqslow' => $fpm_reqslowtimeout,
 				'phpsettings' => $phpsettings,
 				'fpmsettingid' => $fpm_config_id,
-				'fpmpassauth' => $fpm_pass_authorizationheader,
+				'fpmpassauth' => $pass_authorizationheader,
 				'ofc' => $override_fpmconfig,
 				'pm' => $pmanager,
 				'max_children' => $max_children,
@@ -464,7 +463,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *            optional request terminate timeout if FPM is used, default is '60s'
 	 * @param string $phpfpm_reqslowtimeout
 	 *            optional request slowlog timeout if FPM is used, default is '5s'
-	 * @param bool $phpfpm_pass_authorizationheader
+	 * @param bool $pass_authorizationheader
 	 *            optional whether to pass authorization header to webserver if FPM is used, default is 0 (false)
 	 * @param bool $override_fpmconfig
 	 *            optional whether to override fpm-daemon-config value for the following settings if FPM is used,
@@ -516,7 +515,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$fpm_enableslowlog = $this->getBoolParam('phpfpm_enable_slowlog', true, $result['fpm_slowlog']);
 			$fpm_reqtermtimeout = $this->getParam('phpfpm_reqtermtimeout', true, $result['fpm_reqterm']);
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, $result['fpm_reqslow']);
-			$fpm_pass_authorizationheader = $this->getBoolParam('phpfpm_pass_authorizationheader', true, $result['pass_authorizationheader']);
+			$pass_authorizationheader = $this->getBoolParam('pass_authorizationheader', true, $result['pass_authorizationheader']);
 			$override_fpmconfig = $this->getBoolParam('override_fpmconfig', true, $result['override_fpmconfig']);
 			$pmanager = $this->getParam('pm', true, $result['pm']);
 			$max_children = $this->getParam('max_children', true, $result['max_children']);
@@ -548,7 +547,6 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$fpm_enableslowlog = 0;
 				$fpm_reqtermtimeout = 0;
 				$fpm_reqslowtimeout = 0;
-				$fpm_pass_authorizationheader = 0;
 				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_reqtermtimeout = Validate::validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', [], true);
@@ -614,7 +612,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				'fpmreqslow' => $fpm_reqslowtimeout,
 				'phpsettings' => $phpsettings,
 				'fpmsettingid' => $fpm_config_id,
-				'fpmpassauth' => $fpm_pass_authorizationheader,
+				'fpmpassauth' => $pass_authorizationheader,
 				'ofc' => $override_fpmconfig,
 				'pm' => $pmanager,
 				'max_children' => $max_children,
