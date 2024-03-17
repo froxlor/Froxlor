@@ -281,7 +281,9 @@ class Apache extends HttpConfigBase
 							// start block, cut off last pipe and close block
 							$filesmatch = '(' . str_replace(".", "\.", substr($filesmatch, 0, -1)) . ')';
 							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.' . $filesmatch . '$>' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    <If "-f %{SCRIPT_FILENAME}">' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  	SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    </If>' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 							if ($phpconfig['pass_authorizationheader'] == '1') {
 								$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
