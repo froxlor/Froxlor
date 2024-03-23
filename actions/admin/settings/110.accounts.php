@@ -35,6 +35,7 @@ return [
 					'varname' => 'sessiontimeout',
 					'type' => 'number',
 					'min' => 60,
+					'max' => 31536000,
 					'default' => 600,
 					'save_method' => 'storeSettingField'
 				],
