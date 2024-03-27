@@ -823,6 +823,7 @@ class Apache extends HttpConfigBase
 					$modrew_red = ' [R=' . $code . ';L,NE]';
 				}
 
+				$vhost_content .= $this->getLogfiles($domain);
 				// redirect everything, not only root-directory, #541
 				$vhost_content .= '  <IfModule mod_rewrite.c>' . "\n";
 				$vhost_content .= '    RewriteEngine On' . "\n";
