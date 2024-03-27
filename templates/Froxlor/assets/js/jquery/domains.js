@@ -48,6 +48,7 @@ export default function () {
 						id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
 					},
 					dataType: "json",
+					async: false,
 					beforeSend: function (request) {
 						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 					},
