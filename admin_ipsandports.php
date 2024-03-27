@@ -142,8 +142,10 @@ if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_servers
 		}
 	} elseif ($action == 'jqCheckIP') {
 		$ip = $_POST['ip'] ?? "";
-		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) == false) {
-			// returns notice if private network detected so we can display it
+		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
+			echo json_encode('<div id="ipnote" class="invalid-feedback">'.lng('error.invalidip', [$ip]).'</div>');
+		} elseif (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
+			// returns notice if private network detected, so we can display it
 			echo json_encode(lng('admin.ipsandports.ipnote'));
 		} else {
 			echo 0;
