@@ -406,6 +406,7 @@ class Lighttpd extends HttpConfigBase
 				// Get domain's redirect code
 				$code = Domain::getDomainRedirectCode($domain['id']);
 
+				$vhost_content .= $this->getLogFiles($domain);
 				$vhost_content .= '  url.redirect-code = ' . $code . "\n";
 				$vhost_content .= '  url.redirect = (' . "\n";
 				$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";

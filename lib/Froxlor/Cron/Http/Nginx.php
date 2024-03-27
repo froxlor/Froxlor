@@ -604,6 +604,7 @@ class Nginx extends HttpConfigBase
 				// Get domain's redirect code
 				$code = Domain::getDomainRedirectCode($domain['id']);
 
+				$vhost_content .= $this->getLogFiles($domain);
 				$vhost_content .= "\t" . 'location / {' . "\n";
 				$vhost_content .= "\t\t" . 'return ' . $code . ' ' . $uri . '$request_uri;' . "\n";
 				$vhost_content .= "\t" . '}' . "\n";
