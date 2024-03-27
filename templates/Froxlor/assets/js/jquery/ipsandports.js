@@ -15,6 +15,9 @@ export default function () {
 						ip: ipval
 					},
 					dataType: "json",
+					beforeSend: function (request) {
+						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+					},
 					success: function (json) {
 						if (json != 0) {
 							$('#ip').addClass('is-invalid');

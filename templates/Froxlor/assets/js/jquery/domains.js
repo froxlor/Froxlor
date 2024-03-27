@@ -13,6 +13,9 @@ export default function () {
 					customerid: cid
 				},
 				dataType: "json",
+				beforeSend: function (request) {
+					request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+				},
 				success: function (json) {
 					if (json.length > 0) {
 						$('#phpsettingid option').each(function () {
@@ -45,6 +48,9 @@ export default function () {
 						id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
 					},
 					dataType: "json",
+					beforeSend: function (request) {
+						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+					},
 					success: function (json) {
 						if (json.changed) {
 							$('#speciallogfile').addClass('is-invalid');
