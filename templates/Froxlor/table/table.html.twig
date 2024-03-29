@@ -64,6 +64,14 @@
 				{{ pagination.paging(listing.pagination) }}
 			{% endif %}
 		</div>
+		{# handle potential modal-html if defined by actions #}
+		{% for tr in listing.table.tr %}
+			{% for td in tr.td %}
+				{% if td.data is iterable and td.data.macro == 'actions' %}
+					{{ macros.actions_modal(td.data.data) }}
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
 	{% endif %}
 
 	<!-- Modal -->

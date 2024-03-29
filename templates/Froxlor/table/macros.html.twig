@@ -52,25 +52,8 @@
 			{{ data.text }}
 		{% endif %}
 	</{% if data.href is defined %}a{% else %}span{% endif %}>
-	{% if data.modal is defined and data.modal is iterable %}
-		<div class="modal fade" data-action="{{ data.modal.action|default('') }}" data-entry="{{ data.modal.entry }}" id="{{ data.modal.id }}" aria-hidden="true" aria-labelledby="{{ data.modal.id }}Label" tabindex="-1">
-			<div class="modal-dialog {{ data.modal.size|default('modal-xl') }} modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="{{ data.modal.id }}Label">{{ data.modal.title }}</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ lng('panel.modalclose') }}"></button>
-					</div>
-					<div class="modal-body text-start">
-						{{ data.modal.body|raw }}
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endif %}
 	{% endapply %}
+	{# the modal-markup if any will be generated using actions_modal()-macro after the table itself #}
 {% endmacro %}
 
 {% macro domainWithSan(data) %}
@@ -87,6 +70,33 @@
 	{% for action in data %}
 		{% if action.visible is not defined or action.visible is defined and action.visible %}
 			{{ _self.button(action) }}
+		{% endif %}
+	{% endfor %}
+{% endmacro %}
+
+{% macro actions_modal(data) %}
+	{% for action in data %}
+		{% if action.visible is not defined or action.visible is defined and action.visible %}
+			{% apply spaceless %}
+				{% if action.modal is defined and action.modal is iterable %}
+					<div class="modal fade" data-action="{{ action.modal.action|default('') }}" data-entry="{{ action.modal.entry }}" id="{{ action.modal.id }}" aria-hidden="true" aria-labelledby="{{ action.modal.id }}Label" tabindex="-1">
+						<div class="modal-dialog {{ action.modal.size|default('modal-xl') }} modal-dialog-centered">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="{{ action.modal.id }}Label">{{ action.modal.title }}</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ lng('panel.modalclose') }}"></button>
+								</div>
+								<div class="modal-body text-start">
+									{{ action.modal.body|raw }}
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endapply %}
 		{% endif %}
 	{% endfor %}
 {% endmacro %}
