@@ -523,7 +523,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$result = $this->apiCall('Emails.get', [
 			'id' => $id,
 			'emailaddr' => $emailaddr
-		]);
+		], true);
 		$id = $result['id'];
 
 		if (empty($result['popaccountid']) || $result['popaccountid'] == 0) {

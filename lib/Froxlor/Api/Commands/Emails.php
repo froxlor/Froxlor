@@ -221,7 +221,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 
-		$result_stmt = Database::prepare("SELECT v.*, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize` " . ($this->isAdmin() ? ", `u`.`homedir`, `u`.`maildir`" : "") . "
+		$result_stmt = Database::prepare("SELECT v.*, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize` " . ($this->isInternal() ? ", `u`.`homedir`, `u`.`maildir`" : "") . "
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
