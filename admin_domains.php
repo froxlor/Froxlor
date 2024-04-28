@@ -113,7 +113,7 @@ if ($page == 'domains' || $page == 'overview') {
 			} elseif ($alias_check['count'] > 0) {
 				Response::standardError('domains_cantdeletedomainwithaliases');
 			} else {
-				HTML::askYesNo('admin_domain_reallydelete', $filename, [
+				HTML::askYesNoWithCheckbox('admin_domain_reallydelete', 'admin_customer_alsoremovemail', $filename, [
 					'id' => $id,
 					'page' => $page,
 					'action' => $action

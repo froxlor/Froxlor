@@ -2098,6 +2098,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param bool $is_stdsubdomain
 	 *            optional, default false, specify whether it's a std-subdomain you are deleting as it does not count
 	 *            as subdomain-resource
+	 * @param bool $delete_userfiles
+	 *            optional, delete email account files on filesystem (if any), default false
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -2109,7 +2111,8 @@ class Domains extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = $id > 0;
 			$domainname = $this->getParam('domainname', $dn_optional, '');
-			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
+			$is_stdsubdomain = $this->getBoolParam('is_stdsubdomain', true, 0);
+			$delete_user_emailfiles = $this->getBoolParam('delete_userfiles', true, 0);
 
 			$result = $this->apiCall('Domains.get', [
 				'id' => $id,
@@ -2133,6 +2136,14 @@ class Domains extends ApiCommand implements ResourceEntity
 			$idString = implode(' OR ', $idString);
 
 			if ($idString != '') {
+				if ($delete_user_emailfiles) {
+					// determine all connected email-accounts
+					$emailaccount_sel = Database::prepare("SELECT `email`, `homedir`, `maildir` FROM `" . TABLE_MAIL_USERS . "` WHERE " . $idString);
+					Database::pexecute($emailaccount_sel, $paramString, true, true);
+					while ($emailacc_row = $emailaccount_sel->fetch(PDO::FETCH_ASSOC)) {
+						Cronjob::inserttask(TaskId::DELETE_EMAIL_DATA, $emailacc_row['email'], FileDir::makeCorrectDir($emailacc_row['homedir'] . '/' . $emailacc_row['maildir']));
+					}
+				}
 				$del_stmt = Database::prepare("
 						DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE " . $idString);
 				Database::pexecute($del_stmt, $paramString, true, true);

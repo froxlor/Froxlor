@@ -1398,7 +1398,7 @@ Yours sincerely, your administrator',
 	'question' => [
 		'question' => 'Security question',
 		'admin_customer_reallydelete' => 'Do you really want to delete the customer %s? This cannot be undone!',
-		'admin_domain_reallydelete' => 'Do you really want to delete the domain %s?',
+		'admin_domain_reallydelete' => 'Do you really want to delete the domain %s?<br><span class="text-danger"><strong>NOTE:</strong> All subdomains, ftp-accounts and email-addresses/accounts connected to this domain will be removed!</span>',
 		'admin_domain_reallydisablesecuritysetting' => 'Do you really want to disable this security setting OpenBasedir?',
 		'admin_admin_reallydelete' => 'Do you really want to delete the admin %s? Every customer and domain will be reassigned to your account.',
 		'admin_template_reallydelete' => 'Do you really want to delete the template \'%s\'?',

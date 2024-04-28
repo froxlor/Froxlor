@@ -26,7 +26,7 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\SubDomains as SubDomains;
+use Froxlor\Api\Commands\SubDomains;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;

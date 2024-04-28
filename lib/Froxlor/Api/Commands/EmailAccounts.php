@@ -563,7 +563,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		}
 
 		if ($delete_userfiles) {
-			Cronjob::inserttask(TaskId::DELETE_EMAIL_DATA, $customer['loginname'], $result['email_full']);
+			Cronjob::inserttask(TaskId::DELETE_EMAIL_DATA, $customer['loginname'], FileDir::makeCorrectDir($result['homedir'] . '/' . $result['maildir']));
 		}
 
 		// decrease usage for customer

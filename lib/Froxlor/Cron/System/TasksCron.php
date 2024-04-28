@@ -348,24 +348,16 @@ class TasksCron extends FroxlorCron
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task7 started - deleting customer e-mail data');
 
 		if (is_array($row['data'])) {
-			if (isset($row['data']['loginname']) && isset($row['data']['email'])) {
+			if (isset($row['data']['loginname']) && isset($row['data']['emailpath'])) {
 				// remove specific maildir
-				$email_full = $row['data']['email'];
+				$email_full = $row['data']['emailpath'];
 				if (empty($email_full)) {
-					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, 'FATAL: Task7 asks to delete a email account but email field is empty!');
-				}
-				$email_user = substr($email_full, 0, strrpos($email_full, "@"));
-				$email_domain = substr($email_full, strrpos($email_full, "@") + 1);
-				$maildirname = trim(Settings::Get('system.vmail_maildirname'));
-				// Add trailing slash to Maildir if needed
-				$maildirpath = $maildirname;
-				if (!empty($maildirname) and substr($maildirname, -1) != "/") {
-					$maildirpath .= "/";
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, 'FATAL: Task7 asks to delete a email account but emailpath field is empty!');
 				}
 
-				$maildir = FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/' . $email_domain . '/' . $email_user);
+				$maildir = FileDir::makeCorrectDir($email_full);
 
-				if ($maildir != '/' && !empty($maildir) && !empty($email_full) && $maildir != Settings::Get('system.vmail_homedir') && substr($maildir, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir) && is_dir(FileDir::makeCorrectDir($maildir . '/' . $maildirpath)) && fileowner($maildir) == Settings::Get('system.vmail_uid') && filegroup($maildir) == Settings::Get('system.vmail_gid')) {
+				if ($maildir != '/' && !empty($maildir) && $maildir != Settings::Get('system.vmail_homedir') && substr($maildir, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir) && fileowner($maildir) == Settings::Get('system.vmail_uid') && filegroup($maildir) == Settings::Get('system.vmail_gid')) {
 					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
@@ -377,23 +369,6 @@ class TasksCron extends FroxlorCron
 						'~',
 						'?'
 					]);
-				} else {
-					// backward-compatibility for old folder-structure
-					$maildir_old = FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/' . $row['data']['email']);
-
-					if ($maildir_old != '/' && !empty($maildir_old) && $maildir_old != Settings::Get('system.vmail_homedir') && substr($maildir_old, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir_old) && fileowner($maildir_old) == Settings::Get('system.vmail_uid') && filegroup($maildir_old) == Settings::Get('system.vmail_gid')) {
-						FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
-						// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
-						$return = false;
-						FileDir::safe_exec('rm -rf ' . escapeshellarg($maildir_old), $return, [
-							'|',
-							'&',
-							'`',
-							'$',
-							'~',
-							'?'
-						]);
-					}
 				}
 			}
 		}
