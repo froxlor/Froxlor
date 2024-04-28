@@ -73,7 +73,6 @@ export default function () {
 			$('#section_b').hide();
 			$('#section_bssl').hide();
 			$('#section_c').hide();
-			$('#section_d').hide();
 		}
 
 		/**
@@ -85,13 +84,11 @@ export default function () {
 				$('#section_b').hide();
 				$('#section_bssl').hide();
 				$('#section_c').hide();
-				$('#section_d').hide();
 			} else {
 				// show sections
 				$('#section_b').show();
 				$('#section_bssl').show();
 				$('#section_c').show();
-				$('#section_d').show();
 			}
 		})
 
