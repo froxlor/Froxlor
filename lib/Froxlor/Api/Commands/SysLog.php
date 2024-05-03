@@ -90,6 +90,8 @@ class SysLog extends ApiCommand implements ResourceEntity
 		}
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			// clean log-text
+			$row['text'] = preg_replace("/[^\w @#\"':.()\[\]+\-_\/\\\!]/i", "_", $row['text']);
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list log-entries");

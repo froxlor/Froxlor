@@ -272,7 +272,7 @@ if ($action == '2fa_entercode') {
 				$rstlog = FroxlorLogger::getInstanceOf([
 					'loginname' => $_SERVER['REMOTE_ADDR']
 				]);
-				$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
+				$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "Unknown user tried to login.");
 
 				Response::redirectTo('index.php', [
 					'showmessage' => '2'
@@ -334,7 +334,7 @@ if ($action == '2fa_entercode') {
 			$rstlog = FroxlorLogger::getInstanceOf([
 				'loginname' => $_SERVER['REMOTE_ADDR']
 			]);
-			$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
+			$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User tried to login with wrong password.");
 
 			unset($userinfo);
 			Response::redirectTo('index.php', [
@@ -653,7 +653,7 @@ if ($action == 'forgotpwd') {
 							$rstlog = FroxlorLogger::getInstanceOf([
 								'loginname' => 'password_reset'
 							]);
-							$rstlog->logAction(FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
+							$rstlog->logAction(FroxlorLogger::USR_ACTION, LOG_WARNING, "Unknown user requested to set a new password, but was not found in database!");
 							$message = lng('login.usernotfound');
 						}
 
