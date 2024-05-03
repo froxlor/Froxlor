@@ -39,16 +39,7 @@ jobs:
       - name: Wait for database
         run: sleep 15
 
-      - name: Setup database (8.0)
-        if: matrix.mysql-version == '8.0'
-        run: |
-          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED WITH mysql_native_password BY 'fr0xl0r.TravisCI';"
-          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
-          php -r "echo include('install/froxlor.sql.php');" > /tmp/froxlor.sql
-          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < /tmp/froxlor.sql
-
-      - name: Setup database (5.7)
-        if: matrix.mysql-version == '5.7'
+      - name: Setup database
         run: |
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
