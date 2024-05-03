@@ -82,7 +82,8 @@ class DbManagerMySQL
 	 */
 	public function grantPrivilegesTo(string $username, $password, string $access_host = null, bool $p_encrypted = false, bool $update = false, bool $grant_access_prefix = false)
 	{
-		$pwd_plugin = 'mysql_native_password';
+		// this is required for mysql8
+		$pwd_plugin = 'caching_sha2_password';
 		if (is_array($password) && count($password) == 2) {
 			$pwd_plugin = $password['plugin'];
 			$password = $password['password'];
@@ -278,7 +279,7 @@ class DbManagerMySQL
 				if (!isset($allsqlusers[$row['User']]) || !is_array($allsqlusers[$row['User']])) {
 					$allsqlusers[$row['User']] = [
 						'password' => $row['Password'] ?? $row['authentication_string'],
-						'plugin' => $row['plugin'] ?? 'mysql_native_password',
+						'plugin' => $row['plugin'] ?? 'caching_sha2_password',
 						'hosts' => []
 					];
 				}

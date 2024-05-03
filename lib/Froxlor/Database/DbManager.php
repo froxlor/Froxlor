@@ -110,7 +110,7 @@ class DbManager
 			$users = $dbm->getManager()->getAllSqlUsers(false);
 
 			foreach ($databases[$dbserver['dbserver']] as $username) {
-				if (isset($users[$username]) && is_array($users[$username]) && isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
+				if (isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
 
 					$password = [
 						'password' => $users[$username]['password'],
