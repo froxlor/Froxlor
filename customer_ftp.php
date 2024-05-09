@@ -87,9 +87,9 @@ if ($page == 'overview' || $page == 'accounts') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Ftps::getLocal($userinfo, $_POST)->delete();
+					Ftps::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -108,9 +108,9 @@ if ($page == 'overview' || $page == 'accounts') {
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Ftps::getLocal($userinfo, $_POST)->add();
+					Ftps::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -164,9 +164,9 @@ if ($page == 'overview' || $page == 'accounts') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Ftps::getLocal($userinfo, $_POST)->update();
+					Ftps::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

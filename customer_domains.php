@@ -106,9 +106,9 @@ if ($page == 'overview' || $page == 'domains') {
 		]);
 
 		if (isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->delete();
+					SubDomains::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -127,9 +127,9 @@ if ($page == 'overview' || $page == 'domains') {
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->add();
+					SubDomains::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -248,9 +248,9 @@ if ($page == 'overview' || $page == 'domains') {
 				Response::standardError('domaincannotbeedited', $result['domain']);
 			}
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->update();
+					SubDomains::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -395,8 +395,8 @@ if ($page == 'overview' || $page == 'domains') {
 			Response::standardError('domains_canteditdomain');
 		}
 	} elseif ($action == 'jqSpeciallogfileNote') {
-		$domainid = intval($_POST['id']);
-		$newval = intval($_POST['newval']);
+		$domainid = intval(Request::post('id'));
+		$newval = intval(Request::post('newval'));
 		try {
 			$json_result = SubDomains::getLocal($userinfo, [
 				'id' => $domainid

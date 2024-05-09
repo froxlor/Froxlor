@@ -361,7 +361,7 @@ if (CurrentUser::hasSession()) {
 	UI::twig()->addGlobal('csrf_token', $csrf_token);
 	// check if csrf token is valid
 	if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH', 'DELETE'])) {
-		$current_token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+		$current_token = Request::post('csrf_token', $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null);
 		if ($current_token != CurrentUser::getField('csrf_token')) {
 			http_response_code(403);
 			Response::dynamicError('CSRF validation failed');

@@ -62,9 +62,9 @@ if ($page == 'overview') {
 
 	if ($action == 'add') {
 		if ((int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					PhpSettings::getLocal($userinfo, $_POST)->add();
+					PhpSettings::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -114,7 +114,7 @@ if ($page == 'overview') {
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					PhpSettings::getLocal($userinfo, [
 						'id' => $id
@@ -148,9 +148,9 @@ if ($page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					PhpSettings::getLocal($userinfo, $_POST)->update();
+					PhpSettings::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -200,9 +200,9 @@ if ($page == 'overview') {
 
 	if ($action == 'add') {
 		if ((int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					FpmDaemons::getLocal($userinfo, $_POST)->add();
+					FpmDaemons::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -239,9 +239,9 @@ if ($page == 'overview') {
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					FpmDaemons::getLocal($userinfo, $_POST)->delete();
+					FpmDaemons::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -271,9 +271,9 @@ if ($page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['change_serversettings'] == 1) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					FpmDaemons::getLocal($userinfo, $_POST)->update();
+					FpmDaemons::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

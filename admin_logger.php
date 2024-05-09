@@ -31,6 +31,7 @@ use Froxlor\UI\Collection;
 use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
 if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
@@ -55,7 +56,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			]
 		]);
 	} elseif ($action == 'truncate') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
 				SysLog::getLocal($userinfo, [
 					'min_to_keep' => 10

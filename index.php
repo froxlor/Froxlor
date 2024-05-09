@@ -71,7 +71,7 @@ if ($action == '2fa_entercode') {
 		Response::redirectTo('index.php');
 		exit();
 	}
-	$code = isset($_POST['2fa_code']) ? $_POST['2fa_code'] : null;
+	$code = Request::post('2fa_code');
 	// verify entered code
 	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 	// get user-data
@@ -162,8 +162,8 @@ if ($action == '2fa_entercode') {
 	exit();
 } elseif ($action == 'login') {
 	if (!empty($_POST)) {
-		$loginname = Validate::validate($_POST['loginname'], 'loginname');
-		$password = Validate::validate($_POST['password'], 'password');
+		$loginname = Validate::validate(Request::post('loginname'), 'loginname');
+		$password = Validate::validate(Request::post('password'), 'password');
 
 		$select_additional = '';
 		if (Settings::Get('panel.db_version') >= 202312230) {
@@ -485,8 +485,8 @@ if ($action == 'forgotpwd') {
 	$message = '';
 
 	if (!empty($_POST)) {
-		$loginname = Validate::validate($_POST['loginname'], 'loginname');
-		$email = Validate::validateEmail($_POST['loginemail']);
+		$loginname = Validate::validate(Request::post('loginname'), 'loginname');
+		$email = Validate::validateEmail(Request::post('loginemail'));
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `customernumber`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");
@@ -700,8 +700,8 @@ if ($action == 'resetpwd') {
 
 				if ($result !== false) {
 					try {
-						$new_password = Crypt::validatePassword($_POST['new_password'], true);
-						$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], true);
+						$new_password = Crypt::validatePassword(Request::post('new_password'), true);
+						$new_password_confirm = Crypt::validatePassword(Request::post('new_password_confirm'), true);
 					} catch (Exception $e) {
 						$message = $e->getMessage();
 					}

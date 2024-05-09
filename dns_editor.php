@@ -30,6 +30,7 @@ if (!defined('AREA')) {
 
 use Froxlor\Api\Commands\DomainZones;
 use Froxlor\Dns\Dns;
+use Froxlor\Settings;
 use Froxlor\UI\Collection;
 use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
@@ -42,11 +43,11 @@ use Froxlor\UI\Response;
 
 $domain_id = (int)Request::any('domain_id');
 
-$record = isset($_POST['dns_record']) ? trim($_POST['dns_record']) : null;
-$type = isset($_POST['dns_type']) ? $_POST['dns_type'] : 'A';
-$prio = isset($_POST['dns_mxp']) ? (int)$_POST['dns_mxp'] : null;
-$content = isset($_POST['dns_content']) ? trim($_POST['dns_content']) : null;
-$ttl = isset($_POST['dns_ttl']) ? (int)$_POST['dns_ttl'] : 18000;
+$record = Request::post('dns_record', null);
+$type = Request::post('dns_type', 'A');
+$prio = Request::post('dns_mxp');
+$content = Request::post('dns_content');
+$ttl = (int)Request::post('dns_ttl', Settings::get('system.defaultttl'));
 
 // get domain-name
 $domain = Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
@@ -82,9 +83,9 @@ if ($action == 'add_record' && !empty($_POST)) {
 		'page' => $page,
 		'domain_id' => $domain_id
 	]);
-} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && !empty($_POST)) {
-	$entry_id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-	$domain_id = isset($_POST['domain_id']) ? (int)$_POST['domain_id'] : 0;
+} elseif (Request::post('send') == 'send' && $action == 'deletesure' && !empty($_POST)) {
+	$entry_id = (int)Request::post('id', 0);
+	$domain_id = (int)Request::post('domain_id', 0);
 	// remove entry
 	if ($entry_id > 0 && $domain_id > 0) {
 		try {

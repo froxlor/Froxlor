@@ -58,6 +58,7 @@ final class UpdateCommand extends CliCommand
 		if ($input->getOption('database')) {
 			$result = $this->validateRequirements($output, true);
 			if ($result == self::SUCCESS) {
+				require Froxlor::getInstallDir() . '/lib/functions.php';
 				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
 					$output->writeln('<info>' . lng('updates.dbupdate_required') . '</>');
 					if ($input->getOption('check-only')) {

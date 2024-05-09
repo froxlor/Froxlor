@@ -123,9 +123,9 @@ if ($page == 'overview' || $page == 'mysqls') {
 				$result['dbserver'] = 0;
 			}
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Mysqls::getLocal($userinfo, $_POST)->delete();
+					Mysqls::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -146,9 +146,9 @@ if ($page == 'overview' || $page == 'mysqls') {
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Mysqls::getLocal($userinfo, $_POST)->add();
+					Mysqls::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -186,9 +186,9 @@ if ($page == 'overview' || $page == 'mysqls') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['databasename']) && $result['databasename'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					$json_result = Mysqls::getLocal($userinfo, $_POST)->update();
+					$json_result = Mysqls::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -223,9 +223,9 @@ if ($page == 'overview' || $page == 'mysqls') {
 			Response::dynamicError('No permission');
 		}
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 
-			$new_password = Crypt::validatePassword($_POST['mysql_password']);
+			$new_password = Crypt::validatePassword(Request::post('mysql_password'));
 			foreach ($allowed_mysqlservers as $dbserver) {
 				// require privileged access for target db-server
 				Database::needRoot(true, $dbserver, false);

@@ -68,9 +68,9 @@ if (($page == 'cronjobs' || $page == 'overview') && $userinfo['change_serversett
 		}
 		$result = json_decode($json_result, true)['data'];
 		if ($result['cronfile'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Cronjobs::getLocal($userinfo, $_POST)->update();
+					Cronjobs::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

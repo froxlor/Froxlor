@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Ubuntu" codename="noble"
+	<distribution name="Ubuntu" codename="Noble"
 		version="24.04" defaulteditor="/bin/nano">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>

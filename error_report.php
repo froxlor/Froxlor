@@ -77,7 +77,7 @@ if (!empty($errid)) {
 		$mail_html = nl2br($mail_body);
 
 		// send actual report to dev-team
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			// send mail and say thanks
 			$_mailerror = false;
 			try {

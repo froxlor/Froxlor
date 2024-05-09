@@ -70,7 +70,7 @@ if (($page == 'mysqlserver' || $page == 'overview') && $userinfo['change_servers
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['id']) && $result['id'] == $id) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					MysqlServer::getLocal($userinfo, [
 						'id' => $id
@@ -91,9 +91,9 @@ if (($page == 'mysqlserver' || $page == 'overview') && $userinfo['change_servers
 			}
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				MysqlServer::getLocal($userinfo, $_POST)->add();
+				MysqlServer::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -119,9 +119,9 @@ if (($page == 'mysqlserver' || $page == 'overview') && $userinfo['change_servers
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['id']) && $result['id'] == $id) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					MysqlServer::getLocal($userinfo, $_POST)->update();
+					MysqlServer::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

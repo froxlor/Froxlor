@@ -30,6 +30,7 @@ use Froxlor\Api\Commands\EmailAccounts;
 use Froxlor\Api\Commands\EmailDomains;
 use Froxlor\Api\Commands\EmailForwarders;
 use Froxlor\Api\Commands\Emails;
+use Froxlor\Cron\Mail\Rspamd;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
@@ -160,11 +161,11 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['email']) && $result['email'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					Emails::getLocal($userinfo, [
 						'id' => $id,
-						'delete_userfiles' => ($_POST['delete_userfiles'] ?? 0)
+						'delete_userfiles' => Request::post('delete_userfiles', 0)
 					])->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
@@ -187,9 +188,9 @@ if ($page == 'email_domain') {
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					$json_result = Emails::getLocal($userinfo, $_POST)->add();
+					$json_result = Emails::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -244,12 +245,12 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['email']) && $result['email'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					Emails::getLocal($userinfo, [
 						'id' => $id,
-						'spam_tag_level' => $_POST['spam_tag_level'] ?? \Froxlor\Cron\Mail\Rspamd::DEFAULT_MARK_LVL,
-						'spam_kill_level' => $_POST['spam_kill_level'] ?? \Froxlor\Cron\Mail\Rspamd::DEFAULT_REJECT_LVL
+						'spam_tag_level' => Request::post('spam_tag_level', Rspamd::DEFAULT_MARK_LVL),
+						'spam_kill_level' => Request::post('spam_kill_level', Rspamd::DEFAULT_REJECT_LVL)
 					])->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
@@ -386,9 +387,9 @@ if ($page == 'email_domain') {
 			}
 			$result = json_decode($json_result, true)['data'];
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->add();
+					EmailAccounts::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -457,9 +458,9 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->update();
+					EmailAccounts::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -516,9 +517,9 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->update();
+					EmailAccounts::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -575,9 +576,9 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->delete();
+					EmailAccounts::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -611,9 +612,9 @@ if ($page == 'email_domain') {
 			$result = json_decode($json_result, true)['data'];
 
 			if (isset($result['email']) && $result['email'] != '') {
-				if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				if (Request::post('send') == 'send') {
 					try {
-						EmailForwarders::getLocal($userinfo, $_POST)->add();
+						EmailForwarders::getLocal($userinfo, Request::postAll())->add();
 					} catch (Exception $e) {
 						Response::dynamicError($e->getMessage());
 					}
@@ -673,22 +674,15 @@ if ($page == 'email_domain') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['destination']) && $result['destination'] != '') {
-			if (isset($_POST['forwarderid'])) {
-				$forwarderid = intval($_POST['forwarderid']);
-			} elseif (isset($_GET['forwarderid'])) {
-				$forwarderid = intval($_GET['forwarderid']);
-			} else {
-				$forwarderid = 0;
-			}
-
+			$forwarderid = Request::any('forwarderid', 0);
 			$result['destination'] = explode(' ', $result['destination']);
 
 			if (isset($result['destination'][$forwarderid]) && $result['email'] != $result['destination'][$forwarderid]) {
 				$forwarder = $result['destination'][$forwarderid];
 
-				if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				if (Request::post('send') == 'send') {
 					try {
-						EmailForwarders::getLocal($userinfo, $_POST)->delete();
+						EmailForwarders::getLocal($userinfo, Request::postAll())->delete();
 					} catch (Exception $e) {
 						Response::dynamicError($e->getMessage());
 					}

@@ -97,9 +97,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					DirProtections::getLocal($userinfo, $_POST)->delete();
+					DirProtections::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -119,9 +119,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			}
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				DirProtections::getLocal($userinfo, $_POST)->add();
+				DirProtections::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -149,9 +149,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					DirProtections::getLocal($userinfo, $_POST)->update();
+					DirProtections::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -222,9 +222,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					DirOptions::getLocal($userinfo, $_POST)->delete();
+					DirOptions::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -240,9 +240,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			}
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				DirOptions::getLocal($userinfo, $_POST)->add();
+				DirOptions::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -271,9 +271,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		$result = json_decode($json_result, true)['data'];
 
 		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == $userinfo['customerid'])) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					DirOptions::getLocal($userinfo, $_POST)->update();
+					DirOptions::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -306,10 +306,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 	if (Settings::Get('system.exportenabled') == 1) {
 		if ($action == 'abort') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::export - aborted scheduled data export job");
 				try {
-					DataDump::getLocal($userinfo, $_POST)->delete();
+					DataDump::getLocal($userinfo, Request::postAll())->delete();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -336,9 +336,9 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				Response::dynamicError($e->getMessage());
 			}
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					DataDump::getLocal($userinfo, $_POST)->add();
+					DataDump::getLocal($userinfo, Request::postAll())->add();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

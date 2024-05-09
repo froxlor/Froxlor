@@ -38,6 +38,7 @@ use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\System\Crypt;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
 
@@ -141,16 +142,16 @@ if ($page == 'overview') {
 	$languages = Language::getLanguages();
 
 	if (!empty($_POST)) {
-		if ($_POST['send'] == 'changepassword') {
-			$old_password = Validate::validate($_POST['old_password'], 'old password');
+		if (Request::post('send') == 'changepassword') {
+			$old_password = Validate::validate(Request::post('old_password'), 'old password');
 
 			if (!Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 				Response::standardError('oldpasswordnotcorrect');
 			}
 
 			try {
-				$new_password = Crypt::validatePassword($_POST['new_password'], 'new password');
-				$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+				$new_password = Crypt::validatePassword(Request::post('new_password'), 'new password');
+				$new_password_confirm = Crypt::validatePassword(Request::post('new_password_confirm'), 'new password confirm');
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -185,7 +186,7 @@ if ($page == 'overview') {
 				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed password');
 
 				// Update ftp password
-				if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
+				if (Request::post('change_main_ftp') == 'true') {
 					$cryptPassword = Crypt::makeCryptPassword($new_password);
 					$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 					SET `password` = :password
@@ -201,7 +202,7 @@ if ($page == 'overview') {
 				}
 
 				// Update statistics password
-				if (isset($_POST['change_stats']) && $_POST['change_stats'] == 'true') {
+				if (Request::post('change_stats') == 'true') {
 					$new_stats_password = Crypt::makeCryptPassword($new_password, true);
 
 					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
@@ -218,7 +219,7 @@ if ($page == 'overview') {
 				}
 
 				// Update global myqsl user password
-				if ($userinfo['mysqls'] != 0 && isset($_POST['change_global_mysql']) && $_POST['change_global_mysql'] == 'true') {
+				if ($userinfo['mysqls'] != 0 && Request::post('change_global_mysql') == 'true') {
 					$allowed_mysqlservers = json_decode($userinfo['allowed_mysqlserver'] ?? '[]', true);
 					foreach ($allowed_mysqlservers as $dbserver) {
 						// require privileged access for target db-server
@@ -235,9 +236,9 @@ if ($page == 'overview') {
 
 				Response::redirectTo($filename);
 			}
-		} elseif ($_POST['send'] == 'changetheme') {
+		} elseif (Request::post('send') == 'changetheme') {
 			if (Settings::Get('panel.allow_theme_change_customer') == 1) {
-				$theme = Validate::validate($_POST['theme'], 'theme');
+				$theme = Validate::validate(Request::post('theme'), 'theme');
 				try {
 					Customers::getLocal($userinfo, [
 						'id' => $userinfo['customerid'],
@@ -250,8 +251,8 @@ if ($page == 'overview') {
 				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 			}
 			Response::redirectTo($filename);
-		} elseif ($_POST['send'] == 'changelanguage') {
-			$def_language = Validate::validate($_POST['def_language'], 'default language');
+		} elseif (Request::post('send') == 'changelanguage') {
+			$def_language = Validate::validate(Request::post('def_language'), 'default language');
 			if (isset($languages[$def_language])) {
 				try {
 					Customers::getLocal($userinfo, [

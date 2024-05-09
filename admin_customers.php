@@ -119,7 +119,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
 				$json_result = Customers::getLocal($userinfo, [
 					'id' => $id
@@ -147,11 +147,11 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
 				$json_result = Customers::getLocal($userinfo, [
 					'id' => $id,
-					'delete_userfiles' => (isset($_POST['delete_userfiles']) ? (int)$_POST['delete_userfiles'] : 0)
+					'delete_userfiles' => Request::post('delete_userfiles', 0)
 				])->delete();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
@@ -167,9 +167,9 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 			], $result['loginname']);
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				Customers::getLocal($userinfo, $_POST)->add();
+				Customers::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -243,9 +243,9 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Customers::getLocal($userinfo, $_POST)->update();
+					Customers::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

@@ -106,7 +106,7 @@ if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettin
 				Response::standardError('youcantdeleteyourself');
 			}
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				Admins::getLocal($userinfo, [
 					'id' => $id
 				])->delete();
@@ -122,9 +122,9 @@ if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettin
 			}
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				Admins::getLocal($userinfo, $_POST)->add();
+				Admins::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -159,9 +159,9 @@ if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettin
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					Admins::getLocal($userinfo, $_POST)->update();
+					Admins::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

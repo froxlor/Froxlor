@@ -33,6 +33,7 @@
 
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\UI\HTML;
 
@@ -42,7 +43,7 @@ require __DIR__ . '/lib/init.php';
 $horizontal_bar_size = 950; // 1280px window width
 
 if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['change_serversettings'] == '1') {
-	if ($_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		apcu_clear_cache();
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
 		header('Location: ' . $linker->getLink([

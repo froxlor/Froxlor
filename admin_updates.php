@@ -34,6 +34,7 @@ use Froxlor\Install\Update;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\User;
 
@@ -48,8 +49,8 @@ if ($page == 'overview') {
 		$successful_update = false;
 		$message = '';
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			if ((isset($_POST['update_preconfig']) && isset($_POST['update_changesagreed']) && intval($_POST['update_changesagreed']) != 0) || !isset($_POST['update_preconfig'])) {
+		if (Request::post('send') == 'send') {
+			if ((!empty(Request::post('update_preconfig')) && intval(Request::post('update_changesagreed', 0)) != 0) || empty(Request::post('update_preconfig'))) {
 				include_once Froxlor::getInstallDir() . 'install/updatesql.php';
 
 				User::updateCounters();

@@ -32,6 +32,7 @@ use Froxlor\FileDir;
 use Froxlor\Install\AutoUpdate;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
 if ($page != 'error') {
@@ -110,7 +111,7 @@ if ($page == 'overview') {
 } // download the new archive
 elseif ($page == 'getdownload') {
 	// retrieve the new version from the form
-	$newversion = isset($_POST['newversion']) ? $_POST['newversion'] : null;
+	$newversion = Request::post('newversion');
 
 	$result = 6;
 	// valid?
@@ -130,8 +131,8 @@ elseif ($page == 'getdownload') {
 	]);
 } // extract and install new version
 elseif ($page == 'extract') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$toExtract = isset($_POST['archive']) ? $_POST['archive'] : null;
+	if (Request::post('send') == 'send') {
+		$toExtract = Request::post('archive');
 		$localArchive = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/updates/' . $toExtract);
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . Froxlor::getInstallDir());
 		$result = AutoUpdate::extractZip($localArchive);
@@ -145,7 +146,7 @@ elseif ($page == 'extract') {
 		// redirect to update-page
 		Response::redirectTo('admin_updates.php');
 	} else {
-		$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
+		$toExtract = Request::get('archive');
 		$localArchive = FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/updates/' . $toExtract);
 	}
 
@@ -192,7 +193,7 @@ elseif ($page == 'extract') {
 } // display error
 elseif ($page == 'error') {
 	// retrieve error-number via url-parameter
-	$errno = isset($_GET['errno']) ? (int)$_GET['errno'] : 0;
+	$errno = Request::get('errno', 0);
 
 	// 2 = no Zlib
 	// 3 = custom version detected
