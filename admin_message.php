@@ -107,7 +107,7 @@ if ($page == 'message') {
 			}
 		}
 	} elseif ($action == 'showsuccess') {
-		$sentitems = isset($_GET['sentitems']) ? (int)$_GET['sentitems'] : 0;
+		$sentitems = Request::get('sentitems', 0);
 
 		if ($sentitems == 0) {
 			$note_type = 'info';

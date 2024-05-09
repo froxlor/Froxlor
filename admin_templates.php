@@ -371,7 +371,7 @@ if ($action == '') {
 		Response::redirectTo($filename, [
 			'page' => $page
 		]);
-	} elseif (!isset($_GET['files'])) {
+	} elseif (empty(Request::get('files'))) {
 		// email templates
 		$add = false;
 		$language_options = [];

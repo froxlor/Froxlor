@@ -98,7 +98,7 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 
 			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
 
-			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+			$target = Request::get('target', 'index');
 			$redirect = "customer_" . $target . ".php";
 			if (!file_exists(Froxlor::getInstallDir() . "/" . $redirect)) {
 				$redirect = "customer_index.php";

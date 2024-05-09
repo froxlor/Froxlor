@@ -55,7 +55,7 @@ if ($action == 'logout') {
 		$result = $result['switched_user'];
 		session_regenerate_id(true);
 		CurrentUser::setData($result);
-		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+		$target = Request::get('target', 'index');
 		$redirect = "admin_" . $target . ".php";
 		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
 			$redirect = "admin_index.php";
@@ -111,7 +111,7 @@ if ($page == 'overview') {
 
 	$overview['number_domains'] = $number_domains['number_domains'];
 
-	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes') || (isset($lookfornewversion) && $lookfornewversion == 'yes')) {
+	if (Request::get('lookfornewversion') == 'yes' || (isset($lookfornewversion) && $lookfornewversion == 'yes')) {
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->checkUpdate();
 		} catch (Exception $e) {

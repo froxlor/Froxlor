@@ -48,7 +48,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	Settings::loadSettingsInto($settings_data);
 
 	if (Request::post('send') == 'send') {
-		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+		$_part = Request::get('part', '');
 		if ($_part == '') {
 			$_part = Request::post('part', '');
 		}
@@ -97,7 +97,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			Response::dynamicError($e->getMessage(), $e->getCode());
 		}
 	} else {
-		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+		$_part = Request::get('part', '');
 		if ($_part == '') {
 			$_part = Request::post('part', '');
 		}
@@ -235,7 +235,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$integrity = new IntegrityCheck();
 	if (Request::post('send') == 'send') {
 		$integrity->fixAll();
-	} elseif (isset($_GET['action']) && $_GET['action'] == "fix") {
+	} elseif (Request::get('action') == "fix") {
 		HTML::askYesNo('admin_integritycheck_reallyfix', $filename, [
 			'page' => $page
 		]);
@@ -273,7 +273,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		Response::standardError('jsonextensionnotfound');
 	}
 
-	if (isset($_GET['action']) && $_GET['action'] == "export") {
+	if (Request::get('action') == "export") {
 		// export
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
@@ -285,7 +285,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		header('Content-type: application/json');
 		echo $json_export;
 		exit();
-	} elseif (isset($_GET['action']) && $_GET['action'] == "import") {
+	} elseif (Request::get('action') == "import") {
 		// import
 		if (Request::post('send') == 'send') {
 			// get uploaded file

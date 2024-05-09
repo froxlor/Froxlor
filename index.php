@@ -54,7 +54,7 @@ if ($action == '2fa_entercode') {
 		Response::redirectTo('index.php');
 		exit();
 	}
-	$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
+	$smessage = (int)Request::get('showmessage', 0);
 	$message = "";
 	if ($smessage > 0) {
 		$message = lng('error.2fa_wrongcode');
@@ -412,7 +412,7 @@ if ($action == '2fa_entercode') {
 		}
 		exit();
 	} else {
-		$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
+		$smessage = (int)Request::get('showmessage', 0);
 		$message = '';
 		$successmessage = '';
 
@@ -683,9 +683,9 @@ if ($action == 'resetpwd') {
 		"oldest" => time() - 86400
 	]);
 
-	if (isset($_GET['resetcode']) && strlen($_GET['resetcode']) == 50) {
+	$activationcode = Request::get('resetcode');
+	if (!empty($activationcode) && strlen($activationcode) == 50) {
 		// Check if activation code is valid
-		$activationcode = $_GET['resetcode'];
 		$timestamp = substr($activationcode, 15, 10);
 		$third = substr($activationcode, 25, 15);
 		$check = substr($activationcode, 40, 10);

@@ -56,7 +56,7 @@ if ($action == 'logout') {
 		$result = $result['switched_user'];
 		session_regenerate_id(true);
 		CurrentUser::setData($result);
-		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+		$target = Request::get('target', 'index');
 		$redirect = "admin_" . $target . ".php";
 		if (!file_exists(Froxlor::getInstallDir() . "/" . $redirect)) {
 			$redirect = "admin_index.php";

@@ -72,7 +72,7 @@ if ($action == 'add_record' && !empty($_POST)) {
 		$errors = str_replace("\n", "<br>", $e->getMessage());
 	}
 } elseif ($action == 'delete') {
-	$entry_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+	$entry_id = (int)Request::get('id', 0);
 	HTML::askYesNo('dnsentry_reallydelete', $filename, [
 		'id' => $entry_id,
 		'domain_id' => $domain_id,
