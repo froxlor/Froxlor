@@ -101,6 +101,9 @@ class Request
 			unset($value);
 
 			$antiXss = new AntiXSS();
+			$antiXss->addNeverAllowedRegex([
+				'{{(.*)}}' => ''
+			]);
 
 			// check $_GET
 			PhpHelper::cleanGlobal($_GET, $antiXss);
