@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Ubuntu" codename="noble"
+	<distribution name="Ubuntu" codename="Noble"
 		version="24.04" defaulteditor="/bin/nano">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
@@ -167,8 +167,9 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 					<file name="/etc/nginx/nginx.conf" backup="true">
 						<content><![CDATA[
 user www-data;
-worker_processes 4;
+worker_processes auto;
 pid /var/run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
 
 events {
 	worker_connections 768;
