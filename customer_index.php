@@ -228,7 +228,12 @@ if ($page == 'overview') {
 						$dbm = new DbManager($log);
 						// give permission to the user on every access-host we have
 						foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-							$dbm->getManager()->grantPrivilegesTo($userinfo['loginname'], $new_password, $mysql_access_host, false, true);
+							if ($dbm->getManager()->userExistsOnHost($userinfo['loginname'], $mysql_access_host)) {
+								$dbm->getManager()->grantPrivilegesTo($userinfo['loginname'], $new_password, $mysql_access_host, false, true);
+							} else {
+								// create global mysql user if not exists
+								$dbm->getManager()->grantPrivilegesTo($userinfo['loginname'], $new_password, $mysql_access_host, false, false, true);
+							}
 						}
 						$dbm->getManager()->flushPrivileges();
 					}
