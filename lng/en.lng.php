@@ -1952,6 +1952,7 @@ Yours sincerely, your administrator',
 		],
 		'passwordcryptfunc' => [
 			'title' => 'Choose which password-crypt method is to be used',
+			'description' => 'Choose which password-crypt method is to be used. If you change this setting, only new passwords will be encrypted with the new method. Existing passwords will not be changed.',
 		],
 		'systemdefault' => 'System default',
 		'panel_allow_theme_change_admin' => 'Allow admins to change the theme',

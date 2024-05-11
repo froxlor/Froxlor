@@ -1830,6 +1830,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'passwordcryptfunc' => [
 			'title' => 'Wählen Sie die zu verwendende Passwort-Verschlüsselungsmethode',
+			'description' => 'Wählen Sie, welche Methode zur Verschlüsselung von Kennwörtern verwendet werden soll. Wenn Sie diese Einstellung ändern, werden nur neue Kennwörter mit der neuen Methode verschlüsselt. Bestehende Passwörter werden nicht geändert.'
 		],
 		'systemdefault' => 'Systemstandard',
 		'panel_allow_theme_change_admin' => 'Erlaube Admins das Theme zu wechseln',

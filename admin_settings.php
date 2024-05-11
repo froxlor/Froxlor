@@ -69,7 +69,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		// check if the session timeout is too low #815
-		if (Request::post('session_sessiontimeout', 0) < 60) {
+		if (!empty(Request::post('session_sessiontimeout')) &&  intval(Request::post('session_sessiontimeout', 0)) < 60) {
 			Response::standardError(['session_timeout', 'session_timeout_desc']);
 		}
 

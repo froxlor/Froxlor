@@ -43,7 +43,7 @@ use Froxlor\UI\Response;
 
 $domain_id = (int)Request::any('domain_id');
 
-$record = Request::post('dns_record', null);
+$record = Request::post('dns_record');
 $type = Request::post('dns_type', 'A');
 $prio = Request::post('dns_mxp');
 $content = Request::post('dns_content');
