@@ -3678,6 +3678,8 @@ ModuleControlsACLs lsmod allow user *
 LoadModule mod_ctrls_admin.c
 LoadModule mod_tls.c
 
+LoadModule mod_ident.c
+
 # Install one of proftpd-mod-mysql, proftpd-mod-pgsql or any other
 # SQL backend engine to use this module and the required backend.
 # This module must be mandatory loaded before anyone of
@@ -4286,7 +4288,7 @@ aliases:     files
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
 					<install><![CDATA[apt-get install cron gnupg]]></install>
-					<command><![CDATA[ln -s <BASE_PATH>bin/froxlor-cli /usr/local/bin/froxlor-cli]]></command>
+					<command><![CDATA[[ ! -e /usr/local/bin/froxlor-cli ] && ln -s <BASE_PATH>bin/froxlor-cli /usr/local/bin/froxlor-cli]]></command>
 					<command><![CDATA[/usr/bin/php <BASE_PATH>bin/froxlor-cli froxlor:cron --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>

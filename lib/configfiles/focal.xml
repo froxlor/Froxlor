@@ -4289,7 +4289,7 @@ aliases:     files
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
 					<install><![CDATA[apt-get install cron gnupg]]></install>
-					<command><![CDATA[ln -s <BASE_PATH>bin/froxlor-cli /usr/local/bin/froxlor-cli]]></command>
+					<command><![CDATA[[ ! -e /usr/local/bin/froxlor-cli ] && ln -s <BASE_PATH>bin/froxlor-cli /usr/local/bin/froxlor-cli]]></command>
 					<command><![CDATA[/usr/bin/php <BASE_PATH>bin/froxlor-cli froxlor:cron --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>

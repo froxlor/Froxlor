@@ -55,6 +55,10 @@ if (Froxlor::isFroxlorVersion('2.1.9')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_domains';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_algorithm';");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_notes';");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_add_adsp';");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_dkimkeys';");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_servicetype';");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'dkim' AND `varname` = 'dkim_add_adsppolicy';");
 	Update::lastStepStatus(0);
 
 	if ($antispam_activated) {
