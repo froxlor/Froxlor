@@ -193,7 +193,8 @@ class Ajax
 		UI::initTwig();
 
 		try {
-			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($this->userinfo)->checkUpdate();
+			$force = Request::get('force', 0);
+			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($this->userinfo, ['force' => $force])->checkUpdate();
 			$result = json_decode($json_result, true)['data'];
 			$result['full_version'] = Froxlor::getFullVersion();
 			$result['dbversion'] = Froxlor::DBVERSION;

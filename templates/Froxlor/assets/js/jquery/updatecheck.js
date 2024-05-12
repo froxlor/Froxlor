@@ -4,8 +4,17 @@ export default function () {
 		 * updatecheck
 		 */
 		if (document.getElementById('updatecheck')) {
+			runCheck();
+		}
+
+		$('#forceUpdateCheck').on('click', function () {
+			runCheck(1);
+		});
+
+		function runCheck(force = 0)
+		{
 			$.ajax({
-				url: "lib/ajax.php?action=updatecheck&theme=" + window.$theme,
+				url: "lib/ajax.php?action=updatecheck&theme=" + window.$theme + "&force=" + force,
 				type: "GET",
 				success: function (data) {
 					$("#updatecheck").html(data);
