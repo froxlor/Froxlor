@@ -7,10 +7,6 @@ export default function () {
 			runCheck();
 		}
 
-		$('#forceUpdateCheck').on('click', function () {
-			runCheck(1);
-		});
-
 		function runCheck(force = 0)
 		{
 			$.ajax({
@@ -18,7 +14,14 @@ export default function () {
 				type: "GET",
 				success: function (data) {
 					$("#updatecheck").html(data);
-					new bootstrap.Popover(document.getElementById('ucheck'));
+					const po = new bootstrap.Popover(document.getElementById('ucheck'));
+					const myPopoverTrigger = document.getElementById('ucheck')
+					myPopoverTrigger.addEventListener('shown.bs.popover', () => {
+						$('#forceUpdateCheck').on('click', function () {
+							runCheck(1);
+							po.hide();
+						});
+					})
 				},
 				error: function (request, status, error) {
 					console.log(request, status, error)
