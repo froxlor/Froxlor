@@ -75,7 +75,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		];
 
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/extras/',
+			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/extras/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
@@ -200,7 +200,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		];
 
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/extras/',
+			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/extras/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
@@ -349,7 +349,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 				$actions_links = [
 					[
-						'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/extras/',
+						'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/extras/',
 						'target' => '_blank',
 						'icon' => 'fa-solid fa-circle-info',
 						'class' => 'btn-outline-secondary'

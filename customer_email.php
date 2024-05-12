@@ -77,7 +77,7 @@ if ($page == 'overview' || $page == 'emails') {
 		}
 
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/emails/',
+			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/emails/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
@@ -139,7 +139,7 @@ if ($page == 'email_domain') {
 			];
 		}
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/emails/',
+			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/emails/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'

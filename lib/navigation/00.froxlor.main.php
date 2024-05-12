@@ -161,13 +161,13 @@ return [
 			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'misc.documentation')),
 			'elements' => [
 				[
-					'url' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/',
+					'url' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/',
 					'label' => lng('admin.userguide'),
 					'new_window' => true,
 					'is_external' => true,
 				],
 				[
-					'url' => \Froxlor\Froxlor::DOCS_URL . 'api-guide/',
+					'url' => \Froxlor\Froxlor::getDocsUrl() . 'api-guide/',
 					'label' => lng('admin.apiguide'),
 					'new_window' => true,
 					'show_element' => Settings::Get('api.enabled') == 1 && CurrentUser::getField('api_allowed') == 1,
@@ -348,13 +348,13 @@ return [
 			'icon' => 'fa-solid fa-circle-info',
 			'elements' => [
 				[
-					'url' => \Froxlor\Froxlor::DOCS_URL . 'admin-guide/',
+					'url' => \Froxlor\Froxlor::getDocsUrl() . 'admin-guide/',
 					'label' => lng('admin.adminguide'),
 					'new_window' => true,
 					'is_external' => true,
 				],
 				[
-					'url' => \Froxlor\Froxlor::DOCS_URL . 'api-guide/',
+					'url' => \Froxlor\Froxlor::getDocsUrl() . 'api-guide/',
 					'label' => lng('admin.apiguide'),
 					'new_window' => true,
 					'show_element' => Settings::Get('api.enabled') == 1,

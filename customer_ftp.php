@@ -65,7 +65,7 @@ if ($page == 'overview' || $page == 'accounts') {
 			];
 		}
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::DOCS_URL . 'user-guide/ftp-accounts/',
+			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/ftp-accounts/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
