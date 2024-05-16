@@ -449,25 +449,20 @@ if ($action == '2fa_entercode') {
 		}
 
 		// Pass the last used page if needed
-		$lastscript = "";
-		if (isset($_REQUEST['script']) && $_REQUEST['script'] != "") {
-			$lastscript = $_REQUEST['script'];
+		$lastscript = Request::any('script', '');
+		if (!empty($lastscript)) {
 			$lastscript = str_replace("..", "", $lastscript);
 			$lastscript = htmlspecialchars($lastscript, ENT_QUOTES);
 
-			if (!file_exists(__DIR__ . "/" . $lastscript)) {
+			if (file_exists(__DIR__ . "/" . $lastscript)) {
+				$_SESSION['lastscript'] = $lastscript;
+			} else {
 				$lastscript = "";
 			}
 		}
-		$lastqrystr = "";
-		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
-			$lastqrystr = urlencode($_REQUEST['qrystr']);
-		}
-
-		if (!empty($lastscript)) {
-			$_SESSION['lastscript'] = $lastscript;
-		}
+		$lastqrystr = Request::any('qrystr', '');
 		if (!empty($lastqrystr)) {
+			$lastqrystr = urlencode($lastqrystr);
 			$_SESSION['lastqrystr'] = $lastqrystr;
 		}
 

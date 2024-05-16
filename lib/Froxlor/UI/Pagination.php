@@ -61,11 +61,12 @@ class Pagination
 	 */
 	public function __construct(
 		array $fields = [],
-		int $total_entries = 0,
-		int $perPage = 20,
+		int   $total_entries = 0,
+		int   $perPage = 20,
 		array $default_sorting = [],
 		array $pagination_additional_params = []
-	) {
+	)
+	{
 		$this->fields = $fields;
 		$this->entries = $total_entries;
 		$this->perPage = $perPage;
@@ -80,12 +81,13 @@ class Pagination
 			$orderfields = array_keys($fields);
 			$this->searchfield = $orderfields[0];
 		}
-		if (isset($_REQUEST['searchtext']) && (preg_match('/[-_@\p{L}\p{N}*.]+$/u',
-					$_REQUEST['searchtext']) || $_REQUEST['searchtext'] === '')) {
-			$this->searchtext = trim($_REQUEST['searchtext']);
+		$searchtext = Request::any('searchtext');
+		if (isset($searchtext) && (preg_match('/[-_@\p{L}\p{N}*.]+$/u',	$searchtext) || $searchtext === '')) {
+			$this->searchtext = trim($searchtext);
 		}
-		if (isset($_REQUEST['searchfield']) && isset($fields[$_REQUEST['searchfield']])) {
-			$this->searchfield = $_REQUEST['searchfield'];
+		$searchfield = Request::any('searchfield');
+		if (isset($searchfield) && isset($fields[$searchfield])) {
+			$this->searchfield = $searchfield;
 		}
 		if (!empty($this->searchtext) && !empty($this->searchfield)) {
 			$this->addSearch($this->searchtext, $this->searchfield);
@@ -94,11 +96,13 @@ class Pagination
 		}
 
 		// check other ordering requests
-		if (isset($_REQUEST['sortorder']) && (strtolower($_REQUEST['sortorder']) == 'desc' || strtolower($_REQUEST['sortorder']) == 'asc')) {
-			$this->sortorder = strtoupper($_REQUEST['sortorder']);
+		$sortorder = Request::any('sortorder');
+		if (!empty($sortorder) && (strtolower($sortorder) == 'desc' || strtolower($sortorder) == 'asc')) {
+			$this->sortorder = strtoupper($sortorder);
 		}
-		if (isset($_REQUEST['sortfield']) && isset($fields[$_REQUEST['sortfield']])) {
-			$this->sortfield = $_REQUEST['sortfield'];
+		$sortfield = Request::any('sortfield');
+		if (!empty($sortfield) && isset($fields[$sortfield])) {
+			$this->sortfield = $sortfield;
 			$this->addOrderBy($this->sortfield, $this->sortorder);
 		} else {
 			// add default ordering by given order
@@ -118,8 +122,9 @@ class Pagination
 		}
 
 		// check current page / pages
-		if (isset($_REQUEST['pageno']) && intval($_REQUEST['pageno']) != 0) {
-			$this->pageno = intval($_REQUEST['pageno']);
+		$pageno = Request::any('pageno');
+		if (!empty($pageno) && intval($pageno) != 0) {
+			$this->pageno = intval($pageno);
 		}
 		if (($this->pageno - 1) * Settings::Get('panel.paging') > $this->entries) {
 			$this->pageno = 1;
