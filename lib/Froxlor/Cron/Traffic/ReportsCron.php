@@ -211,7 +211,7 @@ class ReportsCron extends FroxlorCron
 					$_mailerror = false;
 					$mailerr_msg = "";
 					try {
-						$mail->SetFrom($row['email'], $row['name']);
+						$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));
@@ -297,7 +297,7 @@ class ReportsCron extends FroxlorCron
 					$_mailerror = false;
 					$mailerr_msg = "";
 					try {
-						$mail->SetFrom($row['email'], $row['name']);
+						$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 						$mail->Subject = $mail_subject;
 						$mail->Body = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));
@@ -472,7 +472,7 @@ class ReportsCron extends FroxlorCron
 					$_mailerror = false;
 					$mailerr_msg = "";
 					try {
-						$mail->SetFrom($row['email'], $row['name']);
+						$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));

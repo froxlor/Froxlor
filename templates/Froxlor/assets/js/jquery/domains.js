@@ -13,6 +13,9 @@ export default function () {
 					customerid: cid
 				},
 				dataType: "json",
+				beforeSend: function (request) {
+					request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+				},
 				success: function (json) {
 					if (json.length > 0) {
 						$('#phpsettingid option').each(function () {
@@ -45,6 +48,10 @@ export default function () {
 						id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
 					},
 					dataType: "json",
+					async: false,
+					beforeSend: function (request) {
+						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+					},
 					success: function (json) {
 						if (json.changed) {
 							$('#speciallogfile').addClass('is-invalid');
@@ -66,7 +73,6 @@ export default function () {
 			$('#section_b').hide();
 			$('#section_bssl').hide();
 			$('#section_c').hide();
-			$('#section_d').hide();
 		}
 
 		/**
@@ -78,13 +84,11 @@ export default function () {
 				$('#section_b').hide();
 				$('#section_bssl').hide();
 				$('#section_c').hide();
-				$('#section_d').hide();
 			} else {
 				// show sections
 				$('#section_b').show();
 				$('#section_bssl').show();
 				$('#section_c').show();
-				$('#section_d').show();
 			}
 		})
 

@@ -103,7 +103,7 @@ return [
 						'maxlength' => 10,
 						'value' => '5s'
 					],
-					'phpfpm_pass_authorizationheader' => [
+					'pass_authorizationheader' => [
 						'visible' => Settings::Get('system.webserver') == "apache2",
 						'label' => lng('admin.phpsettings.pass_authorizationheader'),
 						'type' => 'checkbox',

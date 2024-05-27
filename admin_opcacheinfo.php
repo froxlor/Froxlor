@@ -38,7 +38,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
-	if ($_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		opcache_reset();
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
 		header('Location: ' . $linker->getLink([

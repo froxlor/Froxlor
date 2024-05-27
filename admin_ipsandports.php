@@ -70,7 +70,7 @@ if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_servers
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['id']) && $result['id'] == $id) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					IpsAndPorts::getLocal($userinfo, [
 						'id' => $id
@@ -91,9 +91,9 @@ if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_servers
 			}
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				IpsAndPorts::getLocal($userinfo, $_POST)->add();
+				IpsAndPorts::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -119,9 +119,9 @@ if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_servers
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['ip'] != '') {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					IpsAndPorts::getLocal($userinfo, $_POST)->update();
+					IpsAndPorts::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -141,9 +141,11 @@ if (($page == 'ipsandports' || $page == 'overview') && $userinfo['change_servers
 			}
 		}
 	} elseif ($action == 'jqCheckIP') {
-		$ip = $_POST['ip'] ?? "";
-		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) == false) {
-			// returns notice if private network detected so we can display it
+		$ip = Request::post('ip', '');
+		if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
+			echo json_encode('<div id="ipnote" class="invalid-feedback">'.lng('error.invalidip', [$ip]).'</div>');
+		} elseif (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE)) {
+			// returns notice if private network detected, so we can display it
 			echo json_encode(lng('admin.ipsandports.ipnote'));
 		} else {
 			echo 0;

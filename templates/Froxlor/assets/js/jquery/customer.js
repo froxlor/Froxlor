@@ -31,7 +31,7 @@ export default function () {
 						planid: pid
 					},
 					dataType: "json",
-					beforeSend: function(request) {
+					beforeSend: function (request) {
 						request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 					},
 					success: function (json) {

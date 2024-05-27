@@ -190,7 +190,7 @@ class Cronjob
 		} elseif ($type == TaskId::DELETE_EMAIL_DATA && count($params) == 2 && $params[0] != '' && $params[1] != '') {
 			$data = [];
 			$data['loginname'] = $params[0];
-			$data['email'] = $params[1];
+			$data['emailpath'] = $params[1];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_EMAIL_DATA,

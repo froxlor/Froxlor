@@ -208,7 +208,9 @@ class Apache extends HttpConfigBase
 							];
 							$php = new PhpInterface($domain);
 							$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
-
+							if ($phpconfig['pass_authorizationheader'] == '1') {
+								$this->virtualhosts_data[$vhosts_filename] .= '  FcgidPassHeader     Authorization' . "\n";
+							}
 							$starter_filename = FileDir::makeCorrectFile($configdir . '/php-fcgi-starter');
 							$this->virtualhosts_data[$vhosts_filename] .= '  SuexecUserGroup "' . Settings::Get('system.mod_fcgid_httpuser') . '" "' . Settings::Get('system.mod_fcgid_httpgroup') . '"' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
@@ -279,7 +281,9 @@ class Apache extends HttpConfigBase
 							// start block, cut off last pipe and close block
 							$filesmatch = '(' . str_replace(".", "\.", substr($filesmatch, 0, -1)) . ')';
 							$this->virtualhosts_data[$vhosts_filename] .= '  <FilesMatch \.' . $filesmatch . '$>' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    <If "-f %{SCRIPT_FILENAME}">' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '  	SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    </If>' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 							if ($phpconfig['pass_authorizationheader'] == '1') {
 								$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
@@ -819,6 +823,7 @@ class Apache extends HttpConfigBase
 					$modrew_red = ' [R=' . $code . ';L,NE]';
 				}
 
+				$vhost_content .= $this->getLogfiles($domain);
 				// redirect everything, not only root-directory, #541
 				$vhost_content .= '  <IfModule mod_rewrite.c>' . "\n";
 				$vhost_content .= '    RewriteEngine On' . "\n";

@@ -33,6 +33,7 @@ use Froxlor\FroxlorLogger;
 use Froxlor\FroxlorTwoFactorAuth;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\PhpHelper;
 use Froxlor\User;
@@ -63,7 +64,7 @@ if ($action == 'delete') {
 	]);
 	Response::standardSuccess('2fa.2fa_removed');
 } elseif ($action == 'preadd') {
-	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
+	$type = Request::post('type_2fa', '0');
 
 	$data = "";
 	if ($type > 0) {
@@ -107,9 +108,9 @@ if ($action == 'delete') {
 		Response::dynamicError('Select one of the possible values for 2FA');
 	}
 } elseif ($action == 'add') {
-	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
-	$data = isset($_POST['data_2fa']) ? $_POST['data_2fa'] : '';
-	$code = isset($_POST['codevalidation']) ? $_POST['codevalidation'] : '';
+	$type = Request::post('type_2fa', '0');
+	$data = Request::post('data_2fa', '');
+	$code = Request::post('codevalidation', '');
 
 	// validate
 	$result = $tfa->verifyCode($data, $code, 3);

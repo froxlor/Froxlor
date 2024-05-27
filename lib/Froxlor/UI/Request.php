@@ -30,14 +30,16 @@ use voku\helper\AntiXSS;
 
 class Request
 {
+	private static $cleaned = false;
+
 	/**
 	 * Get key from current $_GET or $_POST request.
 	 *
 	 * @param $key
-	 * @param string|null $default
+	 * @param mixed|null $default
 	 * @return mixed|string|null
 	 */
-	public static function any($key, string $default = null)
+	public static function any($key, $default = null)
 	{
 		self::cleanAll();
 
@@ -48,10 +50,10 @@ class Request
 	 * Get key from current $_GET request.
 	 *
 	 * @param $key
-	 * @param string|null $default
+	 * @param mixed|null $default
 	 * @return mixed|string|null
 	 */
-	public static function get($key, string $default = null)
+	public static function get($key, $default = null)
 	{
 		self::cleanAll();
 
@@ -62,14 +64,26 @@ class Request
 	 * Get key from current $_POST request.
 	 *
 	 * @param $key
-	 * @param string|null $default
+	 * @param mixed|null $default
 	 * @return mixed|string|null
 	 */
-	public static function post($key, string $default = null)
+	public static function post($key, $default = null)
 	{
 		self::cleanAll();
 
 		return $_POST[$key] ?? $default;
+	}
+
+	/**
+	 * return complete $_POST array
+	 *
+	 * @return array
+	 */
+	public static function postAll()
+	{
+		self::cleanAll();
+
+		return $_POST ?? [];
 	}
 
 	/**
@@ -78,21 +92,28 @@ class Request
 	 */
 	public static function cleanAll()
 	{
-		foreach ($_REQUEST as $key => $value) {
-			if (isset($$key)) {
-				unset($$key);
+		if (!self::$cleaned) {
+			foreach ($_REQUEST as $key => $value) {
+				if (isset($$key)) {
+					unset($$key);
+				}
 			}
+			unset($value);
+
+			$antiXss = new AntiXSS();
+			$antiXss->addNeverAllowedRegex([
+				'{{(.*)}}' => ''
+			]);
+
+			// check $_GET
+			PhpHelper::cleanGlobal($_GET, $antiXss);
+			// check $_POST
+			PhpHelper::cleanGlobal($_POST, $antiXss);
+			// check $_COOKIE
+			PhpHelper::cleanGlobal($_COOKIE, $antiXss);
+
+			self::$cleaned = true;
 		}
-		unset($value);
-
-		$antiXss = new AntiXSS();
-
-		// check $_GET
-		PhpHelper::cleanGlobal($_GET, $antiXss);
-		// check $_POST
-		PhpHelper::cleanGlobal($_POST, $antiXss);
-		// check $_COOKIE
-		PhpHelper::cleanGlobal($_COOKIE, $antiXss);
 	}
 
 	/**

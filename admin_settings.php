@@ -47,10 +47,10 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = PhpHelper::loadConfigArrayDir('./actions/admin/settings/');
 	Settings::loadSettingsInto($settings_data);
 
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+	if (Request::post('send') == 'send') {
+		$_part = Request::get('part', '');
 		if ($_part == '') {
-			$_part = isset($_POST['part']) ? $_POST['part'] : '';
+			$_part = Request::post('part', '');
 		}
 
 		if ($_part != '') {
@@ -69,12 +69,12 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		// check if the session timeout is too low #815
-		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] < 60) {
+		if (!empty(Request::post('session_sessiontimeout')) &&  intval(Request::post('session_sessiontimeout', 0)) < 60) {
 			Response::standardError(['session_timeout', 'session_timeout_desc']);
 		}
 
 		try {
-			if (Form::processForm($settings_data, $_POST, [
+			if (Form::processForm($settings_data, Request::postAll(), [
 				'filename' => $filename,
 				'action' => $action,
 				'page' => $page,
@@ -97,9 +97,9 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			Response::dynamicError($e->getMessage(), $e->getCode());
 		}
 	} else {
-		$_part = isset($_GET['part']) ? $_GET['part'] : '';
+		$_part = Request::get('part', '');
 		if ($_part == '') {
-			$_part = isset($_POST['part']) ? $_POST['part'] : '';
+			$_part = Request::post('part', '');
 		}
 
 		$fields = Form::buildForm($settings_data, $_part);
@@ -140,7 +140,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		'phpinfo' => $phpinfo
 	]);
 } elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles");
 		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 		Cronjob::inserttask(TaskId::CREATE_QUOTA);
@@ -158,7 +158,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		]);
 	}
 } elseif ($page == 'updatecounters' && $userinfo['change_serversettings'] == '1') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "updated resource-counters");
 		$updatecounters = User::updateCounters(true);
 		UI::view('user/resource-counter.html.twig', [
@@ -170,7 +170,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		]);
 	}
 } elseif ($page == 'wipecleartextmailpws' && $userinfo['change_serversettings'] == '1') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
@@ -181,7 +181,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		]);
 	}
 } elseif ($page == 'wipequotas' && $userinfo['change_serversettings'] == '1') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "wiped all mailquotas");
 
 		// Set the quota to 0 which means unlimited
@@ -194,7 +194,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		]);
 	}
 } elseif ($page == 'enforcequotas' && $userinfo['change_serversettings'] == '1') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		// Fetch all accounts
 		$result_stmt = Database::query("SELECT `quota`, `customerid` FROM `" . TABLE_MAIL_USERS . "`");
 
@@ -233,9 +233,9 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	}
 } elseif ($page == 'integritycheck' && $userinfo['change_serversettings'] == '1') {
 	$integrity = new IntegrityCheck();
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$integrity->fixAll();
-	} elseif (isset($_GET['action']) && $_GET['action'] == "fix") {
+	} elseif (Request::get('action') == "fix") {
 		HTML::askYesNo('admin_integritycheck_reallyfix', $filename, [
 			'page' => $page
 		]);
@@ -273,7 +273,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		Response::standardError('jsonextensionnotfound');
 	}
 
-	if (isset($_GET['action']) && $_GET['action'] == "export") {
+	if (Request::get('action') == "export") {
 		// export
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
@@ -285,9 +285,9 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		header('Content-type: application/json');
 		echo $json_export;
 		exit();
-	} elseif (isset($_GET['action']) && $_GET['action'] == "import") {
+	} elseif (Request::get('action') == "import") {
 		// import
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			// get uploaded file
 			if (isset($_FILES["import_file"]["tmp_name"])) {
 				$imp_content = file_get_contents($_FILES["import_file"]["tmp_name"]);
@@ -330,8 +330,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$note_type = 'info';
 	$note_msg = lng('admin.smtptestnote');
 
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$test_addr = isset($_POST['test_addr']) ? $_POST['test_addr'] : null;
+	if (Request::post('send') == 'send') {
+		$test_addr = Request::post('test_addr');
 
 		// Initialize the mailingsystem
 		$testmail = new PHPMailer(true);

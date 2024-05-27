@@ -55,7 +55,7 @@ if ($action == 'delete') {
 		'section' => 'domains',
 		'page' => $page
 	]);
-} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
+} elseif (Request::post('send') == 'send' && $action == 'deletesure' && $id > 0) {
 	try {
 		$json_result = Certificates::getLocal($userinfo, [
 			'id' => $id

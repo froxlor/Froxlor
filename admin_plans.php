@@ -73,7 +73,7 @@ if ($page == '' || $page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int)$userinfo['adminid'] == $result['adminid']) {
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
 					HostingPlans::getLocal($userinfo, [
 						'id' => $id
@@ -96,9 +96,9 @@ if ($page == '' || $page == 'overview') {
 			Response::standardError('nopermissionsorinvalidid');
 		}
 	} elseif ($action == 'add') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			try {
-				HostingPlans::getLocal($userinfo, $_POST)->add();
+				HostingPlans::getLocal($userinfo, Request::postAll())->add();
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}
@@ -176,9 +176,9 @@ if ($page == '' || $page == 'overview') {
 			}
 			$result['allowed_phpconfigs'] = json_encode($result['allowed_phpconfigs']);
 
-			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if (Request::post('send') == 'send') {
 				try {
-					HostingPlans::getLocal($userinfo, $_POST)->update();
+					HostingPlans::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}

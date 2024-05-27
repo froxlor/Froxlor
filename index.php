@@ -54,7 +54,7 @@ if ($action == '2fa_entercode') {
 		Response::redirectTo('index.php');
 		exit();
 	}
-	$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
+	$smessage = (int)Request::get('showmessage', 0);
 	$message = "";
 	if ($smessage > 0) {
 		$message = lng('error.2fa_wrongcode');
@@ -71,7 +71,7 @@ if ($action == '2fa_entercode') {
 		Response::redirectTo('index.php');
 		exit();
 	}
-	$code = isset($_POST['2fa_code']) ? $_POST['2fa_code'] : null;
+	$code = Request::post('2fa_code');
 	// verify entered code
 	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 	// get user-data
@@ -162,8 +162,8 @@ if ($action == '2fa_entercode') {
 	exit();
 } elseif ($action == 'login') {
 	if (!empty($_POST)) {
-		$loginname = Validate::validate($_POST['loginname'], 'loginname');
-		$password = Validate::validate($_POST['password'], 'password');
+		$loginname = Validate::validate(Request::post('loginname'), 'loginname');
+		$password = Validate::validate(Request::post('password'), 'password');
 
 		$select_additional = '';
 		if (Settings::Get('panel.db_version') >= 202312230) {
@@ -272,7 +272,7 @@ if ($action == '2fa_entercode') {
 				$rstlog = FroxlorLogger::getInstanceOf([
 					'loginname' => $_SERVER['REMOTE_ADDR']
 				]);
-				$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
+				$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "Unknown user tried to login.");
 
 				Response::redirectTo('index.php', [
 					'showmessage' => '2'
@@ -334,7 +334,7 @@ if ($action == '2fa_entercode') {
 			$rstlog = FroxlorLogger::getInstanceOf([
 				'loginname' => $_SERVER['REMOTE_ADDR']
 			]);
-			$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
+			$rstlog->logAction(FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User tried to login with wrong password.");
 
 			unset($userinfo);
 			Response::redirectTo('index.php', [
@@ -412,7 +412,7 @@ if ($action == '2fa_entercode') {
 		}
 		exit();
 	} else {
-		$smessage = isset($_GET['showmessage']) ? (int)$_GET['showmessage'] : 0;
+		$smessage = (int)Request::get('showmessage', 0);
 		$message = '';
 		$successmessage = '';
 
@@ -449,25 +449,20 @@ if ($action == '2fa_entercode') {
 		}
 
 		// Pass the last used page if needed
-		$lastscript = "";
-		if (isset($_REQUEST['script']) && $_REQUEST['script'] != "") {
-			$lastscript = $_REQUEST['script'];
+		$lastscript = Request::any('script', '');
+		if (!empty($lastscript)) {
 			$lastscript = str_replace("..", "", $lastscript);
 			$lastscript = htmlspecialchars($lastscript, ENT_QUOTES);
 
-			if (!file_exists(__DIR__ . "/" . $lastscript)) {
+			if (file_exists(__DIR__ . "/" . $lastscript)) {
+				$_SESSION['lastscript'] = $lastscript;
+			} else {
 				$lastscript = "";
 			}
 		}
-		$lastqrystr = "";
-		if (isset($_REQUEST['qrystr']) && $_REQUEST['qrystr'] != "") {
-			$lastqrystr = urlencode($_REQUEST['qrystr']);
-		}
-
-		if (!empty($lastscript)) {
-			$_SESSION['lastscript'] = $lastscript;
-		}
+		$lastqrystr = Request::any('qrystr', '');
 		if (!empty($lastqrystr)) {
+			$lastqrystr = urlencode($lastqrystr);
 			$_SESSION['lastqrystr'] = $lastqrystr;
 		}
 
@@ -485,8 +480,8 @@ if ($action == 'forgotpwd') {
 	$message = '';
 
 	if (!empty($_POST)) {
-		$loginname = Validate::validate($_POST['loginname'], 'loginname');
-		$email = Validate::validateEmail($_POST['loginemail']);
+		$loginname = Validate::validate(Request::post('loginname'), 'loginname');
+		$email = Validate::validateEmail(Request::post('loginemail'));
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `customernumber`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");
@@ -653,7 +648,7 @@ if ($action == 'forgotpwd') {
 							$rstlog = FroxlorLogger::getInstanceOf([
 								'loginname' => 'password_reset'
 							]);
-							$rstlog->logAction(FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
+							$rstlog->logAction(FroxlorLogger::USR_ACTION, LOG_WARNING, "Unknown user requested to set a new password, but was not found in database!");
 							$message = lng('login.usernotfound');
 						}
 
@@ -683,9 +678,9 @@ if ($action == 'resetpwd') {
 		"oldest" => time() - 86400
 	]);
 
-	if (isset($_GET['resetcode']) && strlen($_GET['resetcode']) == 50) {
+	$activationcode = Request::get('resetcode');
+	if (!empty($activationcode) && strlen($activationcode) == 50) {
 		// Check if activation code is valid
-		$activationcode = $_GET['resetcode'];
 		$timestamp = substr($activationcode, 15, 10);
 		$third = substr($activationcode, 25, 15);
 		$check = substr($activationcode, 40, 10);
@@ -700,8 +695,8 @@ if ($action == 'resetpwd') {
 
 				if ($result !== false) {
 					try {
-						$new_password = Crypt::validatePassword($_POST['new_password'], true);
-						$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], true);
+						$new_password = Crypt::validatePassword(Request::post('new_password'), true);
+						$new_password_confirm = Crypt::validatePassword(Request::post('new_password_confirm'), true);
 					} catch (Exception $e) {
 						$message = $e->getMessage();
 					}

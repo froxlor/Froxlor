@@ -417,6 +417,9 @@ class PhpHelper
 			'admin_pass',
 			'admin_pass_confirm',
 			'panel_password_special_char',
+			'old_password',
+			'new_password',
+			'new_password_confirm',
 		];
 		if (!empty($global)) {
 			$tmp = $global;

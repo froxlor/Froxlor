@@ -1283,7 +1283,7 @@ Vielen Dank, Ihr Administrator',
 	'question' => [
 		'question' => 'Sicherheitsabfrage',
 		'admin_customer_reallydelete' => 'Wollen Sie den Kunden "%s" wirklich löschen?<br />ACHTUNG! Alle Daten gehen unwiderruflich verloren! Nach dem Vorgang müssen die Daten manuell aus dem Dateisystem entfernt werden.',
-		'admin_domain_reallydelete' => 'Wollen Sie die Domain "%s" wirklich löschen?',
+		'admin_domain_reallydelete' => 'Wollen Sie die Domain "%s" wirklich löschen?<br><span class="text-danger"><strong>ACHTUNG:</strong> Alle Subdomains, FTP-Konten und E-Mail Adressen/Konten, welche mit dieser Domain verbunden sind, werden gelöscht!</span>',
 		'admin_domain_reallydisablesecuritysetting' => 'Wollen Sie die wichtige Sicherheitseinstellung \'OpenBasedir\' wirklich deaktivieren?',
 		'admin_admin_reallydelete' => 'Wollen Sie den Admin "%s" wirklich löschen?<br />Alle Kunden und Domains dieses Admins werden Ihnen zugeteilt.',
 		'admin_template_reallydelete' => 'Wollen Sie die Vorlage "%s" wirklich löschen?',
@@ -1830,6 +1830,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'passwordcryptfunc' => [
 			'title' => 'Wählen Sie die zu verwendende Passwort-Verschlüsselungsmethode',
+			'description' => 'Wählen Sie, welche Methode zur Verschlüsselung von Kennwörtern verwendet werden soll. Wenn Sie diese Einstellung ändern, werden nur neue Kennwörter mit der neuen Methode verschlüsselt. Bestehende Passwörter werden nicht geändert.'
 		],
 		'systemdefault' => 'Systemstandard',
 		'panel_allow_theme_change_admin' => 'Erlaube Admins das Theme zu wechseln',

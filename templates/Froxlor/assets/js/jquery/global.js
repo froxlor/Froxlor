@@ -12,9 +12,14 @@ export default function () {
 			new bootstrap.Popover($(this));
 		})
 
+		if (!window.isSecureContext) {
+			// hide all copyClipboard buttons as this only works in a secure context
+			$('.copyClipboard').hide();
+		}
+
 		$('.copyClipboard').on('click', function (e) {
 			e.preventDefault();
-			const source_element = $(this).data('clipboard-source').text();
+			const source_element = $(this).data('clipboard-source');
 			navigator.clipboard.writeText($('#' + source_element).text().trim());
 		})
 

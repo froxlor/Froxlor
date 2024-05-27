@@ -192,7 +192,7 @@ if ($action == '') {
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($result['varname'] != '') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid
@@ -228,7 +228,7 @@ if ($action == '') {
 	if (Database::num_rows() > 0) {
 		$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		if (Request::post('send') == 'send') {
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid AND `id` = :id");
@@ -251,13 +251,13 @@ if ($action == '') {
 		Response::standardError('templatenotfound');
 	}
 } elseif ($action == 'add') {
-	if (isset($_POST['prepare']) && $_POST['prepare'] == 'prepare') {
+	if (Request::post('prepare') == 'prepare') {
 		// email templates
-		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$language = htmlentities(Validate::validate(Request::post('language'), 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		if (!array_key_exists($language, $languages)) {
 			Response::standardError('templatelanguageinvalid');
 		}
-		$template = Validate::validate($_POST['template'], 'template');
+		$template = Validate::validate(Request::post('template'), 'template');
 
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as def FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -289,15 +289,15 @@ if ($action == '') {
 			'formdata' => $template_add_data['template_add'],
 			'replacers' => $template_add_data['template_replacers']
 		]);
-	} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && !isset($_POST['filesend'])) {
+	} elseif (Request::post('send') == 'send' && empty(Request::post('filesend'))) {
 		// email templates
-		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$language = htmlentities(Validate::validate(Request::post('language'), 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		if (!array_key_exists($language, $languages)) {
 			Response::standardError('templatelanguageinvalid');
 		}
-		$template = Validate::validate($_POST['template'], 'template');
-		$subject = Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-		$mailbody = Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+		$template = Validate::validate(Request::post('template'), 'template');
+		$subject = Validate::validate(Request::post('subject'), 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+		$mailbody = Validate::validate(Request::post('mailbody'), 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
 		$templates = [];
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -347,10 +347,10 @@ if ($action == '') {
 				'page' => $page
 			]);
 		}
-	} elseif (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
+	} elseif (Request::post('filesend') == 'filesend') {
 		// file templates
-		$template = Validate::validate($_POST['template'], 'template');
-		$filecontent = Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+		$template = Validate::validate(Request::post('template'), 'template');
+		$filecontent = Validate::validate(Request::post('filecontent'), 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -371,7 +371,7 @@ if ($action == '') {
 		Response::redirectTo($filename, [
 			'page' => $page
 		]);
-	} elseif (!isset($_GET['files'])) {
+	} elseif (empty(Request::get('files'))) {
 		// email templates
 		$add = false;
 		$language_options = [];
@@ -483,9 +483,9 @@ if ($action == '') {
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($result['varname'] != '') {
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$subject = Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-			$mailbody = Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+		if (Request::post('send') == 'send') {
+			$subject = Validate::validate(Request::post('subject'), 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+			$mailbody = Validate::validate(Request::post('mailbody'), 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
 
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -551,8 +551,8 @@ if ($action == '') {
 		$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		// filetemplates
-		if (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
-			$filecontent = Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+		if (Request::post('filesend') == 'filesend') {
+			$filecontent = Validate::validate(Request::post('filecontent'), 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
 					`value` = :value

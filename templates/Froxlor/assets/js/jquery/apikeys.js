@@ -1,6 +1,6 @@
 export default function () {
 	$(function () {
-		var timer, delay = 500;
+		var timer, delay = 650;
 		$('div[data-action="apikeys"] #allowed_from').on('keyup change', function () {
 			var _this = $(this);
 			clearTimeout(timer);
@@ -54,7 +54,7 @@ export default function () {
 						} else {
 							_this.removeClass('is-invalid');
 							_this.addClass('is-valid');
-							_this.val(data.valid_until);
+							//_this.val(data.valid_until);
 						}
 					},
 					error: function (request, status, error) {

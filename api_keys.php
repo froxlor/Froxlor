@@ -61,7 +61,7 @@ if ($action == 'delete' && $id > 0) {
 		'section' => 'index',
 		'page' => $page
 	]);
-} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && $action == 'deletesure' && $id > 0) {
+} elseif (Request::post('send') == 'send' && $action == 'deletesure' && $id > 0) {
 	$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
 	if (AREA == 'customer') {
 		$chk_stmt = Database::prepare("
@@ -94,7 +94,7 @@ if ($action == 'delete' && $id > 0) {
 		]);
 	}
 } elseif ($action == 'add') {
-	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+	if (Request::post('send') == 'send') {
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_API_KEYS . "` SET
 			`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''

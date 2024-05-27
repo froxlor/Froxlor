@@ -176,15 +176,19 @@ class Core
 			$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
 
 			// look for mysqldump
+			$section = 'mysqldump';
 			if (file_exists("/usr/bin/mysqldump")) {
 				$mysql_dump = '/usr/bin/mysqldump';
 			} elseif (file_exists("/usr/local/bin/mysqldump")) {
 				$mysql_dump = '/usr/local/bin/mysqldump';
+			} elseif (file_exists("/usr/bin/mariadb-dump")) {
+				$mysql_dump = '/usr/bin/mariadb-dump';
+				$section = 'mariadb-dump';
 			}
 
 			// create temporary .cnf file
 			$cnffilename = "/tmp/froxlor_dump.cnf";
-			$dumpcnf = "[mysqldump]" . PHP_EOL . "password=\"" . $this->validatedData['mysql_root_pass'] . "\"" . PHP_EOL;
+			$dumpcnf = "[".$section."]" . PHP_EOL . "password=\"" . $this->validatedData['mysql_root_pass'] . "\"" . PHP_EOL;
 			file_put_contents($cnffilename, $dumpcnf);
 
 			// make the backup
@@ -195,7 +199,7 @@ class Core
 				@unlink($cnffilename);
 				if (stristr(implode(" ", $output), "error")) {
 					throw new Exception(lng('install.errors.mysqldump_backup_failed'));
-				} else if (!file_exists($filename)) {
+				} elseif (!file_exists($filename)) {
 					throw new Exception(lng('install.errors.sql_backup_file_missing'));
 				}
 			} else {
@@ -379,7 +383,7 @@ class Core
 			$this->updateSetting($upd_stmt, 1, 'system', 'leenabled');
 			$this->updateSetting($upd_stmt, 1, 'system', 'le_froxlor_enabled');
 		}
-		$this->updateSetting($upd_stmt, $this->validatedData['servername'], 'system', 'hostname');
+		$this->updateSetting($upd_stmt, strtolower($this->validatedData['servername']), 'system', 'hostname');
 		$this->updateSetting($upd_stmt, 'en', 'panel', 'standardlanguage'); // TODO: set language
 		$this->updateSetting($upd_stmt, $this->validatedData['mysql_access_host'], 'system', 'mysql_access_host');
 		$this->updateSetting($upd_stmt, $this->validatedData['webserver'], 'system', 'webserver');

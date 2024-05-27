@@ -115,30 +115,46 @@ class ExportCron extends FroxlorCron
 
 			$has_dbs = false;
 			$current_dbserver = -1;
-			while ($row = $sel_stmt->fetch()) {
-				// Get sql_root data for the specific database-server the database resides on
-				if ($current_dbserver != $row['dbserver']) {
-					Database::needRoot(true, $row['dbserver']);
-					Database::needSqlData();
-					$sql_root = Database::getSqlData();
-					Database::needRoot(false);
-					// create temporary mysql-defaults file for the connection-credentials/details
-					$mysqlcnf_file = tempnam("/tmp", "frx");
-					$mysqlcnf = "[mysqldump]\npassword=" . $sql_root['passwd'] . "\nhost=" . $sql_root['host'] . "\n";
-					if (!empty($sql_root['port'])) {
-						$mysqlcnf .= "port=" . $sql_root['port'] . "\n";
-					} elseif (!empty($sql_root['socket'])) {
-						$mysqlcnf .= "socket=" . $sql_root['socket'] . "\n";
+
+			// look for mysqldump
+			$section = 'mysqldump';
+			if (file_exists("/usr/bin/mysqldump")) {
+				$mysql_dump = '/usr/bin/mysqldump';
+			} elseif (file_exists("/usr/local/bin/mysqldump")) {
+				$mysql_dump = '/usr/local/bin/mysqldump';
+			} elseif (file_exists("/usr/bin/mariadb-dump")) {
+				$mysql_dump = '/usr/bin/mariadb-dump';
+				$section = 'mariadb-dump';
+			}
+			if (!isset($mysql_dump)) {
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, 'mysqldump/mariadb-dump executable could not be found. Please install mysql-client/mariadb-client package.');
+			} else {
+
+				while ($row = $sel_stmt->fetch()) {
+					// Get sql_root data for the specific database-server the database resides on
+					if ($current_dbserver != $row['dbserver']) {
+						Database::needRoot(true, $row['dbserver']);
+						Database::needSqlData();
+						$sql_root = Database::getSqlData();
+						Database::needRoot(false);
+						// create temporary mysql-defaults file for the connection-credentials/details
+						$mysqlcnf_file = tempnam("/tmp", "frx");
+						$mysqlcnf = "[".$section."]\npassword=" . $sql_root['passwd'] . "\nhost=" . $sql_root['host'] . "\n";
+						if (!empty($sql_root['port'])) {
+							$mysqlcnf .= "port=" . $sql_root['port'] . "\n";
+						} elseif (!empty($sql_root['socket'])) {
+							$mysqlcnf .= "socket=" . $sql_root['socket'] . "\n";
+						}
+						file_put_contents($mysqlcnf_file, $mysqlcnf);
 					}
-					file_put_contents($mysqlcnf_file, $mysqlcnf);
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> '.basename($mysql_dump) . ' -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
+					$bool_false = false;
+					FileDir::safe_exec($mysql_dump . ' --defaults-file=' . escapeshellarg($mysqlcnf_file) . ' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
+						'>'
+					]);
+					$has_dbs = true;
+					$current_dbserver = $row['dbserver'];
 				}
-				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
-				$bool_false = false;
-				FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) . ' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
-					'>'
-				]);
-				$has_dbs = true;
-				$current_dbserver = $row['dbserver'];
 			}
 
 			if ($has_dbs) {

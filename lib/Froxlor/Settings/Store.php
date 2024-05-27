@@ -36,6 +36,7 @@ use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\System\IPTools;
+use Froxlor\UI\Request;
 use Froxlor\Validate\Validate;
 use PDO;
 
@@ -465,7 +466,7 @@ class Store
 			}
 
 			// Delete file?
-			if ($fielddata['value'] !== "" && array_key_exists($fieldname . '_delete', $_POST) && $_POST[$fieldname . '_delete']) {
+			if ($fielddata['value'] !== "" && array_key_exists($fieldname . '_delete', $_POST) && Request::post($fieldname . '_delete')) {
 				@unlink(Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
 				$save_to = '';
 			}

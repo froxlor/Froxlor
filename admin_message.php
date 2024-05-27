@@ -42,11 +42,11 @@ if ($page == 'message') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
 
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			if ($_POST['recipient'] == 0 && $userinfo['customers_see_all'] == '1') {
+		if (Request::post('send') == 'send') {
+			if (Request::post('recipient', -1) == 0 && $userinfo['customers_see_all'] == '1') {
 				$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
 				$result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
-			} elseif ($_POST['recipient'] == 1) {
+			} elseif (Request::post('recipient', -1) == 1) {
 				if ($userinfo['customers_see_all'] == '1') {
 					$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
 					$result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`");
@@ -63,8 +63,8 @@ if ($page == 'message') {
 				Response::standardError('norecipientsgiven');
 			}
 
-			$subject = $_POST['subject'];
-			$message = wordwrap($_POST['message'], 70);
+			$subject = Request::post('subject');
+			$message = wordwrap(Request::post('message'), 70);
 
 			if (!empty($message)) {
 				$mailcounter = 0;
@@ -107,7 +107,7 @@ if ($page == 'message') {
 			}
 		}
 	} elseif ($action == 'showsuccess') {
-		$sentitems = isset($_GET['sentitems']) ? (int)$_GET['sentitems'] : 0;
+		$sentitems = Request::get('sentitems', 0);
 
 		if ($sentitems == 0) {
 			$note_type = 'info';

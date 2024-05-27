@@ -115,7 +115,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 
 		// validation
 		$errors = [];
-		if (empty($record)) {
+		if (empty(trim($record))) {
 			$record = "@";
 		}
 

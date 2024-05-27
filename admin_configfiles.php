@@ -93,14 +93,14 @@ if ($userinfo['change_serversettings'] == '1') {
 		asort($distributions_select);
 	}
 
-	if ($distribution != "" && isset($_POST['finish'])) {
+	if ($distribution != "" && !empty(Request::post('finish'))) {
 		$valid_keys = ['http', 'dns', 'smtp', 'mail', 'antispam', 'ftp', 'system', 'distro'];
 		unset($_POST['finish']);
 		unset($_POST['csrf_token']);
-		$params = $_POST;
+		$params = Request::postAll();
 		$params['distro'] = $distribution;
 		$params['system'] = [];
-		foreach ($_POST['system'] as $sysdaemon) {
+		foreach (Request::post('system', []) as $sysdaemon) {
 			$params['system'][] = $sysdaemon;
 		}
 		// validate params
