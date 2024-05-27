@@ -1,5 +1,5 @@
 name: Froxlor-CI-MariaDB
-on: [ 'push', 'pull_request', 'create' ]
+on: [ 'push', 'pull_request', 'create', 'workflow_dispatch' ]
 
 jobs:
   froxlor:
