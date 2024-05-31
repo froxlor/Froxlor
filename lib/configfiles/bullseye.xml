@@ -4149,7 +4149,7 @@ plugin {
 					<commands index="2">
 						<command><![CDATA[mkdir -p /etc/rspamd/local.d/]]></command>
 						<command><![CDATA[mkdir -p /etc/rspamd/override.d/]]></command>
-						<command><![CDATA[mkdir -p mkdir /var/lib/rspamd/dkim/]]></command>
+						<command><![CDATA[mkdir -p /var/lib/rspamd/dkim/]]></command>
 					</commands>
 					<files index="1">
 						<file name="/etc/rspamd/local.d/actions.conf"
