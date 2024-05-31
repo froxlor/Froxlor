@@ -831,6 +831,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					Cronjob::inserttask(TaskId::REBUILD_VHOST);
 					// Using nameserver, insert a task which rebuilds the server config
 					Cronjob::inserttask(TaskId::REBUILD_DNS);
+					if ($dkim == '1') {
+						Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
+					}
 
 					$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
 
@@ -1673,6 +1676,10 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| $sslenabled != $result['ssl_enabled']
 			) {
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
+			}
+
+			if ($dkim != $result['dkim']) {
+				Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
 			}
 
 			if ($speciallogfile != $result['speciallogfile'] && $speciallogverified != '1') {
