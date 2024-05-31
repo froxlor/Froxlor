@@ -46,7 +46,7 @@ class CurrentUser
 	 */
 	public static function hasSession(): bool
 	{
-		return !empty($_SESSION) && isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo']);
+		return !empty($_SESSION) && !empty($_SESSION['userinfo']);
 	}
 
 	/**

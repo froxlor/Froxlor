@@ -980,7 +980,7 @@ return [
 		'editpassdescription' => 'Neues Passwort setzen oder leer für keine Änderung.',
 	],
 	'gender' => [
-		'title' => 'Geschlecht',
+		'title' => 'Anrede',
 		'male' => 'Herr',
 		'female' => 'Frau',
 		'undef' => '',

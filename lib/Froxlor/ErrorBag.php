@@ -52,7 +52,7 @@ class ErrorBag
 	 */
 	public static function addError(string $data): void
 	{
-		if (!is_array($_SESSION['_errors'])) {
+		if (!isset($_SESSION['_errors']) || !is_array($_SESSION['_errors'])) {
 			$_SESSION['_errors'] = [];
 		}
 		$_SESSION['_errors'][] = $data;

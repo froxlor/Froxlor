@@ -156,7 +156,7 @@ class GlobalSearch
 							],
 							'result_key' => 'domain_ace',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'domain_ace',
 								'href' => 'admin_domains.php?page=domains&searchfield=d.domain_ace&searchtext='
 							]
@@ -172,7 +172,7 @@ class GlobalSearch
 							'result_key' => 'ip',
 							'result_groupkey' => 'ip',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'ip',
 								'href' => 'admin_ipsandports.php?page=ipsandports&searchfield=ip&searchtext='
 							]
@@ -186,7 +186,7 @@ class GlobalSearch
 							],
 							'result_key' => 'id',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'name',
 								'href' => 'admin_plans.php?page=overview&searchfield=id&searchtext='
 							]
@@ -201,7 +201,7 @@ class GlobalSearch
 							],
 							'result_key' => 'id',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'description',
 								'href' => 'admin_phpsettings.php?page=overview&searchfield=id&searchtext='
 							]
@@ -215,7 +215,7 @@ class GlobalSearch
 							],
 							'result_key' => 'id',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'description',
 								'href' => 'admin_phpsettings.php?page=fpmdaemons&searchfield=id&searchtext='
 							]
@@ -234,7 +234,7 @@ class GlobalSearch
 							],
 							'result_key' => 'loginname',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'name',
 								'href' => 'admin_admins.php?page=admins&searchfield=loginname&searchtext='
 							]
@@ -252,7 +252,7 @@ class GlobalSearch
 							],
 							'result_key' => 'domain_ace',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'domain_ace',
 								'href' => 'customer_domains.php?page=domains&searchfield=d.domain_ace&searchtext='
 							]
@@ -266,7 +266,7 @@ class GlobalSearch
 							],
 							'result_key' => 'email',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'email',
 								'href' => 'customer_email.php?page=email_domain&domainid={domainid}&searchfield=m.email&searchtext='
 							]
@@ -279,7 +279,7 @@ class GlobalSearch
 							],
 							'result_key' => 'domain',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'domain',
 								'href' => 'customer_email.php?page=emails&searchfield=d.domain&searchtext='
 							]
@@ -293,7 +293,7 @@ class GlobalSearch
 							],
 							'result_key' => 'databasename',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'databasename',
 								'href' => 'customer_mysql.php?page=mysqls&searchfield=databasename&searchtext='
 							]
@@ -307,7 +307,7 @@ class GlobalSearch
 							],
 							'result_key' => 'username',
 							'result_format' => [
-								'title' => ['self', 'getFieldFromResult'],
+								'title' => ['\\Froxlor\\Ajax\\GlobalSearch', 'getFieldFromResult'],
 								'title_args' => 'username',
 								'href' => 'customer_ftp.php?page=accounts&searchfield=username&searchtext='
 							]

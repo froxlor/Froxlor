@@ -181,6 +181,7 @@ if ($action == '2fa_entercode') {
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		$is_admin = false;
+		$table = "";
 		if ($row && $row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
@@ -220,9 +221,12 @@ if ($action == '2fa_entercode') {
 						}
 					}
 				}
-			} else {
-				$is_admin = true;
 			}
+		}
+
+		if (empty($table)) {
+			// try login as admin of no customer-login method worked
+			$is_admin = true;
 		}
 
 		if ((Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) && $is_admin == false) {

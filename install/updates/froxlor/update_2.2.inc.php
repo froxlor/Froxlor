@@ -75,6 +75,18 @@ if (Froxlor::isFroxlorVersion('2.1.9')) {
 			Database::pexecute($upd_stmt, ['pkey' => $pubkey, 'did' => $domain['id']]);
 		}
 		Update::lastStepStatus(0);
+
+		Update::showUpdateStep("Configure antispam services");
+		$froxlorCliBin = Froxlor::getInstallDir() . '/bin/froxlor-cli';
+		$currentDistro = Settings::Get('system.distribution');
+		$manual_command = <<<EOC
+{$froxlorCliBin} froxlor:config-services -a '{"http":"x","dns":"x","smtp":"x","mail":"x","antispam":"rspamd","ftp":"x","distro":"{$currentDistro}","system":[]}'
+EOC;
+		Update::lastStepStatus(
+			1,
+			'manual action needed',
+			"Please run the following command manually as root:<br><pre>" . $manual_command . "</pre>"
+		);
 	} else {
 		Update::showUpdateStep("Removing existing domainkeys because antispam is disabled");
 		Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `dkim` = '0', `dkim_id` = '0', `dkim_privkey` = '', `dkim_pubkey` = '' WHERE `dkim` = '1';");

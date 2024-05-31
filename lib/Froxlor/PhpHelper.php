@@ -374,6 +374,9 @@ class PhpHelper
 	): bool
 	{
 		foreach ($haystack as $key => $value) {
+			if (empty($value)) {
+				continue;
+			}
 			$pathkey = empty($currentKey) ? $key : $currentKey . '.' . $key;
 			if (is_array($value)) {
 				self::recursive_array_search($needle, $value, $keys, $pathkey);
