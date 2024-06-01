@@ -681,6 +681,7 @@ return [
 			'title' => 'Use greylisting',
 			'description' => 'Incoming emails will be protected by <a href="https://en.wikipedia.org/wiki/Greylisting_(email)" target="_blank">greylisting</a>.<br/>Default: yes'
 		],
+		'required_dkim_dns' => 'Required DKIM DNS entry',
 	],
 	'dns' => [
 		'destinationip' => 'Domain IP(s)',

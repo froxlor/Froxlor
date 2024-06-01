@@ -239,7 +239,7 @@ class Domain
 			}
 			return $iplist;
 		}
-		return lng('panel.empty');
+		return lng('panel.listing_empty');
 	}
 
 	/**

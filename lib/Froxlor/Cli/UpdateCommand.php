@@ -60,7 +60,7 @@ final class UpdateCommand extends CliCommand
 			if ($result == self::SUCCESS) {
 				require Froxlor::getInstallDir() . '/lib/functions.php';
 				if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
-					$output->writeln('<info>' . lng('updates.dbupdate_required') . '</>');
+					$output->writeln('<info>' . lng('update.dbupdate_required') . '</>');
 					if ($input->getOption('check-only')) {
 						$output->writeln('<comment>Doing nothing because of "check-only" flag.</>');
 					} else {
