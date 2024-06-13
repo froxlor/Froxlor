@@ -58,17 +58,17 @@ https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.fro
 #### Debian
 
 ```
-apt-get -y install apt-transport-https lsb-release ca-certificates curl
+apt -y install apt-transport-https lsb-release ca-certificates curl gnupg
 curl -sSLo /usr/share/keyrings/deb.froxlor.org-froxlor.gpg https://deb.froxlor.org/froxlor.gpg
-echo sh -c '"deb [signed-by=/usr/share/keyrings/deb.froxlor.org-froxlor.gpg] https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list'
+sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.froxlor.org-froxlor.gpg] https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list'
 ```
 
 #### Ubuntu
 
 ```
-apt-get -y install apt-transport-https lsb-release ca-certificates curl
+apt -y install apt-transport-https lsb-release ca-certificates curl gnupg
 curl -sSLo /usr/share/keyrings/deb.froxlor.org-froxlor.gpg https://deb.froxlor.org/froxlor.gpg
-echo sh -c '"deb [signed-by=/usr/share/keyrings/deb.froxlor.org-froxlor.gpg] https://deb.froxlor.org/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list'
+sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.froxlor.org-froxlor.gpg] https://deb.froxlor.org/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list'
 ```
 
 ## Contributing
