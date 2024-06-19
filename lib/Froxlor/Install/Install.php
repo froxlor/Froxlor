@@ -327,7 +327,7 @@ class Install
 
 		if (!preg_match('/^[^\r\n\t\f\0]*$/D', $name)) {
 			throw new Exception(lng('error.stringformaterror', ['admin_name']));
-		} elseif (empty(trim($loginname)) || !preg_match('/^[a-z][a-z0-9]+$/', $loginname)) {
+		} elseif (empty(trim($loginname)) || !preg_match('/^[a-z][a-z0-9]+$/Di', $loginname)) {
 			throw new Exception(lng('error.loginnameiswrong', [$loginname]));
 		} elseif (empty(trim($email)) || !Validate::validateEmail($email)) {
 			throw new Exception(lng('error.emailiswrong', [$email]));

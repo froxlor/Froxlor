@@ -176,7 +176,7 @@ class FroxlorLogger
 		}
 
 		// clean log-text
-		$text = preg_replace("/[^\w @#\"':.()\[\]+\-_\/\\\!]/i", "_", $text);
+		$text = preg_replace("/[^\w @#\"':.,()\[\]+\-_\/\\\!]/i", "_", $text);
 
 		if (self::$crondebug_flag || ($action == FroxlorLogger::CRON_ACTION && $type <= LOG_WARNING)) {
 			echo "[" . $this->getLogLevelDesc($type) . "] " . $text . PHP_EOL;

@@ -33,7 +33,7 @@ $return = [];
 
 if (Update::versionInUpdate($current_version, '2.2.0-dev1')) {
 	$has_preconfig = true;
-	$description = 'Froxlor now features antispam configurations using rspamd. Would you like to enable the antispam feature (required re-configuration of services)?';
+	$description = 'Froxlor now features antispam configurations using rspamd. Would you like to enable the antispam feature (required re-configuration of services)?<br><strong>ATTENTION:</strong> When not enabled and the former DomainKey feature was used, keep in mind that all existing domainkeys for all domain are being removed and the dkim-flag disabled for the domains.';
 	$question = '<strong>Enable antispam (recommended)</strong>&nbsp;';
 	$return['antispam_activated'] = [
 		'type' => 'checkbox',
