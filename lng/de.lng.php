@@ -632,6 +632,8 @@ return [
 			'title' => 'Verwende greylisting',
 			'description' => 'Eingehende E-Mails mittels <a href="https://de.wikipedia.org/wiki/Greylisting" target="_blank">Greylisting</a> schützen.<br/>Standard: Ja'
 		],
+		'required_spf_dns' => 'Erforderlicher SPF DNS Eintrag',
+		'required_dmarc_dns' => 'Erforderlicher DMARC DNS Eintrag',
 		'required_dkim_dns' => 'Erforderlicher DKIM DNS Eintrag',
 	],
 	'dns' => [

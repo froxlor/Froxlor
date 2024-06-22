@@ -116,6 +116,18 @@ return [
 						'type' => 'hidden',
 						'value' => '0'
 					],
+					'spf_entry' => [
+						'visible' => (Settings::Get('system.bind_enable') == '0' && Settings::Get('spf.use_spf') == '1' && $result['isemaildomain'] == '1'),
+						'label' => lng('antispam.required_spf_dns'),
+						'type' => 'longtext',
+						'value' => (string)(new \Froxlor\Dns\DnsEntry('@', 'TXT', \Froxlor\Dns\Dns::encloseTXTContent(Settings::Get('spf.spf_entry'))))
+					],
+					'dmarc_entry' => [
+						'visible' => (Settings::Get('system.bind_enable') == '0' && Settings::Get('dmarc.use_dmarc') == '1' && $result['isemaildomain'] == '1'),
+						'label' => lng('antispam.required_dmarc_dns'),
+						'type' => 'longtext',
+						'value' => (string)(new \Froxlor\Dns\DnsEntry('_dmarc', 'TXT', \Froxlor\Dns\Dns::encloseTXTContent(Settings::Get('dmarc.dmarc_entry'))))
+					],
 					'dkim_entry' => [
 						'visible' => (Settings::Get('system.bind_enable') == '0' && Settings::Get('antispam.activated') == '1' && $result['dkim'] == '1' && $result['dkim_pubkey'] != ''),
 						'label' => lng('antispam.required_dkim_dns'),
