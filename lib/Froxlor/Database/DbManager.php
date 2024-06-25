@@ -25,6 +25,7 @@
 
 namespace Froxlor\Database;
 
+use Exception;
 use Froxlor\Database\Manager\DbManagerMySQL;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
@@ -83,7 +84,7 @@ class DbManager
 	 * @param array $mysql_access_host_array
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function correctMysqlUsers(array $mysql_access_host_array)
 	{
@@ -150,6 +151,7 @@ class DbManager
 	 * @param int $last_accnumber
 	 *
 	 * @return string|bool $username if successful or false of username is equal to the password
+	 * @throws Exception
 	 */
 	public function createDatabase(string $loginname = null, string $password = null, int $dbserver = 0, int $last_accnumber = 0)
 	{

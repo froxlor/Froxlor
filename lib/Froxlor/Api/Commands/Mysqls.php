@@ -54,7 +54,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 * @param string $description
 	 *            optional, description for database
 	 * @param string $custom_suffix
-	 *            optional, name for database
+	 *            optional, name for database if customer.mysqlprefix setting is set to "DBNAME"
 	 * @param bool $sendinfomail
 	 *            optional, send created resource-information to customer, default: false
 	 * @param int $customerid
@@ -110,6 +110,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$dbm = new DbManager($this->logger());
 
 			if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
+				if (strlen($newdb_params['loginname'] . '_' . $databasename) > Database::getSqlUsernameLength()) {
+					throw new Exception("Database name cannot be longer than " . (Database::getSqlUsernameLength() - strlen($newdb_params['loginname'] . '_')) . " characters.", 406);
+				}
 				$username = $dbm->createDatabase($newdb_params['loginname'] . '_' . $databasename, $password, $dbserver);
 			} else {
 				$username = $dbm->createDatabase($newdb_params['loginname'], $password, $dbserver, $newdb_params['mysql_lastaccountnumber']);
