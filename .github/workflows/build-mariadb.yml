@@ -1,5 +1,5 @@
 name: Froxlor-CI-MariaDB
-on: [ 'push', 'pull_request', 'create' ]
+on: [ 'push', 'pull_request', 'create', 'workflow_dispatch' ]
 
 jobs:
   froxlor:
@@ -118,12 +118,9 @@ jobs:
           mv froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip dist/
           mv froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip.sha256 dist/
 
-      - name: Deploy nightly to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          ARGS: "-rltDzvO --chown=${{ secrets.WEB_USER }}:${{ secrets.WEB_USER }}"
-          SOURCE: "dist/"
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: "${{ secrets.REMOTE_TARGET }}"
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip
+          path: dist/froxlor-nightly.${{steps.vars.outputs.sha_short}}.zip
+          retention-days: 5
