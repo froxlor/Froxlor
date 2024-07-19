@@ -74,6 +74,9 @@ class Domain
 			if ($attributes['fields']['deactivated']) {
 				return lng('admin.deactivated');
 			}
+			if ($attributes['fields']['email_only']) {
+				return lng('domains.email_only');
+			}
 			// path or redirect
 			if (preg_match('/^https?\:\/\//', $attributes['fields']['documentroot'])) {
 				return [
@@ -127,7 +130,7 @@ class Domain
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		if ((!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)) && !$attributes['fields']['deactivated']) {
+		if ((int)$attributes['fields']['email_only'] == 0 && !$attributes['fields']['deactivated']) {
 			if ((int)UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
 				return true;
 			} elseif ((int)UI::getCurrentUser()['adminsession'] == 1) {
@@ -157,6 +160,7 @@ class Domain
 			&& $attributes['fields']['caneditdomain'] == '1'
 			&& Settings::Get('system.bind_enable') == '1'
 			&& Settings::Get('system.dnsenabled') == '1'
+			&& !$attributes['fields']['email_only']
 			&& !$attributes['fields']['deactivated'];
 	}
 
@@ -169,7 +173,7 @@ class Domain
 
 	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		return ((bool)$attributes['fields']['letsencrypt'] && (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0)));
+		return ((bool)$attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
 	}
 
 	/**
@@ -181,7 +185,7 @@ class Domain
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
 			&& (CurrentUser::isAdmin() || (!CurrentUser::isAdmin() && (int)$attributes['fields']['caneditdomain'] == 1))
 			&& (int)$attributes['fields']['letsencrypt'] == 0
-			&& (!CurrentUser::isAdmin() || (CurrentUser::isAdmin() && (int)$attributes['fields']['email_only'] == 0))
+			&& !(int)$attributes['fields']['email_only']
 			&& !$attributes['fields']['deactivated']
 		) {
 			return true;

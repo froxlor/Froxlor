@@ -61,6 +61,10 @@ if (function_exists('exec')) {
 	}
 	$domain = json_decode($json_result, true)['data'];
 
+	if ($domain['email_only']) {
+		Response::dynamicError("There are no webserver logfiles for email only domains.");
+	}
+
 	$speciallogfile = '';
 	if ($domain['speciallogfile'] == '1') {
 		if ($domain['parentdomainid'] == '0') {

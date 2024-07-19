@@ -784,6 +784,7 @@ return [
 		'hsts' => 'HSTS enabled',
 		'aliasdomainid' => 'ID of alias domain',
 		'nodomainsassignedbyadmin' => 'Your account has currently no (active) domains assigned to it. Please contact your administrator if you think this is wrong.',
+		'email_only' => 'Email only',
 	],
 	'emails' => [
 		'description' => 'Here you can create and change your email addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>',

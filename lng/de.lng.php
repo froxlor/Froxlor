@@ -713,6 +713,7 @@ return [
 		'hsts' => 'HSTS aktiviert',
 		'aliasdomainid' => 'ID der Alias-Domain',
 		'nodomainsassignedbyadmin' => 'Diesem Account wurde noch keine (aktive) Domain zugewiesen. Bitte kontaktiere deinen Administrator, wenn du der Meinung bist, das ist nicht korrekt.',
+		'email_only' => 'Nur E-Mail',
 	],
 	'emails' => [
 		'description' => 'Hier können Sie Ihre E-Mail-Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>',
