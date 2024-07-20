@@ -731,7 +731,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.2.0-rc1'),
-	('panel', 'db_version', '202401090');
+	('panel', 'db_version', '202407200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1048,5 +1048,16 @@ CREATE TABLE `panel_loginlinks` (
   `valid_until` int(15) NOT NULL,
   `allowed_from` text NOT NULL,
   UNIQUE KEY `loginname` (`loginname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `panel_2fa_tokens`;
+CREATE TABLE `panel_2fa_tokens` (
+  `id` int(11) NOT NULL auto_increment,
+  `selector` varchar(20) NOT NULL,
+  `token` varchar(200) NOT NULL,
+  `userid` int(11) NOT NULL default '0',
+  `valid_until` int(15) NOT NULL,
+  PRIMARY KEY  (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

@@ -22,6 +22,14 @@
 							<input class="form-control" type="text" name="2fa_code" id="2fa_code" value="" autocomplete="off" autofocus required/>
 						</div>
 
+						<div class="mb-3">
+							<div class="form-check form-switch">
+								<input type="hidden" name="2fa_remember" value="0"/>
+								<input class="form-check-input" type="checkbox" id="2fa_remember" name="2fa_remember" value="1">
+								<label class="form-check-label" for="2fa_remember">{{ lng('login.2faremember') }}</label>
+							</div>
+						</div>
+
 					</div>
 
 					<div class="card-body d-grid gap-2">

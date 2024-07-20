@@ -122,3 +122,21 @@ if (Froxlor::isFroxlorVersion('2.2.0-dev1')) {
 	Update::showUpdateStep("Updating from 2.2.0-dev1 to 2.2.0-rc1", false);
 	Froxlor::updateToVersion('2.2.0-rc1');
 }
+
+if (Froxlor::isDatabaseVersion('202401090')) {
+
+	Update::showUpdateStep("Adding new table for 2fa tokens");
+	Database::query("DROP TABLE IF EXISTS `panel_2fa_tokens`;");
+	$sql = "CREATE TABLE `panel_2fa_tokens` (
+	  `id` int(11) NOT NULL auto_increment,
+	  `selector` varchar(20) NOT NULL,
+	  `token` varchar(200) NOT NULL,
+	  `userid` int(11) NOT NULL default '0',
+	  `valid_until` int(15) NOT NULL,
+	  PRIMARY KEY  (id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202407200');
+}

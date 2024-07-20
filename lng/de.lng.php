@@ -1032,6 +1032,7 @@ return [
 		'combination_not_found' => 'Kombination aus Benutzername und E-Mail Adresse stimmen nicht überein.',
 		'2fa' => 'Zwei-Faktor Authentifizierung (2FA)',
 		'2facode' => 'Bitte 2FA Code angeben',
+		'2faremember' => 'Browser vertrauen',
 	],
 	'mails' => [
 		'pop_success' => [

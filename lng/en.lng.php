@@ -1104,6 +1104,7 @@ return [
 		'combination_not_found' => 'Combination of user and email address not found.',
 		'2fa' => 'Two-factor authentication (2FA)',
 		'2facode' => 'Please enter 2FA code',
+		'2faremember' => 'Trust browser',
 	],
 	'mails' => [
 		'pop_success' => [
