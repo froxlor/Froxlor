@@ -52,6 +52,14 @@ class Text
 		];
 	}
 
+	public static function type2fa(array $attributes): array
+	{
+		return [
+			'macro' => 'type2fa',
+			'data' => (int)$attributes['data']
+		];
+	}
+
 	public static function customerfullname(array $attributes): string
 	{
 		return User::getCorrectFullUserDetails($attributes['fields'], true);

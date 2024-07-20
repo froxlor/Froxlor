@@ -48,6 +48,7 @@ return [
 		'2fa_ga_desc' => 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "2FA deaktivieren"',
 		'2fa_not_activated' => 'Zwei-Faktor Authentifizierung ist nicht aktiviert',
 		'2fa_not_activated_for_user' => 'Zwei-Faktor Authentifizierung ist für den aktuellen Benutzer nicht aktiviert',
+		'type_2fa' => '2FA Status',
 	],
 	'admin' => [
 		'overview' => 'Übersicht',

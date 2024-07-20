@@ -47,6 +47,8 @@
 											{{ macros.domainWithSan(td.data.data) }}
 										{% elseif td.data.macro == 'actions' %}
 											{{ macros.actions(td.data.data) }}
+										{% elseif td.data.macro == 'type2fa' %}
+											{{ macros.type2fa(td.data.data) }}
 										{% else %}
 											Table macro '{{ td.data.macro|json_encode }}' is not implemented!
 											Unable to handle this data: {{ td.data|json_encode }}

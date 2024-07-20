@@ -49,6 +49,7 @@ return [
 		'2fa_ga_desc' => 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "Deactivate 2FA"',
 		'2fa_not_activated' => 'Two-factor authentication is not enabled',
 		'2fa_not_activated_for_user' => 'Two-factor authentication is not enabled for the current user',
+		'type_2fa' => '2FA status',
 	],
 	'admin' => [
 		'overview' => 'Overview',
