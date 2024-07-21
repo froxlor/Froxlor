@@ -47,13 +47,14 @@ return [
 						'values' => $domainips
 					],
 					'alias' => [
-						'visible' => $alias_check == '0',
+						'visible' => $alias_check == '0' && (int)$result['email_only'] == 0,
 						'label' => lng('domains.aliasdomain'),
 						'type' => 'select',
 						'select_var' => $domains,
 						'selected' => $result['aliasdomain']
 					],
 					'path' => [
+						'visible' => (int)$result['email_only'] == 0,
 						'label' => lng('panel.path'),
 						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescriptionSubdomain').(Settings::Get('system.documentroot_use_default_value') == 1 ? lng('panel.pathDescriptionEx') : '') : null),
 						'type' => $pathSelect['type'],
@@ -63,13 +64,13 @@ return [
 						'note' => $pathSelect['note'] ?? '',
 					],
 					'url' => [
-						'visible' => Settings::Get('panel.pathedit') == 'Dropdown',
+						'visible' => Settings::Get('panel.pathedit') == 'Dropdown' && (int)$result['email_only'] == 0,
 						'label' => lng('panel.urloverridespath'),
 						'type' => 'text',
 						'value' => $urlvalue
 					],
 					'redirectcode' => [
-						'visible' => Settings::Get('customredirect.enabled') == '1',
+						'visible' => Settings::Get('customredirect.enabled') == '1' && (int)$result['email_only'] == 0,
 						'label' => lng('domains.redirectifpathisurl'),
 						'desc' => lng('domains.redirectifpathisurlinfo'),
 						'type' => 'select',
@@ -77,7 +78,7 @@ return [
 						'selected' => $def_code
 					],
 					'selectserveralias' => [
-						'visible' => ($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') || $result['parentdomainid'] != '0',
+						'visible' => (($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') || $result['parentdomainid'] != '0') && (int)$result['email_only'] == 0,
 						'label' => lng('admin.selectserveralias'),
 						'desc' => lng('admin.selectserveralias_desc'),
 						'type' => 'select',
@@ -85,27 +86,28 @@ return [
 						'selected' => $serveraliasoptions_selected
 					],
 					'isemaildomain' => [
-						'visible' => ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $result['parentdomainid'] != '0',
+						'visible' => (($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $result['parentdomainid'] != '0') && (int)$result['email_only'] == 0,
 						'label' => 'Emaildomain',
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['isemaildomain']
 					],
 					'openbasedir_path' => [
-						'visible' => $result['openbasedir'] == '1',
+						'visible' => $result['openbasedir'] == '1' && (int)$result['email_only'] == 0,
 						'label' => lng('domain.openbasedirpath'),
 						'type' => 'select',
 						'select_var' => $openbasedir,
 						'selected' => $result['openbasedir_path']
 					],
 					'phpsettingid' => [
-						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0 && $userinfo['phpenabled'] == '1' && $result['phpenabled'] == '1',
+						'visible' => ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0 && $userinfo['phpenabled'] == '1' && $result['phpenabled'] == '1' && (int)$result['email_only'] == 0,
 						'label' => lng('admin.phpsettings.title'),
 						'type' => 'select',
 						'select_var' => $phpconfigs,
 						'selected' => $result['phpsettingid']
 					],
 					'speciallogfile' => [
+						'visible' =>  (int)$result['email_only'] == 0,
 						'label' => lng('admin.speciallogfile.title'),
 						'desc' => lng('admin.speciallogfile.description'),
 						'type' => 'checkbox',
@@ -139,7 +141,7 @@ return [
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
 				'image' => 'icons/domain_edit.png',
-				'visible' => Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports && Domain::domainHasSslIpPort($result['id']),
+				'visible' => Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports && Domain::domainHasSslIpPort($result['id']) && (int)$result['email_only'] == 0,
 				'fields' => [
 					'sslenabled' => [
 						'label' => lng('admin.domain_sslenabled'),
@@ -194,6 +196,7 @@ return [
 					]
 				]
 			]
-		]
+		],
+		'buttons' => ((int)$result['email_only'] == 1) ? [] : null
 	]
 ];

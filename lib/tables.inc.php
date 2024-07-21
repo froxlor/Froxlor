@@ -57,3 +57,4 @@ const TABLE_PANEL_PLANS = 'panel_plans';
 const TABLE_API_KEYS = 'api_keys';
 const TABLE_PANEL_USERCOLUMNS = 'panel_usercolumns';
 const TABLE_PANEL_LOGINLINKS = 'panel_loginlinks';
+const TABLE_PANEL_2FA_TOKENS = 'panel_2fa_tokens';

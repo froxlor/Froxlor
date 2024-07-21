@@ -72,6 +72,7 @@ if ($action == '2fa_entercode') {
 		exit();
 	}
 	$code = Request::post('2fa_code');
+	$remember = Request::post('2fa_remember');
 	// verify entered code
 	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 	// get user-data
@@ -105,18 +106,47 @@ if ($action == '2fa_entercode') {
 		$userinfo['adminsession'] = $isadmin;
 		$userinfo['userid'] = $uid;
 
-		// if not successful somehow - start again
-		if (!finishLogin($userinfo)) {
-			Response::redirectTo('index.php', [
-				'showmessage' => '2'
-			]);
-		}
-
 		// when using email-2fa, remove the one-time-code
 		if ($userinfo['type_2fa'] == '1') {
 			$del_stmt = Database::prepare("UPDATE " . $table . " SET `data_2fa` = '' WHERE `" . $field . "` = :uid");
 			$userinfo = Database::pexecute_first($del_stmt, [
 				'uid' => $uid
+			]);
+		}
+
+		// when remember is activated, set the cookie
+		if ($remember) {
+			$selector = base64_encode(Froxlor::genSessionId(9));
+			$authenticator = Froxlor::genSessionId(33);
+			$valid_until = time()+60*60*24*30;
+			$ins_stmt = Database::prepare("
+				INSERT INTO `".TABLE_PANEL_2FA_TOKENS."` SET
+				`selector` = :selector,
+				`token` = :authenticator,
+				`userid` = :userid,
+				`valid_until` = :valid_until
+			");
+			Database::pexecute($ins_stmt, [
+				'selector' => $selector,
+				'authenticator' => hash('sha256', $authenticator),
+				'userid' => $uid,
+				'valid_until' => $valid_until
+			]);
+			$cookie_params = [
+				'expires' => $valid_until, // 30 days
+				'path' => '/',
+				'domain' => UI::getCookieHost(),
+				'secure' => UI::requestIsHttps(),
+				'httponly' => true,
+				'samesite' => 'Strict'
+			];
+			setcookie('frx_2fa_remember', $selector.':'.base64_encode($authenticator), $cookie_params);
+		}
+
+		// if not successful somehow - start again
+		if (!finishLogin($userinfo)) {
+			Response::redirectTo('index.php', [
+				'showmessage' => '2'
 			]);
 		}
 		exit();
@@ -349,6 +379,22 @@ if ($action == '2fa_entercode') {
 
 		// 2FA activated
 		if (Settings::Get('2fa.enabled') == '1' && $userinfo['type_2fa'] > 0) {
+
+			// check for remember cookie
+			if (!empty($_COOKIE['frx_2fa_remember'])) {
+				list($selector, $authenticator) = explode(':', $_COOKIE['frx_2fa_remember']);
+				$sel_stmt = Database::prepare("SELECT `token` FROM `".TABLE_PANEL_2FA_TOKENS."` WHERE `selector` = :selector AND `userid` = :uid AND `valid_until` >= UNIX_TIMESTAMP()");
+				$token_check = Database::pexecute_first($sel_stmt, ['selector' => $selector, 'uid' => $userinfo[$uid]]);
+				if ($token_check && hash_equals($token_check['token'], hash('sha256', base64_decode($authenticator)))) {
+					if (!finishLogin($userinfo)) {
+						Response::redirectTo('index.php', [
+							'showmessage' => '2'
+						]);
+					}
+					exit();
+				}
+			}
+
 			// redirect to code-enter-page
 			$_SESSION['secret_2fa'] = ($userinfo['type_2fa'] == 2 ? $userinfo['data_2fa'] : 'email');
 			$_SESSION['uid_2fa'] = $userinfo[$uid];
@@ -829,8 +875,8 @@ function finishLogin($userinfo)
 			$theme = $userinfo['theme'];
 		} else {
 			$theme = Settings::Get('panel.default_theme');
-			CurrentUser::setField('theme', $theme);
 		}
+		CurrentUser::setField('theme', $theme);
 
 		$qryparams = [];
 		if (!empty($_SESSION['lastqrystr'])) {

@@ -270,15 +270,6 @@ class Emails extends ApiCommand implements ResourceEntity
 			throw new Exception("You cannot access this resource", 405);
 		}
 
-		// if enabling catchall is not allowed by settings, we do not need
-		// to run update()
-		if (Settings::Get('catchall.catchall_enabled') != '1') {
-			Response::standardError([
-				'operationnotpermitted',
-				'featureisdisabled'
-			], 'catchall', true);
-		}
-
 		$id = $this->getParam('id', true, 0);
 		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
@@ -297,30 +288,41 @@ class Emails extends ApiCommand implements ResourceEntity
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
 		$description = $this->getParam('description', true, $result['description']);
 
+		// if enabling catchall is not allowed by settings, we do not need
+		// to run update()
+		if ($iscatchall && $result['iscatchall'] == 0 && Settings::Get('catchall.catchall_enabled') != '1') {
+			Response::standardError([
+				'operationnotpermitted',
+				'featureisdisabled'
+			], 'catchall', true);
+		}
+
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
 
 		// check for catchall-flag
+		$email = $result['email_full'];
 		if ($iscatchall) {
 			$iscatchall = '1';
-			$email_parts = explode('@', $result['email_full']);
-			$email = '@' . $email_parts[1];
-			// catchall check
-			$stmt = Database::prepare("
-				SELECT `email_full` FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `email` = :email AND `customerid` = :cid AND `iscatchall` = '1'
-			");
-			$params = [
-				"email" => $email,
-				"cid" => $customer['customerid']
-			];
-			$email_check = Database::pexecute_first($stmt, $params, true, true);
-			if ($email_check) {
-				Response::standardError('youhavealreadyacatchallforthisdomain', '', true);
+			$email = $result['email'];
+			// update only required if it was not a catchall before
+			if ($result['iscatchall'] == 0) {
+				$email_parts = explode('@', $result['email_full']);
+				$email = '@' . $email_parts[1];
+				// catchall check
+				$stmt = Database::prepare("
+					SELECT `email_full` FROM `" . TABLE_MAIL_VIRTUAL . "`
+					WHERE `email` = :email AND `customerid` = :cid AND `iscatchall` = '1'
+				");
+				$params = [
+					"email" => $email,
+					"cid" => $customer['customerid']
+				];
+				$email_check = Database::pexecute_first($stmt, $params, true, true);
+				if ($email_check) {
+					Response::standardError('youhavealreadyacatchallforthisdomain', '', true);
+				}
 			}
-		} else {
-			$iscatchall = '0';
-			$email = $result['email_full'];
 		}
 
 		$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1,2})?$/', '', [7.0], true);

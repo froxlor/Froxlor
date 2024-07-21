@@ -149,6 +149,12 @@ return [
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
 			],
+			'c.type_2fa' => [
+				'label' => lng('2fa.type_2fa'),
+				'field' => 'type_2fa',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'type2fa'],
+			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [
 			'c.name',

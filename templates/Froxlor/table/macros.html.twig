@@ -29,6 +29,16 @@
 	{% endif %}
 {% endmacro %}
 
+{% macro type2fa(data) %}
+	{% if (data == 1) %}
+		<i class="fa-solid fa-envelope text-success"></i>
+	{% elseif (data == 2) %}
+		<i class="fa-solid fa-mobile text-success"></i>
+	{% else %}
+		<i class="fa-solid fa-lock-open text-warning"></i>
+	{% endif %}
+{% endmacro %}
+
 {% macro link(data) %}
 	{% apply spaceless %}
 	<a href="{{ data.href }}" {% if data.class is defined %} class="{{ data.class }}" {% endif %} {% if data.target is defined %} target="{{ data.target }}" {% endif %} {% if data.title is defined %} title="{{ data.title }}" {% endif %}>

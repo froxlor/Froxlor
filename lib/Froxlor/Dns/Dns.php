@@ -54,7 +54,7 @@ class Dns
 				$dom_data['uid'] = $userinfo['userid'];
 			}
 		} else {
-			$where_clause = '`customerid` = :uid AND ';
+			$where_clause = '`customerid` = :uid AND `email_only` = "0" AND ';
 			$dom_data['uid'] = $userinfo['userid'];
 		}
 

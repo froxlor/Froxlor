@@ -983,9 +983,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				'`d`.`letsencrypt`',
 				'`d`.`registration_date`',
 				'`d`.`termination_date`',
-				'`d`.`deactivated`'
+				'`d`.`deactivated`',
+				'`d`.`email_only`',
 			];
 		}
+
 		$query_fields = [];
 
 		// prepare select statement
@@ -996,7 +998,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-			AND `d`.`email_only` = '0'
 			" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` ASC, `d`.`parentdomainid` ASC " . $this->getOrderBy(true) . $this->getLimit());
 
 		$result = [];
@@ -1092,13 +1093,13 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$this->getUserDetail('customerid')
 			];
 		}
+
 		if (!empty($customer_ids)) {
 			// prepare select statement
 			$domains_stmt = Database::prepare("
 				SELECT COUNT(*) as num_subdom
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-				AND `d`.`email_only` = '0'
 			");
 			$result = Database::pexecute_first($domains_stmt, null, true, true);
 			if ($result) {

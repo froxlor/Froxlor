@@ -48,6 +48,7 @@ return [
 		'2fa_ga_desc' => 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "2FA deaktivieren"',
 		'2fa_not_activated' => 'Zwei-Faktor Authentifizierung ist nicht aktiviert',
 		'2fa_not_activated_for_user' => 'Zwei-Faktor Authentifizierung ist für den aktuellen Benutzer nicht aktiviert',
+		'type_2fa' => '2FA Status',
 	],
 	'admin' => [
 		'overview' => 'Übersicht',
@@ -713,6 +714,7 @@ return [
 		'hsts' => 'HSTS aktiviert',
 		'aliasdomainid' => 'ID der Alias-Domain',
 		'nodomainsassignedbyadmin' => 'Diesem Account wurde noch keine (aktive) Domain zugewiesen. Bitte kontaktiere deinen Administrator, wenn du der Meinung bist, das ist nicht korrekt.',
+		'email_only' => 'Nur E-Mail',
 	],
 	'emails' => [
 		'description' => 'Hier können Sie Ihre E-Mail-Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>',
@@ -1031,6 +1033,7 @@ return [
 		'combination_not_found' => 'Kombination aus Benutzername und E-Mail Adresse stimmen nicht überein.',
 		'2fa' => 'Zwei-Faktor Authentifizierung (2FA)',
 		'2facode' => 'Bitte 2FA Code angeben',
+		'2faremember' => 'Browser vertrauen',
 	],
 	'mails' => [
 		'pop_success' => [

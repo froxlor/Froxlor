@@ -49,6 +49,7 @@ return [
 		'2fa_ga_desc' => 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "Deactivate 2FA"',
 		'2fa_not_activated' => 'Two-factor authentication is not enabled',
 		'2fa_not_activated_for_user' => 'Two-factor authentication is not enabled for the current user',
+		'type_2fa' => '2FA status',
 	],
 	'admin' => [
 		'overview' => 'Overview',
@@ -784,6 +785,7 @@ return [
 		'hsts' => 'HSTS enabled',
 		'aliasdomainid' => 'ID of alias domain',
 		'nodomainsassignedbyadmin' => 'Your account has currently no (active) domains assigned to it. Please contact your administrator if you think this is wrong.',
+		'email_only' => 'Email only',
 	],
 	'emails' => [
 		'description' => 'Here you can create and change your email addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>',
@@ -1103,6 +1105,7 @@ return [
 		'combination_not_found' => 'Combination of user and email address not found.',
 		'2fa' => 'Two-factor authentication (2FA)',
 		'2facode' => 'Please enter 2FA code',
+		'2faremember' => 'Trust browser',
 	],
 	'mails' => [
 		'pop_success' => [

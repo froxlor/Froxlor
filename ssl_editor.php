@@ -50,6 +50,10 @@ if ($action == '' || $action == 'view') {
 	}
 	$result_domain = json_decode($json_result, true)['data'];
 
+	if ($result_domain['email_only']) {
+		Response::dynamicError("There are no ssl-certificates for email only domains.");
+	}
+
 	if (Request::post('send') == 'send') {
 		$do_insert = Request::post('do_insert', 0) == 1;
 		try {
