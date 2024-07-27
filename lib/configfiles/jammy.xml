@@ -3872,7 +3872,7 @@ MaxLoginAttempts 3
 BanLog /var/log/proftpd/ban.log
 BanTable /etc/proftpd/ban.tab
 BanMessage "User %u was banned."
-BanOnEvent ClientConnectRate 5/00:00:02 12:00:00 "Stop connecting frequently"
+BanOnEvent ClientConnectRate 10/00:00:02 02:00:00 "Stop connecting frequently"
 BanOnEvent MaxLoginAttempts 3/00:30:00 12:00:00
 BanOnEvent AnonRejectPasswords 1/01:00:00 99:99:99
 BanControlsACLs all allow user root

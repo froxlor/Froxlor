@@ -1824,7 +1824,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'documentroot_use_default_value' => [
 			'title' => 'Verwende Domainnamen im Documentroot',
-			'description' => 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.tld/<br />/var/customers/customer_name/subdomain.example.tld/',
+			'description' => 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/webs/customer_name/example.tld/<br />/var/customers/webs/customer_name/subdomain.example.tld/',
 		],
 		'panel_phpconfigs_hidesubdomains' => [
 			'title' => 'Verstecke Subdomains in PHP-Konfigurations-Übersicht',
