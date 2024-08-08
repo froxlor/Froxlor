@@ -35,6 +35,7 @@ require __DIR__ . '/lib/init.php';
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\HTML;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {

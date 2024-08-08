@@ -227,7 +227,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 				// remove it for checks
 				$content = substr($content, 0, -1);
 			}
-			if (!Validate::validateDomain($content)) {
+			if (!empty($content) && !Validate::validateDomain($content)) {
 				$errors[] = lng('error.dns_mx_needdom');
 			} else {
 				// check whether there is a CNAME-record for the same resource
@@ -244,6 +244,10 @@ class DomainZones extends ApiCommand implements ResourceEntity
 			}
 			// append trailing dot (again)
 			$content .= '.';
+			// if content is only ".", the prio needs to be 0 which results in a "null mx" entry
+			if ($content == '.' && $prio != 0) {
+				$prio = 0;
+			}
 		} elseif ($type == 'NS') {
 			// check for trailing dot
 			if (substr($content, -1) == '.') {

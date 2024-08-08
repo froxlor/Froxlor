@@ -70,7 +70,7 @@ class ReportsCron extends FroxlorCron
 				) as `traffic_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
 				LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
-				ON `a`.`adminid` = `c`.`adminid` WHERE `c`.`reportsent` <> '1'
+				ON `a`.`adminid` = `c`.`adminid` WHERE `c`.`reportsent` & 1 = 0
 			");
 
 			$result_data = [
@@ -78,6 +78,11 @@ class ReportsCron extends FroxlorCron
 				'month' => date("m", $yesterday)
 			];
 			Database::pexecute($result_stmt, $result_data);
+
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = `reportsent` + 1
+				WHERE `customerid` = :customerid
+			");
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$row['traffic'] *= 1024;
@@ -148,10 +153,6 @@ class ReportsCron extends FroxlorCron
 					}
 
 					$mail->ClearAddresses();
-					$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '1'
-						WHERE `customerid` = :customerid
-					");
 					Database::pexecute($upd_stmt, [
 						'customerid' => $row['customerid']
 					]);
@@ -165,7 +166,7 @@ class ReportsCron extends FroxlorCron
 				FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` `t`
 				WHERE `t`.`adminid` = `a`.`adminid` AND `t`.`year` = :year AND `t`.`month` = :month
 				) as `traffic_used_total`
-				FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` = '0'
+				FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` & 1 = 0
 			");
 
 			$result_data = [
@@ -173,6 +174,11 @@ class ReportsCron extends FroxlorCron
 				'month' => date("m", $yesterday)
 			];
 			Database::pexecute($result_stmt, $result_data);
+
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = `reportsent` + 1
+				WHERE `adminid` = :adminid
+			");
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$row['traffic'] *= 1024;
@@ -231,10 +237,6 @@ class ReportsCron extends FroxlorCron
 					}
 
 					$mail->ClearAddresses();
-					$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '1'
-						WHERE `adminid` = :adminid
-					");
 					Database::pexecute($upd_stmt, [
 						'adminid' => $row['adminid']
 					]);
@@ -344,10 +346,15 @@ class ReportsCron extends FroxlorCron
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
 			    LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
 			    ON `a`.`adminid` = `c`.`adminid`
-			    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` <> '2'
+			    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` & 2 = 0
 			");
 
 			$mail = new Mailer(true);
+
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = `reportsent` + 2
+				WHERE `customerid` = :customerid
+			");
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$row['diskspace'] *= 1024;
@@ -418,10 +425,6 @@ class ReportsCron extends FroxlorCron
 					}
 
 					$mail->ClearAddresses();
-					$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '2'
-						WHERE `customerid` = :customerid
-					");
 					Database::pexecute($upd_stmt, [
 						'customerid' => $row['customerid']
 					]);
@@ -432,7 +435,12 @@ class ReportsCron extends FroxlorCron
 			 * report about diskusage for admins/reseller
 			 */
 			$result_stmt = Database::query("
-				SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` <> '2'
+				SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` & 2 = 0
+			");
+
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = `reportsent` + 2
+				WHERE `adminid` = :adminid
 			");
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -492,10 +500,6 @@ class ReportsCron extends FroxlorCron
 					}
 
 					$mail->ClearAddresses();
-					$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '2'
-						WHERE `adminid` = :adminid
-					");
 					Database::pexecute($upd_stmt, [
 						'adminid' => $row['adminid']
 					]);

@@ -1946,7 +1946,7 @@ Yours sincerely, your administrator',
 		],
 		'documentroot_use_default_value' => [
 			'title' => 'Use domain name as default value for DocumentRoot path',
-			'description' => 'If enabled and DocumentRoot path is empty, default value will be the (sub)domain name.<br /><br />Examples: <br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/',
+			'description' => 'If enabled and DocumentRoot path is empty, default value will be the (sub)domain name.<br /><br />Examples: <br />/var/customers/webs/customer_name/example.com/<br />/var/customers/webs/customer_name/subdomain.example.com/',
 		],
 		'panel_phpconfigs_hidesubdomains' => [
 			'title' => 'Hide subdomains in PHP-configuration overview',
