@@ -4742,7 +4742,7 @@ no
 						</content>
 					</file>
 					<file name="/etc/pure-ftpd/db/mysql.conf" chown="root:0"
-						chmod="0644" backup="true">
+						chmod="0640" backup="true">
 						<content><![CDATA[
 ##############################################
 #                                            #

@@ -84,7 +84,8 @@ if ($action == '2fa_entercode') {
 		// verify code set to user's data_2fa field
 		$sel_stmt = Database::prepare("SELECT `data_2fa` FROM " . $table . " WHERE `" . $field . "` = :uid");
 		$userinfo_code = Database::pexecute_first($sel_stmt, ['uid' => $uid]);
-		$result = $tfa->verifyCode($userinfo_code['data_2fa'], $code);
+		// 60sec discrepancy (possible slow email delivery)
+		$result = $tfa->verifyCode($userinfo_code['data_2fa'], $code, 60);
 	} else {
 		$result = $tfa->verifyCode($_SESSION['secret_2fa'], $code, 3);
 	}
