@@ -150,3 +150,12 @@ if (Froxlor::isFroxlorVersion('2.2.0-rc2')) {
 	Update::showUpdateStep("Updating from 2.2.0-rc2 to 2.2.0-rc3", false);
 	Froxlor::updateToVersion('2.2.0-rc3');
 }
+
+if (Froxlor::isDatabaseVersion('202407200')) {
+
+	Update::showUpdateStep("Adjusting field in 2fa-token table");
+	Database::query("ALTER TABLE `panel_2fa_tokens` CHANGE COLUMN `selector` `selector` varchar(200) NOT NULL;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202408140');
+}
