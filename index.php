@@ -394,6 +394,9 @@ if ($action == '2fa_entercode') {
 					}
 					exit();
 				}
+				// not found or invalid, this cookie is useless, get rid of it
+				unset($_COOKIE['frx_2fa_remember']);
+				setcookie('frx_2fa_remember', "", time()-3600);
 			}
 
 			// redirect to code-enter-page
