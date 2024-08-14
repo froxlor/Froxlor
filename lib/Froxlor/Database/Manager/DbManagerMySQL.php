@@ -187,7 +187,7 @@ class DbManagerMySQL
 	 */
 	public function deleteUser(string $username, string $host)
 	{
-		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
 			// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
 			$stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `" . $username . "`@`" . $host . "`");
 			Database::pexecute($stmt);

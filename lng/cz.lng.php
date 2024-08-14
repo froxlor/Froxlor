@@ -49,6 +49,7 @@ return [
 		'2fa_ga_desc' => 'Váš účet je nastaven tak, aby používal jednorázová hesla založená na čase prostřednictvím autentizační aplikace. Naskenujte níže uvedený QR kód pomocí požadované autentizační aplikace pro vygenerování kódů. Chcete-li deaktivovat, klikněte na "Deaktivovat 2FA"',
 		'2fa_not_activated' => 'Dvoufázové ověřování není povoleno',
 		'2fa_not_activated_for_user' => 'Dvoufaktorové ověření není pro aktuálního uživatele povoleno',
+		'type_2fa' => 'Stav 2FA',
 	],
 	'admin' => [
 		'overview' => 'Přehled',
@@ -681,6 +682,8 @@ return [
 			'title' => 'Použít greylisting',
 			'description' => 'Příchozí e-maily budou chráněny <a href="https://en.wikipedia.org/wiki/Greylisting_(email)" target="_blank">greylisting</a>.<br/>Výchozí: ano'
 		],
+		'required_spf_dns' => 'Požadovaný SPF DNS záznam',
+		'required_dmarc_dns' => 'Požadovaný DMARC DNS záznam',
 		'required_dkim_dns' => 'Požadovaný DKIM DNS záznam',
 	],
 	'dns' => [
@@ -782,6 +785,7 @@ return [
 		'hsts' => 'HSTS povoleno',
 		'aliasdomainid' => 'ID aliasové domény',
 		'nodomainsassignedbyadmin' => 'Váš účet nemá v současné době přiřazeny žádné (aktivní) domény. Pokud si myslíte, že je to špatné, kontaktujte svého správce.',
+		'email_only' => 'Jen emaily',
 	],
 	'emails' => [
 		'description' => 'Zde můžete vytvářet a měnit své e-mailové adresy.<br />Účet je jako poštovní schránka před vaším domem. Pokud vám někdo pošle e-mail, bude vypuštěn na účet.<br /><br />Chcete-li stáhnout své e-maily, použijte následující nastavení ve vašem poštovním programu: (Data v <i>kurzívě</i> musí být změněna na ekvivalenty, které jste zadali!<br />Hostitelské jméno: <b><i>doménové jméno</i></b><br />Uživatelské jméno: <b><i>jméno účtu / e-mailová adresa</i></b><br />heslo: <b><i>heslo, které jste zvolili</i></b>',
@@ -1101,6 +1105,7 @@ return [
 		'combination_not_found' => 'Kombinace uživatele a e-mailové adresy nenalezena.',
 		'2fa' => 'Dvoufázové ověření (2FA)',
 		'2facode' => 'Zadejte prosím 2FA kód',
+		'2faremember' => 'Důvěřovat prohlížeči',
 	],
 	'mails' => [
 		'pop_success' => [
@@ -1227,7 +1232,7 @@ Ach upřímně, váš správce',
 	],
 	'opcacheinfo' => [
 		'generaltitle' => 'Obecné informace',
-		'resetcache' => 'Resetövat OPcache',
+		'resetcache' => 'Resetovat OPcache',
 		'version' => 'Verze OPCache',
 		'phpversion' => 'Verze PHP',
 		'runtimeconf' => 'Spustitelná konfigurace',
@@ -1941,7 +1946,7 @@ Ach upřímně, váš správce',
 		],
 		'documentroot_use_default_value' => [
 			'title' => 'Použít název domény jako výchozí hodnotu pro cestu kořenového adresáře dokumentu',
-			'description' => 'Pokud je povoleno a cesta DocumentRoot je prázdná, výchozí hodnotou bude název (sub)domény.<br /><br />Příklady: <br />/var/customers/customer_name/example.com/<br />/var /customers/customer_name/subdomain.example.com/',
+			'description' => 'Pokud je povoleno a cesta DocumentRoot je prázdná, výchozí hodnotou bude název (sub)domény.<br /><br />Příklady: <br />/var/customers/webs/customer_name/example.com/<br />/var/customers/webs/customer_name/subdomain.example.com/',
 		],
 		'panel_phpconfigs_hidesubdomains' => [
 			'title' => 'Skrýt subdomény v PHP-konfiguračním přehledu',
