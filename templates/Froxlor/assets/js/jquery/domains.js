@@ -41,8 +41,9 @@ export default function () {
 				$('#speciallogfilenote').remove();
 				$('#speciallogfile').removeClass('is-invalid');
 				$('#speciallogverified').val(0);
+				const cFileName = window.location.pathname.substring(window.location.pathname.lastIndexOf("/")+1);
 				$.ajax({
-					url: window.location.pathname.substring(1) + "?page=overview&action=jqSpeciallogfileNote",
+					url: cFileName + "?page=overview&action=jqSpeciallogfileNote",
 					type: "POST",
 					data: {
 						id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
