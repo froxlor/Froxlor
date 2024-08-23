@@ -232,7 +232,7 @@ class Data
 	{
 		$returnvalue = true;
 
-		if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
+		if (isset($fielddata['select_mode']) && $fielddata['select_mode'] == 'multiple') {
 			$options = explode(',', $newfieldvalue);
 			foreach ($options as $option) {
 				$returnvalue = ($returnvalue && isset($fielddata['select_var'][$option]));
@@ -247,7 +247,7 @@ class Data
 			if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
 				return true;
 			}
-			return 'not in option';
+			return 'not in option (field: ' . $fieldname . ')';
 		}
 	}
 
