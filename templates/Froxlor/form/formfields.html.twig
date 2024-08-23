@@ -3,7 +3,7 @@
 		{% if norow == false and (field.type != 'hidden' or (field.type == 'hidden' and field.display is defined and field.display is not empty)) %}
 			<div class="row g-0 formfield d-flex align-items-center">
 				{% if field.prior_infotext is defined and field.prior_infotext|length > 0 %}
-					<h5>{{ field.prior_infotext }}</h5>
+					<h5>{{ field.prior_infotext|raw }}</h5>
 				{% endif %}
 				{% if field.label is iterable %}
 					<label for="{{ id }}" class="col-sm-6 col-form-label pe-3">
