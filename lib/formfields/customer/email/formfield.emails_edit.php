@@ -103,18 +103,21 @@ return [
 						]
 					],
 					'spam_tag_level' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.spam_tag_level'),
 						'type' => 'text',
 						'string_regexp' => '/^\d{1,}(\.\d{1,2})?$/',
 						'value' => $result['spam_tag_level']
 					],
 					'spam_kill_level' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.spam_kill_level'),
 						'type' => 'text',
 						'string_regexp' => '/^\d{1,}(\.\d{1,2})?$/',
 						'value' => $result['spam_kill_level']
 					],
 					'bypass_spam' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.bypass_spam'),
 						'type' => 'label',
 						'value' => ((int)$result['bypass_spam'] == 0 ? lng('panel.no') : lng('panel.yes')),
@@ -128,6 +131,7 @@ return [
 						]
 					],
 					'policy_greylist' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.policy_greylist'),
 						'type' => 'label',
 						'value' => ((int)$result['policy_greylist'] == 0 ? lng('panel.no') : lng('panel.yes')),
