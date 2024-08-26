@@ -2121,7 +2121,7 @@ action = "no action";
 			<service type="ftp" title="{{lng.admin.configfiles.ftp}}">
 				<!-- Proftpd -->
 				<daemon name="proftpd" title="ProFTPd" default="true">
-					<install><![CDATA[apt-get install proftpd-basic proftpd-mod-mysql proftpd-mod-crypto]]></install>
+					<install><![CDATA[apt-get install proftpd-basic proftpd-mod-mysql proftpd-mod-crypto proftpd-mod-wrap]]></install>
 					<file name="/etc/proftpd/create-cert.sh" chown="root:0"
 						chmod="0700">
 						<content><![CDATA[#!/bin/bash
