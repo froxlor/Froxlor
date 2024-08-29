@@ -1132,7 +1132,8 @@ Atentamente, su administrador'
 		]
 	],
 	'message' => [
-		'norecipients' => 'No se ha enviado ningún correo electrónico porque no hay destinatarios en la base de datos'
+		'norecipients' => 'No se ha enviado ningún correo electrónico porque no hay destinatarios en la base de datos',
+		'success' => 'Mensaje enviado correctamente a los destinatarios de %s',
 	],
 	'mysql' => [
 		'databasename' => 'Usuario/Nombre de la base de datos',
@@ -2152,7 +2153,6 @@ Atentamente, su administrador'
 		'issuer' => 'Emisor'
 	],
 	'success' => [
-		'messages_success' => 'Mensaje enviado correctamente a los destinatarios de %s',
 		'success' => 'Información',
 		'clickheretocontinue' => 'Haga clic aquí para continuar',
 		'settingssaved' => 'La configuración se ha guardado correctamente.',

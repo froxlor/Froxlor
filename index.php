@@ -62,6 +62,7 @@ if ($action == '2fa_entercode') {
 	// show template to enter code
 	UI::view('login/enter2fa.html.twig', [
 		'pagetitle' => lng('login.2fa'),
+		'remember_me' => (Settings::Get('panel.db_version') >= 202407200) ? true : false,
 		'message' => $message
 	]);
 } elseif ($action == '2fa_verify') {

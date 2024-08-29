@@ -1213,6 +1213,7 @@ Yours sincerely, your administrator',
 	],
 	'message' => [
 		'norecipients' => 'No e-mail has been sent because there are no recipients in the database',
+		'success' => 'Successfully sent message to %s recipients',
 	],
 	'mysql' => [
 		'databasename' => 'User/Database name',
@@ -2273,7 +2274,6 @@ Yours sincerely, your administrator',
 		'issuer' => 'Issuer',
 	],
 	'success' => [
-		'messages_success' => 'Successfully sent message to %s recipients',
 		'success' => 'Information',
 		'clickheretocontinue' => 'Click here to continue',
 		'settingssaved' => 'The settings have been successfully saved.',

@@ -1213,6 +1213,7 @@ Ach upřímně, váš správce',
 	],
 	'message' => [
 		'norecipients' => 'Nebyl odeslán žádný e-mail, protože v databázi nejsou žádní příjemci',
+		'success' => 'Zpráva byla úspěšně odeslána příjemcům %s',
 	],
 	'mysql' => [
 		'databasename' => 'Uživatel/Jméno databáze',
@@ -2273,7 +2274,6 @@ Ach upřímně, váš správce',
 		'issuer' => 'Vydavatel',
 	],
 	'success' => [
-		'messages_success' => 'Zpráva byla úspěšně odeslána příjemcům %s',
 		'success' => 'Informace',
 		'clickheretocontinue' => 'Klikněte zde pro pokračování',
 		'settingssaved' => 'Nastavení bylo úspěšně uloženo.',

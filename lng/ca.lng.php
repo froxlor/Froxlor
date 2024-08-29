@@ -1143,7 +1143,8 @@ Atentament, el vostre administrador'
 		]
 	],
 	'message' => [
-		'norecipients' => 'No s\'ha enviat cap correu electrònic perquè no hi ha destinataris a la base de dades'
+		'norecipients' => 'No s\'ha enviat cap correu electrònic perquè no hi ha destinataris a la base de dades',
+		'success' => 'Missatge enviat correctament als destinataris de %s',
 	],
 	'mysql' => [
 		'databasename' => 'Usuari/Nom de la base de dades',
@@ -2169,7 +2170,6 @@ Atentament, el vostre administrador'
 		'issuer' => 'Emissor'
 	],
 	'success' => [
-		'messages_success' => 'Missatge enviat correctament als destinataris de %s',
 		'success' => 'Informació',
 		'clickheretocontinue' => 'Feu clic aquí per a continuar',
 		'settingssaved' => 'La configuració s\'ha guardat correctament.',

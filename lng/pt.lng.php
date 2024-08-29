@@ -554,6 +554,7 @@ return [
 	],
 	'message' => [
 		'norecipients' => 'Email não enviado porque não tem destinatário no banco de dados',
+		'success' => 'Mensagens enviadas para %s destinatários com sucesso',
 	],
 	'mysql' => [
 		'description' => 'Aqui você pode criar e alterar seus bancos de dados MySQL.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.<br />No menu do lado esquerdo você pode encontrar a ferramenta phpMyAdmin e com ela facilmente administrar seus bancos de dados.<br /><br />Para usar seu banco de dados com scripts em PHP use as seguintes configurações: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente do banco de dados que você criou!)<br />Hostname: <b><SQL_HOST></b><br />Usuario: <b><i>Nome do banco de dadose</i></b><br />Senha: <b><i>a senha que você escolheu</i></b><br />Banco de dados: <b><i>Nome do banco de dados',
@@ -879,9 +880,6 @@ return [
 			'title' => 'Ativa mover domínios entre clientes',
 			'description' => 'Se ativado você pode trocar o cliente de um domínio para administração de outro.<br /><b>Attention:</b> Froxlor não troca nenhum caminho. Isto pode fazer com que domínios parem de funcionar',
 		],
-	],
-	'success' => [
-		'messages_success' => 'Mensagens enviadas para %s destinatários com sucesso',
 	],
 	'traffic' => [
 		'month' => 'Mês',

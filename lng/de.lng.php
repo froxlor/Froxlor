@@ -1141,6 +1141,7 @@ Vielen Dank, Ihr Administrator',
 	],
 	'message' => [
 		'norecipients' => 'Es wurde keine E-Mail versendet, da sich keine Empfänger in der Datenbank befinden',
+		'success' => 'Nachricht erfolgreich an "%s" Empfänger gesendet',
 	],
 	'mysql' => [
 		'databasename' => 'Benutzer-/Datenbankname',
@@ -2139,7 +2140,6 @@ Vielen Dank, Ihr Administrator',
 		'dmarc_entry' => 'DMARC-Eintrag für alle Domains',
 	],
 	'success' => [
-		'messages_success' => 'Nachricht erfolgreich an "%s" Empfänger gesendet',
 		'success' => 'Information',
 		'clickheretocontinue' => 'Hier klicken, um fortzufahren',
 		'settingssaved' => 'Die Einstellungen wurden erfolgreich gespeichert.',
