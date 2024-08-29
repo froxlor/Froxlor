@@ -466,6 +466,7 @@ return [
 	],
 	'message' => [
 		'norecipients' => 'Aucun e-mail n\'a été envoyé car il n\'existe aucun destinataire dans la base de données',
+		'success' => 'Le message a été envoyé aux destinataires "%s"',
 	],
 	'mysql' => [
 		'databasename' => 'Nom de la base de données',
@@ -748,9 +749,6 @@ return [
 			'title' => 'Permettre la réinitialisation des mots de passe par les administrateurs',
 			'description' => 'Les administrateurs / revendeurs peuvent réinitialiser leurs mots de passe et il sera envoyé à leurs propres adresses e-mails',
 		],
-	],
-	'success' => [
-		'messages_success' => 'Le message a été envoyé aux destinataires "%s"',
 	],
 	'traffic' => [
 		'month' => 'Mois',

@@ -619,6 +619,7 @@ Met vriendelijke groet, uw beheerder',
 	],
 	'message' => [
 		'norecipients' => 'Er is geen email verstuurd omdat er geen ontvangers in de database zijn',
+		'success' => 'Bericht verzonden naar ontvangers %s',
 	],
 	'mysql' => [
 		'databasename' => 'gebruiker/database naam',
@@ -1069,7 +1070,6 @@ Met vriendelijke groet, uw beheerder',
 		'spf_entry' => 'SPF regel voor alle domeinen',
 	],
 	'success' => [
-		'messages_success' => 'Bericht verzonden naar ontvangers %s',
 		'success' => 'Informatie',
 		'clickheretocontinue' => 'Klik hier om verder te gaan',
 		'settingssaved' => 'De instellingen zijn opgeslagen.',

@@ -1043,6 +1043,7 @@ Cordiali Saluti, Team Froxlor',
 	],
 	'message' => [
 		'norecipients' => 'Nessuna e-mail è stata inviata perch¸ non ci sono i destinatari nel database',
+		'success' => 'Inviato correttamente il messaggio a %s recipients',
 	],
 	'mysql' => [
 		'description' => 'Qui puoi creare e modificare il tuo database MySQL<br />Le modifiche sono istantanee e puoi usare subito il database.<br />Nel menù a sinistra trovi phpMyAdmin con cui puoi amministrare il tuo database.<br /><br />Per usare i database nei tuoi script php usa le seguenti impostazioni: (Le parole in <i>corsivo</i> devono essere modificate con quello che hai scritto!)<br />Hostname: <b><SQL_HOST></b><br />Utente: <b><i>Nome database</i></b><br />Password: <b><i>La password che hai scelto</i></b><br />Database: <b><i>Nome database</i></b>',
@@ -1703,7 +1704,6 @@ Nota: Perfavore <b>sii sicuro</b> di usare lo stesso nome di file come per il cr
 		'spf_entry' => 'Impostazioni SPF per tutti i domini',
 	],
 	'success' => [
-		'messages_success' => 'Inviato correttamente il messaggio a %s recipients',
 		'success' => 'Informazioni',
 		'clickheretocontinue' => 'Clicca qui per continuare',
 		'settingssaved' => 'Le impostazioni sono state salvate con successo.',
