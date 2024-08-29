@@ -441,7 +441,7 @@ class Apache extends HttpConfigBase
 								if (!empty(Settings::Get('system.dhparams_file'))) {
 									$dhparams = FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 									if (!file_exists($dhparams)) {
-										FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
+										file_put_contents($dhparams, self::FFDHE4096);
 									}
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 								}
@@ -754,7 +754,7 @@ class Apache extends HttpConfigBase
 					if (!empty(Settings::Get('system.dhparams_file'))) {
 						$dhparams = FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 						if (!file_exists($dhparams)) {
-							FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
+							file_put_contents($dhparams, self::FFDHE4096);
 						}
 						$vhost_content .= '  SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 					}
