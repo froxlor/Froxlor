@@ -111,7 +111,7 @@ if ($action == '2fa_entercode') {
 		// when using email-2fa, remove the one-time-code
 		if ($userinfo['type_2fa'] == '1') {
 			$del_stmt = Database::prepare("UPDATE " . $table . " SET `data_2fa` = '' WHERE `" . $field . "` = :uid");
-			$userinfo = Database::pexecute_first($del_stmt, [
+			Database::pexecute_first($del_stmt, [
 				'uid' => $uid
 			]);
 		}
