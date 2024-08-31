@@ -104,6 +104,10 @@ class MailLogParser
 			unset($matches);
 			$line = fgets($file_handle);
 
+			if (strpos($line, 'postfix') === false) {
+				continue;
+			}
+
 			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
 				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
@@ -112,7 +116,7 @@ class MailLogParser
 						"domainFrom" => strtolower($matches[2]),
 						"size" => $matches[3]
 					];
-				} elseif (preg_match("/postfix\/(?:pipe|smtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?,/", $line, $matches)) {
+				} elseif (preg_match("/postfix\/(?:pipe|smtp|lmtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?,/", $line, $matches)) {
 					// Postfix to
 					if (array_key_exists($matches[1], $this->mails)) {
 						$this->mails[$matches[1]]["domainTo"] = strtolower($matches[2]);
@@ -149,7 +153,7 @@ class MailLogParser
 	private function getLogTimestamp($line)
 	{
 		$matches = null;
-		if (preg_match("/((?:[A-Z]{3}\s{1,2}\d{1,2}|\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2})/i", $line, $matches)) {
+		if (preg_match("/((?:[A-Z]{3}\s{1,2}\d{1,2}|\d{4}-\d{2}-\d{2}).\d{2}:\d{2}:\d{2})/i", $line, $matches)) {
 			$timestamp = strtotime($matches[1]);
 			if ($timestamp > ($this->startTime + 60 * 60 * 24)) {
 				return strtotime($matches[1] . " -1 year");
@@ -257,6 +261,10 @@ class MailLogParser
 		while (!feof($file_handle)) {
 			unset($matches);
 			$line = fgets($file_handle);
+
+			if (strpos($line, 'dovecot') === false) {
+				continue;
+			}
 
 			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
