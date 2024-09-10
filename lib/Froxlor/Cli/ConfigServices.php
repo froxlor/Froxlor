@@ -217,6 +217,10 @@ final class ConfigServices extends CliCommand
 		$_daemons_config['distro'] = $io->choice('Choose distribution', $valid_dists, $os_default);
 
 		// go through all services and let user check whether to include it or not
+		if (empty($_daemons_config['distro']) || !file_exists($config_dir . '/' . $_daemons_config['distro']. ".xml")) {
+			$output->writeln('<error>Empty or non-existing distribution given.</>');
+			return self::INVALID;
+		}
 		$configfiles = new ConfigParser($config_dir . '/' . $_daemons_config['distro'] . ".xml");
 		$services = $configfiles->getServices();
 
@@ -352,8 +356,13 @@ final class ConfigServices extends CliCommand
 		}
 
 		if (!empty($decoded_config)) {
+
 			$config_dir = Froxlor::getInstallDir() . 'lib/configfiles/';
-			$configfiles = new ConfigParser($config_dir . '/' . $decoded_config['distro'] . ".xml");
+			if (empty($decoded_config['distro']) || !file_exists($config_dir . '/' . $decoded_config['distro']. ".xml")) {
+				$output->writeln('<error>Empty or non-existing distribution given. Please login with an admin, go to "System -> Configuration" and select your correct distribution in the top-right corner or specify valid distribution name for "distro" parameter.</>');
+				return self::INVALID;
+			}
+			$configfiles = new ConfigParser($config_dir . '/' . $decoded_config['distro']. ".xml");
 			$services = $configfiles->getServices();
 			$replace_arr = $this->getReplacerArray();
 
