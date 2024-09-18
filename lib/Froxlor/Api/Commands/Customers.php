@@ -738,11 +738,12 @@ class Customers extends ApiCommand implements ResourceEntity
 							'adminid' => $this->getUserDetail('adminid'),
 							'docroot' => $documentroot,
 							'phpenabled' => $phpenabled,
-							'openbasedir' => '1'
+							'openbasedir' => '1',
+							'is_stdsubdomain' => 1
 						];
 						$domainid = -1;
 						try {
-							$std_domain = $this->apiCall('Domains.add', $ins_data);
+							$std_domain = $this->apiCall('Domains.add', $ins_data, true);
 							$domainid = $std_domain['id'];
 						} catch (Exception $e) {
 							$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());

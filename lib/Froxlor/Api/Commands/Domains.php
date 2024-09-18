@@ -274,7 +274,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            $override_tls is true
 	 * @param string $description
 	 *            optional custom description (currently not used/shown in the frontend), default empty
-	 *
+	 * @param bool $is_stdsubdomain (internally)
+	 *            optional whether this is a standard subdomain for a customer which is being added so no usage is decreased
 	 * @access admin
 	 * @return string json-encoded array
 	 * @throws Exception
@@ -282,7 +283,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin()) {
-			if ($this->getUserDetail('domains_used') < $this->getUserDetail('domains') || $this->getUserDetail('domains') == '-1') {
+			$is_stdsubdomain = $this->isInternal() ? $this->getBoolParam('is_stdsubdomain', true, 0) : false;
+			if ($is_stdsubdomain || $this->getUserDetail('domains_used') < $this->getUserDetail('domains') || $this->getUserDetail('domains') == '-1') {
 				// parameters
 				$p_domain = $this->getParam('domain');
 
@@ -795,12 +797,15 @@ class Domains extends ApiCommand implements ResourceEntity
 					$ins_data['id'] = $domainid;
 					unset($ins_data);
 
-					$upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1
-						WHERE `adminid` = :adminid");
-					Database::pexecute($upd_stmt, [
-						'adminid' => $adminid
-					], true, true);
+					if (!$is_stdsubdomain) {
+						$upd_stmt = Database::prepare("
+							UPDATE `" . TABLE_PANEL_ADMINS . "` SET `domains_used` = `domains_used` + 1
+							WHERE `adminid` = :adminid
+						");
+						Database::pexecute($upd_stmt, [
+							'adminid' => $adminid
+						], true, true);
+					}
 
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_DOMAINTOIP . "` SET

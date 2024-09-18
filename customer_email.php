@@ -247,11 +247,7 @@ if ($page == 'email_domain') {
 		if (isset($result['email']) && $result['email'] != '') {
 			if (Request::post('send') == 'send') {
 				try {
-					Emails::getLocal($userinfo, [
-						'id' => $id,
-						'spam_tag_level' => Request::post('spam_tag_level', Rspamd::DEFAULT_MARK_LVL),
-						'spam_kill_level' => Request::post('spam_kill_level', Rspamd::DEFAULT_REJECT_LVL)
-					])->update();
+					Emails::getLocal($userinfo, Request::postAll())->update();
 				} catch (Exception $e) {
 					Response::dynamicError($e->getMessage());
 				}
@@ -291,88 +287,12 @@ if ($page == 'email_domain') {
 
 			$email_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_edit.php';
 
-			if (Settings::Get('catchall.catchall_enabled') != '1') {
-				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
-			}
-
 			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(['section' => 'email']),
 				'formdata' => $email_edit_data['emails_edit'],
 				'editid' => $id
 			]);
 		}
-	} elseif ($action == 'togglebypass' && $id != 0) {
-		try {
-			$json_result = Emails::getLocal($userinfo, [
-				'id' => $id
-			])->get();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		try {
-			Emails::getLocal($userinfo, [
-				'id' => $id,
-				'bypass_spam' => ($result['bypass_spam'] == '1' ? 0 : 1)
-			])->update();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		Response::redirectTo($filename, [
-			'page' => $page,
-			'domainid' => $email_domainid,
-			'action' => 'edit',
-			'id' => $id,
-		]);
-	} elseif ($action == 'togglegreylist' && $id != 0) {
-		try {
-			$json_result = Emails::getLocal($userinfo, [
-				'id' => $id
-			])->get();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		try {
-			Emails::getLocal($userinfo, [
-				'id' => $id,
-				'policy_greylist' => ($result['policy_greylist'] == '1' ? 0 : 1)
-			])->update();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		Response::redirectTo($filename, [
-			'page' => $page,
-			'domainid' => $email_domainid,
-			'action' => 'edit',
-			'id' => $id,
-		]);
-	} elseif ($action == 'togglecatchall' && $id != 0) {
-		try {
-			$json_result = Emails::getLocal($userinfo, [
-				'id' => $id
-			])->get();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		try {
-			Emails::getLocal($userinfo, [
-				'id' => $id,
-				'iscatchall' => ($result['iscatchall'] == '1' ? 0 : 1)
-			])->update();
-		} catch (Exception $e) {
-			Response::dynamicError($e->getMessage());
-		}
-		Response::redirectTo($filename, [
-			'page' => $page,
-			'domainid' => $email_domainid,
-			'action' => 'edit',
-			'id' => $id,
-		]);
 	}
 } elseif ($page == 'accounts') {
 	$email_domainid = Request::any('domainid', 0);
