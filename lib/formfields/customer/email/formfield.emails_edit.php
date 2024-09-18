@@ -90,17 +90,11 @@ return [
 						]
 					],
 					'mail_catchall' => [
+						'visible' => Settings::Get('catchall.catchall_enabled') == '1',
 						'label' => lng('emails.catchall'),
-						'type' => 'label',
-						'value' => ((int)$result['iscatchall'] == 0 ? lng('panel.no') : lng('panel.yes')),
-						'next_to' => [
-							'add_link' => [
-								'type' => 'link',
-								'href' => $filename . '?page=' . $page . '&amp;domainid=' . $result['domainid'] . '&amp;action=togglecatchall&amp;id=' . $result['id'],
-								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
-								'classes' => 'btn btn-sm btn-secondary'
-							]
-						]
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => (int)$result['iscatchall'],
 					],
 					'spam_tag_level' => [
 						'visible' => Settings::Get('antispam.activated') == '1',
@@ -119,30 +113,16 @@ return [
 					'bypass_spam' => [
 						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.bypass_spam'),
-						'type' => 'label',
-						'value' => ((int)$result['bypass_spam'] == 0 ? lng('panel.no') : lng('panel.yes')),
-						'next_to' => [
-							'add_link' => [
-								'type' => 'link',
-								'href' => $filename . '?page=' . $page . '&amp;domainid=' . $result['domainid'] . '&amp;action=togglebypass&amp;id=' . $result['id'],
-								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
-								'classes' => 'btn btn-sm btn-secondary'
-							]
-						]
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => (int)$result['bypass_spam'],
 					],
 					'policy_greylist' => [
 						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.policy_greylist'),
-						'type' => 'label',
-						'value' => ((int)$result['policy_greylist'] == 0 ? lng('panel.no') : lng('panel.yes')),
-						'next_to' => [
-							'add_link' => [
-								'type' => 'link',
-								'href' => $filename . '?page=' . $page . '&amp;domainid=' . $result['domainid'] . '&amp;action=togglegreylist&amp;id=' . $result['id'],
-								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
-								'classes' => 'btn btn-sm btn-secondary'
-							]
-						]
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => (int)$result['policy_greylist'],
 					],
 					'mail_fwds' => [
 						'label' => lng('emails.forwarders') . ' (' . $forwarders_count . ')',

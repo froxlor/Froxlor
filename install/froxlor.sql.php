@@ -495,7 +495,6 @@ opcache.save_comments
 opcache.use_cwd
 opcache.fast_shutdown'),
 	('phpfpm', 'ini_admin_values', 'cgi.redirect_status_env
-date.timezone
 disable_classes
 disable_functions
 error_log

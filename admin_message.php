@@ -114,7 +114,7 @@ if ($page == 'message') {
 			$note_msg = lng('message.norecipients');
 		} else {
 			$note_type = 'success';
-			$note_msg = str_replace('%s', $sentitems, lng('message.success'));
+			$note_msg = lng('message.success', [$sentitems]);
 		}
 	}
 
@@ -128,7 +128,7 @@ if ($page == 'message') {
 	$messages_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/messages/formfield.messages_add.php';
 
 	UI::view('user/form-note.html.twig', [
-		'formaction' => $linker->getLink(['section' => 'message']),
+		'formaction' => $linker->getLink(['section' => 'message', 'action' => '']),
 		'formdata' => $messages_add_data['messages_add'],
 		'actions_links' => [
 			[

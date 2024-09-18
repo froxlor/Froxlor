@@ -185,7 +185,7 @@ class Rspamd
 				$this->frx_settings_file .= '	apply {' . "\n";
 				$this->frx_settings_file .= '		actions {' . "\n";
 				$this->frx_settings_file .= '			"add header" = ' . $email['spam_tag_level'] . ';' . "\n";
-				$this->frx_settings_file .= '			rewrite_subject = ' . $email['spam_tag_level'] . ';' . "\n";
+				$this->frx_settings_file .= '			rewrite_subject = ' . ($email['spam_tag_level'] + 0.01) . ';' . "\n";
 				$this->frx_settings_file .= '			reject = ' . $email['spam_kill_level'] . ';' . "\n";
 				if ($type == 'rcpt' && (int)$email['policy_greylist'] == 0) {
 					$this->frx_settings_file .= '			greylist = null;' . "\n";
