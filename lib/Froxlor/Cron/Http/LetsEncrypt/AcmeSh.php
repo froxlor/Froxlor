@@ -321,6 +321,7 @@ EOC;
 			WHERE
 				dom.`customerid` = cust.`customerid`
 				AND cust.deactivated = 0
+				AND dom.deactivated = 0
 				AND dom.`ssl_enabled` = 1
 				AND dom.`letsencrypt` = 1
 				AND dom.`aliasdomain` IS NULL
@@ -383,6 +384,7 @@ EOC;
 			WHERE
 				dom.`customerid` = cust.`customerid`
 				AND cust.deactivated = 0
+				AND dom.deactivated = 0
 				AND dom.`ssl_enabled` = 1
 				AND dom.`letsencrypt` = 1
 				AND dom.`aliasdomain` IS NULL

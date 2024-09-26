@@ -92,10 +92,11 @@ class Emails extends ApiCommand implements ResourceEntity
 			$description = $this->getParam('description', true, '');
 
 			// validation
+			$idna_convert = new IdnaWrapper();
 			if (substr($domain, 0, 4) != 'xn--') {
-				$idna_convert = new IdnaWrapper();
 				$domain = $idna_convert->encode(Validate::validate($domain, 'domain', '', '', [], true));
 			}
+			$email_part = $idna_convert->encode($email_part);
 
 			// check domain and whether it's an email-enabled domain
 			// use internal call because the customer might have 'domains' in customer_hide_options
@@ -103,10 +104,10 @@ class Emails extends ApiCommand implements ResourceEntity
 				'domainname' => $domain
 			], true);
 			if ((int)$domain_check['isemaildomain'] == 0) {
-				Response::standardError('maindomainnonexist', $domain, true);
+				Response::standardError('maindomainnonexist', $idna_convert->decode($domain), true);
 			}
 			if ((int)$domain_check['deactivated'] == 1) {
-				Response::standardError('maindomaindeactivated', $domain, true);
+				Response::standardError('maindomaindeactivated', $idna_convert->decode($domain), true);
 			}
 
 			if (Settings::Get('catchall.catchall_enabled') != '1') {
@@ -127,7 +128,7 @@ class Emails extends ApiCommand implements ResourceEntity
 
 			// validate it
 			if (!Validate::validateEmail($email_full)) {
-				Response::standardError('emailiswrong', $email_full, true);
+				Response::standardError('emailiswrong', $idna_convert->decode($email_full), true);
 			}
 
 			// get needed customer info to reduce the email-address-counter by one
@@ -148,7 +149,7 @@ class Emails extends ApiCommand implements ResourceEntity
 
 			if ($email_check) {
 				if (strtolower($email_check['email_full']) == strtolower($email_full)) {
-					Response::standardError('emailexistalready', $email_full, true);
+					Response::standardError('emailexistalready', $idna_convert->decode($email_full), true);
 				} elseif ($email_check['email'] == $email) {
 					Response::standardError('youhavealreadyacatchallforthisdomain', '', true);
 				}
@@ -226,7 +227,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
 			AND " . (is_numeric($params['idea']) ? "v.`id`= :idea" : "(v.`email` = :idea OR v.`email_full` = :idea)"
-		));
+			));
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get email address '" . $result['email_full'] . "'");
@@ -396,7 +397,10 @@ class Emails extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
 			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 		Database::pexecute($result_stmt, $query_fields, true, true);
+		$idna_convert = new IdnaWrapper();
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$row['email'] = $idna_convert->decode($row['email']);
+			$row['email_full'] = $idna_convert->decode($row['email_full']);
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] list email-addresses");
