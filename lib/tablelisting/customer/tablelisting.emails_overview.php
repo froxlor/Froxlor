@@ -35,7 +35,7 @@ return [
 		'self_overview' => ['section' => 'email', 'page' => 'overview'],
 		'default_sorting' => ['d.domain' => 'asc'],
 		'columns' => [
-			'd.domain' => [
+			'd.domain_ace' => [
 				'label' => 'Domain',
 				'field' => 'domain',
 			],

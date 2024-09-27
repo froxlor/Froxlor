@@ -69,7 +69,7 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 		$result = [];
 		$query_fields = [];
 		$result_stmt = Database::prepare("
-		SELECT DISTINCT d.domain, e.domainid,
+		SELECT DISTINCT d.domain, d.domain_ace, e.domainid,
 		COUNT(e.email) as addresses,
 		IFNULL(SUM(CASE WHEN e.popaccountid > 0 THEN 1 ELSE 0 END), 0) as accounts,
 		IFNULL(SUM(
