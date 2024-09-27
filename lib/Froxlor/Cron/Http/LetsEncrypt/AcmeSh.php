@@ -326,6 +326,7 @@ EOC;
 				AND dom.`letsencrypt` = 1
 				AND dom.`aliasdomain` IS NULL
 				AND dom.`iswildcarddomain` = 0
+				AND dom.`email_only` = 0
 				AND domssl.`validtodate` IS NULL
 		");
 		$customer_ssl = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -389,6 +390,7 @@ EOC;
 				AND dom.`letsencrypt` = 1
 				AND dom.`aliasdomain` IS NULL
 				AND dom.`iswildcarddomain` = 0
+				AND dom.`email_only` = 0
 		");
 		$renew_certs = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
 		if ($renew_certs) {
