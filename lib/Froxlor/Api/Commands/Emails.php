@@ -53,6 +53,8 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *            domain-name for the email-address
 	 * @param float $spam_tag_level
 	 *            optional, score which is required to tag emails as spam, default: 7.0
+	 * @param bool $rewrite_subject
+	 *            optional, whether to add ***SPAM*** to the email's subject if applicable, default true
 	 * @param float $spam_kill_level
 	 *            optional, score which is required to discard emails, default: 14.0
 	 * @param boolean $bypass_spam
@@ -85,7 +87,8 @@ class Emails extends ApiCommand implements ResourceEntity
 
 			// parameters
 			$spam_tag_level = $this->getParam('spam_tag_level', true, '7.0');
-			$spam_kill_level = $this->getParam('spam_kill_level', true, '14.0');
+			$rewrite_subject = $this->getBoolParam('rewrite_subject', true, 1);
+			$spam_kill_level = $this->getUlParam('spam_kill_level', 'spam_kill_level_ul', true, '14.0');
 			$bypass_spam = $this->getBoolParam('bypass_spam', true, 0);
 			$policy_greylist = $this->getBoolParam('policy_greylist', true, 1);
 			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
@@ -155,8 +158,10 @@ class Emails extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1,2})?$/', '', [7.0], true);
-			$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1,2})?$/', '', [14.0], true);
+			$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1})?$/', '', [7.0], true);
+			if ($spam_kill_level > -1) {
+				$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1})?$/', '', [14.0], true);
+			}
 			$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 
 			$stmt = Database::prepare("
@@ -165,6 +170,7 @@ class Emails extends ApiCommand implements ResourceEntity
 				`email` = :email,
 				`email_full` = :email_full,
 				`spam_tag_level` = :spam_tag_level,
+				`rewrite_subject` = :rewrite_subject,
 				`spam_kill_level` = :spam_kill_level,
 				`bypass_spam` = :bypass_spam,
 				`policy_greylist` = :policy_greylist,
@@ -177,6 +183,7 @@ class Emails extends ApiCommand implements ResourceEntity
 				"email" => $email,
 				"email_full" => $email_full,
 				"spam_tag_level" => $spam_tag_level,
+				"rewrite_subject" => $rewrite_subject,
 				"spam_kill_level" => $spam_kill_level,
 				"bypass_spam" => $bypass_spam,
 				"policy_greylist" => $policy_greylist,
@@ -250,6 +257,8 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *            optional, required when called as admin (if $customerid is not specified)
 	 * @param float $spam_tag_level
 	 *            optional, score which is required to tag emails as spam, default: 7.0
+	 * @param bool $rewrite_subject
+	 *              optional, whether to add ***SPAM*** to the email's subject if applicable, default true
 	 * @param float $spam_kill_level
 	 *            optional, score which is required to discard emails, default: 14.0
 	 * @param boolean $bypass_spam
@@ -283,7 +292,8 @@ class Emails extends ApiCommand implements ResourceEntity
 
 		// parameters
 		$spam_tag_level = $this->getParam('spam_tag_level', true, $result['spam_tag_level']);
-		$spam_kill_level = $this->getParam('spam_kill_level', true, $result['spam_kill_level']);
+		$rewrite_subject = $this->getBoolParam('rewrite_subject', true, $result['rewrite_subject']);
+		$spam_kill_level = $this->getUlParam('spam_kill_level', 'spam_kill_level_ul', true, $result['spam_kill_level']);
 		$bypass_spam = $this->getBoolParam('bypass_spam', true, $result['bypass_spam']);
 		$policy_greylist = $this->getBoolParam('policy_greylist', true, $result['policy_greylist']);
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
@@ -327,13 +337,16 @@ class Emails extends ApiCommand implements ResourceEntity
 		}
 
 		$spam_tag_level = Validate::validate($spam_tag_level, 'spam_tag_level', '/^\d{1,}(\.\d{1,2})?$/', '', [7.0], true);
-		$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1,2})?$/', '', [14.0], true);
+		if ($spam_kill_level > -1) {
+			$spam_kill_level = Validate::validate($spam_kill_level, 'spam_kill_level', '/^\d{1,}(\.\d{1,2})?$/', '', [14.0], true);
+		}
 		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET
 			`email` = :email ,
 			`spam_tag_level` = :spam_tag_level,
+			`rewrite_subject` = :rewrite_subject,
 			`spam_kill_level` = :spam_kill_level,
 			`bypass_spam` = :bypass_spam,
 			`policy_greylist` = :policy_greylist,
@@ -344,6 +357,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$params = [
 			"email" => $email,
 			"spam_tag_level" => $spam_tag_level,
+			"rewrite_subject" => $rewrite_subject,
 			"spam_kill_level" => $spam_kill_level,
 			"bypass_spam" => $bypass_spam,
 			"policy_greylist" => $policy_greylist,

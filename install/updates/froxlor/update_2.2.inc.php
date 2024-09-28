@@ -169,3 +169,12 @@ if (Froxlor::isFroxlorVersion('2.2.0')) {
 	Update::showUpdateStep("Updating from 2.2.0 to 2.2.1", false);
 	Froxlor::updateToVersion('2.2.1');
 }
+
+if (Froxlor::isDatabaseVersion('202408140')) {
+
+	Update::showUpdateStep("Adding new rewrite-subject field to email table");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` ADD `rewrite_subject` tinyint(1) NOT NULL default '1' AFTER `spam_tag_level`;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202409280');
+}

@@ -96,26 +96,35 @@ return [
 						'value' => '1',
 						'checked' => (int)$result['iscatchall'],
 					],
-					'spam_tag_level' => [
-						'visible' => Settings::Get('antispam.activated') == '1',
-						'label' => lng('antispam.spam_tag_level'),
-						'type' => 'text',
-						'string_regexp' => '/^\d{1,}(\.\d{1,2})?$/',
-						'value' => $result['spam_tag_level']
-					],
-					'spam_kill_level' => [
-						'visible' => Settings::Get('antispam.activated') == '1',
-						'label' => lng('antispam.spam_kill_level'),
-						'type' => 'text',
-						'string_regexp' => '/^\d{1,}(\.\d{1,2})?$/',
-						'value' => $result['spam_kill_level']
-					],
 					'bypass_spam' => [
 						'visible' => Settings::Get('antispam.activated') == '1',
 						'label' => lng('antispam.bypass_spam'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => (int)$result['bypass_spam'],
+					],
+					'spam_tag_level' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
+						'label' => lng('antispam.spam_tag_level'),
+						'type' => 'number',
+						'min' => 0,
+						'step' => 0.1,
+						'value' => $result['spam_tag_level'],
+					],
+					'spam_rewrite_subject' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
+						'label' => lng('antispam.rewrite_subject'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => (int)$result['rewrite_subject'],
+					],
+					'spam_kill_level' => [
+						'visible' => Settings::Get('antispam.activated') == '1',
+						'label' => lng('antispam.spam_kill_level'),
+						'desc' => lng('panel.use_checkbox_to_disable'),
+						'type' => 'textul',
+						'step' => 0.1,
+						'value' => $result['spam_kill_level']
 					],
 					'policy_greylist' => [
 						'visible' => Settings::Get('antispam.activated') == '1',
