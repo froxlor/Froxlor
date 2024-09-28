@@ -165,7 +165,7 @@ class Rspamd
 		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Generating antispam config for ' . $email['email']);
 
 		$email['spam_tag_level'] = floatval($email['spam_tag_level']);
-		$email['spam_kill_level'] = floatval($email['spam_kill_level']);
+		$email['spam_kill_level'] = $email['spam_kill_level'] == -1 ? "null" : floatval($email['spam_kill_level']);
 		$email_id = md5($email['email']);
 
 		$this->frx_settings_file .= '# Email: ' . $email['email'] . "\n";
@@ -185,7 +185,9 @@ class Rspamd
 				$this->frx_settings_file .= '	apply {' . "\n";
 				$this->frx_settings_file .= '		actions {' . "\n";
 				$this->frx_settings_file .= '			"add header" = ' . $email['spam_tag_level'] . ';' . "\n";
-				$this->frx_settings_file .= '			rewrite_subject = ' . ($email['spam_tag_level'] + 0.01) . ';' . "\n";
+				if ((int)$email['rewrite_subject'] == 1) {
+					$this->frx_settings_file .= '			rewrite_subject = ' . ($email['spam_tag_level'] + 0.01) . ';' . "\n";
+				}
 				$this->frx_settings_file .= '			reject = ' . $email['spam_kill_level'] . ';' . "\n";
 				if ($type == 'rcpt' && (int)$email['policy_greylist'] == 0) {
 					$this->frx_settings_file .= '			greylist = null;' . "\n";

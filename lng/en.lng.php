@@ -670,6 +670,10 @@ return [
 			'title' => 'Spam tag level',
 			'description' => 'Score that is required to mark an email as spam<br/>Default: 7.0'
 		],
+		'rewrite_subject' => [
+			'title' => 'Rewrite subject',
+			'description' => 'Whether to add <strong>***SPAM***</strong> to the email subject if applicable',
+		],
 		'spam_kill_level' => [
 			'title' => 'Spam kill level',
 			'description' => 'Score that is required to discard an email entirely<br/>Default: 14.0'
@@ -1377,6 +1381,7 @@ Yours sincerely, your administrator',
 		'upload_import' => 'Upload and import',
 		'profile' => 'My profile',
 		'use_checkbox_for_unlimited' => 'The value "0" deactivates this resource. The checkbox on the right allows "unlimited" usage.',
+		'use_checkbox_to_disable' => 'To disable, activate the checkbox on the right of the input field',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',

@@ -621,6 +621,10 @@ return [
 			'title' => 'Spam Level',
 			'description' => 'Erforderliche Punktzahl zum Markieren einer E-Mail als Spam<br/>Standard: 7.0'
 		],
+		'rewrite_subject' => [
+			'title' => 'Betreff ändern',
+			'description' => 'Dem E-Mail Betreff <strong>***SPAM***</strong> hinzufügen, sofern zutreffend',
+		],
 		'spam_kill_level' => [
 			'title' => 'Ablehnungs Level',
 			'description' => 'Erforderliche Punktzahl für das Ablehnen einer E-Mail<br/>Standard: 14.0'
@@ -1262,6 +1266,7 @@ Vielen Dank, Ihr Administrator',
 		'upload_import' => 'Hochladen und importieren',
 		'profile' => 'Mein Profil',
 		'use_checkbox_for_unlimited' => 'Der Wert "0" deaktiviert die Resource. Die Checkbox rechts erlaubt "unlimitierte" Nutzung.',
+		'use_checkbox_to_disable' => 'Zum Deaktivieren, klicke die Checkbox auf der rechten Seite des Eingabefeldes',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',

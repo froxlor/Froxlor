@@ -95,6 +95,7 @@ CREATE TABLE `mail_virtual` (
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
   `description` varchar(255) NOT NULL DEFAULT '',
   `spam_tag_level` float(4,1) NOT NULL DEFAULT 7.0,
+  `rewrite_subject` tinyint(1) NOT NULL default '1',
   `spam_kill_level` float(4,1) NOT NULL DEFAULT 14.0,
   `bypass_spam` tinyint(1) NOT NULL default '0',
   `policy_greylist` tinyint(1) NOT NULL default '1',
@@ -730,7 +731,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.2.1'),
-	('panel', 'db_version', '202408140');
+	('panel', 'db_version', '202409280');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
