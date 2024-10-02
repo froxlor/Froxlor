@@ -187,21 +187,23 @@ class DbManagerMySQL
 	 */
 	public function deleteUser(string $username, string $host)
 	{
-		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
-			// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
-			$stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `" . $username . "`@`" . $host . "`");
-			Database::pexecute($stmt);
+		if ($this->userExistsOnHost($username, $host)) {
+			if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
+				// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
+				$stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `" . $username . "`@`" . $host . "`");
+				Database::pexecute($stmt);
+			}
+			// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
+			if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+				$stmt = Database::prepare("DROP USER :username@:host");
+			} else {
+				$stmt = Database::prepare("DROP USER IF EXISTS :username@:host");
+			}
+			Database::pexecute($stmt, [
+				"username" => $username,
+				"host" => $host
+			]);
 		}
-		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
-			$stmt = Database::prepare("DROP USER :username@:host");
-		} else {
-			$stmt = Database::prepare("DROP USER IF EXISTS :username@:host");
-		}
-		Database::pexecute($stmt, [
-			"username" => $username,
-			"host" => $host
-		]);
 	}
 
 	/**
