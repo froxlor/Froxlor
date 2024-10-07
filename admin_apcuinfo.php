@@ -118,7 +118,7 @@ if ($page == 'showinfo' && $userinfo['change_serversettings'] == '1') {
 		'uptime' => duration($cache['start_time'])
 	];
 
-	$overview['mem_used_percentage'] = number_format(($overview['mem_used'] / $overview['mem_avail']) * 100, 1);
+	$overview['mem_used_percentage'] = number_format(($overview['mem_used'] / $overview['mem_size']) * 100, 1);
 	$overview['num_hits_percentage'] = number_format(($overview['num_hits'] / $overview['num_hits_and_misses']) * 100,
 		1);
 	$overview['num_misses_percentage'] = number_format(($overview['num_misses'] / $overview['num_hits_and_misses']) * 100,
