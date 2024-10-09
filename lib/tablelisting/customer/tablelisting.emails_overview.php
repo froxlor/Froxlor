@@ -56,7 +56,7 @@ return [
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('emaildomain_list', [
-			'd.domain',
+			'd.domain_ace',
 			'addresses',
 			'accounts',
 			'forwarder',
