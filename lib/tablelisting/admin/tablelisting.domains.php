@@ -143,6 +143,11 @@ return [
 				'field' => 'http2',
 				'callback' => [Text::class, 'boolean'],
 			],
+			'd.http3' => [
+				'label' => lng('admin.domain_http3.title'),
+				'field' => 'http3',
+				'callback' => [Text::class, 'boolean'],
+			],
 			'd.letsencrypt' => [
 				'label' => lng('panel.letsencrypt'),
 				'field' => 'letsencrypt',

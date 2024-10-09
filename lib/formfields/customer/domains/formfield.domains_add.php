@@ -137,6 +137,14 @@ return [
 						'value' => '1',
 						'checked' => false
 					],
+					'http3' => [
+						'visible' => $ssl_ipsandports && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http3_support') == '1',
+						'label' => lng('admin.domain_http3.title'),
+						'desc' => lng('admin.domain_http3.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => false
+					],
 					'hsts_maxage' => [
 						'label' => lng('admin.domain_hsts_maxage.title'),
 						'desc' => lng('admin.domain_hsts_maxage.description'),
