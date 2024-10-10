@@ -235,7 +235,7 @@ return [
 						'checked' => false
 					],
 					'http3' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http3_support') == '1',
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') == 'nginx' && Settings::Get('system.http3_support') == '1',
 						'label' => lng('admin.domain_http3.title'),
 						'desc' => lng('admin.domain_http3.description'),
 						'type' => 'checkbox',
