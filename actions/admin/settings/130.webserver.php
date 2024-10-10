@@ -86,6 +86,18 @@ return [
 					],
 					'visible' => Settings::Get('system.use_ssl')
 				],
+				'system_http3_support' => [
+					'label' => lng('serversettings.http3_support'),
+					'settinggroup' => 'system',
+					'varname' => 'http3_support',
+					'type' => 'checkbox',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => [
+						'nginx'
+					],
+					'visible' => Settings::Get('system.use_ssl')
+				],
 				'system_dhparams_file' => [
 					'label' => lng('serversettings.dhparams_file'),
 					'settinggroup' => 'system',
