@@ -55,7 +55,7 @@ class Rspamd
 
 		// get all email addresses
 		$antispam_stmt = Database::prepare("
-			SELECT email, spam_tag_level, spam_kill_level, bypass_spam, policy_greylist, iscatchall
+			SELECT email, spam_tag_level, rewrite_subject, spam_kill_level, bypass_spam, policy_greylist, iscatchall
 			FROM `" . TABLE_MAIL_VIRTUAL . "`
 			ORDER BY email
 		");
