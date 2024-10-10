@@ -193,3 +193,16 @@ if (Froxlor::isFroxlorVersion('2.2.3')) {
 	Update::showUpdateStep("Updating from 2.2.3 to 2.2.4", false);
 	Froxlor::updateToVersion('2.2.4');
 }
+
+if (Froxlor::isDatabaseVersion('202409280')) {
+
+	Update::showUpdateStep("Adding new settings");
+	Settings::AddNew("system.http3_support", "0");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Adding http3 field to domain table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `http3` tinyint(1) NOT NULL default '0' AFTER `http2`;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202410100');
+}
