@@ -184,7 +184,7 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . 'http3_hq on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_gso on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_retry on;' . "\n";
-					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '" ma=86400\';' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '"; ma=86400\';' . "\n";
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 
