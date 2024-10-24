@@ -448,6 +448,10 @@ return [
 			'title' => 'HTTP2 Unterstützung',
 			'description' => 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F2">Wikipedia</a> für eine ausführliche Beschreibung von HTTP2',
 		],
+		'domain_http3' => [
+			'title' => 'HTTP3 Unterstützung',
+			'description' => 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F3">Wikipedia</a> für eine ausführliche Beschreibung von HTTP3',
+		],
 		'testmail' => 'SMTP Test',
 		'phpsettingsforsubdomains' => 'PHP-Config für alle Subdomains übernehmen:',
 		'plans' => [
@@ -2004,6 +2008,10 @@ Vielen Dank, Ihr Administrator',
 		'http2_support' => [
 			'title' => 'HTTP2 Unterstützung',
 			'description' => 'Aktiviere HTTP2 Unterstützung für SSL.<br><em class="text-danger">NUR AKTIVIEREN, WENN DER WEBSERVER DIESE FUNKTION UNTERSTÜTZT (nginx version 1.9.5+, apache2 version 2.4.17+)</em>',
+		],
+		'http3_support' => [
+			'title' => 'HTTP3 Unterstützung',
+			'description' => 'Aktiviere HTTP3 Unterstützung für SSL.<br><em class="text-danger">NUR AKTIVIEREN, WENN DER WEBSERVER DIESE FUNKTION UNTERSTÜTZT (nginx version 1.25.0+)</em>',
 		],
 		'nssextrausers' => [
 			'title' => 'Verwende libnss-extrausers anstatt libnss-mysql',

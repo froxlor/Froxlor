@@ -246,6 +246,9 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param bool $http2
 	 *            optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default
 	 *            0 (false)
+	 * @param bool $http3
+	 *            optional, whether to enable http/3 for this domain (requires to be enabled in the settings), default
+	 *            0 (false)
 	 * @param int $hsts_maxage
 	 *            optional max-age value for HSTS header
 	 * @param bool $hsts_sub
@@ -322,6 +325,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$dont_use_default_ssl_ipandport_if_empty = $this->getBoolParam('dont_use_default_ssl_ipandport_if_empty', true, 0);
 				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $dont_use_default_ssl_ipandport_if_empty ? [] : explode(',', Settings::Get('system.defaultsslip')));
 				$http2 = $this->getBoolParam('http2', true, 0);
+				$http3 = $this->getBoolParam('http3', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
@@ -557,6 +561,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
 					$http2 = 0;
+					$http3 = 0;
 					// we need this for the json_encode
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = -1;
@@ -726,6 +731,7 @@ class Domains extends ApiCommand implements ResourceEntity
 						'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
 						'letsencrypt' => $letsencrypt,
 						'http2' => $http2,
+						'http3' => $http3,
 						'hsts' => $hsts_maxage,
 						'hsts_sub' => $hsts_sub,
 						'hsts_preload' => $hsts_preload,
@@ -779,6 +785,7 @@ class Domains extends ApiCommand implements ResourceEntity
 						`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 						`letsencrypt` = :letsencrypt,
 						`http2` = :http2,
+						`http3` = :http3,
 						`hsts` = :hsts,
 						`hsts_sub` = :hsts_sub,
 						`hsts_preload` = :hsts_preload,
@@ -1137,6 +1144,9 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param bool $http2
 	 *            optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default
 	 *            0 (false)
+	 * @param bool $http3
+	 *            optional, whether to enable http/3 for this domain (requires to be enabled in the settings), default
+	 *            0 (false)
 	 * @param int $hsts_maxage
 	 *            optional max-age value for HSTS header
 	 * @param bool $hsts_sub
@@ -1224,6 +1234,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			] : null);
 			$sslenabled = $remove_ssl_ipandport ? false : $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$http2 = $this->getBoolParam('http2', true, $result['http2']);
+			$http3 = $this->getBoolParam('http3', true, $result['http3']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
@@ -1540,6 +1551,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
+				$http3 = 0;
 				// act like $remove_ssl_ipandport
 				$ssl_ipandports = [];
 
@@ -1674,6 +1686,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
 				|| $letsencrypt != $result['letsencrypt']
 				|| $http2 != $result['http2']
+				|| $http3 != $result['http3']
 				|| $hsts_maxage != $result['hsts']
 				|| $hsts_sub != $result['hsts_sub']
 				|| $hsts_preload != $result['hsts_preload']
@@ -1847,6 +1860,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$update_data['termination_date'] = $termination_date;
 			$update_data['letsencrypt'] = $letsencrypt;
 			$update_data['http2'] = $http2;
+			$update_data['http3'] = $http3;
 			$update_data['hsts'] = $hsts_maxage;
 			$update_data['hsts_sub'] = $hsts_sub;
 			$update_data['hsts_preload'] = $hsts_preload;
@@ -1895,6 +1909,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				`termination_date` = :termination_date,
 				`letsencrypt` = :letsencrypt,
 				`http2` = :http2,
+				`http3` = :http3,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
 				`hsts_preload` = :hsts_preload,

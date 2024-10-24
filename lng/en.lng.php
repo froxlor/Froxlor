@@ -456,6 +456,10 @@ return [
 			'title' => 'HTTP2 support',
 			'description' => 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/2">Wikipedia</a> for a detailed explanation of HTTP2',
 		],
+		'domain_http3' => [
+			'title' => 'HTTP3 support',
+			'description' => 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/3">Wikipedia</a> for a detailed explanation of HTTP3',
+		],
 		'testmail' => 'SMTP test',
 		'phpsettingsforsubdomains' => 'Apply php-config to all subdomains:',
 		'plans' => [
@@ -2126,6 +2130,10 @@ Yours sincerely, your administrator',
 		'http2_support' => [
 			'title' => 'HTTP2 Support',
 			'description' => 'enable HTTP2 support for ssl.<br><em class="text-danger">ENABLE ONLY IF YOUR WEBSERVER SUPPORTS THIS FEATURE (nginx version 1.9.5+, apache2 version 2.4.17+)</em>',
+		],
+		'http3_support' => [
+			'title' => 'HTTP3 Support',
+			'description' => 'enable HTTP3 support for ssl.<br><em class="text-danger">ENABLE ONLY IF YOUR WEBSERVER SUPPORTS THIS FEATURE (nginx version 1.25.0+)</em>',
 		],
 		'nssextrausers' => [
 			'title' => 'Use libnss-extrausers instead of libnss-mysql',
