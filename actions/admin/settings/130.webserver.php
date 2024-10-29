@@ -49,7 +49,7 @@ return [
 					],
 					'requires_reconf' => ['http']
 				],
-				'system_apache_24' => [
+				'system_apache24' => [
 					'label' => lng('serversettings.apache_24'),
 					'settinggroup' => 'system',
 					'varname' => 'apache24',
