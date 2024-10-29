@@ -16,7 +16,7 @@
 			<default for="nginx" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/nginx/froxlor-htpasswd/"></default>
 			<default for="nginx" settinggroup="system" varname="apachereload_command" value="service nginx reload"></default>
 			<default for="nginx" settinggroup="system" varname="letsencryptacmeconf" value="/etc/nginx/acme.conf"></default>
-			<default for="nginx" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/nginx/"></default>
+			<default for="nginx" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/php/"></default>
 		</defaults>
 		<services>
 			<!-- HTTP -->

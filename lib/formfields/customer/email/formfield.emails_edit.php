@@ -89,7 +89,7 @@ return [
 							]
 						]
 					],
-					'mail_catchall' => [
+					'iscatchall' => [
 						'visible' => Settings::Get('catchall.catchall_enabled') == '1',
 						'label' => lng('emails.catchall'),
 						'type' => 'checkbox',
