@@ -31,7 +31,7 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '2.2.4';
+	const VERSION = '2.2.5';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
 	const DBVERSION = '202409280';
