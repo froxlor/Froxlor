@@ -391,6 +391,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('antispam', 'config_file', '/etc/rspamd/local.d/froxlor_settings.conf'),
 	('antispam', 'reload_command', 'service rspamd restart'),
 	('antispam', 'dkim_keylength', '1024'),
+	('antispam', 'default_bypass_spam', '2'),
+	('antispam', 'default_spam_rewrite_subject', '1'),
+	('antispam', 'default_policy_greylist', '1'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
@@ -731,7 +734,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.2.5'),
-	('panel', 'db_version', '202409280');
+	('panel', 'db_version', '202411200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -198,3 +198,14 @@ if (Froxlor::isFroxlorVersion('2.2.4')) {
 	Update::showUpdateStep("Updating from 2.2.4 to 2.2.5", false);
 	Froxlor::updateToVersion('2.2.5');
 }
+
+if (Froxlor::isDatabaseVersion('202409280')) {
+
+	Update::showUpdateStep("Adding new antispam settings");
+	Settings::AddNew("antispam.default_bypass_spam", "2");
+	Settings::AddNew("antispam.default_spam_rewrite_subject", "1");
+	Settings::AddNew("antispam.default_policy_greylist", "1");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202411200');
+}

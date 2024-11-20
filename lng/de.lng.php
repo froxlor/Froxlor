@@ -640,6 +640,24 @@ return [
 		'required_spf_dns' => 'Erforderlicher SPF DNS Eintrag',
 		'required_dmarc_dns' => 'Erforderlicher DMARC DNS Eintrag',
 		'required_dkim_dns' => 'Erforderlicher DKIM DNS Eintrag',
+		'default_select' => [
+			'on_changeable' => 'Aktiviert, einstellbar',
+			'off_changeable' => 'Deaktiviert, einstellbar',
+			'on_unchangeable' => 'Aktiviert, nicht einstellbar',
+			'off_unchangeable' => 'Deaktiviert, nicht einstellbar',
+		],
+		'default_bypass_spam' => [
+			'title' => 'Standardwert: Spamfilter umgehen',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Spamfilter umgehen" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Deaktiviert, einstellbar'
+		],
+		'default_spam_rewrite_subject' => [
+			'title' => 'Standardwert: Betreff ändern',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Betreff ändern" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Aktiviert, einstellbar'
+		],
+		'default_policy_greylist' => [
+			'title' => 'Standardwert: Verwende greylisting',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Verwende greylisting" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Aktiviert, einstellbar'
+		],
 	],
 	'dns' => [
 		'destinationip' => 'Domain-IP-Adresse(n)',
