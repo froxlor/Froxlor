@@ -433,15 +433,17 @@ return [
 			'section_d' => [
 				'title' => lng('admin.nameserversettings'),
 				'image' => 'icons/domain_edit.png',
-				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
+				'visible' => $userinfo['change_serversettings'] == '1',
 				'fields' => [
 					'isbinddomain' => [
+						'visible' => Settings::Get('system.bind_enable') == '1',
 						'label' => lng('admin.createzonefile'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['isbinddomain']
 					],
 					'zonefile' => [
+						'visible' => Settings::Get('system.bind_enable') == '1',
 						'label' => lng('admin.custombindzone'),
 						'desc' => lng('admin.bindzonewarning'),
 						'type' => 'text',
