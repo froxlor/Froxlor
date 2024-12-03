@@ -26,6 +26,7 @@
 use Froxlor\Database\Database;
 use Froxlor\Database\DbManager;
 use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
 
@@ -227,7 +228,7 @@ if (Froxlor::isDatabaseVersion('202411200')) {
 			// require privileged access for target db-server
 			Database::needRoot(true, $dbserver, true);
 			// get DbManager
-			$dbm = new DbManager($this->logger());
+			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
 			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 				if ($dbm->getManager()->userExistsOnHost($customer['loginname'], $mysql_access_host)) {
 					// deactivate temporarily

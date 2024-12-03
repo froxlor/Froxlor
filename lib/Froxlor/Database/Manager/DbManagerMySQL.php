@@ -334,7 +334,7 @@ class DbManagerMySQL
 			Database::pexecute($sel_stmt, ['cid' => $cust['customerid']]);
 			while ($dbdata = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$stmt = Database::prepare("
-					GRANT CREATE ON `" . $dbdata['databasename'] . "`.* TO :username@:host
+					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO :username@:host
 				");
 				Database::pexecute($stmt, [
 					"username" => $username,
@@ -348,6 +348,7 @@ class DbManagerMySQL
 	 * grant "CREATE" for prefix user to all existing databases of that customer
 	 *
 	 * @param string $username
+	 * @param string $database
 	 * @param string $access_host
 	 * @return void
 	 * @throws \Exception
@@ -355,7 +356,7 @@ class DbManagerMySQL
 	public function grantCreateToDb(string $username, string $database, string $access_host)
 	{
 		$stmt = Database::prepare("
-			GRANT CREATE ON `" . $database . "`.* TO :username@:host
+			GRANT ALL ON `" . $database . "`.* TO :username@:host
 		");
 		Database::pexecute($stmt, [
 			"username" => $username,
