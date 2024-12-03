@@ -1347,7 +1347,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
 				foreach ($current_allowed_mysqlserver as $dbserver) {
 					// require privileged access for target db-server
-					Database::needRoot(true, $dbserver, false);
+					Database::needRoot(true, $dbserver, true);
 					// get DbManager
 					$dbm = new DbManager($this->logger());
 					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {

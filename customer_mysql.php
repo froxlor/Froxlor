@@ -228,7 +228,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 			$new_password = Crypt::validatePassword(Request::post('mysql_password'));
 			foreach ($allowed_mysqlservers as $dbserver) {
 				// require privileged access for target db-server
-				Database::needRoot(true, $dbserver, false);
+				Database::needRoot(true, $dbserver, true);
 				// get DbManager
 				$dbm = new DbManager($log);
 				// give permission to the user on every access-host we have
