@@ -129,7 +129,7 @@ return [
 					'settinggroup' => 'spf',
 					'varname' => 'spf_entry',
 					'type' => 'text',
-					'string_regexp' => '/^v=spf[a-z0-9:~?\s.-\/]+$/i',
+					'string_regexp' => '/^v=spf[a-z0-9:~?\s\.\-\/]+$/i',
 					'default' => 'v=spf1 a mx -all',
 					'save_method' => 'storeSettingField'
 				],
