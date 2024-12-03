@@ -1571,7 +1571,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
-			if (($result['letsencrypt'] != $letsencrypt || $result['ssl_redirect'] != $ssl_redirect) && $ssl_redirect > 0 && $letsencrypt == 1) {
+			if ($result['letsencrypt'] != $letsencrypt && $ssl_redirect > 0 && $letsencrypt == 1) {
 				$ssl_redirect = 2;
 			}
 
