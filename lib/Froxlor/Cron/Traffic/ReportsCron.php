@@ -133,7 +133,9 @@ class ReportsCron extends FroxlorCron
 					$_mailerror = false;
 					$mailerr_msg = "";
 					try {
-						$mail->SetFrom($row['adminmail'], $row['adminname']);
+						$mail->setFrom(Settings::Get('panel.adminmail'), $row['adminname']);
+						$mail->clearReplyTos();
+						$mail->addReplyTo($row['adminmail'], $row['adminname']);
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));
@@ -405,7 +407,9 @@ class ReportsCron extends FroxlorCron
 					$_mailerror = false;
 					$mailerr_msg = "";
 					try {
-						$mail->SetFrom($row['adminmail'], $row['adminname']);
+						$mail->setFrom(Settings::Get('panel.adminmail'), $row['adminname']);
+						$mail->clearReplyTos();
+						$mail->addReplyTo($row['adminmail'], $row['adminname']);
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));
