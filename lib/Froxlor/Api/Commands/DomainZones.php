@@ -178,7 +178,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 				}
 			}
 		} elseif ($type == 'CAA' && !empty($content)) {
-			$re = '/(?\'critical\'\d)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
+			$re = '/(?\'critical\'\d+)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9:\.\/\-]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
 			preg_match($re, $content, $matches);
 
 			if (empty($matches)) {
