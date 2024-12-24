@@ -237,6 +237,17 @@ class Store
 		return $returnvalue;
 	}
 
+	public static function storeSettingFieldInsertUpdateServicesTask($fieldname, $fielddata, $newfieldvalue)
+	{
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			Cronjob::inserttask(TaskId::UPDATE_LE_SERVICES);
+		}
+		return $returnvalue;
+	}
+
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);

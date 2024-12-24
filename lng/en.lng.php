@@ -2326,6 +2326,7 @@ Yours sincerely, your administrator',
 		'CREATE_CUSTOMER_DATADUMP' => 'Data export job for customer %s',
 		'DELETE_DOMAIN_PDNS' => 'Delete domain %s from PowerDNS database',
 		'DELETE_DOMAIN_SSL' => 'Delete ssl files of domain %s',
+		'UPDATE_LE_SERVICES' => 'Updating system services for Let\'s Encrypt',
 	],
 	'terms' => 'Terms of use',
 	'traffic' => [

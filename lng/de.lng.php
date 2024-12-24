@@ -2192,6 +2192,7 @@ Vielen Dank, Ihr Administrator',
 		'CREATE_CUSTOMER_DATADUMP' => 'Daten-Export für Kunde %s',
 		'DELETE_DOMAIN_PDNS' => 'Lösche Domain %s von PowerDNS Datenbank',
 		'DELETE_DOMAIN_SSL' => 'Lösche SSL Dateien von Domain %s',
+		'UPDATE_LE_SERVICES' => 'Aktualisiere Systemdienste für Let\'s Encrypt',
 	],
 	'terms' => 'AGB',
 	'traffic' => [

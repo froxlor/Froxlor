@@ -80,6 +80,7 @@ final class MasterCron extends CliCommand
 				Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
 				Cronjob::inserttask(TaskId::CREATE_QUOTA);
 				Cronjob::inserttask(TaskId::REBUILD_CRON);
+				Cronjob::inserttask(TaskId::UPDATE_LE_SERVICES);
 				$jobs[] = 'tasks';
 			}
 			define('CRON_IS_FORCED', 1);
