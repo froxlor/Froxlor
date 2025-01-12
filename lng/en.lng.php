@@ -519,6 +519,7 @@ return [
 		'backups' => [
 			'backups' => 'Backups',
 		],
+		'emaildomainwarning' => '<div id="emaildomainnote" class="invalid-feedback">WARNING: By changing this setting you will delete all existing e-mail addresses and -accounts permanently.</div>',
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',
@@ -1048,6 +1049,7 @@ return [
 		'invalidpgppublickey' => 'The PGP Public Key is not valid',
 		'invalid_validtime' => 'Valid time in seconds can only be between 10 and 120',
 		'customerphpenabledbutnoconfig' => 'Customer has PHP activated but no PHP-configuration was selected.',
+		'emaildomainstillhasaddresses' => 'Cannot deactivate mail-domain flag, as there are still email-addresses for this domain.',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

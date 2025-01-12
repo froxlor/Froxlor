@@ -213,6 +213,10 @@ return [
 						'type' => 'hidden',
 						'value' => '0'
 					],
+					'emaildomainverified' => [
+						'type' => 'hidden',
+						'value' => '0'
+					],
 				]
 			],
 			'section_bssl' => [

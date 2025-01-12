@@ -152,7 +152,7 @@ class User
 			]);
 			$customer['emails_used_new'] = (int)$customer_emails['number_emails'];
 
-			$customer_emails_result_stmt = Database::prepare('SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders` FROM `' . TABLE_MAIL_VIRTUAL . '`
+			$customer_emails_result_stmt = Database::prepare('SELECT `email`, `email_full`, `destination`, `popaccountid` FROM `' . TABLE_MAIL_VIRTUAL . '`
 			WHERE `customerid` = :cid');
 			Database::pexecute($customer_emails_result_stmt, [
 				"cid" => $customer['customerid']
