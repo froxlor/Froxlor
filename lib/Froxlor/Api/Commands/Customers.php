@@ -505,6 +505,15 @@ class Customers extends ApiCommand implements ResourceEntity
 						'login' => $loginname
 					], true, true);
 
+					// Check for existing email address
+					// do not check via api as we skip any permission checks for this task
+					$email_check_admin_stmt = Database::prepare("
+						SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email
+					");
+					$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+						'email' => $email
+					], true, true);
+
 					$mysql_maxlen = Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'));
 					if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 						Response::standardError('loginnameexists', $loginname, true);
@@ -514,6 +523,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						} else {
 							Response::standardError('loginnameiswrong', $loginname, true);
 						}
+					} elseif ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+						Response::standardError('emailexistsanon', $email, true);
 					}
 
 					$guid = intval(Settings::Get('system.lastguid')) + 1;
@@ -1243,6 +1254,18 @@ class Customers extends ApiCommand implements ResourceEntity
 				], '', true);
 			} elseif (!Validate::validateEmail($email)) {
 				Response::standardError('emailiswrong', $email, true);
+			} else {
+				// Check for existing email address
+				// do not check via api as we skip any permission checks for this task
+				$email_check_admin_stmt = Database::prepare("
+						SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email
+					");
+				$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+					'email' => $email
+				], true, true);
+				if ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+					Response::standardError('emailexistsanon', $email, true);
+				}
 			}
 		}
 

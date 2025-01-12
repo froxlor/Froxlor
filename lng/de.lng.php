@@ -787,6 +787,8 @@ return [
 		'mydocumentroot' => '\'Documentroot\'',
 		'loginnameexists' => 'Der Login-Name "%s" existiert bereits.',
 		'emailiswrong' => 'Die E-Mail-Adresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.',
+		'emailexists' => 'Die E-Mail-Adresse "%s" wird bereits von einem anderen Admin verwendet',
+		'emailexistsanon' => 'Die E-Mail-Adresse "%s" wird bereits verwendet',
 		'alternativeemailiswrong' => 'Die angegebene alternative E-Mail Adresse "%s", an welche die Zugangsdaten geschickt werden soll, scheint ungültig zu sein.',
 		'loginnameiswrong' => 'Der Login-Name "%s" enthält ungültige Zeichen.',
 		'loginnameiswrong2' => 'Der Login-Name enthält zu viele Zeichen, es sind maximal %s Zeichen erlaubt.',

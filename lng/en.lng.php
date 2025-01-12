@@ -858,6 +858,8 @@ return [
 		'mydocumentroot' => '\'Documentroot\'',
 		'loginnameexists' => 'Loginname %s already exists',
 		'emailiswrong' => 'Email-address %s contains invalid characters or is incomplete',
+		'emailexists' => 'Email-address %s already in use by another admin',
+		'emailexistsanon' => 'Email-address %s already in use.',
 		'alternativeemailiswrong' => 'The given alternative email address %s to send the credentials to seems to be invalid',
 		'loginnameiswrong' => 'Loginname "%s" contains illegal characters.',
 		'loginnameiswrong2' => 'Loginname contains too many characters. Only %s characters are allowed.',
