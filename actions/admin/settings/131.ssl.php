@@ -268,7 +268,7 @@ return [
 						'dovecot' => 'dovecot (imap/pop3)',
 						'proftpd' => 'proftpd (ftp)',
 					],
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingFieldInsertUpdateServicesTask',
 					'advanced_mode' => true
 				],
 				'system_le_renew_hook' => [
@@ -278,7 +278,7 @@ return [
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\/\._\- ]+$/i',
 					'default' => 'systemctl restart postfix dovecot proftpd',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingFieldInsertUpdateServicesTask',
 					'advanced_mode' => true,
 					'required_otp' => true
 				],

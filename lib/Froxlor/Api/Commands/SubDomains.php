@@ -503,8 +503,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
-		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
-		throw new Exception("Subdomain with " . $key . " could not be found", 404);
+		throw new Exception("Requested subdomain could not be found", 404);
 	}
 
 	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int

@@ -54,13 +54,13 @@ class Emails extends ApiCommand implements ResourceEntity
 	 * @param float $spam_tag_level
 	 *            optional, score which is required to tag emails as spam, default: 7.0
 	 * @param bool $rewrite_subject
-	 *            optional, whether to add ***SPAM*** to the email's subject if applicable, default true
+	 *            optional, whether to add ***SPAM*** to the email's subject if applicable, default: [antispam.default_spam_rewrite_subject]
 	 * @param float $spam_kill_level
 	 *            optional, score which is required to discard emails, default: 14.0
 	 * @param boolean $bypass_spam
-	 *            optional, disable spam-filter entirely, default: no
+	 *            optional, disable spam-filter entirely, default: [antispam.default_bypass_spam]
 	 * @param boolean $policy_greylist
-	 *            optional, enable grey-listing, default: yes
+	 *            optional, enable grey-listing, default: [antispam.default_policy_greylist]
 	 * @param boolean $iscatchall
 	 *            optional, make this address a catchall address, default: no
 	 * @param int $customerid
@@ -87,12 +87,25 @@ class Emails extends ApiCommand implements ResourceEntity
 
 			// parameters
 			$spam_tag_level = $this->getParam('spam_tag_level', true, '7.0');
-			$rewrite_subject = $this->getBoolParam('rewrite_subject', true, 1);
 			$spam_kill_level = $this->getUlParam('spam_kill_level', 'spam_kill_level_ul', true, '14.0');
-			$bypass_spam = $this->getBoolParam('bypass_spam', true, 0);
-			$policy_greylist = $this->getBoolParam('policy_greylist', true, 1);
 			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
 			$description = $this->getParam('description', true, '');
+
+			if ((int)Settings::Get('antispam.default_spam_rewrite_subject') <= 2) {
+				$rewrite_subject = $this->getBoolParam('rewrite_subject', true, (int)Settings::Get('antispam.default_spam_rewrite_subject') == 1 ? 1 : 0);
+			} else {
+				$rewrite_subject = (int)Settings::Get('antispam.default_spam_rewrite_subject') == 3 ? 1 : 0;
+			}
+			if ((int)Settings::Get('antispam.default_bypass_spam') <= 2) {
+				$bypass_spam = $this->getBoolParam('bypass_spam', true, (int)Settings::Get('antispam.default_bypass_spam') == 1 ? 1 : 0);
+			} else {
+				$bypass_spam = (int)Settings::Get('antispam.default_bypass_spam') == 3 ? 1 : 0;
+			}
+			if ((int)Settings::Get('antispam.default_policy_greylist') <= 2) {
+				$policy_greylist = $this->getBoolParam('policy_greylist', true, (int)Settings::Get('antispam.default_policy_greylist') == 1 ? 1 : 0);
+			} else {
+				$policy_greylist = (int)Settings::Get('antispam.default_policy_greylist') == 3 ? 1 : 0;
+			}
 
 			// validation
 			$idna_convert = new IdnaWrapper();
@@ -258,13 +271,13 @@ class Emails extends ApiCommand implements ResourceEntity
 	 * @param float $spam_tag_level
 	 *            optional, score which is required to tag emails as spam, default: 7.0
 	 * @param bool $rewrite_subject
-	 *              optional, whether to add ***SPAM*** to the email's subject if applicable, default true
+	 *              optional, whether to add ***SPAM*** to the email's subject if applicable, default: [antispam.default_spam_rewrite_subject]
 	 * @param float $spam_kill_level
 	 *            optional, score which is required to discard emails, default: 14.0
 	 * @param boolean $bypass_spam
-	 *            optional, disable spam-filter entirely, default: no
+	 *            optional, disable spam-filter entirely, default: [antispam.default_bypass_spam]
 	 * @param boolean $policy_greylist
-	 *            optional, enable grey-listing, default: yes
+	 *            optional, enable grey-listing, default: [antispam.default_policy_greylist]
 	 * @param boolean $iscatchall
 	 *            optional
 	 * @param string $description
@@ -292,12 +305,25 @@ class Emails extends ApiCommand implements ResourceEntity
 
 		// parameters
 		$spam_tag_level = $this->getParam('spam_tag_level', true, $result['spam_tag_level']);
-		$rewrite_subject = $this->getBoolParam('rewrite_subject', true, $result['rewrite_subject']);
 		$spam_kill_level = $this->getUlParam('spam_kill_level', 'spam_kill_level_ul', true, $result['spam_kill_level']);
-		$bypass_spam = $this->getBoolParam('bypass_spam', true, $result['bypass_spam']);
-		$policy_greylist = $this->getBoolParam('policy_greylist', true, $result['policy_greylist']);
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
 		$description = $this->getParam('description', true, $result['description']);
+
+		if ((int)Settings::Get('antispam.default_spam_rewrite_subject') <= 2) {
+			$rewrite_subject = $this->getBoolParam('rewrite_subject', true, $result['rewrite_subject']);
+		} else {
+			$rewrite_subject = (int)Settings::Get('antispam.default_spam_rewrite_subject') == 3 ? 1 : 0;
+		}
+		if ((int)Settings::Get('antispam.default_bypass_spam') <= 2) {
+			$bypass_spam = $this->getBoolParam('bypass_spam', true, $result['bypass_spam']);
+		} else {
+			$bypass_spam = (int)Settings::Get('antispam.default_bypass_spam') == 3 ? 1 : 0;
+		}
+		if ((int)Settings::Get('antispam.default_policy_greylist') <= 2) {
+			$policy_greylist = $this->getBoolParam('policy_greylist', true, $result['policy_greylist']);
+		} else {
+			$policy_greylist = (int)Settings::Get('antispam.default_policy_greylist') == 3 ? 1 : 0;
+		}
 
 		// if enabling catchall is not allowed by settings, we do not need
 		// to run update()

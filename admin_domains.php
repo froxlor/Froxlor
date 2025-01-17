@@ -319,7 +319,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$alias_check = $alias_check['count'];
 
 			$domain_emails_result_stmt = Database::prepare("
-				SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders`
+				SELECT `email`, `email_full`, `destination`, `popaccountid`
 				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :customerid AND `domainid` = :id
 			");
 			Database::pexecute($domain_emails_result_stmt, [
@@ -589,6 +589,23 @@ if ($page == 'domains' || $page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 		if ($newval != $result['speciallogfile']) {
 			echo json_encode(['changed' => true, 'info' => lng('admin.speciallogwarning')]);
+			exit();
+		}
+		echo 0;
+		exit();
+	} elseif ($action == 'jqEmaildomainNote') {
+		$domainid = intval(Request::post('id'));
+		$newval = intval(Request::post('newval'));
+		try {
+			$json_result = Domains::getLocal($userinfo, [
+				'id' => $domainid
+			])->get();
+		} catch (Exception $e) {
+			Response::dynamicError($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+		if ((int)$newval == 0 && $newval != $result['isemaildomain']) {
+			echo json_encode(['changed' => true, 'info' => lng('admin.emaildomainwarning')]);
 			exit();
 		}
 		echo 0;

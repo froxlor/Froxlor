@@ -504,6 +504,7 @@ return [
 		'apiguide' => 'API Guide',
 		'domain_duplicate' => 'Domain duplizieren',
 		'domain_duplicate_named' => '%s duplizieren',
+		'emaildomainwarning' => '<div id="emaildomainnote" class="invalid-feedback">ACHTUNG: Durch die Änderung dieser Einstellung löschen Sie alle bestehenden E-Mail-Adressen und -Konten unwiderruflich.</div>',
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',
@@ -640,6 +641,24 @@ return [
 		'required_spf_dns' => 'Erforderlicher SPF DNS Eintrag',
 		'required_dmarc_dns' => 'Erforderlicher DMARC DNS Eintrag',
 		'required_dkim_dns' => 'Erforderlicher DKIM DNS Eintrag',
+		'default_select' => [
+			'on_changeable' => 'Aktiviert, einstellbar',
+			'off_changeable' => 'Deaktiviert, einstellbar',
+			'on_unchangeable' => 'Aktiviert, nicht einstellbar',
+			'off_unchangeable' => 'Deaktiviert, nicht einstellbar',
+		],
+		'default_bypass_spam' => [
+			'title' => 'Standardwert: Spamfilter umgehen',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Spamfilter umgehen" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Deaktiviert, einstellbar'
+		],
+		'default_spam_rewrite_subject' => [
+			'title' => 'Standardwert: Betreff ändern',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Betreff ändern" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Aktiviert, einstellbar'
+		],
+		'default_policy_greylist' => [
+			'title' => 'Standardwert: Verwende greylisting',
+			'description' => 'Wählen, ob bei neuen E-Mail-Konten "Verwende greylisting" standardmäßig aktiviert ist und ob diese Einstellung vom Kunden angepasst werden kann.<br/>Standard: Aktiviert, einstellbar'
+		],
 	],
 	'dns' => [
 		'destinationip' => 'Domain-IP-Adresse(n)',
@@ -769,6 +788,8 @@ return [
 		'mydocumentroot' => '\'Documentroot\'',
 		'loginnameexists' => 'Der Login-Name "%s" existiert bereits.',
 		'emailiswrong' => 'Die E-Mail-Adresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.',
+		'emailexists' => 'Die E-Mail-Adresse "%s" wird bereits von einem anderen Admin verwendet',
+		'emailexistsanon' => 'Die E-Mail-Adresse "%s" wird bereits verwendet',
 		'alternativeemailiswrong' => 'Die angegebene alternative E-Mail Adresse "%s", an welche die Zugangsdaten geschickt werden soll, scheint ungültig zu sein.',
 		'loginnameiswrong' => 'Der Login-Name "%s" enthält ungültige Zeichen.',
 		'loginnameiswrong2' => 'Der Login-Name enthält zu viele Zeichen, es sind maximal %s Zeichen erlaubt.',
@@ -956,6 +977,7 @@ return [
 		'invalidpgppublickey' => 'Der angegebene PGP Public Key ist ungültig',
 		'invalid_validtime' => 'Wert der valid_time in Sekunden muss zwischen 10 und 120 liegen.',
 		'customerphpenabledbutnoconfig' => 'Kunde hat PHP aktiviert aber keine PHP-Konfiguration wurde gewählt.',
+		'emaildomainstillhasaddresses' => 'Maildomain-Flag kann nicht deaktiviert werden, da für diese Domain noch E-Mail-Adressen vorhanden sind.',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
@@ -2174,6 +2196,7 @@ Vielen Dank, Ihr Administrator',
 		'CREATE_CUSTOMER_DATADUMP' => 'Daten-Export für Kunde %s',
 		'DELETE_DOMAIN_PDNS' => 'Lösche Domain %s von PowerDNS Datenbank',
 		'DELETE_DOMAIN_SSL' => 'Lösche SSL Dateien von Domain %s',
+		'UPDATE_LE_SERVICES' => 'Aktualisiere Systemdienste für Let\'s Encrypt',
 	],
 	'terms' => 'AGB',
 	'traffic' => [

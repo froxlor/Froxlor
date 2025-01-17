@@ -121,7 +121,7 @@ class UI
 			'domain' => self::getCookieHost(),
 			'secure' => self::requestIsHttps(),
 			'httponly' => true,
-			'samesite' => 'Strict'
+			'samesite' => 'Lax'
 		]);
 		session_start();
 

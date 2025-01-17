@@ -110,13 +110,21 @@ class DbManagerMySQL
 				"password" => $password
 			]);
 			// grant privileges
+			$grants = "ALL";
+			if ($grant_access_prefix) {
+				$grants = "SELECT, INSERT, UPDATE, DELETE, DROP, INDEX, ALTER";
+			}
 			$stmt = Database::prepare("
-				GRANT ALL ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO :username@:host
+				GRANT " . $grants . " ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO :username@:host
 			");
 			Database::pexecute($stmt, [
 				"username" => $username,
 				"host" => $access_host
 			]);
+
+			if ($grant_access_prefix) {
+				$this->grantCreateToCustomerDbs($username, $access_host);
+			}
 		} else {
 			// set password
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<') || version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
@@ -145,9 +153,10 @@ class DbManagerMySQL
 	 * takes away any privileges from a user to that db
 	 *
 	 * @param string $dbname
+	 * @param ?string $global_user
 	 * @throws \Exception
 	 */
-	public function deleteDatabase(string $dbname)
+	public function deleteDatabase(string $dbname, string $global_user = "")
 	{
 		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
 			// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
@@ -167,11 +176,19 @@ class DbManagerMySQL
 		} else {
 			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
 		}
+		$rev_stmt = Database::prepare("REVOKE ALL PRIVILEGES ON `" . $dbname . "`.* FROM :guser@:host;");
 		while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
 			Database::pexecute($drop_stmt, [
 				'dbname' => $dbname,
 				'host' => $host['Host']
 			], false);
+
+			if (!empty($global_user)) {
+				Database::pexecute($rev_stmt, [
+					'guser' => $global_user,
+					'host' => $host['Host']
+				], false);
+			}
 		}
 
 		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $dbname . "`");
@@ -231,8 +248,15 @@ class DbManagerMySQL
 	{
 		// check whether user exists to avoid errors
 		if ($this->userExistsOnHost($username, $host)) {
-			Database::query('GRANT ALL PRIVILEGES ON `' . $username . ($grant_access_prefix ? '%' : '') . '`.* TO `' . $username . '`@`' . $host . '`');
-			Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . ($grant_access_prefix ? '%' : '') . '` . * TO `' . $username . '`@`' . $host . '`');
+			$grants = "ALL PRIVILEGES";
+			if ($grant_access_prefix) {
+				$grants = "SELECT, INSERT, UPDATE, DELETE, DROP, INDEX, ALTER";
+			}
+			Database::query('GRANT ' . $grants . ' ON `' . $username . ($grant_access_prefix ? '%' : '') . '`.* TO `' . $username . '`@`' . $host . '`');
+			Database::query('GRANT ' . $grants . ' ON `' . str_replace('_', '\_', $username) . ($grant_access_prefix ? '%' : '') . '` . * TO `' . $username . '`@`' . $host . '`');
+			if ($grant_access_prefix) {
+				$this->grantCreateToCustomerDbs($username, $host);
+			}
 		}
 	}
 
@@ -291,5 +315,52 @@ class DbManagerMySQL
 			}
 		}
 		return $allsqlusers;
+	}
+
+	/**
+	 * grant "CREATE" for prefix user to all existing databases of that customer
+	 *
+	 * @param string $username
+	 * @param string $access_host
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function grantCreateToCustomerDbs(string $username, string $access_host)
+	{
+		$cus_stmt = Database::prepare("SELECT customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = :username");
+		$cust = Database::pexecute_first($cus_stmt, ['username' => $username]);
+		if ($cust) {
+			$sel_stmt = Database::prepare("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
+			Database::pexecute($sel_stmt, ['cid' => $cust['customerid']]);
+			while ($dbdata = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$stmt = Database::prepare("
+					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO :username@:host
+				");
+				Database::pexecute($stmt, [
+					"username" => $username,
+					"host" => $access_host
+				]);
+			}
+		}
+	}
+
+	/**
+	 * grant "CREATE" for prefix user to all existing databases of that customer
+	 *
+	 * @param string $username
+	 * @param string $database
+	 * @param string $access_host
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function grantCreateToDb(string $username, string $database, string $access_host)
+	{
+		$stmt = Database::prepare("
+			GRANT ALL ON `" . $database . "`.* TO :username@:host
+		");
+		Database::pexecute($stmt, [
+			"username" => $username,
+			"host" => $access_host
+		]);
 	}
 }

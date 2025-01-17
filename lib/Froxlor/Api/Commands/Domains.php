@@ -1063,6 +1063,9 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            (default yes), 3 = always, default 0 (never)
 	 * @param bool $isemaildomain
 	 *            optional, allow email usage with this domain, default 0 (false)
+	 * @param bool $emaildomainverified
+	 *            optional, when setting $isemaildomain to false, this needs to be set to true to confirm the action in case email addresses exist for this domain,
+	 *            default 0 (false)
 	 * @param bool $email_only
 	 *            optional, restrict domain to email usage, default 0 (false)
 	 * @param int $selectserveralias
@@ -1190,6 +1193,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
+			$emaildomainverified = $this->getBoolParam('emaildomainverified', true, 0);
 			$email_only = $this->getBoolParam('email_only', true, $result['email_only']);
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, -1);
 			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
@@ -1273,7 +1277,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// count where we are used in email-accounts
 			$domain_emails_result_stmt = Database::prepare("
-				SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders`
+				SELECT `email`, `email_full`, `destination`, `popaccountid`
 				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :customerid AND `domainid` = :id
 			");
 			Database::pexecute($domain_emails_result_stmt, [
@@ -1294,6 +1298,10 @@ class Domains extends ApiCommand implements ResourceEntity
 						$email_accounts++;
 					}
 				}
+			}
+
+			if ($emails > 0 && (int)$isemaildomain == 0 && (int)$result['isemaildomain'] == 1 && (int)$emaildomainverified == 0) {
+				Response::standardError('emaildomainstillhasaddresses', '', true);
 			}
 
 			// handle change of customer (move domain from customer to customer)
@@ -1571,7 +1579,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
-			if (($result['letsencrypt'] != $letsencrypt || $result['ssl_redirect'] != $ssl_redirect) && $ssl_redirect > 0 && $letsencrypt == 1) {
+			if ($result['letsencrypt'] != $letsencrypt && $ssl_redirect > 0 && $letsencrypt == 1) {
 				$ssl_redirect = 2;
 			}
 

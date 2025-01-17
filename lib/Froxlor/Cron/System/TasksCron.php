@@ -29,6 +29,7 @@ use Exception;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Cron\Http\ConfigIO;
 use Froxlor\Cron\Http\HttpConfigBase;
+use Froxlor\Cron\Http\LetsEncrypt\AcmeSh;
 use Froxlor\Cron\Mail\Rspamd;
 use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
@@ -125,6 +126,12 @@ class TasksCron extends FroxlorCron
 				 */
 				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing Let's Encrypt entries for domain " . $row['data']['domain']);
 				Domain::doLetsEncryptCleanUp($row['data']['domain']);
+			} elseif ($row['type'] == TaskId::UPDATE_LE_SERVICES) {
+				/**
+				 * TYPE=13 set configuration for selected services regarding the use of Let's Encrypt certificate
+				 */
+				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Updating Let's Encrypt configuration for selected services");
+				AcmeSh::renewHookConfigs(FroxlorLogger::getInstanceOf());
 			}
 		}
 

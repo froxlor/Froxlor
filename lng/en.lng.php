@@ -519,6 +519,7 @@ return [
 		'backups' => [
 			'backups' => 'Backups',
 		],
+		'emaildomainwarning' => '<div id="emaildomainnote" class="invalid-feedback">WARNING: By changing this setting you will delete all existing e-mail addresses and -accounts permanently.</div>',
 	],
 	'apcuinfo' => [
 		'clearcache' => 'Clear APCu cache',
@@ -689,6 +690,24 @@ return [
 		'required_spf_dns' => 'Required SPF DNS entry',
 		'required_dmarc_dns' => 'Required DMARC DNS entry',
 		'required_dkim_dns' => 'Required DKIM DNS entry',
+		'default_select' => [
+			'on_changeable' => 'Activated, adjustable',
+			'off_changeable' => 'Deactivated, adjustable',
+			'on_unchangeable' => 'Activated, not adjustable',
+			'off_unchangeable' => 'Deactivated, not adjustable',
+		],
+		'default_bypass_spam' => [
+			'title' => 'Bypass spamfilter default value',
+			'description' => 'Whether new email accounts have "Bypass spamfilter" activated by default and whether this setting is adjustable by the customer.<br/>Default: Deactivated, adjustable'
+		],
+		'default_spam_rewrite_subject' => [
+			'title' => 'Rewrite subject default value',
+			'description' => 'Whether new email accounts have "Rewrite subject" activated by default and whether this setting is adjustable by the customer.<br/>Default: Activated, adjustable'
+		],
+		'default_policy_greylist' => [
+			'title' => 'Use greylisting default value',
+			'description' => 'Whether new email accounts have "Use greylisting" activated by default and whether this setting is adjustable by the customer.<br/>Default: Activated, adjustable'
+		],
 	],
 	'dns' => [
 		'destinationip' => 'Domain IP(s)',
@@ -840,6 +859,8 @@ return [
 		'mydocumentroot' => '\'Documentroot\'',
 		'loginnameexists' => 'Loginname %s already exists',
 		'emailiswrong' => 'Email-address %s contains invalid characters or is incomplete',
+		'emailexists' => 'Email-address %s already in use by another admin',
+		'emailexistsanon' => 'Email-address %s already in use.',
 		'alternativeemailiswrong' => 'The given alternative email address %s to send the credentials to seems to be invalid',
 		'loginnameiswrong' => 'Loginname "%s" contains illegal characters.',
 		'loginnameiswrong2' => 'Loginname contains too many characters. Only %s characters are allowed.',
@@ -1028,6 +1049,7 @@ return [
 		'invalidpgppublickey' => 'The PGP Public Key is not valid',
 		'invalid_validtime' => 'Valid time in seconds can only be between 10 and 120',
 		'customerphpenabledbutnoconfig' => 'Customer has PHP activated but no PHP-configuration was selected.',
+		'emaildomainstillhasaddresses' => 'Cannot deactivate mail-domain flag, as there are still email-addresses for this domain.',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',
@@ -2308,6 +2330,7 @@ Yours sincerely, your administrator',
 		'CREATE_CUSTOMER_DATADUMP' => 'Data export job for customer %s',
 		'DELETE_DOMAIN_PDNS' => 'Delete domain %s from PowerDNS database',
 		'DELETE_DOMAIN_SSL' => 'Delete ssl files of domain %s',
+		'UPDATE_LE_SERVICES' => 'Updating system services for Let\'s Encrypt',
 	],
 	'terms' => 'Terms of use',
 	'traffic' => [

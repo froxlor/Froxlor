@@ -505,6 +505,15 @@ class Customers extends ApiCommand implements ResourceEntity
 						'login' => $loginname
 					], true, true);
 
+					// Check for existing email address
+					// do not check via api as we skip any permission checks for this task
+					$email_check_admin_stmt = Database::prepare("
+						SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email
+					");
+					$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+						'email' => $email
+					], true, true);
+
 					$mysql_maxlen = Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'));
 					if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 						Response::standardError('loginnameexists', $loginname, true);
@@ -514,6 +523,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						} else {
 							Response::standardError('loginnameiswrong', $loginname, true);
 						}
+					} elseif ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+						Response::standardError('emailexistsanon', $email, true);
 					}
 
 					$guid = intval(Settings::Get('system.lastguid')) + 1;
@@ -1106,7 +1117,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
-			$company_required = (!empty($name) && empty($firstname)) || (empty($name) && !empty($firstname)) || (empty($name) && empty($firstname));
+			$company_required = ((!empty($name) && empty($firstname)) || (empty($name) && !empty($firstname)) || (empty($name) && empty($firstname))) && empty($result['company']);
 			$company = $this->getParam('company', !$company_required, $result['company']);
 			$street = $this->getParam('street', true, $result['street']);
 			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
@@ -1243,6 +1254,18 @@ class Customers extends ApiCommand implements ResourceEntity
 				], '', true);
 			} elseif (!Validate::validateEmail($email)) {
 				Response::standardError('emailiswrong', $email, true);
+			} else {
+				// Check for existing email address
+				// do not check via api as we skip any permission checks for this task
+				$email_check_admin_stmt = Database::prepare("
+						SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email
+					");
+				$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+					'email' => $email
+				], true, true);
+				if ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+					Response::standardError('emailexistsanon', $email, true);
+				}
 			}
 		}
 
@@ -1347,7 +1370,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$current_allowed_mysqlserver =  isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], true) : [];
 				foreach ($current_allowed_mysqlserver as $dbserver) {
 					// require privileged access for target db-server
-					Database::needRoot(true, $dbserver, false);
+					Database::needRoot(true, $dbserver, true);
 					// get DbManager
 					$dbm = new DbManager($this->logger());
 					foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {

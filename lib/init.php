@@ -374,7 +374,7 @@ if (CurrentUser::hasSession()) {
 		'domain' => UI::getCookieHost(),
 		'secure' => UI::requestIsHttps(),
 		'httponly' => true,
-		'samesite' => 'Strict'
+		'samesite' => 'Lax'
 	];
 	setcookie(session_name(), $_COOKIE[session_name()], $cookie_params);
 } else {
