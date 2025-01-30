@@ -265,7 +265,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 					$this->mailer()->addReplyTo($admin['email'], User::getCorrectUserSalutation($admin));
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
-					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+					$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 					$this->mailer()->addAddress($email_full);
 					$this->mailer()->send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {

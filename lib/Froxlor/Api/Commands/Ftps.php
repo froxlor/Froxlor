@@ -288,7 +288,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					try {
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
-						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 						$this->mailer()->addAddress($customer['email'], User::getCorrectUserSalutation($customer));
 						$this->mailer()->send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
