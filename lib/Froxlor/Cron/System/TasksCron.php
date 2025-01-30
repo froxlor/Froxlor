@@ -341,10 +341,11 @@ class TasksCron extends FroxlorCron
 				// webserver logs
 				$logsdir = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $row['data']['loginname']);
 
-				if (file_exists($logsdir) && $logsdir != '/' && $logsdir != FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')) && substr($logsdir, 0, strlen(Settings::Get('system.logfiles_directory'))) == Settings::Get('system.logfiles_directory')) {
+				if (file_exists(dirname($logsdir)) && $logsdir != '/' && $logsdir != FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')) && substr($logsdir, 0, strlen(Settings::Get('system.logfiles_directory'))) == Settings::Get('system.logfiles_directory')) {
 					// build up wildcard for webX-{access,error}.log{*}
-					$logsdir .= '-*';
-					FileDir::safe_exec('rm -f ' . escapeshellarg($logsdir));
+					$logsdir .= '-*.log';
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' .FileDir::makeCorrectFile($logsdir));
+					FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($logsdir));
 				}
 			}
 		}
