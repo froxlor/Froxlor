@@ -134,7 +134,7 @@ class Cronjob
 			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type, `data` = :data
 		");
 
-		if ($type == TaskId::REBUILD_VHOST || $type == TaskId::REBUILD_DNS || $type == TaskId::CREATE_FTP || $type == TaskId::REBUILD_RSPAMD || $type == TaskId::CREATE_QUOTA || $type == TaskId::REBUILD_CRON) {
+		if ($type == TaskId::REBUILD_VHOST || $type == TaskId::REBUILD_DNS || $type == TaskId::CREATE_FTP || $type == TaskId::REBUILD_RSPAMD || $type == TaskId::CREATE_QUOTA || $type == TaskId::REBUILD_CRON || $type == TaskId::UPDATE_LE_SERVICES) {
 			// 4 = bind -> if bind disabled -> no task
 			if ($type == TaskId::REBUILD_DNS && Settings::Get('system.bind_enable') == '0') {
 				return;
@@ -145,6 +145,10 @@ class Cronjob
 			}
 			// 10 = quota -> if quota disabled -> no task
 			if ($type == TaskId::CREATE_QUOTA && Settings::Get('system.diskquota_enabled') == '0') {
+				return;
+			}
+			// 13 = let's encrypt for services -> if services empty = no task
+			if ($type == TaskId::UPDATE_LE_SERVICES && (Settings::Get('system.le_froxlor_enabled') == '0' || Settings::Get('system.le_renew_services') == '')) {
 				return;
 			}
 
