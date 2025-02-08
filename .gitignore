@@ -10,6 +10,7 @@ logs/*
 .settings/
 .test/
 *.diff
+*.patch
 *~
 .well-known
 .idea
