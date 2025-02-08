@@ -437,7 +437,7 @@ return [
 			'section_d' => [
 				'title' => lng('admin.nameserversettings'),
 				'image' => 'icons/domain_edit.png',
-				'visible' => ($userinfo['change_serversettings'] == '1' || ($userinfo['change_serversettings'] == '0' && $result['isbinddomain'] == '0')) && (Settings::Get('system.bind_enable') == '1' || $result['isemaildomain'] == '1'),
+				'visible' => ($userinfo['change_serversettings'] == '1' && Settings::Get('system.bind_enable') == '1') || ($result['isemaildomain'] == '1' && (Settings::Get('spf.use_spf') == '1' || Settings::Get('dmarc.use_dmarc') == '1' || (Settings::Get('antispam.activated') == '1' && $result['dkim'] == '1' && $result['dkim_pubkey'] != ''))),
 				'fields' => [
 					'isbinddomain' => [
 						'visible' => $userinfo['change_serversettings'] == '1' && Settings::Get('system.bind_enable') == '1',
@@ -454,19 +454,19 @@ return [
 						'value' => $result['zonefile']
 					],
 					'spf_entry' => [
-						'visible' => ($result['isbinddomain'] == '0' && Settings::Get('spf.use_spf') == '1' && $result['isemaildomain'] == '1'),
+						'visible' => (Settings::Get('spf.use_spf') == '1' && $result['isemaildomain'] == '1'),
 						'label' => lng('antispam.required_spf_dns'),
 						'type' => 'longtext',
 						'value' => (string)(new \Froxlor\Dns\DnsEntry('@', 'TXT', \Froxlor\Dns\Dns::encloseTXTContent(Settings::Get('spf.spf_entry'))))
 					],
 					'dmarc_entry' => [
-						'visible' => ($result['isbinddomain'] == '0' && Settings::Get('dmarc.use_dmarc') == '1' && $result['isemaildomain'] == '1'),
+						'visible' => (Settings::Get('dmarc.use_dmarc') == '1' && $result['isemaildomain'] == '1'),
 						'label' => lng('antispam.required_dmarc_dns'),
 						'type' => 'longtext',
 						'value' => (string)(new \Froxlor\Dns\DnsEntry('_dmarc', 'TXT', \Froxlor\Dns\Dns::encloseTXTContent(Settings::Get('dmarc.dmarc_entry'))))
 					],
 					'dkim_entry' => [
-						'visible' => ($result['isbinddomain'] == '0'  && Settings::Get('antispam.activated') == '1' && $result['dkim'] == '1' && $result['dkim_pubkey'] != '' && $result['isemaildomain'] == '1'),
+						'visible' => (Settings::Get('antispam.activated') == '1' && $result['dkim'] == '1' && $result['dkim_pubkey'] != '' && $result['isemaildomain'] == '1'),
 						'label' => lng('antispam.required_dkim_dns'),
 						'type' => 'longtext',
 						'value' => (string)(new \Froxlor\Dns\DnsEntry('dkim' . $result['dkim_id'] . '._domainkey', 'TXT', \Froxlor\Dns\Dns::encloseTXTContent('v=DKIM1; k=rsa; p='.trim($result['dkim_pubkey']))))
