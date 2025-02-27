@@ -51,7 +51,7 @@ return [
 						'label' => lng('login.password'),
 						'desc' => lng('ftp.editpassdescription'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'ftp_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',

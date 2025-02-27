@@ -58,7 +58,7 @@ return [
 					'ftp_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'ftp_password_suggestion' => [

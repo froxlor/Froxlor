@@ -63,7 +63,7 @@ return [
 					'new_customer_password' => [
 						'label' => lng('login.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'new_customer_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',
