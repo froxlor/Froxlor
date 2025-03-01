@@ -29,6 +29,7 @@ return [
 		'de' => 'German',
 		'en' => 'English',
 		'fr' => 'French',
+		'hu' => 'Hungarian',
 		'it' => 'Italian',
 		'nl' => 'Dutch',
 		'pt' => 'Portuguese',
