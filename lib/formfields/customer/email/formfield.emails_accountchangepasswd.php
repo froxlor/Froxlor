@@ -43,7 +43,7 @@ return [
 					'email_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'email_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',

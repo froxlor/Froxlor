@@ -24,4 +24,5 @@ templates/*
 !templates/index.html
 !templates/Froxlor/
 templates/Froxlor/build/
+templates/Froxlor/hot
 !templates/misc/

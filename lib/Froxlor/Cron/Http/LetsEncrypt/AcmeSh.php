@@ -397,6 +397,7 @@ EOC;
 				AND dom.`aliasdomain` IS NULL
 				AND dom.`iswildcarddomain` = 0
 				AND dom.`email_only` = 0
+				AND dom.`ssl_redirect` != 2
 		");
 		$renew_certs = $certificates_stmt->fetchAll(PDO::FETCH_ASSOC);
 		if ($renew_certs) {
