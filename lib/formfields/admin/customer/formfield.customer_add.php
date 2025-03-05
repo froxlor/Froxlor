@@ -58,7 +58,7 @@ return [
 					'new_customer_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'placeholder' => lng('admin.password_default_msg'),
 						'next_to' => [
 							'new_customer_password_suggestion' => [

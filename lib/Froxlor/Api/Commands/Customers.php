@@ -839,7 +839,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						try {
 							$this->mailer()->Subject = $mail_subject;
 							$this->mailer()->AltBody = $mail_body;
-							$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+							$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 							$this->mailer()->addAddress($email, User::getCorrectUserSalutation([
 								'firstname' => $firstname,
 								'name' => $name,

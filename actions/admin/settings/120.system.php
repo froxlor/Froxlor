@@ -257,7 +257,8 @@ return [
 					'varname' => 'mail_smtp_user',
 					'type' => 'text',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'autocomplete' => 'off'
 				],
 				'system_mail_smtp_passwd' => [
 					'label' => lng('serversettings.mail_smtp_passwd'),
@@ -265,7 +266,8 @@ return [
 					'varname' => 'mail_smtp_passwd',
 					'type' => 'password',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'autocomplete' => 'new-password'
 				],
 				'system_apply_specialsettings_default' => [
 					'label' => lng('serversettings.apply_specialsettings_default'),

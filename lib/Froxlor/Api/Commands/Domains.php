@@ -201,7 +201,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param string $zonefile
 	 *            optional, custom dns zone filename (only of nameserver is activated), default empty (auto-generated)
 	 * @param bool $dkim
-	 *            optional, currently not in use, default 0 (false)
+	 *            optional, whether this domain should use dkim if antispam is activated, default 0 (false)
 	 * @param string $specialsettings
 	 *            optional, custom webserver vhost-content which is added to the generated vhost, default empty
 	 * @param string $ssl_specialsettings
@@ -474,7 +474,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 					$caneditdomain = '1';
 					$zonefile = '';
-					$dkim = '0';
 					$specialsettings = '';
 					$ssl_specialsettings = '';
 					$include_specialsettings = 0;
@@ -550,8 +549,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 				}
 				if (Settings::Get('system.use_ssl') == "1" && $sslenabled == 1 && empty($ssl_ipandports)) {
-					// enabled ssl for the domain but no ssl ip/port is selected
-					Response::standardError('nosslippportgiven', '', true);
+					// if this is a customer standard-subdomain, we simply ignore this and disable ssl-related settings (see if-statement below)
+					if (!$is_stdsubdomain) {
+						// enabled ssl for the domain but no ssl ip/port is selected
+						Response::standardError('nosslippportgiven', '', true);
+					}
 				}
 				if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 					$ssl_redirect = 0;
@@ -1088,7 +1090,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param string $zonefile
 	 *            optional, custom dns zone filename (only of nameserver is activated), default empty (auto-generated)
 	 * @param bool $dkim
-	 *            optional, currently not in use, default 0 (false)
+	 *            optional, whether this domain should use dkim if antispam is activated, default 0 (false)
 	 * @param string $specialsettings
 	 *            optional, custom webserver vhost-content which is added to the generated vhost, default empty
 	 * @param string $ssl_specialsettings
@@ -1460,7 +1462,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			} else {
 				$isbinddomain = $result['isbinddomain'];
 				$zonefile = $result['zonefile'];
-				$dkim = $result['dkim'];
 				$specialsettings = $result['specialsettings'];
 				$ssl_specialsettings = $result['ssl_specialsettings'];
 				$include_specialsettings = $result['include_specialsettings'];

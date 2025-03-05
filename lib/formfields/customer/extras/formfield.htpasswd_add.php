@@ -54,7 +54,7 @@ return [
 					'directory_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'directory_password_suggestion' => [

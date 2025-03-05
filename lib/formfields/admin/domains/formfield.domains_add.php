@@ -193,7 +193,7 @@ return [
 						'label' => lng('admin.domain_sslenabled'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => !empty($ssl_ipsandports)
+						'checked' => !empty(Settings::Get('system.defaultsslip'))
 					],
 					'no_ssl_available_info' => [
 						'visible' => empty($ssl_ipsandports),

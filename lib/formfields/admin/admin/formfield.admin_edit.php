@@ -52,7 +52,7 @@ return [
 					'admin_password' => [
 						'label' => lng('login.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'visible' => $result['adminid'] != $userinfo['userid'],
 						'next_to' => [
 							'admin_password_suggestion' => [
