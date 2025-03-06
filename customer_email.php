@@ -30,7 +30,6 @@ use Froxlor\Api\Commands\EmailAccounts;
 use Froxlor\Api\Commands\EmailDomains;
 use Froxlor\Api\Commands\EmailForwarders;
 use Froxlor\Api\Commands\Emails;
-use Froxlor\Cron\Mail\Rspamd;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
@@ -105,7 +104,7 @@ if ($page == 'email_domain') {
 			$email_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails.php';
 			$collection = (new Collection(Emails::class, $userinfo, $sql_search))
 				->withPagination($email_list_data['email_list']['columns'],
-					$email_list_data['email_list']['default_sorting']);
+					$email_list_data['email_list']['default_sorting'], ['domainid=' . $email_domainid]);
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}
