@@ -61,7 +61,7 @@ function lng(string $identifier, array $arguments = [])
  * @param string|null $session
  * @return mixed|string|null
  */
-function old(string $identifier, string $default = null, string $session = null)
+function old(string $identifier, ?string $default, ?string $session = null)
 {
 	if ($session && isset($_SESSION[$session])) {
 		return $_SESSION[$session][$identifier] ?? $default;

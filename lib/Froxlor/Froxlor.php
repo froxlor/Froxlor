@@ -316,7 +316,7 @@ final class Froxlor
 	 * @param array|null $arr
 	 * @return void
 	 */
-	private static function parseVersionArray(array &$arr = null)
+	private static function parseVersionArray(?array &$arr)
 	{
 		// -dev or -beta or -rc ?
 		if (stripos($arr[count($arr) - 1], '-') !== false) {
