@@ -233,9 +233,7 @@ class AcmeSh extends FroxlorCron
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 			// also check for possible existing certificate
-			if (($froxlor_ssl && empty($froxlor_ssl['validtodate']))
-				|| (!$froxlor_ssl && !self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s')))
-			) {
+			if (!$froxlor_ssl || empty($froxlor_ssl['validtodate'])) {
 				return true;
 			}
 		}
