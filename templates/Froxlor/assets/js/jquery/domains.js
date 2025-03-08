@@ -69,7 +69,7 @@ export default function () {
 
 		// show warning if emaildomain option is set to disabled but was enabled
 		if ($('input[name=emaildomainverified]')) {
-			$('input[name=emaildomainverified]').on('click', function () {
+			$('input[name=isemaildomain]').on('click', function () {
 				$('#emaildomainnote').remove();
 				$('#isemaildomain').removeClass('is-invalid');
 				$('#emaildomainverified').val(0);
