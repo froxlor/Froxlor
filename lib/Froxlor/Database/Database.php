@@ -133,7 +133,7 @@ class Database
 	 *            if set to false, the error will be logged, but we go on
 	 * @throws Exception
 	 */
-	private static function showerror(Exception $error, bool $showerror = true, bool $json_response = false, PDOStatement $stmt = null)
+	private static function showerror(Exception $error, bool $showerror = true, bool $json_response = false, ?PDOStatement $stmt = null)
 	{
 		global $userinfo, $theme, $linker;
 
