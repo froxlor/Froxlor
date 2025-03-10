@@ -378,6 +378,14 @@ class Database
 	}
 
 	/**
+	 * get the currently used database-server (relevant for root-connection)
+	 */
+	public static function getServer()
+	{
+		return self::$dbserver;
+	}
+
+	/**
 	 * enable the temporary access to sql-access data
 	 * note: if you want root-sqldata you need to
 	 * call needRoot(true) first.

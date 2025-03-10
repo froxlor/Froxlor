@@ -327,11 +327,17 @@ class DbManagerMySQL
 	 */
 	private function grantCreateToCustomerDbs(string $username, string $access_host)
 	{
+		// remember what (possible remote) db-server we're on
+		$currentDbServer = Database::getServer();
+		// use "unprivileged" connection
+		Database::needRoot();
 		$cus_stmt = Database::prepare("SELECT customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = :username");
 		$cust = Database::pexecute_first($cus_stmt, ['username' => $username]);
 		if ($cust) {
-			$sel_stmt = Database::prepare("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
-			Database::pexecute($sel_stmt, ['cid' => $cust['customerid']]);
+			$sel_stmt = Database::prepare("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid AND `dbserver` = :dbserver");
+			Database::pexecute($sel_stmt, ['cid' => $cust['customerid'], 'dbserver' => $currentDbServer]);
+			// reset to root-connection for used dbserver
+			Database::needRoot(true, $currentDbServer, false);
 			while ($dbdata = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$stmt = Database::prepare("
 					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO :username@:host
