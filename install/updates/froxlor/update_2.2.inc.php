@@ -238,7 +238,7 @@ if (Froxlor::isDatabaseVersion('202411200')) {
 				}
 			}
 			$dbm->getManager()->flushPrivileges();
-			Database::needRoot(false);
+			Database::needRoot();
 		}
 	}
 	Update::lastStepStatus(0);
