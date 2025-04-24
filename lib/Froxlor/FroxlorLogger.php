@@ -164,7 +164,7 @@ class FroxlorLogger
 	 * @param int $type
 	 * @param ?string $text
 	 */
-	public function logAction($action = FroxlorLogger::USR_ACTION, int $type = LOG_NOTICE, string $text = null)
+	public function logAction($action = FroxlorLogger::USR_ACTION, int $type = LOG_NOTICE, ?string $text = null)
 	{
 		// not logging normal stuff if not set to "paranoid" logging
 		if (!self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {

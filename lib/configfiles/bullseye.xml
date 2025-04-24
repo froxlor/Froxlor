@@ -4168,6 +4168,7 @@ try_fallback = true;
 allow_username_mismatch = true;
 path = "/var/lib/rspamd/dkim/$domain.$selector.key";
 selector_map = "/etc/rspamd/dkim_selectors.map";
+use_esld = false;
 ]]>
 							</content>
 						</file>

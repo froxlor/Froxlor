@@ -176,7 +176,7 @@ class DbManager
 	 */
 	public function createDatabase(string $loginname = null, string $password = null, int $dbserver = 0, int $last_accnumber = 0, string $global_user = "")
 	{
-		Database::needRoot(true, $dbserver, true);
+		Database::needRoot(true, $dbserver, false);
 
 		// check whether we shall create a random username
 		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
@@ -211,7 +211,7 @@ class DbManager
 		}
 
 		$this->getManager()->flushPrivileges();
-		Database::needRoot(false);
+		Database::needRoot();
 
 		$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 

@@ -28,7 +28,6 @@ namespace Froxlor\Validate;
 use Exception;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
-use Froxlor\Idna\IdnaWrapper;
 use Froxlor\System\IPTools;
 use Froxlor\UI\Response;
 
@@ -63,10 +62,11 @@ class Validate
 		string $str,
 		string $fieldname,
 		string $pattern = '',
-		$lng = '',
-		$emptydefault = [],
-		bool $throw_exception = false
-	) {
+			   $lng = '',
+			   $emptydefault = [],
+		bool   $throw_exception = false
+	)
+	{
 		if (!is_array($emptydefault)) {
 			$emptydefault_array = [
 				$emptydefault
@@ -122,14 +122,15 @@ class Validate
 	 */
 	public static function validate_ip2(
 		string $ip,
-		bool $return_bool = false,
+		bool   $return_bool = false,
 		string $lng = 'invalidip',
-		bool $allow_localhost = false,
-		bool $allow_priv = false,
-		bool $allow_cidr = false,
-		bool $cidr_as_netmask = false,
-		bool $throw_exception = false
-	) {
+		bool   $allow_localhost = false,
+		bool   $allow_priv = false,
+		bool   $allow_cidr = false,
+		bool   $cidr_as_netmask = false,
+		bool   $throw_exception = false
+	)
+	{
 		$cidr = "";
 		if ($allow_cidr) {
 			$org_ip = $ip;
@@ -200,20 +201,34 @@ class Validate
 			$url = 'http://' . $url;
 		}
 
-		// needs converting
-		try {
-			$idna_convert = new IdnaWrapper();
-			$url = $idna_convert->encode($url);
-		} catch (Exception $e) {
+		// Parse parts
+		$parts = parse_url($url);
+		if ($parts === false || !isset($parts['scheme'], $parts['host'])) {
 			return false;
 		}
 
-		if ($allow_private_ip) {
-			$pattern = '%^(?:(?:https?):\/\/)(?:\S+(?::\S*)?@)?(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$%iuS';
-		} else {
-			$pattern = '%^(?:(?:https?):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$%iuS';
+		// Check allowed schemes
+		if (!in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+			return false;
 		}
-		if (preg_match($pattern, $url)) {
+
+		// Check if host is valid domain or valid IP (v4 or v6)
+		$host = $parts['host'];
+		if (substr($host, 0, 1) == '[' && substr($host, -1) == ']') {
+			$host = substr($host, 1, -1);
+		}
+
+		$opts = FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE;
+		$opts6 = FILTER_FLAG_IPV6 | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE;
+		if ($allow_private_ip) {
+			$opts = FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE;
+			$opts6 = FILTER_FLAG_IPV6 | FILTER_FLAG_NO_RES_RANGE;
+		}
+		if (filter_var($host, FILTER_VALIDATE_IP, $opts)) {
+			return true;
+		} elseif (substr($parts['host'], 0, 1) == '[' && substr($parts['host'], -1) == ']' && filter_var($host, FILTER_VALIDATE_IP, $opts6)) {
+			return true;
+		} elseif (!preg_match('/^([0-9]{1,3}\.)+[0-9]{1,3}$/', $host) && self::validateDomain($host) !== false) {
 			return true;
 		}
 
@@ -342,7 +357,8 @@ class Validate
 	 * @return bool
 	 * @throws Exception
 	 */
-	public static function validateBase64Image(string $base64string) {
+	public static function validateBase64Image(string $base64string)
+	{
 
 		if (!extension_loaded('gd')) {
 			Response::standardError('phpgdextensionnotavailable', null, true);

@@ -777,7 +777,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					if ($mysqls != 0) {
 						foreach ($allowed_mysqlserver as $dbserver) {
 							// require privileged access for target db-server
-							Database::needRoot(true, $dbserver, true);
+							Database::needRoot(true, $dbserver, false);
 							// get DbManager
 							$dbm = new DbManager($this->logger());
 							// give permission to the user on every access-host we have

@@ -115,12 +115,9 @@ class DbManagerMySQL
 				$grants = "SELECT, INSERT, UPDATE, DELETE, DROP, INDEX, ALTER";
 			}
 			$stmt = Database::prepare("
-				GRANT " . $grants . " ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO :username@:host
+				GRANT " . $grants . " ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO `" . $username . "`@`" . $access_host . "`
 			");
-			Database::pexecute($stmt, [
-				"username" => $username,
-				"host" => $access_host
-			]);
+			Database::pexecute($stmt);
 
 			if ($grant_access_prefix) {
 				$this->grantCreateToCustomerDbs($username, $access_host);
@@ -327,19 +324,22 @@ class DbManagerMySQL
 	 */
 	private function grantCreateToCustomerDbs(string $username, string $access_host)
 	{
+		// remember what (possible remote) db-server we're on
+		$currentDbServer = Database::getServer();
+		// use "unprivileged" connection
+		Database::needRoot();
 		$cus_stmt = Database::prepare("SELECT customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE loginname = :username");
 		$cust = Database::pexecute_first($cus_stmt, ['username' => $username]);
 		if ($cust) {
-			$sel_stmt = Database::prepare("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");
-			Database::pexecute($sel_stmt, ['cid' => $cust['customerid']]);
+			$sel_stmt = Database::prepare("SELECT databasename FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid AND `dbserver` = :dbserver");
+			Database::pexecute($sel_stmt, ['cid' => $cust['customerid'], 'dbserver' => $currentDbServer]);
+			// reset to root-connection for used dbserver
+			Database::needRoot(true, $currentDbServer, false);
 			while ($dbdata = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$stmt = Database::prepare("
-					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO :username@:host
+					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO `" . $username . "`@`" . $access_host . "`
 				");
-				Database::pexecute($stmt, [
-					"username" => $username,
-					"host" => $access_host
-				]);
+				Database::pexecute($stmt);
 			}
 		}
 	}
@@ -355,12 +355,12 @@ class DbManagerMySQL
 	 */
 	public function grantCreateToDb(string $username, string $database, string $access_host)
 	{
-		$stmt = Database::prepare("
-			GRANT ALL ON `" . $database . "`.* TO :username@:host
-		");
-		Database::pexecute($stmt, [
-			"username" => $username,
-			"host" => $access_host
-		]);
+		// only grant permission if the user exists
+		if ($this->userExistsOnHost($username, $access_host)) {
+			$stmt = Database::prepare("
+				GRANT ALL ON `" . $database . "`.* TO `" . $username . "`@`" . $access_host . "`
+			");
+			Database::pexecute($stmt);
+		}
 	}
 }

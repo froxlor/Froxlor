@@ -226,7 +226,7 @@ if (Froxlor::isDatabaseVersion('202411200')) {
 		$current_allowed_mysqlserver = !empty($customer['allowed_mysqlserver']) ? json_decode($customer['allowed_mysqlserver'], true) : [];
 		foreach ($current_allowed_mysqlserver as $dbserver) {
 			// require privileged access for target db-server
-			Database::needRoot(true, $dbserver, true);
+			Database::needRoot(true, $dbserver, false);
 			// get DbManager
 			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
 			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
@@ -238,7 +238,7 @@ if (Froxlor::isDatabaseVersion('202411200')) {
 				}
 			}
 			$dbm->getManager()->flushPrivileges();
-			Database::needRoot(false);
+			Database::needRoot();
 		}
 	}
 	Update::lastStepStatus(0);
