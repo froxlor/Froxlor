@@ -46,7 +46,6 @@
 		"ext-fileinfo": "*",
 		"ext-gmp": "*",
 		"ext-gd": "*",
-		"ext-gnupg": "*",
 		"phpmailer/phpmailer": "~6.0",
 		"monolog/monolog": "^1.24",
 		"robthree/twofactorauth": "^1.6",
@@ -73,6 +72,7 @@
 	"suggest": {
 		"ext-bcmath": "*",
 		"ext-zip": "*",
+		"ext-gnupg": "*",
 		"ext-apcu": "*",
 		"ext-readline": "*"
 	},
