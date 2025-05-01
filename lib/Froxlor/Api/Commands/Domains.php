@@ -595,12 +595,18 @@ class Domains extends ApiCommand implements ResourceEntity
 					$ssl_redirect = 2;
 				}
 
-				if (!preg_match('/^https?\:\/\//', $documentroot)) {
-					if (strstr($documentroot, ":") !== false) {
-						Response::standardError('pathmaynotcontaincolon', '', true);
-					} else {
-						$documentroot = FileDir::makeCorrectDir($documentroot);
+				// Check if given documentroot is either a valid URL or a valid path
+				if (preg_match('/^https?\:\/\//', $documentroot)) {
+					$encoded = $idna_convert->encode($documentroot);
+					if (!Validate::validateUrl($encoded, true)) {
+						Response::standardError('invaliddocumentrooturl', '', true);
 					}
+					$documentroot = $encoded;
+				} else {
+					if (strpos($documentroot, ':') !== false) {
+						Response::standardError('pathmaynotcontaincolon', '', true);
+					}
+					$documentroot = FileDir::makeCorrectDir($documentroot);
 				}
 
 				$domain_check_stmt = Database::prepare("
@@ -1414,10 +1420,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			if (!preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
-				Response::standardError('pathmaynotcontaincolon', '', true);
-			}
-
 			if ($this->getUserDetail('change_serversettings') == '1') {
 				if (Settings::Get('system.bind_enable') == '1') {
 					$zonefile = Validate::validate($zonefile, 'zonefile', '', '', [], true);
@@ -1584,10 +1586,20 @@ class Domains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = 2;
 			}
 
-			if (!preg_match('/^https?\:\/\//', $documentroot)) {
-				if ($documentroot != $result['documentroot']) {
+			$idna_convert = new IdnaWrapper();
+			if ($documentroot != $result['documentroot']) {
+				if (preg_match('/^https?\:\/\//', $documentroot)) {
+					$encoded = $idna_convert->encode($documentroot);
+					if (!Validate::validateUrl($encoded, true)) {
+						Response::standardError('invaliddocumentrooturl', '', true);
+					}
+					$documentroot = $encoded;
+				} else {
 					if (substr($documentroot, 0, 1) != "/") {
 						$documentroot = $customer['documentroot'] . '/' . $documentroot;
+					}
+					if (strpos($documentroot, ':') !== false) {
+						Response::standardError('pathmaynotcontaincolon', '', true);
 					}
 					$documentroot = FileDir::makeCorrectDir($documentroot);
 				}
@@ -2099,7 +2111,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			$idna_convert = new IdnaWrapper();
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $idna_convert->decode($result['domain']) . "'");
 			$result = $this->apiCall('Domains.get', [
 				'domainname' => $result['domain']

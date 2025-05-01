@@ -8,7 +8,7 @@ if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd'
 	$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
 	define('TRAVIS_CI', 0);
 } else {
-	// travis-ci.org
+	// github actions
 	$pwd = 'fr0xl0r.TravisCI';
 	$rpwd = 'fr0xl0r.TravisCI';
 	define('TRAVIS_CI', 1);
