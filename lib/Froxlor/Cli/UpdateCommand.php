@@ -190,7 +190,8 @@ final class UpdateCommand extends CliCommand
 
 								$question = new ConfirmationQuestion('Update database? [no] ', false, '/^(y|j)/i');
 								if ($yestoall || $helper->ask($input, $output, $question)) {
-									$result = $this->runUpdate($output, true);
+									// run in separate process to ensure the use of newly unpacked files
+									passthru(Froxlor::getInstallDir() . '/bin/froxlor-cli froxlor:update -dA', $result);
 								}
 							} else {
 								$errmsg = 'error.autoupdate_' . $auex;
