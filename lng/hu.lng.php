@@ -2045,6 +2045,11 @@ Jelszó: {USR_PASS}
 			'description' => 'Parancs a cronjobjaink végrehajtásához. Csak akkor változtassa meg, ha tudja, mit csinál (alapértelmezett: "/usr/bin/nice -n 5 /usr/bin/php -q")!',
 		],
 		'system_cron_allowautoupdate' => [
+			'title' => 'Automatikus adatbázis-frissítések engedélyezése',
+			'description' => '<div class="text-danger"><b>FIGYELEM:</b></div> Ez a beállítás lehetővé teszi a cronjob számára, hogy megkerülje a froxlor fájlok és az adatbázis verzióellenőrzését, és verzióeltérés esetén lefuttassa az adatbázis-frissítéseket.<br><br><div class="text-danger">Az automatikus frissítés mindig az alapértelmezett értékeket állítja be az új beállításokhoz vagy változtatásokhoz. Ez nem mindig felel meg az Ön rendszerének. Kérjük, gondolja át kétszer, mielőtt aktiválja ezt a beállítást.</div>',
+		],
+		'dns_createhostnameentry' => 'Bind-zone/config létrehozása a rendszer hosztnévhez',
+		'panel_password_alpha_lower' => [
 			'title' => 'Kisbetű',
 			'description' => 'A jelszónak tartalmaznia kell legalább egy kisbetűt (a-z).',
 		],
