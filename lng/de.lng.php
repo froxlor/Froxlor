@@ -878,6 +878,7 @@ return [
 		'plausibilitychecknotunderstood' => 'Die Antwort des Plausibilitätschecks wurde nicht verstanden',
 		'errorwhensaving' => 'Bei dem Speichern des Feldes "%s" trat ein Fehler auf',
 		'pathmaynotcontaincolon' => 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert für den Pfad ein.',
+		'invaliddocumentrooturl' => 'Die URL, die Sie für den Pfad eingegeben haben, ist ungültig. Bitte geben Sie eine korrekte URL oder einen Unix-Pfad ein.',
 		'notrequiredpasswordcomplexity' => 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.',
 		'stringerrordocumentnotvalidforlighty' => 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
 		'urlerrordocumentnotvalidforlighty' => 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
@@ -2107,7 +2108,7 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Ist die Nutzung eines hochgeladenen Logos gewünscht, muss diese Einstellung auf "Ja" gesetzt werden. Alternativ kann weiterhin das Theme-basierte Überschreiben via "logo_custom.png" und "logo_custom_login.png" genutzt werden.',
 		],
 		'logo_overridecustom' => [
-			'title' => 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bold" (Header und Login, siehe unten)',
+			'title' => 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bild" (Header und Login, siehe unten)',
 			'description' => 'Ist diese Einstellung aktiv, werden benutzerdefinierte Logos im Theme-Ordner mit dem "Logo Bild" ersetzt',
 		],
 		'createstdsubdom_default' => [

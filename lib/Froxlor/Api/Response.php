@@ -34,7 +34,9 @@ class Response
 
 	public static function jsonResponse($data = null, int $response_code = 200)
 	{
-		http_response_code($response_code);
+		if (!defined('TRAVIS_CI') || TRAVIS_CI == 0) {
+			http_response_code($response_code);
+		}
 
 		return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	}

@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.2']
+        php-versions: ['7.4', '8.3']
         mysql-version: [8.0, 5.7]
     steps:
       - name: Checkout
@@ -19,7 +19,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2
-          extensions: mbstring, xml, ctype, pdo_mysql, mysql, curl, json, zip, session, filter, posix, openssl, fileinfo, bcmath, gmp, gnupg
+          extensions: mbstring, xml, ctype, pdo_mysql, mysql, curl, json, zip, session, filter, posix, openssl, fileinfo, bcmath, gmp
 
       - name: Install tools
         run: sudo apt-get install -y ant

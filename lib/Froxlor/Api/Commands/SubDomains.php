@@ -549,32 +549,33 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 */
 	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
 	{
-		// check whether an URL was specified
 		$_doredirect = false;
-		if (!empty($url) && Validate::validateUrl($url, true)) {
-			$path = $url;
+		$idna = new IdnaWrapper();
+
+		// url mode: either $url or $path begins with http:// or https://
+		$maybeUrl = !empty($url) ? $url : (preg_match('/^https?\:\/\//', $path) ? $path : '');
+		if ($maybeUrl !== '') {
+			$encoded = $idna->encode($maybeUrl);
+			if (!Validate::validateUrl($encoded, true)) {
+				Response::standardError('invaliddocumentrooturl', '', true);
+			}
 			$_doredirect = true;
-		} else {
-			$path = Validate::validate($path, 'path', '', '', [], true);
+			return $encoded;
 		}
 
-		// check whether path is a real path
-		if (!preg_match('/^https?\:\/\//', $path) || !Validate::validateUrl($path, true)) {
-			if (strstr($path, ":") !== false) {
-				Response::standardError('pathmaynotcontaincolon', '', true);
-			}
-			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-			// set default path to subdomain or domain name
-			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain, $customer['documentroot']);
-			} else {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
-			}
-		} else {
-			// no it's not, create a redirect
-			$_doredirect = true;
+		// path mode: regular directory path
+		$path = Validate::validate($path, 'path', Validate::REGEX_DIR, '', [], true);
+
+		// default path if empty and setting active
+		if (($path === '' || $path === '/') && Settings::Get('system.documentroot_use_default_value') == 1) {
+			return FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain, $customer['documentroot']);
 		}
-		return $path;
+		// check if path does not contain a colon
+		if (strpos($path, ':') !== false) {
+			Response::standardError('pathmaynotcontaincolon', '', true);
+		}
+
+		return FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 	}
 
 	/**

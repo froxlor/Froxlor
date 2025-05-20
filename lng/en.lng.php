@@ -951,6 +951,7 @@ return [
 		'notrequiredpasswordlength' => 'The given password is too short. Please enter at least %s characters.',
 		'overviewsettingoptionisnotavalidfield' => 'Whoops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!',
 		'pathmaynotcontaincolon' => 'The path you have entered should not contain a colon (":"). Please enter a correct path value.',
+		'invaliddocumentrooturl' => 'The URL you have entered for the documentroot is not valid. Please enter a correct URL or a unix-path.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'The specified password-complexity was not satisfied.<br />Please contact your administrator if you have any questions about the complexity-specification',
 		'stringerrordocumentnotvalidforlighty' => 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file',
