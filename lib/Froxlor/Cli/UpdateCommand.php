@@ -83,7 +83,7 @@ final class UpdateCommand extends CliCommand
 					}
 					return $result;
 				}
-				$output->writeln('<info>' . lng('update.noupdatesavail', (Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')) . '</>');
+				$output->writeln('<info>' . lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')]) . '</>');
 			}
 			return $result;
 		}
