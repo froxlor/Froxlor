@@ -966,6 +966,8 @@ return [
 		'no_wwwcnamae_ifwwwalias' => 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"',
 		'local_group_exists' => 'Die angegebene Gruppe existiert bereits auf dem System',
 		'local_group_invalid' => 'Der angegebene Gruppen-Name ist nicht gültig',
+		'local_user_invalid' => 'Der angegebene Benutzer-Name ist nicht gültig oder existiert nicht',
+		'local_user_isfroxloruser' => 'Der angegebene Benutzer-Name ist ein von froxlor verwalteter Benutzer und kann in diesem Kontext nicht verwendet werden.',
 		'invaliddnsforletsencrypt' => 'Die DNS-Einträge der Domain enthalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.',
 		'notallowedphpconfigused' => 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist',
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
