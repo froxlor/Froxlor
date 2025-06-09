@@ -549,7 +549,7 @@ class Dns
 			// start
 			$dkim_txt = 'v=DKIM1;';
 			// key
-			$dkim_txt .= 'k=rsa;p=' . trim($domain['dkim_pubkey']) . ';';
+			$dkim_txt .= 'k=rsa;p=' . trim(str_replace(PHP_EOL, '', $domain['dkim_pubkey'])) . ';';
 			// dkim-entry
 			$zone_dkim[] = $dkim_txt;
 		}
