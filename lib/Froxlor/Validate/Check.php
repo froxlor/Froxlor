@@ -359,4 +359,41 @@ class Check
 
 		return [self::FORMFIELDS_PLAUSIBILITY_CHECK_OK];
 	}
+
+	/**
+	 * @param $fieldname
+	 * @param $fielddata
+	 * @param $newfieldvalue
+	 * @param $allnewfieldvalues
+	 * @return array|int[]
+	 * @throws \Exception
+	 */
+	public static function checkSystemUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+	{
+		if (empty($newfieldvalue) || $fielddata['value'] == $newfieldvalue) {
+			$returnvalue = [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
+			];
+		} elseif (function_exists('posix_getpwnam') && posix_getpwnam($newfieldvalue) == false) {
+			$returnvalue = [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				'local_user_invalid'
+			];
+		} else {
+			// user exists, but cannot be one of the froxlor-customers
+			$sel_stmt = Database::prepare("SELECT COUNT(*) as numUsers FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :username");
+			$result = Database::pexecute_first($sel_stmt, [':username' => $newfieldvalue]);
+			if ($result && $result['numUsers'] > 0) {
+				$returnvalue = [
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					'local_user_isfroxloruser'
+				];
+			} else {
+				$returnvalue = [
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
+				];
+			}
+		}
+		return $returnvalue;
+	}
 }

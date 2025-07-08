@@ -104,6 +104,10 @@ return [
 					'varname' => 'httpuser',
 					'type' => 'text',
 					'default' => 'www-data',
+					'plausibility_check_method' => [
+						'\\Froxlor\\Validate\\Check',
+						'checkSystemUsername'
+					],
 					'save_method' => 'storeSettingWebserverFcgidFpmUser'
 				],
 				'system_httpgroup' => [

@@ -111,7 +111,7 @@ return [
 						'step' => 0.1,
 						'value' => $result['spam_tag_level'],
 					],
-					'spam_rewrite_subject' => [
+					'rewrite_subject' => [
 						'visible' => Settings::Get('antispam.activated') == '1' && (int)Settings::Get('antispam.default_spam_rewrite_subject') <= 2,
 						'label' => lng('antispam.rewrite_subject'),
 						'type' => 'checkbox',

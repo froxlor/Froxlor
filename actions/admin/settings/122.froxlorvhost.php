@@ -177,6 +177,10 @@ return [
 					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'string_emptyallowed' => false,
+					'plausibility_check_method' => [
+						'\\Froxlor\\Validate\\Check',
+						'checkSystemUsername'
+					],
 					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'websrv_avail' => [
 						'apache2'
@@ -246,6 +250,10 @@ return [
 					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'string_emptyallowed' => false,
+					'plausibility_check_method' => [
+						'\\Froxlor\\Validate\\Check',
+						'checkSystemUsername'
+					],
 					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'visible' => Settings::Get('phpfpm.enabled') && call_user_func([
 						'\Froxlor\Settings\FroxlorVhostSettings',

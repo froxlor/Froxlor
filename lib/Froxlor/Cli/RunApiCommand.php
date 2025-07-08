@@ -42,7 +42,7 @@ final class RunApiCommand extends CliCommand
 		$this->setDescription('Run an API command as given user');
 		$this->addArgument('user', InputArgument::REQUIRED, 'Loginname of the user you want to run the command as')
 			->addArgument('api-command', InputArgument::REQUIRED, 'The command to execute in the form "Module.function"')
-			->addArgument('parameters', InputArgument::OPTIONAL, 'Paramaters to pass to the command as JSON array');
+			->addArgument('parameters', InputArgument::OPTIONAL, 'Parameters to pass to the command as JSON array');
 		$this->addOption('show-params', 's', InputOption::VALUE_NONE, 'Show possible parameters for given api-command (given command will *not* be called)');
 	}
 

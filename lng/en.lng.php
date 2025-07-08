@@ -1039,6 +1039,8 @@ return [
 		'no_wwwcnamae_ifwwwalias' => 'Cannot set CNAME record for "www" as domain is set to generate a www-alias. Please change settings to either "No alias" or "Wildcard alias"',
 		'local_group_exists' => 'The given group already exists on the system.',
 		'local_group_invalid' => 'The given group name is invalid',
+		'local_user_invalid' => 'The given user name is invalid or does not exist',
+		'local_user_isfroxloruser' => 'The given user name is a froxlor managed username and cannot be used in this context',
 		'invaliddnsforletsencrypt' => 'The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.',
 		'notallowedphpconfigused' => 'Trying to use php-config which is not assigned to customer',
 		'pathmustberelative' => 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).',

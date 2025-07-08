@@ -966,6 +966,8 @@ return [
 		'no_wwwcnamae_ifwwwalias' => 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"',
 		'local_group_exists' => 'Die angegebene Gruppe existiert bereits auf dem System',
 		'local_group_invalid' => 'Der angegebene Gruppen-Name ist nicht gültig',
+		'local_user_invalid' => 'Der angegebene Benutzer-Name ist nicht gültig oder existiert nicht',
+		'local_user_isfroxloruser' => 'Der angegebene Benutzer-Name ist ein von froxlor verwalteter Benutzer und kann in diesem Kontext nicht verwendet werden.',
 		'invaliddnsforletsencrypt' => 'Die DNS-Einträge der Domain enthalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.',
 		'notallowedphpconfigused' => 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist',
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
@@ -2108,7 +2110,7 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Ist die Nutzung eines hochgeladenen Logos gewünscht, muss diese Einstellung auf "Ja" gesetzt werden. Alternativ kann weiterhin das Theme-basierte Überschreiben via "logo_custom.png" und "logo_custom_login.png" genutzt werden.',
 		],
 		'logo_overridecustom' => [
-			'title' => 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bold" (Header und Login, siehe unten)',
+			'title' => 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bild" (Header und Login, siehe unten)',
 			'description' => 'Ist diese Einstellung aktiv, werden benutzerdefinierte Logos im Theme-Ordner mit dem "Logo Bild" ersetzt',
 		],
 		'createstdsubdom_default' => [
