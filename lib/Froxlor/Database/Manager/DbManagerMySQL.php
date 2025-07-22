@@ -111,10 +111,7 @@ class DbManagerMySQL
 			]);
 			// grant privileges if not global user
 			if (!$grant_access_prefix) {
-				$stmt = Database::prepare("
-					GRANT ALL ON `" . $username . "`.* TO `" . $username . "`@`" . $access_host . "`
-				");
-				Database::pexecute($stmt);
+				Database::query("GRANT ALL ON `" . str_replace('_', '\_', $username) . "`.* TO `" . $username . "`@`" . $access_host . "`");
 			} else {
 				// grant explicitly to existing databases
 				$this->grantCreateToCustomerDbs($username, $access_host);
@@ -243,8 +240,7 @@ class DbManagerMySQL
 		// check whether user exists to avoid errors
 		if ($this->userExistsOnHost($username, $host)) {
 			if (!$grant_access_prefix) {
-				Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
-				Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
+				Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '`.* TO `' . $username . '`@`' . $host . '`');
 			} else {
 				$this->grantCreateToCustomerDbs($username, $host);
 			}
@@ -331,7 +327,7 @@ class DbManagerMySQL
 			Database::needRoot(true, $currentDbServer, false);
 			while ($dbdata = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$stmt = Database::prepare("
-					GRANT ALL ON `" . $dbdata['databasename'] . "`.* TO `" . $username . "`@`" . $access_host . "`
+					GRANT ALL ON `" . str_replace('_', '\_', $dbdata['databasename']) . "`.* TO `" . $username . "`@`" . $access_host . "`
 				");
 				Database::pexecute($stmt);
 			}
@@ -352,7 +348,7 @@ class DbManagerMySQL
 		// only grant permission if the user exists
 		if ($this->userExistsOnHost($username, $access_host)) {
 			$stmt = Database::prepare("
-				GRANT ALL ON `" . $database . "`.* TO `" . $username . "`@`" . $access_host . "`
+				GRANT ALL ON `" . str_replace('_', '\_', $database) . "`.* TO `" . $username . "`@`" . $access_host . "`
 			");
 			Database::pexecute($stmt);
 		}
