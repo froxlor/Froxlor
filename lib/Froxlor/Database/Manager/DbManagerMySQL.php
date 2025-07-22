@@ -109,17 +109,14 @@ class DbManagerMySQL
 			Database::pexecute($stmt, [
 				"password" => $password
 			]);
-			// grant privileges
-			$grants = "ALL";
-			if ($grant_access_prefix) {
-				$grants = "SELECT, INSERT, UPDATE, DELETE, DROP, INDEX, ALTER";
-			}
-			$stmt = Database::prepare("
-				GRANT " . $grants . " ON `" . $username . ($grant_access_prefix ? '%' : '') . "`.* TO `" . $username . "`@`" . $access_host . "`
-			");
-			Database::pexecute($stmt);
-
-			if ($grant_access_prefix) {
+			// grant privileges if not global user
+			if (!$grant_access_prefix) {
+				$stmt = Database::prepare("
+					GRANT ALL ON `" . $username . "`.* TO `" . $username . "`@`" . $access_host . "`
+				");
+				Database::pexecute($stmt);
+			} else {
+				// grant explicitly to existing databases
 				$this->grantCreateToCustomerDbs($username, $access_host);
 			}
 		} else {
@@ -245,13 +242,10 @@ class DbManagerMySQL
 	{
 		// check whether user exists to avoid errors
 		if ($this->userExistsOnHost($username, $host)) {
-			$grants = "ALL PRIVILEGES";
-			if ($grant_access_prefix) {
-				$grants = "SELECT, INSERT, UPDATE, DELETE, DROP, INDEX, ALTER";
-			}
-			Database::query('GRANT ' . $grants . ' ON `' . $username . ($grant_access_prefix ? '%' : '') . '`.* TO `' . $username . '`@`' . $host . '`');
-			Database::query('GRANT ' . $grants . ' ON `' . str_replace('_', '\_', $username) . ($grant_access_prefix ? '%' : '') . '` . * TO `' . $username . '`@`' . $host . '`');
-			if ($grant_access_prefix) {
+			if (!$grant_access_prefix) {
+				Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
+				Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
+			} else {
 				$this->grantCreateToCustomerDbs($username, $host);
 			}
 		}
