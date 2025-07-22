@@ -4137,6 +4137,7 @@ plugin {
 				<!-- general RSpamd commands -->
 				<general>
 					<commands index="1">
+						<command><![CDATA[DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install wget gnupg]]></command>
 						<command><![CDATA[mkdir -p /etc/apt/keyrings]]></command>
 						<command><![CDATA[wget -O- https://rspamd.com/apt-stable/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/rspamd.gpg > /dev/null]]></command>
 						<command><![CDATA[echo "deb [signed-by=/etc/apt/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list]]></command>
@@ -5062,7 +5063,7 @@ aliases:     files
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
-					<install><![CDATA[apt-get install cron gnupg]]></install>
+					<install><![CDATA[DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install cron gnupg]]></install>
 					<command><![CDATA[[ ! -e /usr/local/bin/froxlor-cli ] && ln -s <BASE_PATH>bin/froxlor-cli /usr/local/bin/froxlor-cli]]></command>
 					<command><![CDATA[/usr/bin/php <BASE_PATH>bin/froxlor-cli froxlor:cron --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
