@@ -439,7 +439,7 @@ class Core
 			$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
 			$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
 			// fcgid
-			if ($this->validatedData['distribution'] == 'bookworm') {
+			if ($this->validatedData['distribution'] == 'bookworm' || $this->validatedData['distribution'] == 'trixie') {
 				$binary = "/usr/bin/php-cgi" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;
 			} else {
 				$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";

@@ -817,6 +817,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			|| $iswildcarddomain != $result['iswildcarddomain']
 			|| $aliasdomain != (int)$result['aliasdomain']
 			|| $openbasedir_path != $result['openbasedir_path']
+			|| $sslenabled != $result['ssl_enabled']
 			|| $ssl_redirect != $result['ssl_redirect']
 			|| $letsencrypt != $result['letsencrypt']
 			|| $hsts_maxage != $result['hsts']

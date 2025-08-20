@@ -42,6 +42,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class ConfigServices extends CliCommand
 {
 	private $yes_to_all_supported = [
+		'trixie',
 		'bookworm',
 		'bullseye',
 		'focal',
@@ -171,8 +172,8 @@ final class ConfigServices extends CliCommand
 		$distributions_select_data = [];
 
 		//set default os.
-		$os_dist = ['ID' => 'bookworm'];
-		$os_version = ['0' => '12'];
+		$os_dist = ['ID' => 'trixie'];
+		$os_version = ['0' => '13'];
 		$os_default = $os_dist['ID'];
 
 		//read os-release
