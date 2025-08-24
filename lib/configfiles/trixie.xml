@@ -2288,10 +2288,10 @@ LoadModule mod_ls.c
 LoadModule mod_xfer.c
 
 # Install proftpd-mod-crypto to use this module for TLS/SSL support.
-#LoadModule mod_tls.c
+LoadModule mod_tls.c
 # Even these modules depend on the previous one
-#LoadModule mod_tls_fscache.c
-#LoadModule mod_tls_shmcache.c
+LoadModule mod_tls_fscache.c
+LoadModule mod_tls_shmcache.c
 
 # Install one of proftpd-mod-mysql, proftpd-mod-pgsql or any other
 # SQL backend engine to use this module and the required backend.
@@ -2421,7 +2421,7 @@ SQLAuthenticate on
 # Use both an encrypted or plaintext password
 SQLAuthTypes Crypt OpenSSL
 
-SQLAuthenticate users* groups*
+SQLAuthenticate users groups
 
 #
 # Connection
