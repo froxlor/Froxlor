@@ -1890,6 +1890,7 @@ namespace inbox {
   inbox = yes
 }
 mail_privileged_group = mail
+mail_inbox_path = ~/
 
 service auth {
   # Postfix smtp-auth
