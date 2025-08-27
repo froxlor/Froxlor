@@ -1974,7 +1974,7 @@ mail_plugins {
 					<installs index="1">
 						<install><![CDATA[DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install rspamd]]></install>
 					</installs>
-					<commands index="2">
+					<commands index="1">
 						<command><![CDATA[mkdir -p /etc/rspamd/local.d/]]></command>
 						<command><![CDATA[mkdir -p /etc/rspamd/override.d/]]></command>
 						<command><![CDATA[mkdir -p /var/lib/rspamd/dkim/]]></command>
@@ -2035,7 +2035,7 @@ action = "no action";
 						</content>
 					</file>
 					</files>
-					<commands index="3">
+					<commands index="2">
 						<command><![CDATA[cp /etc/rspamd/local.d/arc.conf /etc/rspamd/local.d/dkim_signing.conf]]></command>
 						<command><![CDATA[postconf -e "milter_protocol = 6"]]></command>
 						<command><![CDATA[postconf -e "milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen}"]]></command>
@@ -2049,15 +2049,13 @@ action = "no action";
 				</general>
 				<!-- rspamd -->
 				<daemon name="rspamd" title="Rspamd" default="true">
-					<include>//service[@type='antispam']/general/commands[@index=1]
-					</include>
 					<include>//service[@type='antispam']/general/installs[@index=1]
 					</include>
-					<include>//service[@type='antispam']/general/commands[@index=2]
+					<include>//service[@type='antispam']/general/commands[@index=1]
 					</include>
 					<include>//service[@type='antispam']/general/files[@index=1]
 					</include>
-					<include>//service[@type='antispam']/general/commands[@index=3]
+					<include>//service[@type='antispam']/general/commands[@index=2]
 					</include>
 				</daemon>
 			</service>
