@@ -1623,7 +1623,7 @@ mydestination = $myhostname, frxtrixie, localhost.localdomain, , localhost
 # you must set up an alias to forward root mail to a real user.
 #mailbox_command = /usr/bin/procmail
 #mailbox_command = /usr/bin/procmail -a "$EXTENSION"
-mailbox_command =
+mailbox_command = /usr/lib/dovecot/deliver
 
 # List of alias maps to use to lookup local addresses.
 # Per Debian Policy it should be /etc/aliases.
@@ -1655,8 +1655,6 @@ cyrus_sasl_config_path = /etc/postfix/sasl
 # SMTP Client TLS session cache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
-
-mailbox_command = /usr/lib/dovecot/deliver
 
 append_dot_mydomain = no
 biff = no
@@ -1700,7 +1698,6 @@ virtual_gid_maps = static:<VIRTUAL_GID_MAPS>
 
 # Local delivery settings
 local_transport = local
-alias_maps = $alias_database
 
 # Default Mailbox size, is set to 0 which means unlimited!
 mailbox_size_limit = 0
@@ -1718,8 +1715,6 @@ smtpd_tls_key_file = <SSL_KEY_FILE>
 #smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 smtpd_tls_loglevel = 1
 smtpd_tls_received_header = yes
-smtp_use_tls = yes
-smtpd_use_tls = yes
 smtpd_tls_session_cache_timeout = 3600s
 ]]>
 						</content>
@@ -1931,7 +1926,6 @@ postmaster_address = postmaster@<SERVERNAME>
 
 protocol imap {
   mail_plugins {
-    quota = yes
     imap_quota = yes
   }
 }
@@ -2416,12 +2410,13 @@ AuthOrder mod_sql.c
 SQLBackend	mysql
 #
 SQLEngine on
-SQLAuthenticate on
+
 #
 # Use both an encrypted or plaintext password
 SQLAuthTypes Crypt OpenSSL
 
-SQLAuthenticate users groups
+# Do user and (fast) group lookups
+SQLAuthenticate users groups groupsetfast
 
 #
 # Connection
