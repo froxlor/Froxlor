@@ -185,22 +185,26 @@ class Fcgid
 			$openbasedirc = ';';
 		}
 
-		$admin = $this->getAdminData($this->domain['adminid']);
-		$php_ini_variables = [
-			'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
-			'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
-			'TMP_DIR' => $this->getTempDir(),
-			'CUSTOMER_EMAIL' => $this->domain['email'],
-			'ADMIN_EMAIL' => $admin['email'],
-			'DOMAIN' => $this->domain['domain'],
-			'CUSTOMER' => $this->domain['loginname'],
-			'ADMIN' => $admin['loginname'],
-			'OPEN_BASEDIR' => $openbasedir,
-			'OPEN_BASEDIR_C' => $openbasedirc,
-			'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-			'DOCUMENT_ROOT' => FileDir::makeCorrectDir($this->domain['documentroot']),
-			'CUSTOMER_HOMEDIR' => FileDir::makeCorrectDir($this->domain['customerroot'])
-		];
+$admin = $this->getAdminData($this->domain['adminid']);
+
+$admin_email = (is_array($admin) && isset($admin['email'])) ? $admin['email'] : '';
+$admin_loginname = (is_array($admin) && isset($admin['loginname'])) ? $admin['loginname'] : '';
+
+$php_ini_variables = [
+    'SAFE_MODE' => 'Off',
+    'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
+    'TMP_DIR' => $this->getTempDir(),
+    'CUSTOMER_EMAIL' => $this->domain['email'],
+    'ADMIN_EMAIL' => $admin_email,
+    'DOMAIN' => $this->domain['domain'],
+    'CUSTOMER' => $this->domain['loginname'],
+    'ADMIN' => $admin_loginname,
+    'OPEN_BASEDIR' => $openbasedir,
+    'OPEN_BASEDIR_C' => $openbasedirc,
+    'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
+    'DOCUMENT_ROOT' => FileDir::makeCorrectDir($this->domain['documentroot']),
+    'CUSTOMER_HOMEDIR' => FileDir::makeCorrectDir($this->domain['customerroot'])
+];
 
 		// insert a small header for the file
 		$phpini_file = ";\n";
