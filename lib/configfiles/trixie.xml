@@ -1600,7 +1600,7 @@ myorigin = $myhostname
 smtpd_banner = $myhostname ESMTP $mail_name (Debian)
 
 # IP protocols to use: ipv4, ipv6, or all
-# (set this explicitly so `post-install upgrade-configuration' wont complain)
+# (set this explicitly so `post-install upgrade-configuration' won't complain)
 inet_protocols = all
 
 # List of "trusted" SMTP clients (maptype:mapname allowed) that have more
@@ -2184,7 +2184,7 @@ SystemLog /var/log/proftpd/proftpd.log
 #SetEnv TZ :/etc/localtime
 
 <IfModule mod_quotatab.c>
-QuotaEngine off
+QuotaEngine on
 </IfModule>
 
 <IfModule mod_ratio.c>
@@ -2363,7 +2363,7 @@ LoadModule mod_deflate.c
 LoadModule mod_ifversion.c
 LoadModule mod_memcache.c
 # Install proftpd-mod-crypto to use this module for TLS/SSL support.
-#LoadModule mod_tls_memcache.c
+LoadModule mod_tls_memcache.c
 
 #LoadModule mod_redis.c
 # Install proftpd-mod-crypto to use this module for TLS/SSL support.
