@@ -133,6 +133,7 @@ if ($page == 'overview' || $page == 'accounts') {
 					}
 				}
 
+				$user_shell_allowed = intval($userinfo['shell_allowed']) == 1;
 				if (Settings::Get('system.allow_customer_shell') == '1') {
 					$shells['/bin/false'] = "/bin/false";
 					$shells_avail = Settings::Get('system.available_shells');
@@ -183,6 +184,7 @@ if ($page == 'overview' || $page == 'accounts') {
 
 				$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
 
+				$user_shell_allowed = intval($userinfo['shell_allowed']) == 1;
 				if (Settings::Get('system.allow_customer_shell') == '1') {
 					$shells['/bin/false'] = "/bin/false";
 					$shells_avail = Settings::Get('system.available_shells');

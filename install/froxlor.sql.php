@@ -227,6 +227,7 @@ CREATE TABLE `panel_customers` (
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(25) NOT NULL default '',
   `api_allowed` tinyint(1) NOT NULL default '1',
+  `shell_allowed` tinyint(1) NOT NULL default '0',
   `logviewenabled` tinyint(1) NOT NULL default '0',
   `allowed_mysqlserver` text NOT NULL,
   `gui_access` tinyint(1) NOT NULL default '1',
@@ -733,8 +734,8 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
-	('panel', 'version', '2.2.8'),
-	('panel', 'db_version', '202412030');
+	('panel', 'version', '2.3.0-dev1'),
+	('panel', 'db_version', '202508310');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

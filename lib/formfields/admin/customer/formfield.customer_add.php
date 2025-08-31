@@ -97,6 +97,13 @@ return [
 						'checked' => Settings::Get('api.enabled') == '1' && Settings::Get('api.customer_default'),
 						'visible' => Settings::Get('api.enabled') == '1'
 					],
+					'shell_allowed' => [
+						'label' => lng('usersettings.shell_allowed.title'),
+						'desc' => lng('usersettings.shell_allowed.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+					],
 				]
 			],
 			'section_b' => [

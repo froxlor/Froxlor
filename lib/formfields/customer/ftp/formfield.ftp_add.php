@@ -77,7 +77,7 @@ return [
 						'checked' => false
 					],
 					'shell' => [
-						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+						'visible' => Settings::Get('system.allow_customer_shell') == '1' && $user_shell_allowed,
 						'label' => lng('panel.shell'),
 						'type' => 'select',
 						'select_var' => $shells,

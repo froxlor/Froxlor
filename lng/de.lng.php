@@ -2285,6 +2285,10 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Wenn in den Einstellungen aktiviert, kann der Benutzer API Schlüssel erstellen und auf die froxlor API Zugreifen',
 			'notice' => 'API Zugriff ist für dieses Konto deaktiviert.',
 		],
+		'shell_allowed' => [
+			'title' => 'Erlaube Shell Zugriff',
+			'description' => 'Wenn in den Einstellungen aktiviert, kann der Benutzer seinen FTP-Konten Shell Zugriff erlauben',
+		],
 		'gui_access' => [
 			'title' => 'WebUI-Anmeldung zulassen',
 			'description' => 'Wenn diese Option deaktiviert ist, kann sich der Benutzer nicht bei der Froxlor-Weboberfläche anmelden, aber alle Dienste (Web, FTP, E-Mail, Datenbanken, API-Zugriff, usw.) funktionieren normal.',

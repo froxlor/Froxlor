@@ -89,6 +89,9 @@ class Extrausers
 						$u['shell'] = '/bin/false';
 						$u['comment'] = 'Locked Froxlor User';
 					}
+					if (Customer::getCustomerDetail($u['customerid'], 'shell_allowed') == '0') {
+						$u['shell'] = '/bin/false';
+					}
 					$line = $u['username'] . ':' . $u['password'] . ':' . $u['uid'] . ':' . $u['gid'] . ':' . $u['comment'] . ':' . $u['homedir'] . ':' . $u['shell'] . PHP_EOL;
 					if (is_array($result_list)) {
 						$result_list[] = $u['username'];
