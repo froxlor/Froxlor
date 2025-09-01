@@ -880,8 +880,6 @@ return [
 		'pathmaynotcontaincolon' => 'Der eingegebene Pfad sollte keinen Doppelpunkt (":") enthalten. Bitte geben Sie einen korrekten Wert für den Pfad ein.',
 		'invaliddocumentrooturl' => 'Die URL, die Sie für den Pfad eingegeben haben, ist ungültig. Bitte geben Sie eine korrekte URL oder einen Unix-Pfad ein.',
 		'notrequiredpasswordcomplexity' => 'Die vorgegebene Passwort-Komplexität wurde nicht erfüllt.<br />Bitte kontaktieren Sie Ihren Administrator, wenn Sie Fragen zur Komplexitäts-Vorgabe haben.',
-		'stringerrordocumentnotvalidforlighty' => 'Ein Text als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
-		'urlerrordocumentnotvalidforlighty' => 'Eine URL als Fehlerdokument funktioniert leider in LigHTTPd nicht, bitte geben Sie einen Pfad zu einer Datei an',
 		'invaliderrordocumentvalue' => 'Der angegebene Wert für das Fehlederdokument ist keine gültige Datei, URL oder Text-Zeile.',
 		'intvaluetoolow' => 'Die angegebene Zahl ist zu klein (Feld "%s")',
 		'intvaluetoohigh' => 'Die angegebene Zahl ist zu groß (Feld "%s")',
@@ -906,7 +904,7 @@ return [
 		'sslcertificateinvalidchain' => 'Das angegebene CertificateChainFile scheint nicht gültig zu sein.',
 		'givendirnotallowed' => 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.',
 		'sslredirectonlypossiblewithsslipport' => 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.',
-		'fcgidstillenableddeadlock' => 'FCGID ist derzeit aktiviert.<br />Bitte deaktiviere es, um einen anderen Webserver als Apache2 oder lighttpd auswählen zu können.',
+		'fcgidstillenableddeadlock' => 'FCGID ist derzeit aktiviert.<br />Bitte deaktiviere es, um einen anderen Webserver als Apache2 auswählen zu können.',
 		'send_report_title' => 'Fehler melden',
 		'send_report_desc' => 'Danke, dass Sie uns diesen Fehler melden und damit helfen Froxlor zu verbessern.<br />Folgender Bericht wird per Mail an das Froxlor Entwickler Team gesendet.',
 		'send_report' => 'Fehlerbericht senden',
@@ -1694,16 +1692,16 @@ Vielen Dank, Ihr Administrator',
 		'defaultwebsrverrhandler_enabled' => 'Verwende Standard-Fehlerdokumente für alle Kunden',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'Datei/URL für Fehler 401',
-			'description' => '<div class="text-danger">Nicht unterstützt in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'Datei/URL für Fehler 403',
-			'description' => '<div class="text-danger">Nicht unterstützt in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err404' => 'Datei/URL für Fehler 404',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'Datei/URL für Fehler 500',
-			'description' => '<div class="text-danger">Nicht unterstützt in: lighttpd</div>',
+			'description' => '',
 		],
 		'ftpserver' => [
 			'desc' => 'Wenn pureftpd ausgewählt ist, werden die .ftpquota Dateien für das Quota erstellt und täglich aktualisiert.',
@@ -1721,10 +1719,6 @@ Vielen Dank, Ihr Administrator',
 		'panel_password_regex' => [
 			'title' => 'Regulärer Ausdruck für Passwörter',
 			'description' => 'Hier können Sie einen regulären Ausdruck für Passwort-Komplexität festlegen.<br />Leer = keine bestimmten Anforderungen',
-		],
-		'perl_path' => [
-			'title' => 'Pfad zu Perl',
-			'description' => 'Standard ist /usr/bin/perl',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'Verwende FCGID im Froxlor-Vhost',

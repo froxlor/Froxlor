@@ -489,8 +489,6 @@ return [
 		'pathmaynotcontaincolon' => 'Het opgegeven pad mag geen dubbele punt (":") bevatten. Geef een correct pad op.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'Er is niet voldaan aan de complexiteit voor het wachtwoord (regex: %s)',
-		'stringerrordocumentnotvalidforlighty' => 'Een tekenreeks als ErrorDocument werkt niet in lighttpd. Geef een pad naar een bestand',
-		'urlerrordocumentnotvalidforlighty' => 'Een tekenreeks als ErrorDocument werkt niet in lighttpd. Geef een pad naar een bestand',
 		'intvaluetoolow' => 'Het opgegeven nummer is te laag (veld %s)',
 		'intvaluetoohigh' => 'Het opgegeven nummer is te hoog (veld %s)',
 		'phpfpmstillenabled' => 'PHP-FPM is op dit moment actief. Schakel dit eerst uit voordat u FCGID inschakelt',
@@ -978,16 +976,16 @@ Met vriendelijke groet, uw beheerder',
 		'defaultwebsrverrhandler_enabled' => 'Standaard foutdocumenten voor alle klanten activeren',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'Bestand/URL voor foutcode 401',
-			'description' => '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'Bestand/URL voor foutcode 403',
-			'description' => '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err404' => 'Bestand/URL voor foutcode 404',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'Bestand/URL voor foutcode 500',
-			'description' => '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>',
+			'description' => '',
 		],
 		'ftpserver' => [
 			'desc' => 'Indien PureFTPD geselecteerd is, worden .ftpquota bestanden dagelijks aangemaakt en/of bijgewerkt',
@@ -1005,10 +1003,6 @@ Met vriendelijke groet, uw beheerder',
 		'panel_password_regex' => [
 			'title' => 'Reguliere expressie voor wachtwoorden',
 			'description' => 'Hier kunt u een reguliere expressie opgeven voor de complexiteit van wachtwoorden.<br />Leeg betekent geen speciale complexiteit',
-		],
-		'perl_path' => [
-			'title' => 'Pad naar Perl',
-			'description' => 'Alleen relevant voor lighttpd. Standaard is /usr/bin/perl',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'FCGID inschakelen voor de VHost voor Froxlor',

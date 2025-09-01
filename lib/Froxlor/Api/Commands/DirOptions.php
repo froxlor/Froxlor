@@ -177,16 +177,8 @@ class DirOptions extends ApiCommand implements ResourceEntity
 					}
 				} elseif (preg_match('/^"([^\r\n\t\f\0"]+)"$/', $errdoc)) {
 					// a string (check for ending ")
-					// string won't work for lighty
-					if (Settings::Get('system.webserver') == 'lighttpd') {
-						Response::standardError('stringerrordocumentnotvalidforlighty', '', $throw_exception);
-					}
 				} else {
 					Response::standardError('invaliderrordocumentvalue', '', $throw_exception);
-				}
-			} else {
-				if (Settings::Get('system.webserver') == 'lighttpd') {
-					Response::standardError('urlerrordocumentnotvalidforlighty', '', $throw_exception);
 				}
 			}
 		}

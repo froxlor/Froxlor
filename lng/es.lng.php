@@ -863,8 +863,6 @@ return [
 		'pathmaynotcontaincolon' => 'La ruta introducida no debe contener dos puntos (":"). Por favor, introduzca un valor de ruta correcto.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'La complejidad de la contraseña especificada no se ha cumplido.<br/>Póngase en contacto con su administrador si tiene alguna duda sobre la complejidad especificada.',
-		'stringerrordocumentnotvalidforlighty' => 'Una cadena como ErrorDocument no funciona en lighttpd, por favor especifique una ruta a un archivo.',
-		'urlerrordocumentnotvalidforlighty' => 'Una URL como ErrorDocument no funciona en lighttpd, por favor especifique una ruta a un archivo',
 		'invaliderrordocumentvalue' => 'El valor dado como ErrorDocument no parece ser un archivo, URL o cadena válidos.',
 		'intvaluetoolow' => 'El número dado es demasiado bajo (campo %s))',
 		'intvaluetoohigh' => 'El número dado es demasiado alto (campo %s)',
@@ -888,7 +886,7 @@ return [
 		'sslcertificateinvalidchain' => 'Los datos de la cadena del certificado no parecen ser un certificado válido.',
 		'givendirnotallowed' => 'El directorio indicado en el campo %s no está permitido.',
 		'sslredirectonlypossiblewithsslipport' => 'El uso de Let\'s Encrypt sólo es posible cuando el dominio tiene asignada al menos una combinación IP/puerto habilitada para ssl.',
-		'fcgidstillenableddeadlock' => 'FCGID está actualmente activo.<br/>Por favor, desactívelo antes de cambiar a otro servidor web que no sea Apache2 o lighttpd',
+		'fcgidstillenableddeadlock' => 'FCGID está actualmente activo.<br/>Por favor, desactívelo antes de cambiar a otro servidor web que no sea Apache2',
 		'send_report_title' => 'Enviar informe de error',
 		'send_report_desc' => 'Gracias por informar de este error y ayudarnos a mejorar Froxlor.<br/>Este es el correo electrónico que se enviará al equipo de desarrolladores de Froxlor:',
 		'send_report' => 'Enviar informe',
@@ -1698,16 +1696,16 @@ Atentamente, su administrador'
 		'defaultwebsrverrhandler_enabled' => 'Habilitar documentos de error por defecto para todos los clientes',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'Archivo/URL para error 401',
-			'description' => '<div class="text-danger">No soportado en: lighttpd</div>'
+			'description' => ''
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'Archivo/URL para error 403',
-			'description' => '<div class="text-danger">No soportado en: lighttpd</div>'
+			'description' => ''
 		],
 		'defaultwebsrverrhandler_err404' => 'Archivo/URL para error 404',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'Archivo/URL para error 500',
-			'description' => '<div class="text-danger">No soportado en: lighttpd</div>'
+			'description' => ''
 		],
 		'ftpserver' => [
 			'desc' => 'Si se selecciona pureftpd, los archivos .ftpquota para cuotas de usuario se crean y actualizan diariamente'
@@ -1725,10 +1723,6 @@ Atentamente, su administrador'
 		'panel_password_regex' => [
 			'title' => 'Expresión regular para contraseñas',
 			'description' => 'Aquí puede establecer una expresión regular para la complejidad de las contraseñas.<br/>Empty = no specific requirement'
-		],
-		'perl_path' => [
-			'title' => 'Ruta a perl',
-			'description' => 'Por defecto es /usr/bin/perl'
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'Habilitar FCGID para el vHost de Froxlor',

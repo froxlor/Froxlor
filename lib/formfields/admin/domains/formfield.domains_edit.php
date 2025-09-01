@@ -263,7 +263,7 @@ return [
 						'checked' => $result['letsencrypt']
 					],
 					'http2' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.http2_support') == '1',
 						'label' => lng('admin.domain_http2.title'),
 						'desc' => lng('admin.domain_http2.description'),
 						'type' => 'checkbox',
@@ -278,7 +278,7 @@ return [
 						'checked' => $result['override_tls']
 					],
 					'ssl_protocols' => [
-						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => lng('serversettings.ssl.ssl_protocols.title'),
 						'desc' => lng('serversettings.ssl.ssl_protocols.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'checkbox',
@@ -359,7 +359,7 @@ return [
 						'checked' => $result['hsts_preload']
 					],
 					'ocsp_stapling' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => !empty($ssl_ipsandports),
 						'label' => lng('admin.domain_ocsp_stapling.title'),
 						'desc' => lng('admin.domain_ocsp_stapling.description') . (Settings::Get('system.webserver') == 'nginx' ? lng('admin.domain_ocsp_stapling.nginx_version_warning') : ""),
 						'type' => 'checkbox',
@@ -374,7 +374,7 @@ return [
 						'checked' => $result['ssl_honorcipherorder']
 					],
 					'sessiontickets' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.sessionticketsenabled' != '1'),
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.sessionticketsenabled' != '1'),
 						'label' => lng('admin.domain_sessiontickets'),
 						'type' => 'checkbox',
 						'value' => '1',

@@ -39,7 +39,6 @@ return [
 					'default' => 'apache2',
 					'select_var' => [
 						'apache2' => 'Apache 2',
-						'lighttpd' => 'ligHTTPd',
 						'nginx' => 'Nginx'
 					],
 					'save_method' => 'storeSettingField',

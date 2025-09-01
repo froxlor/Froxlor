@@ -165,7 +165,7 @@ return [
 						'checked' => $result['letsencrypt']
 					],
 					'http2' => [
-						'visible' => $ssl_ipsandports && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+						'visible' => $ssl_ipsandports && Settings::Get('system.http2_support') == '1',
 						'label' => lng('admin.domain_http2.title'),
 						'desc' => lng('admin.domain_http2.description'),
 						'type' => 'checkbox',

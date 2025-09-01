@@ -5,12 +5,6 @@
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
 			<default settinggroup="system" varname="nssextrausers" value="1"></default>
-			<default for="lighttpd" settinggroup="system" varname="apacheconf_vhost" value="/etc/lighttpd/conf-enabled/"></default>
-			<default for="lighttpd" settinggroup="system" varname="apacheconf_diroptions" value="/etc/lighttpd/froxlor-diroptions/"></default>
-			<default for="lighttpd" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/lighttpd/froxlor-htpasswd/"></default>
-			<default for="lighttpd" settinggroup="system" varname="apachereload_command" value="service lighttpd reload"></default>
-			<default for="lighttpd" settinggroup="system" varname="letsencryptacmeconf" value="/etc/lighttpd/acme.conf"></default>+
-			<default for="lighttpd" settinggroup="phpfpm" varname="fastcgi_ipcdir" value="/var/run/lighttpd/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_vhost" value="/etc/nginx/sites-enabled/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_diroptions" value="/etc/nginx/sites-enabled/"></default>
 			<default for="nginx" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/nginx/froxlor-htpasswd/"></default>
@@ -88,70 +82,6 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
-				</daemon>
-				<!-- HTTP Lighttpd -->
-				<daemon name="lighttpd" title="LigHTTPd (deprecated)">
-					<install><![CDATA[apt-get install lighttpd]]></install>
-					<file name="/etc/lighttpd/lighttpd.conf">
-						<content><![CDATA[
-server.modules = (
-	"mod_access",
-	"mod_alias",
-	"mod_compress",
-	"mod_redirect",
-	"mod_rewrite",
-	"mod_setenv",
-)
-
-server.document-root        = "/var/www"
-server.upload-dirs          = ( "/var/cache/lighttpd/uploads" )
-server.errorlog             = "/var/log/lighttpd/error.log"
-server.pid-file             = "/var/run/lighttpd.pid"
-server.username             = "www-data"
-server.groupname            = "www-data"
-server.port                 = 80
-
-
-index-file.names            = ( "index.php", "index.html", "index.lighttpd.html" )
-url.access-deny             = ( "~", ".inc" )
-static-file.exclude-extensions = ( ".php", ".pl", ".fcgi" )
-
-compress.cache-dir          = "/var/cache/lighttpd/compress/"
-compress.filetype           = ( "application/javascript", "text/css", "text/html", "text/plain" )
-
-alias.url                  += ("/.well-known/acme-challenge/" => "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge/")
-
-# default listening port for IPv6 falls back to the IPv4 port
-include_shell "/usr/share/lighttpd/use-ipv6.pl " + server.port
-include_shell "/usr/share/lighttpd/create-mime.assign.pl"
-include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
-]]>
-						</content>
-					</file>
-					<include>//service[@type='http']/general/commands</include>
-					<command>
-						<visibility mode="isdir">{{settings.system.apacheconf_vhost}}
-						</visibility>
-						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_vhost}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
-					</command>
-					<command>
-						<visibility mode="isfile">{{settings.system.apacheconf_vhost}}
-						</visibility>
-						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_vhost}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
-					</command>
-					<command>
-						<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}
-						</visibility>
-						<content><![CDATA[echo -e '\\ninclude_shell "cat {{settings.system.apacheconf_diroptions}}*.conf"' >> /etc/lighttpd/lighttpd.conf]]></content>
-					</command>
-					<command>
-						<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}
-						</visibility>
-						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_diroptions}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
-					</command>
-					<command><![CDATA[lighty-disable-mod cgi]]></command>
-					<command><![CDATA[lighty-disable-mod fastcgi]]></command>
 					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Nginx -->

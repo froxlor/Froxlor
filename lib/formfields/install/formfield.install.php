@@ -198,7 +198,7 @@ return [
 						'label' => lng('admin.webserver'),
 						'type' => 'select',
 						'mandatory' => true,
-						'select_var' => ['apache24' => 'Apache 2.4', 'nginx' => 'Nginx', 'lighttpd' => 'LigHTTPd'],
+						'select_var' => ['apache24' => 'Apache 2.4', 'nginx' => 'Nginx'],
 						'selected' => old('webserver', $guessedWebserver, 'installation'),
 					],
 					'webserver_backend' => [

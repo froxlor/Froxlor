@@ -592,7 +592,6 @@ opcache.validate_timestamps'),
 	('system', 'diskquota_quotatool_path', '/usr/bin/quotatool'),
 	('system', 'diskquota_customer_partition', '/dev/root'),
 	('system', 'mod_fcgid_idle_timeout', '30'),
-	('system', 'perl_path', '/usr/bin/perl'),
 	('system', 'mod_fcgid_ownvhost', '0'),
 	('system', 'mod_fcgid_httpuser', 'froxlorlocal'),
 	('system', 'mod_fcgid_httpgroup', 'froxlorlocal'),
@@ -735,7 +734,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.3.0-dev1'),
-	('panel', 'db_version', '202508310');
+	('panel', 'db_version', '202509010');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

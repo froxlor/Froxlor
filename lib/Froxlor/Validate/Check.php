@@ -254,8 +254,8 @@ class Check
 		];
 
 		if ((int)Settings::Get('system.mod_fcgid') == 1) {
-			// fcgid only works for apache and lighttpd
-			if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
+			// fcgid only works for apache
+			if (strtolower($newfieldvalue) != 'apache2') {
 				$returnvalue = [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidstillenableddeadlock'

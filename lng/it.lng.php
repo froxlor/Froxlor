@@ -846,8 +846,6 @@ return [
 		'pathmaynotcontaincolon' => 'Il percorso che hai inserito non dovrebbe contenere i due punti (:). Inserisci un percorso valido.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'La complessita della password specificata non è soddisfacente.<br />Si prega di contattare l\'amministratore se avete domande sulla complessità della password',
-		'stringerrordocumentnotvalidforlighty' => 'Una stringa come ErrorDocument non funziona in lighttpd, si prega di specificare un percorso di un file',
-		'urlerrordocumentnotvalidforlighty' => 'Un URL come ErrorDocument non funziona in lighttpd, si prega di specificare un percorso di un file',
 		'intvaluetoolow' => 'Il numero dato è troppo basso (campo %s)',
 		'intvaluetoohigh' => 'Il numero dato è troppo alto (campo %s)',
 		'phpfpmstillenabled' => 'PHP-FPM è attivo. Si prega di disattivarlo prima di attivare FCGID',
@@ -1470,16 +1468,16 @@ Cordiali Saluti, Team Froxlor',
 		'defaultwebsrverrhandler_enabled' => 'Abilita errordocuments in automatico per tutti i clienti',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'File/URL per l\'errore 401',
-			'description' => '<div class="text-danger">Non supportato in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'File/URL per l\'errore 403',
-			'description' => '<div class="text-danger">Non supportato in: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err404' => 'File/URL per l\'errore 404',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'File/URL per l\'errore 500',
-			'description' => '<div class="text-danger">Non supportato in: lighttpd</div>',
+			'description' => '',
 		],
 		'ftpserver' => [
 			'desc' => 'Se pureftpd è selezionato i file .ftpquota per i limiti dell\'utente sono creati e aggiornati giornalmente',
@@ -1497,10 +1495,6 @@ Cordiali Saluti, Team Froxlor',
 		'panel_password_regex' => [
 			'title' => 'Espressione per le password',
 			'description' => 'Qui è possibile impostare una espressione regolare per la complessità delle password.<br />Vuoto = nessun requisito specificato',
-		],
-		'perl_path' => [
-			'title' => 'Percorso perl',
-			'description' => 'Rilevante solo se si utilizza lighttpd. Predefinito /usr/bin/perl',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'Abilita FCGID per i vhost Froxlor',

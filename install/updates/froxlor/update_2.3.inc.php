@@ -24,9 +24,7 @@
  */
 
 use Froxlor\Database\Database;
-use Froxlor\Database\DbManager;
 use Froxlor\Froxlor;
-use Froxlor\FroxlorLogger;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
 
@@ -52,4 +50,20 @@ if (Froxlor::isDatabaseVersion('202412030')) {
 
 	Update::showUpdateStep("Updating from 2.2.8 to 2.3.0-dev1", false);
 	Froxlor::updateToVersion('2.3.0-dev1');
+}
+
+if (Froxlor::isDatabaseVersion('202508310')) {
+	Update::showUpdateStep("Remove old settings");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'perl_path'");
+	Update::lastStepStatus(0);
+
+	if (Settings::Get('system.webserver') == 'lighttpd') {
+		$system_alt_webserver = $_POST['system_alt_webserver'] ?? 'apache2';
+		Update::showUpdateStep("Switching from lighttpd to " . $system_alt_webserver);
+		Settings::Set('system.webserver', $system_alt_webserver);
+		Settings::Set('system.apache24', 1);
+		Update::lastStepStatus(0);
+	}
+
+	Froxlor::updateToDbVersion('202509010');
 }

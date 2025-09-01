@@ -159,11 +159,6 @@ class TasksCron extends FroxlorCron
 			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
 				$websrv .= 'Fcgi';
 			}
-		} elseif (Settings::Get('system.webserver') == "lighttpd") {
-			$websrv = '\\Froxlor\\Cron\\Http\\Lighttpd';
-			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
-				$websrv .= 'Fcgi';
-			}
 		} elseif (Settings::Get('system.webserver') == "nginx") {
 			$websrv = '\\Froxlor\\Cron\\Http\\Nginx';
 			if (Settings::Get('phpfpm.enabled') == 1) {

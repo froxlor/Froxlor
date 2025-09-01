@@ -953,8 +953,6 @@ return [
 		'pathmaynotcontaincolon' => 'Az Ön által megadott útvonal nem tartalmazhat kettőspontot (":"). Kérjük, adjon meg helyes útvonal értéket.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'A megadott jelszó-komplexitás nem teljesült.<br />Kérjük, lépjen kapcsolatba az adminisztrátorával, ha kérdése van a komplexitási előírásokkal kapcsolatban',
-		'stringerrordocumentnotvalidforlighty' => 'A karakterlánc mint ErrorDocument nem működik a lighttpd-ben, kérjük, adjon meg egy fájl útvonalát',
-		'urlerrordocumentnotvalidforlighty' => 'Az URL mint ErrorDocument nem működik a lighttpd-ben, kérjük, adjon meg egy fájl útvonalát',
 		'invaliderrordocumentvalue' => 'Az ErrorDocument-ként megadott érték nem tűnik érvényes fájlnak, URL-nek vagy karakterláncnak.',
 		'intvaluetoolow' => 'A megadott szám túl alacsony (%s mező)',
 		'intvaluetoohigh' => 'A megadott szám túl magas (%s mező)',
@@ -978,7 +976,7 @@ return [
 		'sslcertificateinvalidchain' => 'A megadott tanúsítványlánc adatok nem tűnnek érvényes tanúsítványnak',
 		'givendirnotallowed' => 'A(z) %s mezőben megadott könyvtár nem engedélyezett.',
 		'sslredirectonlypossiblewithsslipport' => 'A Let\'s Encrypt használata csak akkor lehetséges, ha a domainhez legalább egy SSL-engedélyezett IP/port kombináció van hozzárendelve.',
-		'fcgidstillenableddeadlock' => 'Az FCGID jelenleg aktív.<br />Kérjük, deaktiválja, mielőtt az Apache2 vagy lighttpd helyett másik webszerverre váltana',
+		'fcgidstillenableddeadlock' => 'Az FCGID jelenleg aktív.<br />Kérjük, deaktiválja, mielőtt az Apache2 helyett másik webszerverre váltana',
 		'send_report_title' => 'Hibajelentés küldése',
 		'send_report_desc' => 'Köszönjük, hogy jelenti ezt a hibát és segít a Froxlor fejlesztésében.<br />Ez az e-mail, amely a Froxlor fejlesztői csapatának lesz elküldve:',
 		'send_report' => 'Jelentés küldése',
@@ -1814,16 +1812,16 @@ Jelszó: {USR_PASS}
 		'defaultwebsrverrhandler_enabled' => 'Alapértelmezett hibadokumentumok engedélyezése minden ügyfél számára',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'Fájl/URL a 401-es hibához',
-			'description' => '<div class="text-danger">Nem támogatott: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'Fájl/URL a 403-as hibához',
-			'description' => '<div class="text-danger">Nem támogatott: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err404' => 'Fájl/URL a 404-es hibához',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'Fájl/URL az 500-as hibához',
-			'description' => '<div class="text-danger">Nem támogatott: lighttpd</div>',
+			'description' => '',
 		],
 		'ftpserver' => [
 			'desc' => 'Ha a pureftpd van kiválasztva, a .ftpquota fájlok a felhasználói kvótákhoz létrejönnek és naponta frissülnek',
@@ -1841,10 +1839,6 @@ Jelszó: {USR_PASS}
 		'panel_password_regex' => [
 			'title' => 'Jelszavak reguláris kifejezése',
 			'description' => 'Itt beállíthat egy reguláris kifejezést a jelszavak összetettségére.<br />Üres = nincs külön követelmény',
-		],
-		'perl_path' => [
-			'title' => 'Perl elérési út',
-			'description' => 'Alapértelmezett: /usr/bin/perl',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'FCGID engedélyezése a Froxlor vHosthoz',
