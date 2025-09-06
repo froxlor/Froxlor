@@ -77,8 +77,7 @@ if (Froxlor::isDatabaseVersion('202509010')) {
 	  `ftp_user_id` int(20) NOT NULL,
 	  `ssh_pubkey` text NOT NULL,
 	  `description` varchar(255) NOT NULL DEFAULT '',
-	  PRIMARY KEY  (id),
-	  UNIQUE KEY `user_key` (`ftp_user_id`, `ssh_pubkey`)
+	  PRIMARY KEY  (id)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
 	Update::lastStepStatus(0);
