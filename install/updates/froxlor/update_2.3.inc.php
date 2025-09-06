@@ -67,3 +67,21 @@ if (Froxlor::isDatabaseVersion('202508310')) {
 
 	Froxlor::updateToDbVersion('202509010');
 }
+
+if (Froxlor::isDatabaseVersion('202509010')) {
+	Update::showUpdateStep("Adding new table for user ssh-keys");
+	Database::query("DROP TABLE IF EXISTS `panel_sshkeys`;");
+	$sql = "CREATE TABLE `panel_sshkeys` (
+	  `id` int(11) NOT NULL auto_increment,
+	  `customerid` int(11) NOT NULL,
+	  `ftp_user_id` int(20) NOT NULL,
+	  `ssh_pubkey` text NOT NULL,
+	  `description` varchar(255) NOT NULL DEFAULT '',
+	  PRIMARY KEY  (id),
+	  UNIQUE KEY `user_key` (`ftp_user_id`, `ssh_pubkey`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202509060');
+}

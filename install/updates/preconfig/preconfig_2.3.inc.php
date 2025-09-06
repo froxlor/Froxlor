@@ -23,28 +23,32 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-return [
-	'plans_add' => [
-		'title' => lng('admin.plans.add'),
-		'image' => 'fa-solid fa-plus',
-		'self_overview' => ['section' => 'plans', 'page' => 'overview'],
-		'sections' => [
-			'section_a' => [
-				'title' => lng('admin.plans.plan_details'),
-				'fields' => [
-					'name' => [
-						'label' => lng('admin.plans.name'),
-						'type' => 'text',
-						'mandatory' => true
-					],
-					'description' => [
-						'label' => lng('admin.plans.description'),
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12
-					]
-				]
-			]
-		]
-	]
+use Froxlor\Install\Update;
+use Froxlor\Settings;
+
+$preconfig = [
+	'title' => '2.3.x updates',
+	'fields' => []
 ];
+$return = [];
+
+if (Update::versionInUpdate($current_db_version, '202508310')) {
+	if (Settings::Get('system.webserver') == 'lighttpd') {
+		$has_preconfig = true;
+		$description = 'You seem to be using "lighttpd" as webserver, froxlor 2.3 no longer supports this webserver. Please select an alternative one. Remember to configure the service after the update!';
+		$question = '<strong>Switch webserver to:</strong>&nbsp;';
+		$return['system_alt_webserver'] = [
+			'type' => 'select',
+			'select_var' => [
+				'apache2' => 'Apache 2.4',
+				'nginx' => 'Nginx'
+			],
+			'selected' => 'apache2',
+			'label' => $question,
+			'prior_infotext' => $description
+		];
+	}
+}
+
+$preconfig['fields'] = $return;
+return $preconfig;

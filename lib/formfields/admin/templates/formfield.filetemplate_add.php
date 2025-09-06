@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.templates.template_add'),
-				'image' => 'icons/templates_add.png',
 				'fields' => [
 					'template' => [
 						'label' => lng('admin.templates.action'),

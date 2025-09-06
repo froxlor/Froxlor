@@ -20,12 +20,11 @@ use Froxlor\System\Crypt;
 return [
 	'ftp_edit' => [
 		'title' => lng('ftp.account_edit'),
-		'image' => 'icons/user_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('ftp.account_edit'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'username' => [
 						'label' => lng('login.username'),

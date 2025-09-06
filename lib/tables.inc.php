@@ -58,3 +58,4 @@ const TABLE_API_KEYS = 'api_keys';
 const TABLE_PANEL_USERCOLUMNS = 'panel_usercolumns';
 const TABLE_PANEL_LOGINLINKS = 'panel_loginlinks';
 const TABLE_PANEL_2FA_TOKENS = 'panel_2fa_tokens';
+const TABLE_PANEL_USER_SSHKEYS = 'panel_sshkeys';

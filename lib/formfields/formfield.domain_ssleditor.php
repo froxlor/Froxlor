@@ -30,7 +30,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => 'SSL certificates',
-				'image' => 'icons/ssl.png',
 				'fields' => [
 					'domainname' => [
 						'label' => lng('domains.domainname'),

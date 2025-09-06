@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.templates.template_edit'),
-				'image' => 'icons/templates_edit.png',
 				'fields' => [
 					'language' => [
 						'label' => lng('login.language'),

@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('extras.directoryprotection_edit'),
-				'image' => 'icons/htpasswd_edit.png',
 				'fields' => [
 					'path' => [
 						'label' => lng('panel.path'),

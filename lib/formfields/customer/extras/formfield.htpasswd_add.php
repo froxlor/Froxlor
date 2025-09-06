@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('extras.directoryprotection_add'),
-				'image' => 'icons/htpasswd_add.png',
 				'fields' => [
 					'path' => [
 						'label' => lng('panel.path'),

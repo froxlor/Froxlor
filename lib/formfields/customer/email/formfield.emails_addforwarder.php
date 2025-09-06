@@ -30,7 +30,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.forwarder_add'),
-				'image' => 'icons/autoresponder_add.png',
 				'fields' => [
 					'emailaddr' => [
 						'label' => lng('emails.from'),

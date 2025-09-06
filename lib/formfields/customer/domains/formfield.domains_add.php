@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.subdomain_add'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'subdomain' => [
 						'label' => lng('domains.domainname'),
@@ -105,7 +104,6 @@ return [
 			],
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
-				'image' => 'icons/domain_add.png',
 				'visible' => Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports,
 				'fields' => [
 					'sslenabled' => [

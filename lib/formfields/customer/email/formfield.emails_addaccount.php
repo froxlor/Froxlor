@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.account_add'),
-				'image' => 'icons/email_add.png',
 				'fields' => [
 					'emailaddr' => [
 						'label' => lng('emails.emailaddress'),

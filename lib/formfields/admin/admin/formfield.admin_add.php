@@ -35,7 +35,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.accountdata'),
-				'image' => 'icons/user_add.png',
 				'fields' => [
 					'new_loginname' => [
 						'label' => lng('login.username'),
@@ -83,7 +82,6 @@ return [
 			],
 			'section_b' => [
 				'title' => lng('admin.contactdata'),
-				'image' => 'icons/user_add.png',
 				'fields' => [
 					'name' => [
 						'label' => lng('customer.name'),
@@ -112,7 +110,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.servicedata'),
-				'image' => 'icons/user_add.png',
 				'fields' => [
 					'ipaddress' => [
 						'label' => lng('serversettings.ipaddress.title'),

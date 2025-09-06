@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.subdomain_edit'),
-				'image' => 'icons/domain_edit.png',
 				'fields' => [
 					'domain' => [
 						'label' => lng('domains.domainname'),
@@ -140,7 +139,6 @@ return [
 			],
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
-				'image' => 'icons/domain_edit.png',
 				'visible' => Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports && Domain::domainHasSslIpPort($result['id']) && (int)$result['email_only'] == 0,
 				'fields' => [
 					'sslenabled' => [

@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domainsettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'domain' => [
 						'label' => 'Domain',
@@ -90,7 +89,6 @@ return [
 			],
 			'section_e' => [
 				'title' => lng('admin.mailserversettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'isemaildomain' => [
 						'label' => lng('admin.emaildomain'),
@@ -121,7 +119,6 @@ return [
 			],
 			'section_b' => [
 				'title' => lng('admin.webserversettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'documentroot' => [
 						'label' => 'DocumentRoot',
@@ -185,7 +182,6 @@ return [
 			],
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
-				'image' => 'icons/domain_add.png',
 				'visible' => Settings::Get('system.use_ssl') == '1',
 				'fields' => [
 					'sslenabled' => [
@@ -349,7 +345,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.phpserversettings'),
-				'image' => 'icons/domain_add.png',
 				'visible' => $userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1',
 				'fields' => [
 					'openbasedir' => [
@@ -391,7 +386,6 @@ return [
 			],
 			'section_d' => [
 				'title' => lng('admin.nameserversettings'),
-				'image' => 'icons/domain_add.png',
 				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
 				'fields' => [
 					'isbinddomain' => [

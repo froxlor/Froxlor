@@ -29,11 +29,10 @@ use Froxlor\System\Crypt;
 return [
 	'emails_accountchangepasswd' => [
 		'title' => lng('menue.main.changepassword'),
-		'image' => 'icons/email_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('menue.main.changepassword'),
-				'image' => 'icons/email_edit.png',
 				'fields' => [
 					'emailaddr' => [
 						'label' => lng('emails.emailaddress'),

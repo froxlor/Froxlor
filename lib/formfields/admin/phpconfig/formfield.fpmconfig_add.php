@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.fpmsettings.addnew'),
-				'image' => 'icons/phpsettings_add.png',
 				'fields' => [
 					'description' => [
 						'label' => lng('admin.phpsettings.description'),

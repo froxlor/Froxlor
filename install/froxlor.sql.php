@@ -734,7 +734,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.3.0-dev1'),
-	('panel', 'db_version', '202509010');
+	('panel', 'db_version', '202509060');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1062,5 +1062,16 @@ CREATE TABLE `panel_2fa_tokens` (
   `userid` int(11) NOT NULL default '0',
   `valid_until` int(15) NOT NULL,
   PRIMARY KEY  (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+DROP TABLE IF EXISTS `panel_sshkeys`;
+CREATE TABLE `panel_sshkeys` (
+  `id` int(11) NOT NULL auto_increment,
+  `customerid` int(11) NOT NULL,
+  `ftp_user_id` int(20) NOT NULL,
+  `ssh_pubkey` text NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY `user_key` (`ftp_user_id`, `ssh_pubkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;
