@@ -47,7 +47,7 @@ class SshKeys
 		");
 		Database::pexecute($sel_stmt);
 		$sshkeys_sel_stmt = Database::prepare("
-			SELECT `ssh_pubkey` FROM `" . TABLE_PANEL_USER_SSHKEYS . "` WHERE `ftp_user_id` = :fuid AND `customerid` = :cid
+			SELECT `id`, `ssh_pubkey` FROM `" . TABLE_PANEL_USER_SSHKEYS . "` WHERE `ftp_user_id` = :fuid AND `customerid` = :cid
 		");
 		while ($usr = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$authkeysfile = FileDir::makeCorrectFile($usr['homedir'] . '/.ssh/authorized_keys');
@@ -61,6 +61,9 @@ class SshKeys
 				if (!file_exists($authkeysfile)) {
 					@touch($authkeysfile);
 				}
+
+				// remove all entries with 'froxlor:id=...'
+				self::removeFroxlorKeys($authkeysfile);
 
 				while ($sshkey = $sshkeys_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 					// normalize: Algo + Base64 part (remove comment)
@@ -91,7 +94,7 @@ class SshKeys
 
 					// add key
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Addin ssh-key for user ' . $usr['username']);
-					file_put_contents($authkeysfile, trim($sshkey['ssh_pubkey']) . "\n", FILE_APPEND | LOCK_EX);
+					file_put_contents($authkeysfile, trim($sshkey['ssh_pubkey']) . " froxlor:id=" . $sshkey['id'] . "\n", FILE_APPEND | LOCK_EX);
 				}
 			}
 			@chmod(dirname($authkeysfile), 0700);
@@ -101,5 +104,39 @@ class SshKeys
 			@chown($authkeysfile, $usr['uid']);
 			@chgrp($authkeysfile, $usr['gid']);
 		}
+	}
+
+	private static function removeFroxlorKeys(string $authFile)
+	{
+		if (!file_exists($authFile)) {
+			return false;
+		}
+
+		$lines = file($authFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$newLines = [];
+
+		foreach ($lines as $line) {
+			// kill whitespaces
+			$trim = trim($line);
+
+			// if comment 'froxlor:id=' skip line
+			if (preg_match('/\bfroxlor:id=/', $trim)) {
+				continue;
+			}
+
+			if (!empty($trim)) {
+				$newLines[] = $line;
+			}
+		}
+
+		// use LOCK_EX to avoid race
+		if (empty($newLines)) {
+			// create empty file
+			file_put_contents($authFile, "", LOCK_EX);
+		} else {
+			// keep existing (non-froxlor-managed entries)
+			file_put_contents($authFile, implode("\n", $newLines) . "\n", LOCK_EX);
+		}
+		return true;
 	}
 }

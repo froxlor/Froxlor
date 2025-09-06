@@ -28,9 +28,11 @@ namespace Froxlor\Api\Commands;
 use Exception;
 use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
+use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
 use Froxlor\Validate\Validate;
 use phpseclib3\Crypt\PublicKeyLoader;
 
@@ -136,6 +138,12 @@ class SshKeys extends ApiCommand implements ResourceEntity
 		$result = $this->apiCall('SshKeys.get', [
 			'id' => $sshkeyid
 		]);
+
+		if (Settings::Get('system.nssextrausers') == 1) {
+			// this is used so that the libnss-extrausers cron is fired
+			Cronjob::inserttask(TaskId::CREATE_FTP);
+		}
+
 		return $this->response($result);
 	}
 
@@ -264,6 +272,12 @@ class SshKeys extends ApiCommand implements ResourceEntity
 			'id' => $result['id']
 		]);
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ssh-key '" . $result['id'] . "'");
+
+		if (Settings::Get('system.nssextrausers') == 1) {
+			// this is used so that the libnss-extrausers cron is fired
+			Cronjob::inserttask(TaskId::CREATE_FTP);
+		}
+
 		return $this->response($result);
 	}
 
@@ -400,6 +414,12 @@ class SshKeys extends ApiCommand implements ResourceEntity
 		], true, true);
 
 		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted ssh-key '" . $result['id'] . "'");
+
+		if (Settings::Get('system.nssextrausers') == 1) {
+			// this is used so that the libnss-extrausers cron is fired
+			Cronjob::inserttask(TaskId::CREATE_FTP);
+		}
+
 		return $this->response($result);
 	}
 
