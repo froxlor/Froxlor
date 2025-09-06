@@ -62,7 +62,11 @@ class SshKeys extends ApiCommand implements ResourceEntity
 	 */
 	public function add()
 	{
-		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
+		if ($this->isAdmin() == false &&
+			(Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0)
+		) {
 			throw new Exception("You cannot access this resource", 405);
 		}
 
@@ -91,11 +95,12 @@ class SshKeys extends ApiCommand implements ResourceEntity
 		if (!$this->isValidSshPublicKey($ssh_pubkey)) {
 			throw new Exception("Given SSH-key does not seem to be a valid public key", 406);
 		}
-		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
-		$key = PublicKeyLoader::loadPublicKey($ssh_pubkey);
+		$key = PublicKeyLoader::loadPublicKey(trim($ssh_pubkey));
 		if (empty($description)) {
 			$description = $key->getComment() ?? '';
 		}
+		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
 		// check for existing ssh-key for given user
 		$check_stmt = Database::prepare("
 			SELECT `ssh_pubkey`
@@ -121,7 +126,7 @@ class SshKeys extends ApiCommand implements ResourceEntity
 		$params = [
 			"cid" => $customer['customerid'],
 			"fid" => $id,
-			"sshpub" => $ssh_pubkey,
+			"sshpub" => trim($ssh_pubkey),
 			"desc" => $description
 		];
 		Database::pexecute($stmt, $params, true, true);
@@ -175,7 +180,9 @@ class SshKeys extends ApiCommand implements ResourceEntity
 				");
 			}
 		} else {
-			if (Settings::IsInList('panel.customer_hide_options', 'ftp')) {
+			if (Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0) {
 				throw new Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
@@ -217,7 +224,11 @@ class SshKeys extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
+		if ($this->isAdmin() == false &&
+			(Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0)
+		) {
 			throw new Exception("You cannot access this resource", 405);
 		}
 
@@ -281,6 +292,14 @@ class SshKeys extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
+		if ($this->isAdmin() == false &&
+			(Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0)
+		) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = [];
 		$query_fields = [];
@@ -316,6 +335,14 @@ class SshKeys extends ApiCommand implements ResourceEntity
 	 */
 	public function listingCount()
 	{
+		if ($this->isAdmin() == false &&
+			(Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0)
+		) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = [];
 		$result_stmt = Database::prepare("
@@ -347,7 +374,11 @@ class SshKeys extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id');
 
-		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
+		if ($this->isAdmin() == false &&
+			(Settings::IsInList('panel.customer_hide_options', 'ftp')
+				|| intval(Settings::Get('system.allow_customer_shell')) == 0
+				|| intval($this->getUserDetail('shell_allowed')) == 0)
+		) {
 			throw new Exception("You cannot access this resource", 405);
 		}
 

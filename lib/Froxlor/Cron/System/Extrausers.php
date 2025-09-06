@@ -58,6 +58,8 @@ class Extrausers
 		@chmod('/var/lib/extrausers/passwd', 0644);
 		@chmod('/var/lib/extrausers/group', 0644);
 		@chmod('/var/lib/extrausers/shadow', 0640);
+
+		SshKeys::generateFiles($cronlog);
 	}
 
 	private static function generateFile($file, $query, &$cronlog, &$result_list = null)

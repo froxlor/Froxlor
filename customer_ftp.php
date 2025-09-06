@@ -209,6 +209,12 @@ if ($page == 'overview' || $page == 'accounts') {
 		}
 	}
 } elseif ($page == 'sshkeys') {
+
+	// redirect if this customer has no permission for API usage
+	if ($userinfo['adminsession'] == 0 && (intval(Settings::Get('system.allow_customer_shell')) == 0 || $userinfo['shell_allowed'] == 0)) {
+		Response::redirectTo('customer_index.php');
+	}
+
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp::sshkeys");
 		try {
