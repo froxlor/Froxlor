@@ -52,6 +52,8 @@ class SshKeys
 		while ($usr = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$authkeysfile = FileDir::makeCorrectFile($usr['homedir'] . '/.ssh/authorized_keys');
 			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating file ' . $authkeysfile);
+			// remove all entries with 'froxlor:id=...'
+			self::removeFroxlorKeys($authkeysfile, $cronlog);
 			// get keys
 			Database::pexecute($sshkeys_sel_stmt, ['fuid' => $usr['id'], 'cid' => $usr['customerid']]);
 			if ($sshkeys_sel_stmt->rowCount() > 0) {
@@ -61,9 +63,6 @@ class SshKeys
 				if (!file_exists($authkeysfile)) {
 					@touch($authkeysfile);
 				}
-
-				// remove all entries with 'froxlor:id=...'
-				self::removeFroxlorKeys($authkeysfile);
 
 				while ($sshkey = $sshkeys_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 					// normalize: Algo + Base64 part (remove comment)
@@ -106,7 +105,7 @@ class SshKeys
 		}
 	}
 
-	private static function removeFroxlorKeys(string $authFile)
+	private static function removeFroxlorKeys(string $authFile, &$cronlog): bool
 	{
 		if (!file_exists($authFile)) {
 			return false;
@@ -120,7 +119,9 @@ class SshKeys
 			$trim = trim($line);
 
 			// if comment 'froxlor:id=' skip line
-			if (preg_match('/\bfroxlor:id=/', $trim)) {
+			$matches = [];
+			if (preg_match('/\bfroxlor:id=(.+)/', $trim, $matches)) {
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Removing ' . $matches[0]);
 				continue;
 			}
 
@@ -131,8 +132,8 @@ class SshKeys
 
 		// use LOCK_EX to avoid race
 		if (empty($newLines)) {
-			// create empty file
-			file_put_contents($authFile, "", LOCK_EX);
+			// empty file, we can safely remove it
+			@unlink($authFile);
 		} else {
 			// keep existing (non-froxlor-managed entries)
 			file_put_contents($authFile, implode("\n", $newLines) . "\n", LOCK_EX);
