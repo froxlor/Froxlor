@@ -274,8 +274,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            $override_tls is true
 	 * @param string $description
 	 *            optional custom description (currently not used/shown in the frontend), default empty
-	 * @param bool $is_stdsubdomain (internally)
-	 *            optional whether this is a standard subdomain for a customer which is being added so no usage is decreased
+	 * @param bool $is_stdsubdomain
+	 *            (internally) optional whether this is a standard subdomain for a customer which is being added so no usage is decreased
 	 * @access admin
 	 * @return string json-encoded array
 	 * @throws Exception

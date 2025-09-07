@@ -31,6 +31,7 @@ use Froxlor\Api\Commands\SshKeys;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
 use Froxlor\UI\Collection;
@@ -66,7 +67,7 @@ if ($page == 'overview' || $page == 'accounts') {
 			];
 		}
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/ftp-accounts/',
+			'href' => Froxlor::getDocsUrl() . 'user-guide/ftp-accounts/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'
@@ -234,7 +235,7 @@ if ($page == 'overview' || $page == 'accounts') {
 			];
 		}
 		$actions_links[] = [
-			'href' => \Froxlor\Froxlor::getDocsUrl() . 'user-guide/ftp-accounts/ssh-keys/',
+			'href' => Froxlor::getDocsUrl() . 'user-guide/ssh-keys/',
 			'target' => '_blank',
 			'icon' => 'fa-solid fa-circle-info',
 			'class' => 'btn-outline-secondary'

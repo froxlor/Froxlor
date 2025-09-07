@@ -1013,8 +1013,8 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param int $customernumber
 	 *                             optional
 	 * @param string $def_language
-	 * *                           optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
-	 * *                           default is system-default language
+	 *                             optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
+	 *                             default is system-default language
 	 * @param bool $gui_access
 	 *                             optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
