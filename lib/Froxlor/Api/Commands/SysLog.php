@@ -110,7 +110,7 @@ class SysLog extends ApiCommand implements ResourceEntity
 	 */
 	public function listingCount()
 	{
-		$params = null;
+		$params = [];
 		$query_fields = [];
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '1') {
 			$result_stmt = Database::prepare("

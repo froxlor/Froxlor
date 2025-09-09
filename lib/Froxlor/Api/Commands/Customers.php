@@ -151,8 +151,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_customers
-				FROM `" . TABLE_PANEL_CUSTOMERS . "`
-				WHERE " . ($this->getUserDetail('customers_see_all') ? "1" : " `adminid` = :adminid ") . $this->getSearchWhere($query_fields, true));
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
+				WHERE `c`.`adminid` = `a`.`adminid` AND " . ($this->getUserDetail('customers_see_all') ? "1" : " `adminid` = :adminid ") . $this->getSearchWhere($query_fields, true));
 			$params = [];
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params = [
