@@ -388,6 +388,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`
 			WHERE ";
 		$qry_params = [];
+		$query_fields = [];
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
 			// admin with only customer-specific permissions
 			$certs_stmt_query .= "d.adminid = :adminid ";
@@ -399,7 +400,8 @@ class Certificates extends ApiCommand implements ResourceEntity
 		} else {
 			$certs_stmt_query .= "1 ";
 		}
-		$certs_stmt = Database::prepare($certs_stmt_query);
+		$certs_stmt = Database::prepare($certs_stmt_query . $this->getSearchWhere($query_fields, true));
+		$qry_params = array_merge($qry_params, $query_fields);
 		$result = Database::pexecute_first($certs_stmt, $qry_params, true, true);
 		if ($result) {
 			return $this->response($result['num_certs']);

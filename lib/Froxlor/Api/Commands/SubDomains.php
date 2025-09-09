@@ -1096,13 +1096,14 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 
 		if (!empty($customer_ids)) {
+			$query_fields = [];
 			// prepare select statement
 			$domains_stmt = Database::prepare("
 				SELECT COUNT(*) as num_subdom
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-			");
-			$result = Database::pexecute_first($domains_stmt, null, true, true);
+			" . $this->getSearchWhere($query_fields, true));
+			$result = Database::pexecute_first($domains_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_subdom']);
 			}

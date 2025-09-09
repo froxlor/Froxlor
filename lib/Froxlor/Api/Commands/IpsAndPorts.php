@@ -99,12 +99,15 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || !empty($this->getUserDetail('ip')))) {
 			$ip_where = "";
+			$query_fields = [];
 			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
-				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ")";
+				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ") " . $this->getSearchWhere($query_fields, true);
+			} else {
+				$ip_where =  $this->getSearchWhere($query_fields);
 			}
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_ips FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where);
-			$result = Database::pexecute_first($result_stmt, null, true, true);
+			$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_ips']);
 			}

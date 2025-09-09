@@ -352,11 +352,12 @@ class DirProtections extends ApiCommand implements ResourceEntity
 		$customer_ids = $this->getAllowedCustomerIds('extras.directoryprotection');
 
 		$result = [];
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as num_htpasswd FROM `" . TABLE_PANEL_HTPASSWDS . "`
 			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_htpasswd']);
 		}

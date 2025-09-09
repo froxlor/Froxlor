@@ -123,11 +123,12 @@ class Admins extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_admins
 				FROM `" . TABLE_PANEL_ADMINS . "`
-			");
-			$result = Database::pexecute_first($result_stmt, null, true, true);
+			" . $this->getSearchWhere($query_fields));
+			$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_admins']);
 			}

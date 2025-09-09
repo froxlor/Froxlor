@@ -218,6 +218,11 @@ class Pagination
 		return $this->entries;
 	}
 
+	public function setEntries(int $entries): void
+	{
+		$this->entries = $entries;
+	}
+
 	public function getApiCommandParams(): array
 	{
 		return $this->data;

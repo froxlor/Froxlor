@@ -184,11 +184,12 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		if ($this->isAdmin()) {
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_phps
 				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
-			");
-			$result = Database::pexecute_first($result_stmt, null, true, true);
+			" . $this->getSearchWhere($query_fields));
+			$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_phps']);
 			}

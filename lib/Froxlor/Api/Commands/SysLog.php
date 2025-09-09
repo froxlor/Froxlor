@@ -111,10 +111,11 @@ class SysLog extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		$params = null;
+		$query_fields = [];
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '1') {
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_logs FROM `" . TABLE_PANEL_LOG . "`
-			");
+			" . $this->getSearchWhere($query_fields));
 		} elseif ($this->isAdmin()) {
 			// get all admin customers
 			$_custom_list_result = $this->apiCall('Customers.listing');
@@ -127,12 +128,12 @@ class SysLog extends ApiCommand implements ResourceEntity
 				$result_stmt = Database::prepare("
 					SELECT COUNT(*) as num_logs FROM `" . TABLE_PANEL_LOG . "`
 					WHERE `user` = :loginname OR `user` IN ('" . implode("', '", $customer_names) . "')
-				");
+				" . $this->getSearchWhere($query_fields, true));
 			} else {
 				$result_stmt = Database::prepare("
 					SELECT COUNT(*) as num_logs FROM `" . TABLE_PANEL_LOG . "`
 					WHERE `user` = :loginname
-				");
+				" . $this->getSearchWhere($query_fields, true));
 			}
 			$params = [
 				'loginname' => $this->getUserDetail('loginname')
@@ -142,12 +143,12 @@ class SysLog extends ApiCommand implements ResourceEntity
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_logs FROM `" . TABLE_PANEL_LOG . "`
 				WHERE `user` = :loginname AND `action` <> 99
-			");
+			" . $this->getSearchWhere($query_fields, true));
 			$params = [
 				'loginname' => $this->getUserDetail('loginname')
 			];
 		}
-
+		$params = array_merge($params, $query_fields);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			return $this->response($result['num_logs']);

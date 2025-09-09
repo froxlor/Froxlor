@@ -569,11 +569,12 @@ class Ftps extends ApiCommand implements ResourceEntity
 	{
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = [];
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as num_ftps FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_ftps']);
 		}

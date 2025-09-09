@@ -145,17 +145,19 @@ class Domains extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list domains");
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT
 				COUNT(*) as num_domains
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid "));
+				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid ") . $this->getSearchWhere($query_fields, true));
 			$params = [];
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
 			}
+			$params = array_merge($params, $query_fields);
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				return $this->response($result['num_domains']);

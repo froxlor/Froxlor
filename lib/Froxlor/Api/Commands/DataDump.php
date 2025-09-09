@@ -239,8 +239,9 @@ class DataDump extends ApiCommand implements ResourceEntity
 
 		// check whether there is a data export job for this customer
 		$result_count = 0;
-		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");
-		Database::pexecute($sel_stmt, null, true, true);
+		$query_fields = [];
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20' " . $this->getSearchWhere($query_fields, true));
+		Database::pexecute($sel_stmt, $query_fields, true, true);
 		while ($entry = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$entry['data'] = json_decode($entry['data'], true);
 			if (in_array($entry['data']['customerid'], $customer_ids)) {

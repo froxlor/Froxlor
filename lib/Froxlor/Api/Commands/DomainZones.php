@@ -521,10 +521,10 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		]);
 		$id = $result['id'];
 
-		$sel_stmt = Database::prepare("SELECT COUNT(*) as num_dns FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
-		$result = Database::pexecute_first($sel_stmt, [
-			'did' => $id
-		], true, true);
+		$query_fields = [];
+		$sel_stmt = Database::prepare("SELECT COUNT(*) as num_dns FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did" . $this->getSearchWhere($query_fields, true));
+		$params = array_merge(['did' => $id], $query_fields);
+		$result = Database::pexecute_first($sel_stmt, $params, true, true);
 		if ($result) {
 			return $this->response($result['num_dns']);
 		}

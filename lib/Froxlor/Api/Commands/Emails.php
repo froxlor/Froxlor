@@ -465,14 +465,15 @@ class Emails extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as num_emails
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
 			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_emails']);
 		}
