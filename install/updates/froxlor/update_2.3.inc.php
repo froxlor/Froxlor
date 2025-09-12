@@ -84,3 +84,11 @@ if (Froxlor::isDatabaseVersion('202509010')) {
 
 	Froxlor::updateToDbVersion('202509060');
 }
+
+if (Froxlor::isDatabaseVersion('202509060')) {
+	Update::showUpdateStep("Disabling OCSP for Let's Encrypt enabled domains, as service is EOL");
+	Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ocsp_stapling` = '0' WHERE `letsencrypt` = '1';");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202509120');
+}
