@@ -169,6 +169,7 @@ class Nginx extends HttpConfigBase
 				}
 
 				$http2 = $ssl_vhost == true && Settings::Get('system.http2_support') == '1';
+				$http3 = $ssl_vhost == true && Settings::Get('system.http3_support') == '1';
 
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
@@ -176,6 +177,14 @@ class Nginx extends HttpConfigBase
 				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 && !$this->http2_on_directive ? ' http2' : '') . ';' . "\n";
 				if ($http2 && $this->http2_on_directive) {
 					$this->nginx_data[$vhost_filename] .= "\t" . 'http2 on;' . "\n";
+				}
+				if ($http3) {
+					$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server quic reuseport;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'http3 on;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'http3_hq on;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_gso on;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_retry on;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '"; ma=86400\';' . "\n";
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 
@@ -515,6 +524,7 @@ class Nginx extends HttpConfigBase
 			'domainid' => $domain['id']
 		]);
 
+		$http3 = $ssl_vhost == true && (isset($domain['http3']) && $domain['http3'] == '1' && Settings::Get('system.http3_support') == '1');
 		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$domain['ip'] = $ipandport['ip'];
 			$domain['port'] = $ipandport['port'];
@@ -550,6 +560,17 @@ class Nginx extends HttpConfigBase
 				$vhost_content .= "\t" . 'http2 on;' . "\n";
 				$has_http2_on = true;
 			}
+			if ($http3) {
+				$vhost_content .= "\t" . 'listen    ' . $ipport . ' quic;' . "\n";
+			}
+		}
+
+		if ($http3) {
+			$vhost_content .= "\t" . 'add_header Alt-Svc \'h3=":' . $domain['port'] . '"; ma=86400\';' . "\n";
+			$vhost_content .= "\t" . 'http3 on;' . "\n";
+			$vhost_content .= "\t" . 'http3_hq on;' . "\n";
+			$vhost_content .= "\t" . 'quic_gso on;' . "\n";
+			$vhost_content .= "\t" . 'quic_retry on;' . "\n";
 		}
 
 		// get all server-names

@@ -80,6 +80,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * @param bool $http2
 	 *            optional, whether to enable http/2 for this subdomain (requires to be enabled in the settings),
 	 *            default 0 (false)
+	 * @param bool $http3
+	 *            optional, whether to enable http/3 for this subdomain (requires to be enabled in the settings),
+	 *            default 0 (false)
 	 * @param int $hsts_maxage
 	 *            optional max-age value for HSTS header, default 0
 	 * @param bool $hsts_sub
@@ -116,6 +119,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
 				$http2 = $this->getBoolParam('http2', true, 0);
+				$http3 = $this->getBoolParam('http3', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
@@ -124,6 +128,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
+				$http3 = 0;
 				$hsts_maxage = 0;
 				$hsts_sub = 0;
 				$hsts_preload = 0;
@@ -341,6 +346,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				`phpsettingid` = :phpsettingid,
 				`letsencrypt` = :letsencrypt,
 				`http2` = :http2,
+				`http3` = :http3,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
 				`hsts_preload` = :hsts_preload,
@@ -373,6 +379,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"phpsettingid" => $phpsid_result['phpsettingid'],
 				"letsencrypt" => $letsencrypt,
 				"http2" => $http2,
+				"http3" => $http3,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
 				"hsts_preload" => $hsts_preload,
@@ -618,6 +625,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * @param bool $http2
 	 *            optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default
 	 *            0 (false)
+	 * @param bool $http3
+	 *            optional, whether to enable http/3 for this domain (requires to be enabled in the settings), default
+	 *            0 (false)
 	 * @param int $hsts_maxage
 	 *            optional max-age value for HSTS header
 	 * @param bool $hsts_sub
@@ -671,6 +681,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
 			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
 			$http2 = $this->getBoolParam('http2', true, $result['http2']);
+			$http3 = $this->getBoolParam('http3', true, $result['http3']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
@@ -679,6 +690,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$ssl_redirect = 0;
 			$letsencrypt = 0;
 			$http2 = 0;
+			$http3 = 0;
 			$hsts_maxage = 0;
 			$hsts_sub = 0;
 			$hsts_preload = 0;
@@ -825,6 +837,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			|| $hsts_preload != $result['hsts_preload']
 			|| $phpsettingid != $result['phpsettingid']
 			|| $http2 != $result['http2']
+			|| $http3 != $result['http3']
 			|| ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1')
 		) {
 			$stmt = Database::prepare("
@@ -839,6 +852,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					`ssl_redirect` = :ssl_redirect,
 					`letsencrypt` = :letsencrypt,
 					`http2` = :http2,
+					`http3` = :http3,
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
 					`hsts_preload` = :hsts_preload,
@@ -857,6 +871,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"ssl_redirect" => $ssl_redirect,
 				"letsencrypt" => $letsencrypt,
 				"http2" => $http2,
+				"http3" => $http3,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
 				"hsts_preload" => $hsts_preload,

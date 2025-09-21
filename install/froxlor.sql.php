@@ -292,6 +292,7 @@ CREATE TABLE `panel_domains` (
   `hsts_preload` tinyint(1) NOT NULL default '0',
   `ocsp_stapling` tinyint(1) DEFAULT '0',
   `http2` tinyint(1) DEFAULT '0',
+  `http3` tinyint(1) DEFAULT '0',
   `notryfiles` tinyint(1) DEFAULT '0',
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
@@ -602,6 +603,7 @@ opcache.validate_timestamps'),
 	('system', 'ssl_cipher_list', 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128'),
 	('system', 'nginx_php_backend', '127.0.0.1:8888'),
 	('system', 'http2_support', '0'),
+	('system', 'http3_support', '0'),
 	('system', 'perl_server', 'unix:/var/run/nginx/cgiwrap-dispatch.sock'),
 	('system', 'phpreload_command', ''),
 	('system', 'apache24', '1'),
@@ -734,7 +736,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.3.0-dev1'),
-	('panel', 'db_version', '202509120');
+	('panel', 'db_version', '202509210');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
