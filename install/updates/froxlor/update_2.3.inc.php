@@ -24,6 +24,7 @@
  */
 
 use Froxlor\Database\Database;
+use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
@@ -90,5 +91,20 @@ if (Froxlor::isDatabaseVersion('202509060')) {
 	Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ocsp_stapling` = '0' WHERE `letsencrypt` = '1';");
 	Update::lastStepStatus(0);
 
+	// clear templates cache
+	FileDir::safe_exec('rm -rf ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/cache/*'));
+
 	Froxlor::updateToDbVersion('202509120');
+}
+
+if (Froxlor::isDatabaseVersion('202509120')) {
+	Update::showUpdateStep("Adding new settings");
+	Settings::AddNew("system.http3_support", "0");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Adding http3 field to domain table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `http3` tinyint(1) NOT NULL default '0' AFTER `http2`;");
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202509210');
 }

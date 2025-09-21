@@ -451,6 +451,7 @@ return [
 		'domain_http3' => [
 			'title' => 'HTTP3 Unterstützung',
 			'description' => 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F3">Wikipedia</a> für eine ausführliche Beschreibung von HTTP3',
+			'nginx_version_warning' => '<br /><strong class="text-danger">WARNUNG:</strong> Nginx unterstützt HTTP/3 erst ab Version 1.25.0 und dem SSL-Protokoll TLSv1.3. Wenn Ihre Version älter ist, wird der Webserver bei aktiviertem HTTP/3 NICHT korrekt starten.',
 		],
 		'testmail' => 'SMTP Test',
 		'phpsettingsforsubdomains' => 'PHP-Config für alle Subdomains übernehmen:',
@@ -983,6 +984,7 @@ return [
 		'invalid_validtime' => 'Wert der valid_time in Sekunden muss zwischen 10 und 120 liegen.',
 		'customerphpenabledbutnoconfig' => 'Kunde hat PHP aktiviert aber keine PHP-Konfiguration wurde gewählt.',
 		'emaildomainstillhasaddresses' => 'Maildomain-Flag kann nicht deaktiviert werden, da für diese Domain noch E-Mail-Adressen vorhanden sind.',
+		'tls13requiredforhttp3' => 'Domain hat http3 Option aktiviert, aber SSL-Protokoll enthält nicht TLSv1.3',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',

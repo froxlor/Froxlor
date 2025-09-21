@@ -134,6 +134,35 @@ class Domains extends ApiCommand implements ResourceEntity
 		return $ipandports;
 	}
 
+	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int
+	{
+		// nothing (ssl_global)
+		$domain_hascert = 0;
+		$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+		Database::pexecute($ssl_stmt, array(
+			"domainid" => $domainid
+		));
+		$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+		if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+			// own certificate (ssl_customer_green)
+			$domain_hascert = 1;
+		} else {
+			// check if it's parent has one set (shared)
+			if ($parentdomainid != 0) {
+				$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+				Database::pexecute($ssl_stmt, array(
+					"domainid" => $parentdomainid
+				));
+				$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+				if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+					// parent has a certificate (ssl_shared)
+					$domain_hascert = 2;
+				}
+			}
+		}
+		return $domain_hascert;
+	}
+
 	/**
 	 * returns the total number of accessible domains
 	 *
@@ -472,6 +501,21 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 					if (empty($ssl_protocols)) {
 						$override_tls = '0';
+					}
+
+					// http/3 for nginx only works with TLSv1.3 enabled
+					if ($http3 == '1') {
+						// overwrite enabled?
+						if (Settings::Get('system.webserver') != 'nginx') {
+							$http3 = '0';
+						} else {
+							if (($override_tls == '1' && !in_array('TLSv1.3', $ssl_protocols)) ||
+								($override_tls == '0' && !in_array('TLSv1.3', explode(",", Settings::Get('system.ssl_protocols'))))
+							) {
+								// no tlsv1.3 -> no http/3
+								Response::standardError('tls13requiredforhttp3', '', true);
+							}
+						}
 					}
 				} else {
 					$isbinddomain = '0';
@@ -927,35 +971,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			throw new Exception("Domain with " . $key . " could not be found", 404);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
-	}
-
-	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int
-	{
-		// nothing (ssl_global)
-		$domain_hascert = 0;
-		$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-		Database::pexecute($ssl_stmt, array(
-			"domainid" => $domainid
-		));
-		$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-		if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-			// own certificate (ssl_customer_green)
-			$domain_hascert = 1;
-		} else {
-			// check if it's parent has one set (shared)
-			if ($parentdomainid != 0) {
-				$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-				Database::pexecute($ssl_stmt, array(
-					"domainid" => $parentdomainid
-				));
-				$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-				if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-					// parent has a certificate (ssl_shared)
-					$domain_hascert = 2;
-				}
-			}
-		}
-		return $domain_hascert;
 	}
 
 	/**
@@ -1473,6 +1488,21 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				if (empty($ssl_protocols)) {
 					$override_tls = '0';
+				}
+
+				// http/3 for nginx only works with TLSv1.3 enabled
+				if ($http3 == '1') {
+					// overwrite enabled?
+					if (Settings::Get('system.webserver') != 'nginx') {
+						$http3 = '0';
+					} else {
+						if (($override_tls == '1' && !in_array('TLSv1.3', $ssl_protocols)) ||
+							($override_tls == '0' && !in_array('TLSv1.3', explode(",", Settings::Get('system.ssl_protocols'))))
+						) {
+							// no tlsv1.3 -> no http/3
+							Response::standardError('tls13requiredforhttp3', '', true);
+						}
+					}
 				}
 			} else {
 				$isbinddomain = $result['isbinddomain'];
@@ -2039,7 +2069,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				'id' => $id
 			], true, true);
 			$current_ips = [];
-			while ($cIP = $ip_sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			while ($cIP = $ip_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$current_ips[] = $cIP['id_ipandports'];
 			}
 

@@ -460,6 +460,7 @@ return [
 		'domain_http3' => [
 			'title' => 'HTTP3 support',
 			'description' => 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/3">Wikipedia</a> for a detailed explanation of HTTP3',
+			'nginx_version_warning' => '<br /><strong class="text-danger">WARNING:</strong> Nginx version 1.25.0 or above and ssl-protocol TLSv1.3 is required for HTTP/3. If your version is older, the webserver will NOT start correctly while HTTP/3 is enabled!',
 		],
 		'testmail' => 'SMTP test',
 		'phpsettingsforsubdomains' => 'Apply php-config to all subdomains:',
@@ -1056,6 +1057,7 @@ return [
 		'invalid_validtime' => 'Valid time in seconds can only be between 10 and 120',
 		'customerphpenabledbutnoconfig' => 'Customer has PHP activated but no PHP-configuration was selected.',
 		'emaildomainstillhasaddresses' => 'Cannot deactivate mail-domain flag, as there are still email-addresses for this domain.',
+		'tls13requiredforhttp3' => 'Domain http3 flag enabled but ssl-protocols does not include TLSv1.3',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

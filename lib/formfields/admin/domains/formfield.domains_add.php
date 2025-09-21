@@ -233,7 +233,7 @@ return [
 					'http3' => [
 						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') == 'nginx' && Settings::Get('system.http3_support') == '1',
 						'label' => lng('admin.domain_http3.title'),
-						'desc' => lng('admin.domain_http3.description'),
+						'desc' => lng('admin.domain_http3.description') . lng('admin.domain_http3.nginx_version_warning'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
@@ -250,9 +250,7 @@ return [
 						'label' => lng('serversettings.ssl.ssl_protocols.title'),
 						'desc' => lng('serversettings.ssl.ssl_protocols.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'checkbox',
-						'value' => [
-							'TLSv1.2'
-						],
+						'value' => explode(",", Settings::Get('system.ssl_protocols') ?? 'TLSv1.2'),
 						'values' => [
 							[
 								'value' => 'TLSv1',
