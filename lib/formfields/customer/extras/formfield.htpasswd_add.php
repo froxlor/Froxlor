@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('extras.directoryprotection_add'),
-				'image' => 'icons/htpasswd_add.png',
 				'fields' => [
 					'path' => [
 						'label' => lng('panel.path'),
@@ -54,7 +53,7 @@ return [
 					'directory_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'directory_password_suggestion' => [

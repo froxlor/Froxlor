@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.ipsandports.ipandport'),
-				'image' => 'icons/ipsports_add.png',
 				'fields' => [
 					'ip' => [
 						'label' => lng('admin.ipsandports.ip'),
@@ -52,7 +51,6 @@ return [
 			],
 			'section_b' => [
 				'title' => lng('admin.ipsandports.webserverdefaultconfig'),
-				'image' => 'icons/ipsports_add.png',
 				'fields' => [
 					'listen_statement' => [
 						'visible' => Settings::Get('system.webserver') != 'nginx',
@@ -97,7 +95,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.ipsandports.webserverdomainconfig'),
-				'image' => 'icons/ipsports_add.png',
 				'fields' => [
 					'default_vhostconf_domain' => [
 						'label' => lng('admin.ipsandports.default_vhostconf_domain'),
@@ -124,7 +121,6 @@ return [
 			],
 			'section_d' => [
 				'title' => lng('admin.ipsandports.webserverssldomainconfig'),
-				'image' => 'icons/ipsports_add.png',
 				'visible' => Settings::Get('system.use_ssl') == 1,
 				'fields' => [
 					'ssl' => [

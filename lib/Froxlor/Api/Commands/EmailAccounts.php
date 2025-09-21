@@ -260,10 +260,12 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				$_mailerror = false;
 				$mailerr_msg = "";
 				try {
-					$this->mailer()->setFrom($admin['email'], User::getCorrectUserSalutation($admin));
+					$this->mailer()->setFrom(Settings::Get('panel.adminmail'), User::getCorrectUserSalutation($admin));
+					$this->mailer()->clearReplyTos();
+					$this->mailer()->addReplyTo($admin['email'], User::getCorrectUserSalutation($admin));
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
-					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+					$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 					$this->mailer()->addAddress($email_full);
 					$this->mailer()->send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
@@ -290,7 +292,9 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 
 					$_mailerror = false;
 					try {
-						$this->mailer()->setFrom($admin['email'], User::getCorrectUserSalutation($admin));
+						$this->mailer()->setFrom(Settings::Get('panel.adminmail'), User::getCorrectUserSalutation($admin));
+						$this->mailer()->clearReplyTos();
+						$this->mailer()->addReplyTo($admin['email'], User::getCorrectUserSalutation($admin));
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
 						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));

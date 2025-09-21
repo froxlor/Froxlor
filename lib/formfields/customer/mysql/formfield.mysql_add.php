@@ -20,12 +20,11 @@ use Froxlor\System\Crypt;
 return [
 	'mysql_add' => [
 		'title' => lng('mysql.database_create'),
-		'image' => 'icons/mysql_add.png',
+		'image' => 'fa-solid fa-plus',
 		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('mysql.database_create'),
-				'image' => 'icons/mysql_add.png',
 				'fields' => [
 					'custom_suffix' => [
 						'visible' => strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME',
@@ -45,7 +44,7 @@ return [
 					'mysql_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'mysql_password_suggestion' => [

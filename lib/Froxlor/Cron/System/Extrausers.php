@@ -58,6 +58,8 @@ class Extrausers
 		@chmod('/var/lib/extrausers/passwd', 0644);
 		@chmod('/var/lib/extrausers/group', 0644);
 		@chmod('/var/lib/extrausers/shadow', 0640);
+
+		SshKeys::generateFiles($cronlog);
 	}
 
 	private static function generateFile($file, $query, &$cronlog, &$result_list = null)
@@ -88,6 +90,9 @@ class Extrausers
 						$u['password'] = '*';
 						$u['shell'] = '/bin/false';
 						$u['comment'] = 'Locked Froxlor User';
+					}
+					if (Customer::getCustomerDetail($u['customerid'], 'shell_allowed') == '0') {
+						$u['shell'] = '/bin/false';
 					}
 					$line = $u['username'] . ':' . $u['password'] . ':' . $u['uid'] . ':' . $u['gid'] . ':' . $u['comment'] . ':' . $u['homedir'] . ':' . $u['shell'] . PHP_EOL;
 					if (is_array($result_list)) {

@@ -35,7 +35,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.accountdata'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'loginname' => [
 						'label' => lng('login.username'),
@@ -52,7 +51,7 @@ return [
 					'admin_password' => [
 						'label' => lng('login.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'visible' => $result['adminid'] != $userinfo['userid'],
 						'next_to' => [
 							'admin_password_suggestion' => [
@@ -91,7 +90,6 @@ return [
 			],
 			'section_b' => [
 				'title' => lng('admin.contactdata'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'name' => [
 						'label' => lng('customer.name'),
@@ -123,7 +121,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.servicedata'),
-				'image' => 'icons/user_add.png',
 				'visible' => $result['adminid'] != $userinfo['userid'],
 				'fields' => [
 					'ipaddress' => [

@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domainsettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'domain' => [
 						'label' => 'Domain',
@@ -90,7 +89,6 @@ return [
 			],
 			'section_e' => [
 				'title' => lng('admin.mailserversettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'isemaildomain' => [
 						'label' => lng('admin.emaildomain'),
@@ -121,7 +119,6 @@ return [
 			],
 			'section_b' => [
 				'title' => lng('admin.webserversettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'documentroot' => [
 						'label' => 'DocumentRoot',
@@ -185,7 +182,6 @@ return [
 			],
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
-				'image' => 'icons/domain_add.png',
 				'visible' => Settings::Get('system.use_ssl') == '1',
 				'fields' => [
 					'sslenabled' => [
@@ -193,7 +189,7 @@ return [
 						'label' => lng('admin.domain_sslenabled'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => !empty($ssl_ipsandports)
+						'checked' => !empty(Settings::Get('system.defaultsslip'))
 					],
 					'no_ssl_available_info' => [
 						'visible' => empty($ssl_ipsandports),
@@ -227,7 +223,7 @@ return [
 						'checked' => false
 					],
 					'http2' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.http2_support') == '1',
 						'label' => lng('admin.domain_http2.title'),
 						'desc' => lng('admin.domain_http2.description'),
 						'type' => 'checkbox',
@@ -250,7 +246,7 @@ return [
 						'checked' => false
 					],
 					'ssl_protocols' => [
-						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => lng('serversettings.ssl.ssl_protocols.title'),
 						'desc' => lng('serversettings.ssl.ssl_protocols.description').lng('admin.domain_override_tls_addinfo'),
 						'type' => 'checkbox',
@@ -332,7 +328,7 @@ return [
 						'checked' => false
 					],
 					'ocsp_stapling' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => !empty($ssl_ipsandports),
 						'label' => lng('admin.domain_ocsp_stapling.title'),
 						'desc' => lng('admin.domain_ocsp_stapling.description') . (Settings::Get('system.webserver') == 'nginx' ? lng('admin.domain_ocsp_stapling.nginx_version_warning') : ""),
 						'type' => 'checkbox',
@@ -347,7 +343,7 @@ return [
 						'checked' => false
 					],
 					'sessiontickets' => [
-						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.sessionticketsenabled' != '1'),
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.sessionticketsenabled' != '1'),
 						'label' => lng('admin.domain_sessiontickets'),
 						'type' => 'checkbox',
 						'value' => '1',
@@ -357,7 +353,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.phpserversettings'),
-				'image' => 'icons/domain_add.png',
 				'visible' => $userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1',
 				'fields' => [
 					'openbasedir' => [
@@ -399,7 +394,6 @@ return [
 			],
 			'section_d' => [
 				'title' => lng('admin.nameserversettings'),
-				'image' => 'icons/domain_add.png',
 				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
 				'fields' => [
 					'isbinddomain' => [

@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('extras.pathoptions_add'),
-				'image' => 'icons/htpasswd_add.png',
 				'fields' => [
 					'path' => [
 						'label' => lng('panel.path'),

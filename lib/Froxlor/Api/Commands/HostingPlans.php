@@ -95,14 +95,16 @@ class HostingPlans extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		if ($this->isAdmin()) {
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_plans
 				FROM `" . TABLE_PANEL_PLANS . "` p, `" . TABLE_PANEL_ADMINS . "` a
-				WHERE `p`.`adminid` = `a`.`adminid`" . ($this->getUserDetail('customers_see_all') ? '' : " AND `p`.`adminid` = :adminid "));
+				WHERE `p`.`adminid` = `a`.`adminid`" . ($this->getUserDetail('customers_see_all') ? '' : " AND `p`.`adminid` = :adminid ") . $this->getSearchWhere($query_fields, true));
 			$params = [];
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
 			}
+			$params = array_merge($params, $query_fields);
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				return $this->response($result['num_plans']);

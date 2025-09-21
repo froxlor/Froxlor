@@ -24,7 +24,9 @@
  */
 
 use Froxlor\Database\Database;
+use Froxlor\Database\DbManager;
 use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
 
@@ -194,15 +196,68 @@ if (Froxlor::isFroxlorVersion('2.2.3')) {
 	Froxlor::updateToVersion('2.2.4');
 }
 
+if (Froxlor::isFroxlorVersion('2.2.4')) {
+	Update::showUpdateStep("Updating from 2.2.4 to 2.2.5", false);
+	Froxlor::updateToVersion('2.2.5');
+}
+
 if (Froxlor::isDatabaseVersion('202409280')) {
 
-	Update::showUpdateStep("Adding new settings");
-	Settings::AddNew("system.http3_support", "0");
+	Update::showUpdateStep("Adding new antispam settings");
+	Settings::AddNew("antispam.default_bypass_spam", "2");
+	Settings::AddNew("antispam.default_spam_rewrite_subject", "1");
+	Settings::AddNew("antispam.default_policy_greylist", "1");
 	Update::lastStepStatus(0);
 
-	Update::showUpdateStep("Adding http3 field to domain table");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `http3` tinyint(1) NOT NULL default '0' AFTER `http2`;");
-	Update::lastStepStatus(0);
-
-	Froxlor::updateToDbVersion('202410100');
+	Froxlor::updateToDbVersion('202411200');
 }
+
+if (Froxlor::isDatabaseVersion('202411200')) {
+
+	Update::showUpdateStep("Adjusting customer mysql global user");
+	// get all customers that are not deactivated and that have at least one database (hence a global database-user)
+	$customers = Database::query("
+		SELECT DISTINCT c.loginname, c.allowed_mysqlserver
+		FROM `" . TABLE_PANEL_CUSTOMERS . "` c
+		LEFT JOIN `" . TABLE_PANEL_DATABASES . "` d ON c.customerid = d.customerid
+		WHERE c.deactivated = '0' AND d.id IS NOT NULL
+	");
+	while ($customer = $customers->fetch(\PDO::FETCH_ASSOC)) {
+		$current_allowed_mysqlserver = !empty($customer['allowed_mysqlserver']) ? json_decode($customer['allowed_mysqlserver'], true) : [];
+		foreach ($current_allowed_mysqlserver as $dbserver) {
+			// require privileged access for target db-server
+			Database::needRoot(true, $dbserver, false);
+			// get DbManager
+			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
+			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
+				if ($dbm->getManager()->userExistsOnHost($customer['loginname'], $mysql_access_host)) {
+					// deactivate temporarily
+					$dbm->getManager()->disableUser($customer['loginname'], $mysql_access_host);
+					// re-enable
+					$dbm->getManager()->enableUser($customer['loginname'], $mysql_access_host, true);
+				}
+			}
+			$dbm->getManager()->flushPrivileges();
+			Database::needRoot();
+		}
+	}
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202412030');
+}
+
+if (Froxlor::isFroxlorVersion('2.2.5')) {
+	Update::showUpdateStep("Updating from 2.2.5 to 2.2.6", false);
+	Froxlor::updateToVersion('2.2.6');
+}
+
+if (Froxlor::isFroxlorVersion('2.2.6')) {
+	Update::showUpdateStep("Updating from 2.2.6 to 2.2.7", false);
+	Froxlor::updateToVersion('2.2.7');
+}
+
+if (Froxlor::isFroxlorVersion('2.2.7')) {
+	Update::showUpdateStep("Updating from 2.2.7 to 2.2.8", false);
+	Froxlor::updateToVersion('2.2.8');
+}
+

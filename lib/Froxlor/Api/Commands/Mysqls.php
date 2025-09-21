@@ -113,9 +113,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				if (strlen($newdb_params['loginname'] . '_' . $databasename) > Database::getSqlUsernameLength()) {
 					throw new Exception("Database name cannot be longer than " . (Database::getSqlUsernameLength() - strlen($newdb_params['loginname'] . '_')) . " characters.", 406);
 				}
-				$username = $dbm->createDatabase($newdb_params['loginname'] . '_' . $databasename, $password, $dbserver);
+				$username = $dbm->createDatabase($newdb_params['loginname'] . '_' . $databasename, $password, $dbserver, 0, $newdb_params['loginname']);
 			} else {
-				$username = $dbm->createDatabase($newdb_params['loginname'], $password, $dbserver, $newdb_params['mysql_lastaccountnumber']);
+				$username = $dbm->createDatabase($newdb_params['loginname'], $password, $dbserver, $newdb_params['mysql_lastaccountnumber'], $newdb_params['loginname']);
 			}
 
 			// we've checked against the password in dbm->createDatabase
@@ -184,7 +184,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				try {
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
-					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+					$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 					$this->mailer()->addAddress($userinfo['email'], User::getCorrectUserSalutation($userinfo));
 					$this->mailer()->send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
@@ -490,11 +490,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		$customer_ids = $this->getAllowedCustomerIds('mysql');
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_dbs']);
 		}
@@ -541,7 +542,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		// Begin root-session
 		Database::needRoot(true, $result['dbserver'], false);
 		$dbm = new DbManager($this->logger());
-		$dbm->getManager()->deleteDatabase($result['databasename']);
+		$dbm->getManager()->deleteDatabase($result['databasename'], $customer['loginname']);
 		Database::needRoot(false);
 		// End root-session
 

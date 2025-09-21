@@ -227,6 +227,7 @@ CREATE TABLE `panel_customers` (
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(25) NOT NULL default '',
   `api_allowed` tinyint(1) NOT NULL default '1',
+  `shell_allowed` tinyint(1) NOT NULL default '0',
   `logviewenabled` tinyint(1) NOT NULL default '0',
   `allowed_mysqlserver` text NOT NULL,
   `gui_access` tinyint(1) NOT NULL default '1',
@@ -392,6 +393,9 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('antispam', 'config_file', '/etc/rspamd/local.d/froxlor_settings.conf'),
 	('antispam', 'reload_command', 'service rspamd restart'),
 	('antispam', 'dkim_keylength', '1024'),
+	('antispam', 'default_bypass_spam', '2'),
+	('antispam', 'default_spam_rewrite_subject', '1'),
+	('antispam', 'default_policy_greylist', '1'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
@@ -589,7 +593,6 @@ opcache.validate_timestamps'),
 	('system', 'diskquota_quotatool_path', '/usr/bin/quotatool'),
 	('system', 'diskquota_customer_partition', '/dev/root'),
 	('system', 'mod_fcgid_idle_timeout', '30'),
-	('system', 'perl_path', '/usr/bin/perl'),
 	('system', 'mod_fcgid_ownvhost', '0'),
 	('system', 'mod_fcgid_httpuser', 'froxlorlocal'),
 	('system', 'mod_fcgid_httpgroup', 'froxlorlocal'),
@@ -732,8 +735,8 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
-	('panel', 'version', '2.2.4'),
-	('panel', 'db_version', '202410100');
+	('panel', 'version', '2.3.0-dev1'),
+	('panel', 'db_version', '202509210');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1060,6 +1063,16 @@ CREATE TABLE `panel_2fa_tokens` (
   `token` varchar(200) NOT NULL,
   `userid` int(11) NOT NULL default '0',
   `valid_until` int(15) NOT NULL,
+  PRIMARY KEY  (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+DROP TABLE IF EXISTS `panel_sshkeys`;
+CREATE TABLE `panel_sshkeys` (
+  `id` int(11) NOT NULL auto_increment,
+  `customerid` int(11) NOT NULL,
+  `ftp_user_id` int(20) NOT NULL,
+  `ssh_pubkey` text NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 FROXLORSQL;

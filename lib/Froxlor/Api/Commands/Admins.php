@@ -123,11 +123,12 @@ class Admins extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_admins
 				FROM `" . TABLE_PANEL_ADMINS . "`
-			");
-			$result = Database::pexecute_first($result_stmt, null, true, true);
+			" . $this->getSearchWhere($query_fields));
+			$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_admins']);
 			}
@@ -148,8 +149,8 @@ class Admins extends ApiCommand implements ResourceEntity
 	 * @param string $admin_password
 	 *            optional, default auto-generated
 	 * @param string $def_language
-	 * *          optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
-	 * *          default is system-default language
+	 *            optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
+	 *            default is system-default language
 	 * @param bool $gui_access
 	 *            optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
@@ -287,6 +288,15 @@ class Admins extends ApiCommand implements ResourceEntity
 				'login' => $loginname
 			], true, true);
 
+			// Check for existing email address
+			// do not check via api as we skip any permission checks for this task
+			$email_check_admin_stmt = Database::prepare("
+				SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email
+			");
+			$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+				'email' => $email
+			], true, true);
+
 			if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 				Response::standardError('loginnameexists', $loginname, true);
 			} elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
@@ -298,6 +308,8 @@ class Admins extends ApiCommand implements ResourceEntity
 				Response::standardError('loginnameiswrong', $loginname, true);
 			} elseif (!Validate::validateEmail($email)) {
 				Response::standardError('emailiswrong', $email, true);
+			} elseif ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+				Response::standardError('emailexists', $email, true);
 			} else {
 				if ($customers_see_all != '1') {
 					$customers_see_all = '0';
@@ -439,10 +451,10 @@ class Admins extends ApiCommand implements ResourceEntity
 	 * @param string $admin_password
 	 *            optional, default auto-generated
 	 * @param string $def_language
-	 * *          optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
-	 * *          default is system-default language
+	 *            optional, ISO 639-1 language code (e.g. 'en', 'de', see lng-folder for supported languages),
+	 *            default is system-default language
 	 * @param bool $gui_access
-	 * *          optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
+	 *            optional, allow login via webui, if false ONLY the login via webui is disallowed; default true
 	 * @param bool $api_allowed
 	 *            optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
@@ -610,8 +622,20 @@ class Admins extends ApiCommand implements ResourceEntity
 						'admin.email'
 					], '', true);
 				}
+				// Check for existing email address
+				// do not check via api as we skip any permission checks for this task
+				$email_check_admin_stmt = Database::prepare("
+					SELECT `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `email` = :email and `adminid` <> :adminid
+				");
+				$email_check_admin = Database::pexecute_first($email_check_admin_stmt, [
+					'email' => $email,
+					'adminid' => $id,
+				], true, true);
+
 				if (!Validate::validateEmail($email)) {
 					Response::standardError('emailiswrong', $email, true);
+				} elseif ($email_check_admin && strtolower($email_check_admin['email']) == strtolower($email)) {
+					Response::standardError('emailexists', $email, true);
 				} else {
 					if ($deactivated != '1') {
 						$deactivated = '0';

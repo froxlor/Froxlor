@@ -20,12 +20,11 @@ use Froxlor\System\Crypt;
 return [
 	'ftp_add' => [
 		'title' => lng('ftp.account_add'),
-		'image' => 'icons/user_add.png',
+		'image' => 'fa-solid fa-plus',
 		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('ftp.account_add'),
-				'image' => 'icons/user_add.png',
 				'fields' => [
 					'ftp_username' => [
 						'visible' => Settings::Get('customer.ftpatdomain') == '1',
@@ -58,7 +57,7 @@ return [
 					'ftp_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'ftp_password_suggestion' => [
@@ -77,7 +76,7 @@ return [
 						'checked' => false
 					],
 					'shell' => [
-						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+						'visible' => Settings::Get('system.allow_customer_shell') == '1' && $user_shell_allowed,
 						'label' => lng('panel.shell'),
 						'type' => 'select',
 						'select_var' => $shells,

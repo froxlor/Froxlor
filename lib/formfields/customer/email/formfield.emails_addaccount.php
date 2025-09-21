@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.account_add'),
-				'image' => 'icons/email_add.png',
 				'fields' => [
 					'emailaddr' => [
 						'label' => lng('emails.emailaddress'),
@@ -43,7 +42,7 @@ return [
 					'email_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'mandatory' => true,
 						'next_to' => [
 							'email_password_suggestion' => [

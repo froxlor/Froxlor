@@ -34,7 +34,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.subdomain_edit'),
-				'image' => 'icons/domain_edit.png',
 				'fields' => [
 					'domain' => [
 						'label' => lng('domains.domainname'),
@@ -140,7 +139,6 @@ return [
 			],
 			'section_bssl' => [
 				'title' => lng('admin.webserversettings_ssl'),
-				'image' => 'icons/domain_edit.png',
 				'visible' => Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports && Domain::domainHasSslIpPort($result['id']) && (int)$result['email_only'] == 0,
 				'fields' => [
 					'sslenabled' => [
@@ -165,7 +163,7 @@ return [
 						'checked' => $result['letsencrypt']
 					],
 					'http2' => [
-						'visible' => $ssl_ipsandports && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+						'visible' => $ssl_ipsandports && Settings::Get('system.http2_support') == '1',
 						'label' => lng('admin.domain_http2.title'),
 						'desc' => lng('admin.domain_http2.description'),
 						'type' => 'checkbox',

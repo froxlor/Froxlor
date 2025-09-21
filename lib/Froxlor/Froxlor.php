@@ -31,10 +31,10 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '2.2.4';
+	const VERSION = '2.3.0-dev1';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202410100';
+	const DBVERSION = '202509210';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';
@@ -316,7 +316,7 @@ final class Froxlor
 	 * @param array|null $arr
 	 * @return void
 	 */
-	private static function parseVersionArray(array &$arr = null)
+	private static function parseVersionArray(?array &$arr)
 	{
 		// -dev or -beta or -rc ?
 		if (stripos($arr[count($arr) - 1], '-') !== false) {

@@ -307,17 +307,20 @@ if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '
 					$hosting_plans[$row['id']] = $row['name'];
 				}
 
-				$available_admins_stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
-					WHERE (`customers` = '-1' OR `customers` > `customers_used`)
-					AND adminid <> :currentadmin
-				");
-				Database::pexecute($available_admins_stmt, ['currentadmin' => $result['adminid']]);
-				$admin_select = [
-					0 => "---"
-				];
-				while ($available_admin = $available_admins_stmt->fetch()) {
-					$admin_select[$available_admin['adminid']] = $available_admin['name'] . " (" . $available_admin['loginname'] . ")";
+				$admin_select = [];
+				if ($userinfo['customers_see_all'] == '1') {
+					$available_admins_stmt = Database::prepare("
+						SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+						WHERE (`customers` = '-1' OR `customers` > `customers_used`)
+						AND adminid <> :currentadmin
+					");
+					Database::pexecute($available_admins_stmt, ['currentadmin' => $result['adminid']]);
+					$admin_select = [
+						0 => "---"
+					];
+					while ($available_admin = $available_admins_stmt->fetch()) {
+						$admin_select[$available_admin['adminid']] = $available_admin['name'] . " (" . $available_admin['loginname'] . ")";
+					}
 				}
 
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';

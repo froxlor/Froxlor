@@ -510,8 +510,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
-		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
-		throw new Exception("Subdomain with " . $key . " could not be found", 404);
+		throw new Exception("Requested subdomain could not be found", 404);
 	}
 
 	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int
@@ -557,32 +556,33 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 */
 	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
 	{
-		// check whether an URL was specified
 		$_doredirect = false;
-		if (!empty($url) && Validate::validateUrl($url, true)) {
-			$path = $url;
+		$idna = new IdnaWrapper();
+
+		// url mode: either $url or $path begins with http:// or https://
+		$maybeUrl = !empty($url) ? $url : (preg_match('/^https?\:\/\//', $path) ? $path : '');
+		if ($maybeUrl !== '') {
+			$encoded = $idna->encode($maybeUrl);
+			if (!Validate::validateUrl($encoded, true)) {
+				Response::standardError('invaliddocumentrooturl', '', true);
+			}
 			$_doredirect = true;
-		} else {
-			$path = Validate::validate($path, 'path', '', '', [], true);
+			return $encoded;
 		}
 
-		// check whether path is a real path
-		if (!preg_match('/^https?\:\/\//', $path) || !Validate::validateUrl($path, true)) {
-			if (strstr($path, ":") !== false) {
-				Response::standardError('pathmaynotcontaincolon', '', true);
-			}
-			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-			// set default path to subdomain or domain name
-			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain, $customer['documentroot']);
-			} else {
-				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
-			}
-		} else {
-			// no it's not, create a redirect
-			$_doredirect = true;
+		// path mode: regular directory path
+		$path = Validate::validate($path, 'path', Validate::REGEX_DIR, '', [], true);
+
+		// default path if empty and setting active
+		if (($path === '' || $path === '/') && Settings::Get('system.documentroot_use_default_value') == 1) {
+			return FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain, $customer['documentroot']);
 		}
-		return $path;
+		// check if path does not contain a colon
+		if (strpos($path, ':') !== false) {
+			Response::standardError('pathmaynotcontaincolon', '', true);
+		}
+
+		return FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path, $customer['documentroot']);
 	}
 
 	/**
@@ -829,6 +829,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			|| $iswildcarddomain != $result['iswildcarddomain']
 			|| $aliasdomain != (int)$result['aliasdomain']
 			|| $openbasedir_path != $result['openbasedir_path']
+			|| $sslenabled != $result['ssl_enabled']
 			|| $ssl_redirect != $result['ssl_redirect']
 			|| $letsencrypt != $result['letsencrypt']
 			|| $hsts_maxage != $result['hsts']
@@ -1110,13 +1111,14 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 
 		if (!empty($customer_ids)) {
+			$query_fields = [];
 			// prepare select statement
 			$domains_stmt = Database::prepare("
 				SELECT COUNT(*) as num_subdom
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
-			");
-			$result = Database::pexecute_first($domains_stmt, null, true, true);
+			" . $this->getSearchWhere($query_fields, true));
+			$result = Database::pexecute_first($domains_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_subdom']);
 			}

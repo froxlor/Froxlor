@@ -20,12 +20,11 @@ use Froxlor\System\Crypt;
 return [
 	'ftp_edit' => [
 		'title' => lng('ftp.account_edit'),
-		'image' => 'icons/user_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('ftp.account_edit'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'username' => [
 						'label' => lng('login.username'),
@@ -51,7 +50,7 @@ return [
 						'label' => lng('login.password'),
 						'desc' => lng('ftp.editpassdescription'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'ftp_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',
@@ -63,7 +62,7 @@ return [
 						]
 					],
 					'shell' => [
-						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+						'visible' => Settings::Get('system.allow_customer_shell') == '1' && $user_shell_allowed,
 						'label' => lng('panel.shell'),
 						'type' => 'select',
 						'select_var' => $shells,

@@ -108,7 +108,15 @@ class Ftps extends ApiCommand implements ResourceEntity
 			$password = Crypt::validatePassword($password, true);
 			$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 
-			if (Settings::Get('system.allow_customer_shell') == '1') {
+			// get needed customer info to reduce the ftp-user-counter by one
+			if ($is_defaultuser) {
+				// no resource check for default user
+				$customer = $this->getCustomerData();
+			} else {
+				$customer = $this->getCustomerData('ftps');
+			}
+
+			if (Settings::Get('system.allow_customer_shell') == '1' && $customer['shell_allowed'] == '1') {
 				$shell = Validate::validate(trim($shell), 'shell', '', '', [], true);
 			} else {
 				$shell = "/bin/false";
@@ -123,13 +131,6 @@ class Ftps extends ApiCommand implements ResourceEntity
 			}
 
 			$params = [];
-			// get needed customer info to reduce the ftp-user-counter by one
-			if ($is_defaultuser) {
-				// no resource check for default user
-				$customer = $this->getCustomerData();
-			} else {
-				$customer = $this->getCustomerData('ftps');
-			}
 
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
@@ -288,7 +289,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					try {
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
-						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mailer()->Body = str_replace("\n", "<br />", $mail_body);
 						$this->mailer()->addAddress($customer['email'], User::getCorrectUserSalutation($customer));
 						$this->mailer()->send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
@@ -431,7 +432,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$password = Validate::validate($password, 'password', '', '', [], true);
 		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 
-		if (Settings::Get('system.allow_customer_shell') == '1') {
+		// get needed customer info to reduce the ftp-user-counter by one
+		$customer = $this->getCustomerData();
+
+		if (Settings::Get('system.allow_customer_shell') == '1' && $customer['shell_allowed'] == '1') {
 			$shell = Validate::validate(trim($shell), 'shell', '', '', [], true);
 		} else {
 			$shell = "/bin/false";
@@ -440,9 +444,6 @@ class Ftps extends ApiCommand implements ResourceEntity
 		if ($login_enabled != 1) {
 			$login_enabled = 0;
 		}
-
-		// get needed customer info to reduce the ftp-user-counter by one
-		$customer = $this->getCustomerData();
 
 		// password update?
 		if ($password != '') {
@@ -568,11 +569,12 @@ class Ftps extends ApiCommand implements ResourceEntity
 	{
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = [];
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as num_ftps FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_ftps']);
 		}

@@ -88,12 +88,6 @@ class DomainSSL
 				return;
 			}
 
-			if (Settings::Get('system.webserver') == 'lighttpd') {
-				// put my.crt and my.key together for lighty.
-				$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file']) . "\n" . trim($dom_certs['ssl_key_file']) . "\n";
-				$ssl_files['ssl_key_file'] = '';
-			}
-
 			// initialize optional files
 			$ssl_files['ssl_ca_file'] = '';
 			$ssl_files['ssl_cert_chainfile'] = '';

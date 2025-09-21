@@ -26,11 +26,10 @@
 return [
 	'emails_accountchangequota' => [
 		'title' => lng('emails.quota_edit'),
-		'image' => 'icons/email_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.quota_edit'),
-				'image' => 'icons/email_edit.png',
 				'fields' => [
 					'emailaddr' => [
 						'label' => lng('emails.emailaddress'),

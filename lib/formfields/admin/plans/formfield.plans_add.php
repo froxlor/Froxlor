@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.plans.plan_details'),
-				'image' => 'icons/templates_add_big.png',
 				'fields' => [
 					'name' => [
 						'label' => lng('admin.plans.name'),

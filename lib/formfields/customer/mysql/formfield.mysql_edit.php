@@ -20,12 +20,11 @@ use Froxlor\System\Crypt;
 return [
 	'mysql_edit' => [
 		'title' => lng('mysql.database_edit'),
-		'image' => 'icons/mysql_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
 		'sections' => [
 			'section_a' => [
 				'title' => lng('mysql.database_edit'),
-				'image' => 'icons/mysql_edit.png',
 				'fields' => [
 					'databasename' => [
 						'label' => lng('mysql.databasename'),
@@ -52,7 +51,7 @@ return [
 					'mysql_password' => [
 						'label' => lng('changepassword.new_password_ifnotempty'),
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'mysql_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',

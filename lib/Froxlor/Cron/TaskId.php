@@ -88,6 +88,11 @@ final class TaskId
 	const DELETE_DOMAIN_SSL = 12;
 
 	/**
+	 * TYPE=13 set configuration for selected services regarding the use of Let's Encrypt certificate
+	 */
+	const UPDATE_LE_SERVICES = 13;
+
+	/**
 	 * TYPE=20 CUSTUMER DATA DUMP
 	 */
 	const CREATE_CUSTOMER_DATADUMP = 20;

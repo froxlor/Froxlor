@@ -159,13 +159,8 @@ class Apache extends HttpConfigBase
 				}
 
 				if (!$is_redirect) {
-					if (Settings::Get('system.froxlordirectlyviahostname')) {
-						$relpath = "/";
-					} else {
-						$relpath = "/" . basename(Froxlor::getInstallDir());
-					}
 					// protect lib/userdata.inc.php
-					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim($relpath, "/") . '/lib/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim($mypath, "/") . '/lib/">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '    <Files "userdata.inc.php">' . "\n";
 					if (Settings::Get('system.apache24') == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
@@ -176,7 +171,7 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename] .= '    </Files>' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 					// protect bin/
-					$this->virtualhosts_data[$vhosts_filename] .= '  <DirectoryMatch "^' . rtrim($relpath, "/") . '/(bin|cache|logs|tests|vendor)/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  <DirectoryMatch "^' . rtrim($mypath, "/") . '/(bin|cache|logs|tests|vendor)/">' . "\n";
 					if (Settings::Get('system.apache24') == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
 					} else {
@@ -270,6 +265,7 @@ class Apache extends HttpConfigBase
 							$srvName = substr(md5($ipport), 0, 4) . '.ssl-fpm.external';
 						}
 
+						$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 						// mod_proxy stuff for apache-2.4
 						if (Settings::Get('system.apache24') == '1' && Settings::Get('phpfpm.use_mod_proxy') == '1') {
 							$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
@@ -286,9 +282,7 @@ class Apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= '    </If>' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  </FilesMatch>' . "\n";
 							if ($phpconfig['pass_authorizationheader'] == '1') {
-								$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
-								$this->virtualhosts_data[$vhosts_filename] .= '      CGIPassAuth On' . "\n";
-								$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= '    CGIPassAuth On' . "\n";
 							}
 						} else {
 							$addheader = "";
@@ -296,7 +290,6 @@ class Apache extends HttpConfigBase
 								$addheader = " -pass-header Authorization";
 							}
 							$this->virtualhosts_data[$vhosts_filename] .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . $mypath . '">' . "\n";
 							$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
 							$extensions = explode(" ", $filesmatch);
 							$filesmatch = "";
@@ -310,22 +303,17 @@ class Apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= '     Action php-fastcgi /fastcgiphp' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '      Options +ExecCGI' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '    </FilesMatch>' . "\n";
-							// >=apache-2.4 enabled?
-							if (Settings::Get('system.apache24') == '1') {
-								$mypath_dir = new Directory($mypath);
-								// only create the require all granted if there is not active directory-protection
-								// for this path, as this would be the first require and therefore grant all access
-								if ($mypath_dir->isUserProtected() == false) {
-									$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
-									$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
-								}
-							} else {
-								$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
-								$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
-							}
-							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '  Alias /fastcgiphp ' . $php->getInterface()->getAliasConfigDir() . $srvName . "\n";
 						}
+						// >=apache-2.4 enabled?
+						if (Settings::Get('system.apache24') == '1') {
+							$this->virtualhosts_data[$vhosts_filename] .= '    Require all granted' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    AllowOverride All' . "\n";
+						} else {
+							$this->virtualhosts_data[$vhosts_filename] .= '    Order allow,deny' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '    allow from all' . "\n";
+						}
+						$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 					} else {
 						// mod_php
 						$domain = [

@@ -30,7 +30,6 @@ return [
 			'icon' => 'fa-brands fa-php',
 			'websrv_avail' => [
 				'apache2',
-				'lighttpd'
 			],
 			'fields' => [
 				'system_mod_fcgid' => [

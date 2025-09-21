@@ -32,7 +32,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domainsettings'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'domain' => [
 						'label' => 'Domain',

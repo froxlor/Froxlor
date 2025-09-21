@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.4', '8.2' ]
+        php-versions: [ '7.4', '8.3' ]
         mariadb-version: [ 10.11, 10.5 ]
     steps:
       - name: Checkout
@@ -19,7 +19,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: composer:v2
-          extensions: mbstring, xml, ctype, pdo_mysql, mysql, curl, json, zip, session, filter, posix, openssl, fileinfo, bcmath, gmp, gnupg
+          extensions: mbstring, xml, ctype, pdo_mysql, mysql, curl, json, zip, session, filter, posix, openssl, fileinfo, bcmath, gmp
 
       - name: Install tools
         run: sudo apt-get install -y ant
@@ -72,7 +72,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
 
       - name: Install npm dependencies
         run: npm install
@@ -120,7 +120,7 @@ jobs:
 
       - name: Deploy nightly to server
         uses: easingthemes/ssh-deploy@main
-        env:
+        with:
           ARGS: "-rltDzvO --chown=${{ secrets.WEB_USER }}:${{ secrets.WEB_USER }}"
           SOURCE: "dist/"
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}

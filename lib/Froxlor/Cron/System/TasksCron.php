@@ -29,6 +29,7 @@ use Exception;
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Cron\Http\ConfigIO;
 use Froxlor\Cron\Http\HttpConfigBase;
+use Froxlor\Cron\Http\LetsEncrypt\AcmeSh;
 use Froxlor\Cron\Mail\Rspamd;
 use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
@@ -125,6 +126,12 @@ class TasksCron extends FroxlorCron
 				 */
 				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing Let's Encrypt entries for domain " . $row['data']['domain']);
 				Domain::doLetsEncryptCleanUp($row['data']['domain']);
+			} elseif ($row['type'] == TaskId::UPDATE_LE_SERVICES) {
+				/**
+				 * TYPE=13 set configuration for selected services regarding the use of Let's Encrypt certificate
+				 */
+				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Updating Let's Encrypt configuration for selected services");
+				AcmeSh::renewHookConfigs(FroxlorLogger::getInstanceOf());
 			}
 		}
 
@@ -149,11 +156,6 @@ class TasksCron extends FroxlorCron
 	{
 		if (Settings::Get('system.webserver') == "apache2") {
 			$websrv = '\\Froxlor\\Cron\\Http\\Apache';
-			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
-				$websrv .= 'Fcgi';
-			}
-		} elseif (Settings::Get('system.webserver') == "lighttpd") {
-			$websrv = '\\Froxlor\\Cron\\Http\\Lighttpd';
 			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
 				$websrv .= 'Fcgi';
 			}
@@ -334,10 +336,11 @@ class TasksCron extends FroxlorCron
 				// webserver logs
 				$logsdir = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $row['data']['loginname']);
 
-				if (file_exists($logsdir) && $logsdir != '/' && $logsdir != FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')) && substr($logsdir, 0, strlen(Settings::Get('system.logfiles_directory'))) == Settings::Get('system.logfiles_directory')) {
+				if (file_exists(dirname($logsdir)) && $logsdir != '/' && $logsdir != FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')) && substr($logsdir, 0, strlen(Settings::Get('system.logfiles_directory'))) == Settings::Get('system.logfiles_directory')) {
 					// build up wildcard for webX-{access,error}.log{*}
-					$logsdir .= '-*';
-					FileDir::safe_exec('rm -f ' . escapeshellarg($logsdir));
+					$logsdir .= '-*.log';
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' .FileDir::makeCorrectFile($logsdir));
+					FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($logsdir));
 				}
 			}
 		}

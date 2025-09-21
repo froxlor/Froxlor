@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('emails.emails_edit'),
-				'image' => 'icons/email_edit.png',
 				'fields' => [
 					'email_full' => [
 						'label' => lng('emails.emailaddress'),
@@ -89,7 +88,7 @@ return [
 							]
 						]
 					],
-					'mail_catchall' => [
+					'iscatchall' => [
 						'visible' => Settings::Get('catchall.catchall_enabled') == '1',
 						'label' => lng('emails.catchall'),
 						'type' => 'checkbox',
@@ -97,7 +96,7 @@ return [
 						'checked' => (int)$result['iscatchall'],
 					],
 					'bypass_spam' => [
-						'visible' => Settings::Get('antispam.activated') == '1',
+						'visible' => Settings::Get('antispam.activated') == '1' && (int)Settings::Get('antispam.default_bypass_spam') <= 2,
 						'label' => lng('antispam.bypass_spam'),
 						'type' => 'checkbox',
 						'value' => '1',
@@ -111,8 +110,8 @@ return [
 						'step' => 0.1,
 						'value' => $result['spam_tag_level'],
 					],
-					'spam_rewrite_subject' => [
-						'visible' => Settings::Get('antispam.activated') == '1',
+					'rewrite_subject' => [
+						'visible' => Settings::Get('antispam.activated') == '1' && (int)Settings::Get('antispam.default_spam_rewrite_subject') <= 2,
 						'label' => lng('antispam.rewrite_subject'),
 						'type' => 'checkbox',
 						'value' => '1',
@@ -127,7 +126,7 @@ return [
 						'value' => $result['spam_kill_level']
 					],
 					'policy_greylist' => [
-						'visible' => Settings::Get('antispam.activated') == '1',
+						'visible' => Settings::Get('antispam.activated') == '1' && (int)Settings::Get('antispam.default_policy_greylist') <= 2,
 						'label' => lng('antispam.policy_greylist'),
 						'type' => 'checkbox',
 						'value' => '1',

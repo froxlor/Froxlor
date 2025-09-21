@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('cronjob.cronjobsettings'),
-				'image' => 'icons/clock_edit.png',
 				'fields' => [
 					'cronfile' => [
 						'label' => 'Cronjob',

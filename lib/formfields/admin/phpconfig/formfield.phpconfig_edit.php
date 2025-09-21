@@ -33,7 +33,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.phpsettings.editsettings'),
-				'image' => 'icons/phpsettings_edit.png',
 				'fields' => [
 					'description' => [
 						'label' => lng('admin.phpsettings.description'),

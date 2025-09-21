@@ -29,17 +29,6 @@ return [
 			'title' => lng('admin.perl_settings'),
 			'icon' => 'fa-solid fa-code',
 			'fields' => [
-				'system_perl_path' => [
-					'label' => lng('serversettings.perl_path'),
-					'settinggroup' => 'system',
-					'varname' => 'perl_path',
-					'type' => 'text',
-					'default' => '/usr/bin/perl',
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => [
-						'lighttpd'
-					]
-				],
 				'perl_suexecworkaround' => [
 					'label' => lng('serversettings.perl.suexecworkaround'),
 					'settinggroup' => 'perl',

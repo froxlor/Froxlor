@@ -68,9 +68,9 @@ class Mailer extends PHPMailer
 
 		if (self::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
-			$this->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+			$this->setFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 			if (Settings::Get('panel.adminmail_return') != '') {
-				$this->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+				$this->addReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
 			}
 		}
 	}

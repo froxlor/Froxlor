@@ -80,6 +80,7 @@ final class MasterCron extends CliCommand
 				Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
 				Cronjob::inserttask(TaskId::CREATE_QUOTA);
 				Cronjob::inserttask(TaskId::REBUILD_CRON);
+				Cronjob::inserttask(TaskId::UPDATE_LE_SERVICES);
 				$jobs[] = 'tasks';
 			}
 			define('CRON_IS_FORCED', 1);
@@ -214,9 +215,14 @@ final class MasterCron extends CliCommand
 
 		if (file_exists($this->lockFile)) {
 			$jobinfo = json_decode(file_get_contents($this->lockFile), true);
-			$check_pid_return = null;
-			// get status of process
-			system("kill -CHLD " . (int)$jobinfo['pid'] . " 1> /dev/null 2> /dev/null", $check_pid_return);
+			if ($jobinfo === false || !is_array($jobinfo)) {
+				// looks like an invalid lockfile
+				$check_pid_return = 1;
+			} else {
+				$check_pid_return = null;
+				// get status of process
+				system("kill -CHLD " . (int)$jobinfo['pid'] . " 1> /dev/null 2> /dev/null", $check_pid_return);
+			}
 			if ($check_pid_return == 1) {
 				// Process does not seem to run, most likely it has died
 				$this->unlockJob();

@@ -31,7 +31,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('domains.domain_import'),
-				'image' => 'icons/domain_add.png',
 				'fields' => [
 					'separator' => [
 						'label' => lng('domains.import_separator'),

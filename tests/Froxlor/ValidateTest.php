@@ -142,6 +142,12 @@ class ValidateTest extends TestCase
 		$this->assertFalse($result);
 		$result = Validate::validateUrl("172.16.0.1:8080", true);
 		$this->assertTrue($result);
+		$result = Validate::validateUrl("https://xn--frxlr-kuac.de/", true);
+		$this->assertTrue($result);
+		$result = Validate::validateUrl("https://2a10:ec2::193:107:51:5/test");
+		$this->assertFalse($result);
+		$result = Validate::validateUrl("https://[2a10:ec2::193:107:51:5]");
+		$this->assertTrue($result);
 	}
 
 	public function testValidateDomain()

@@ -39,7 +39,6 @@ return [
 					'default' => 'apache2',
 					'select_var' => [
 						'apache2' => 'Apache 2',
-						'lighttpd' => 'ligHTTPd',
 						'nginx' => 'Nginx'
 					],
 					'save_method' => 'storeSettingField',
@@ -49,7 +48,7 @@ return [
 					],
 					'requires_reconf' => ['http']
 				],
-				'system_apache_24' => [
+				'system_apache24' => [
 					'label' => lng('serversettings.apache_24'),
 					'settinggroup' => 'system',
 					'varname' => 'apache24',
@@ -116,6 +115,10 @@ return [
 					'varname' => 'httpuser',
 					'type' => 'text',
 					'default' => 'www-data',
+					'plausibility_check_method' => [
+						'\\Froxlor\\Validate\\Check',
+						'checkSystemUsername'
+					],
 					'save_method' => 'storeSettingWebserverFcgidFpmUser'
 				],
 				'system_httpgroup' => [

@@ -125,25 +125,20 @@ class Store
 		}
 
 		if (count($ids) > 0) {
-			$defaultips_new = explode(',', $newfieldvalue);
 
-			if (!empty($defaultips_old) && !empty($newfieldvalue)) {
-				$in_value = $defaultips_old . ", " . $newfieldvalue;
-			} elseif (!empty($defaultips_old) && empty($newfieldvalue)) {
-				$in_value = $defaultips_old;
-			} else {
-				$in_value = $newfieldvalue;
+			if (!empty($defaultips_old)) {
+				// Delete the existing mappings linking to default IPs
+				$del_stmt = Database::prepare("
+					DELETE FROM `" . TABLE_DOMAINTOIP . "`
+					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
+					AND `id_ipandports` IN (" . $defaultips_old . ")
+				");
+				Database::pexecute($del_stmt);
 			}
 
-			// Delete the existing mappings linking to default IPs
-			$del_stmt = Database::prepare("
-				DELETE FROM `" . TABLE_DOMAINTOIP . "`
-				WHERE `id_domain` IN (" . implode(', ', $ids) . ")
-				AND `id_ipandports` IN (" . $in_value . ")
-			");
-			Database::pexecute($del_stmt);
-
+			$defaultips_new = !empty($newfieldvalue) ? explode(",", $newfieldvalue) : [];
 			if (count($defaultips_new) > 0) {
+
 				// Insert the new mappings
 				$ins_stmt = Database::prepare("
 					INSERT INTO `" . TABLE_DOMAINTOIP . "`
@@ -166,6 +161,9 @@ class Store
 	{
 		$defaultips_old = Settings::Get('system.defaultsslip');
 
+		self::cleanIpSelection($defaultips_old);
+		self::cleanIpSelection($newfieldvalue);
+
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultsslip') {
@@ -173,6 +171,14 @@ class Store
 		}
 
 		return $returnvalue;
+	}
+
+	private static function cleanIpSelection(&$selection)
+	{
+		$selection_arr = array_filter(explode(',', $selection), function ($value) {
+			return !empty($value);
+		});
+		$selection = implode(",", $selection_arr);
 	}
 
 	/**
@@ -233,6 +239,17 @@ class Store
 
 		if ($returnvalue !== false) {
 			Cronjob::inserttask(TaskId::REBUILD_RSPAMD);
+		}
+		return $returnvalue;
+	}
+
+	public static function storeSettingFieldInsertUpdateServicesTask($fieldname, $fielddata, $newfieldvalue)
+	{
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			Cronjob::inserttask(TaskId::UPDATE_LE_SERVICES);
 		}
 		return $returnvalue;
 	}

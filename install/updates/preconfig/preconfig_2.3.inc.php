@@ -24,24 +24,30 @@
  */
 
 use Froxlor\Install\Update;
+use Froxlor\Settings;
 
 $preconfig = [
-	'title' => '0.10.x updates',
+	'title' => '2.3.x updates',
 	'fields' => []
 ];
 $return = [];
 
-if (Update::versionInUpdate($current_db_version, '202004140')) {
-	$has_preconfig = true;
-	$description = 'Froxlor can now optionally validate the dns entries of domains that request Lets Encrypt certificates to reduce dns-related problems (e.g. freshly registered domain or updated a-record).';
-	$question = '<strong>Validate DNS of domains when using Lets Encrypt</strong>';
-	$return['system_le_domain_dnscheck'] = [
-		'type' => 'checkbox',
-		'value' => 1,
-		'checked' => 1,
-		'label' => $question,
-		'prior_infotext' => $description
-	];
+if (Update::versionInUpdate($current_db_version, '202508310')) {
+	if (Settings::Get('system.webserver') == 'lighttpd') {
+		$has_preconfig = true;
+		$description = 'You seem to be using "lighttpd" as webserver, froxlor 2.3 no longer supports this webserver. Please select an alternative one. Remember to configure the service after the update!';
+		$question = '<strong>Switch webserver to:</strong>&nbsp;';
+		$return['system_alt_webserver'] = [
+			'type' => 'select',
+			'select_var' => [
+				'apache2' => 'Apache 2.4',
+				'nginx' => 'Nginx'
+			],
+			'selected' => 'apache2',
+			'label' => $question,
+			'prior_infotext' => $description
+		];
+	}
 }
 
 $preconfig['fields'] = $return;

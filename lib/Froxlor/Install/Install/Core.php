@@ -395,8 +395,6 @@ class Core
 		if ($this->validatedData['webserver'] == "apache24") {
 			$this->updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
 			$this->updateSetting($upd_stmt, '1', 'system', 'apache24');
-		} elseif ($this->validatedData['webserver'] == "lighttpd") {
-			$this->updateSetting($upd_stmt, '/var/run/lighttpd/', 'phpfpm', 'fastcgi_ipcdir');
 		} elseif ($this->validatedData['webserver'] == "nginx") {
 			$this->updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 			$this->updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
@@ -439,7 +437,7 @@ class Core
 			$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
 			$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
 			// fcgid
-			if ($this->validatedData['distribution'] == 'bookworm') {
+			if ($this->validatedData['distribution'] == 'bookworm' || $this->validatedData['distribution'] == 'trixie') {
 				$binary = "/usr/bin/php-cgi" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;
 			} else {
 				$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";

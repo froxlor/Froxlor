@@ -36,7 +36,6 @@ return [
 		'sections' => [
 			'section_a' => [
 				'title' => lng('admin.accountdata'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'loginname' => [
 						'label' => lng('login.username'),
@@ -63,7 +62,7 @@ return [
 					'new_customer_password' => [
 						'label' => lng('login.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
-						'autocomplete' => 'off',
+						'autocomplete' => 'new-password',
 						'next_to' => [
 							'new_customer_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',
@@ -95,11 +94,18 @@ return [
 						'checked' => $result['api_allowed'],
 						'visible' => Settings::Get('api.enabled') == '1'
 					],
+					'shell_allowed' => [
+						'label' => lng('usersettings.shell_allowed.title'),
+						'desc' => lng('usersettings.shell_allowed.description'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['shell_allowed'],
+						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+					],
 				]
 			],
 			'section_b' => [
 				'title' => lng('admin.contactdata'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'gender' => [
 						'label' => lng('gender.title'),
@@ -190,7 +196,6 @@ return [
 			'section_cpre' => [
 				'visible' => !empty($hosting_plans),
 				'title' => lng('admin.plans.use_plan'),
-				'image' => 'icons/user_add.png',
 				'fields' => [
 					'use_plan' => [
 						'label' => lng('admin.plans.use_plan'),
@@ -201,7 +206,6 @@ return [
 			],
 			'section_c' => [
 				'title' => lng('admin.servicedata'),
-				'image' => 'icons/user_edit.png',
 				'fields' => [
 					'diskspace' => [
 						'label' => lng('customer.diskspace') . ' (' . lng('customer.mib') . ')',
@@ -335,7 +339,6 @@ return [
 			],
 			'section_d' => [
 				'title' => lng('admin.movetoadmin'),
-				'image' => 'icons/user_edit.png',
 				'visible' => count($admin_select) > 0,
 				'fields' => [
 					'move_to_admin' => [

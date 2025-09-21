@@ -927,8 +927,6 @@ return [
 		'pathmaynotcontaincolon' => 'Cesta, kterou jste zadali, by neměla obsahovat dvojtečku (":"). Zadejte správnou hodnotu cesty.',
 		'exception' => '%s',
 		'notrequiredpasswordcomplexity' => 'Složitost zadaného hesla nebyla dostatečná.<br />Pokud máte nějaké dotazy ohledně složitosti',
-		'stringerrordocumentnotvalidforlighty' => 'Řetězec jako ErrorDocument v lighttpd nefunguje, zadejte prosím cestu k souboru',
-		'urlerrordocumentnotvalidforlighty' => 'URL adresa jako chybový dokument nefunguje v lighttp, zadejte prosím cestu k souboru',
 		'invaliderrordocumentvalue' => 'Hodnota udaná jako chybový dokument se nezdá být platným souborem, URL nebo řetězcem.',
 		'intvaluetoolow' => 'Zadané číslo je příliš nízké (pole %s)',
 		'intvaluetoohigh' => 'Zadané číslo je příliš vysoké (pole %s)',
@@ -952,7 +950,7 @@ return [
 		'sslcertificateinvalidchain' => 'Údaje daného řetězce certifikátů se nezdají být platným certifikátem',
 		'givendirnotallowed' => 'Zadaný adresář v poli %s není povolen.',
 		'sslredirectonlypossiblewithsslipport' => 'Použití Let\'s Encryptí je možné pouze v případě, že doména má přiřazenou alespoň jednu ssl-povolenou kombinaci IP/port.',
-		'fcgidstillenableddeadlock' => 'FCGID je aktuálně aktivní.<br />Prosím deaktivujte ho před přepnutím na jiný webový server než Apache2 nebo lighttpd',
+		'fcgidstillenableddeadlock' => 'FCGID je aktuálně aktivní.<br />Prosím deaktivujte ho před přepnutím na jiný webový server než Apache2',
 		'send_report_title' => 'Odeslat zprávu o chybě',
 		'send_report_desc' => 'Děkujeme, že jste nahlásili tuto chybu a pomohli nám vylepšit Froxlor.<br />Toto je e-mail, který bude odeslán Froxlor vývojáři:',
 		'send_report' => 'Odeslat hlášení',
@@ -1786,16 +1784,16 @@ Ach upřímně, váš správce',
 		'defaultwebsrverrhandler_enabled' => 'Povolit výchozí chybové dokumenty pro všechny zákazníky',
 		'defaultwebsrverrhandler_err401' => [
 			'title' => 'Soubor/URL pro chybu 401',
-			'description' => '<div class="text-danger">Není podporováno v: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err403' => [
 			'title' => 'Soubor/URL pro chybu 403',
-			'description' => '<div class="text-danger">Není podporováno v: lighttpd</div>',
+			'description' => '',
 		],
 		'defaultwebsrverrhandler_err404' => 'Soubor/URL pro chybu 404',
 		'defaultwebsrverrhandler_err500' => [
 			'title' => 'Soubor/URL pro chybu 500',
-			'description' => '<div class="text-danger">Není podporováno v: lighttpd</div>',
+			'description' => '',
 		],
 		'ftpserver' => [
 			'desc' => 'Pokud je zvolen pureftpd, soubory .ftpquota pro uživatelské kvóty jsou vytvářeny a denně aktualizovány',
@@ -1813,10 +1811,6 @@ Ach upřímně, váš správce',
 		'panel_password_regex' => [
 			'title' => 'Regulární výraz pro hesla',
 			'description' => 'Zde můžete nastavit regulární výraz pro složitost hesel.<br />Prázdné = žádné specifické požadavky',
-		],
-		'perl_path' => [
-			'title' => 'Cesta k perl',
-			'description' => 'Výchozí je /usr/bin/perl',
 		],
 		'mod_fcgid_ownvhost' => [
 			'title' => 'Povolit FCGID pro Froxlor vHost',

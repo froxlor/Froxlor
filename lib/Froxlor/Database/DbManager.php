@@ -102,8 +102,26 @@ class DbManager
 			$databases[$databases_row['dbserver']][] = $databases_row['databasename'];
 		}
 
+		$customers_sel = Database::query("
+			SELECT DISTINCT c.loginname
+			FROM `" . TABLE_PANEL_CUSTOMERS . "` c
+			LEFT JOIN `" . TABLE_PANEL_DATABASES . "` d ON c.customerid = d.customerid
+			WHERE c.deactivated = '0' AND d.id IS NOT NULL
+		");
+		$customers = [];
+		while ($customer = $customers_sel->fetch(\PDO::FETCH_ASSOC)) {
+			$customers[] = $customer['loginname'];
+		}
+
 		$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
 		while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+			// add all customer loginnames to the $databases array for this database-server to correct
+			// a possible existing global mysql-user for that customer
+			foreach ($customers as $customer) {
+				$databases[$dbserver['dbserver']][] = $customer;
+			}
+
 			// require privileged access for target db-server
 			Database::needRoot(true, $dbserver['dbserver'], false);
 
@@ -136,6 +154,8 @@ class DbManager
 
 			$dbm->getManager()->flushPrivileges();
 			Database::needRoot(false);
+
+			unset($databases[$dbserver['dbserver']]);
 		}
 	}
 
@@ -149,11 +169,12 @@ class DbManager
 	 * @param ?string $password
 	 * @param int $dbserver
 	 * @param int $last_accnumber
+	 * @param ?string $global_user
 	 *
 	 * @return string|bool $username if successful or false of username is equal to the password
 	 * @throws Exception
 	 */
-	public function createDatabase(string $loginname = null, string $password = null, int $dbserver = 0, int $last_accnumber = 0)
+	public function createDatabase(string $loginname = null, string $password = null, int $dbserver = 0, int $last_accnumber = 0, string $global_user = "")
 	{
 		Database::needRoot(true, $dbserver, false);
 
@@ -184,10 +205,13 @@ class DbManager
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
+			if (!empty($global_user)) {
+				$this->getManager()->grantCreateToDb($global_user, $username, $mysql_access_host);
+			}
 		}
 
 		$this->getManager()->flushPrivileges();
-		Database::needRoot(false);
+		Database::needRoot();
 
 		$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 

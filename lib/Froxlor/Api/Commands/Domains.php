@@ -145,17 +145,19 @@ class Domains extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list domains");
+			$query_fields = [];
 			$result_stmt = Database::prepare("
 				SELECT
 				COUNT(*) as num_domains
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid "));
+				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid ") . $this->getSearchWhere($query_fields, true));
 			$params = [];
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
 			}
+			$params = array_merge($params, $query_fields);
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				return $this->response($result['num_domains']);
@@ -201,7 +203,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param string $zonefile
 	 *            optional, custom dns zone filename (only of nameserver is activated), default empty (auto-generated)
 	 * @param bool $dkim
-	 *            optional, currently not in use, default 0 (false)
+	 *            optional, whether this domain should use dkim if antispam is activated, default 0 (false)
 	 * @param string $specialsettings
 	 *            optional, custom webserver vhost-content which is added to the generated vhost, default empty
 	 * @param string $ssl_specialsettings
@@ -277,8 +279,8 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            $override_tls is true
 	 * @param string $description
 	 *            optional custom description (currently not used/shown in the frontend), default empty
-	 * @param bool $is_stdsubdomain (internally)
-	 *            optional whether this is a standard subdomain for a customer which is being added so no usage is decreased
+	 * @param bool $is_stdsubdomain
+	 *            (internally) optional whether this is a standard subdomain for a customer which is being added so no usage is decreased
 	 * @access admin
 	 * @return string json-encoded array
 	 * @throws Exception
@@ -478,7 +480,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 					$caneditdomain = '1';
 					$zonefile = '';
-					$dkim = '0';
 					$specialsettings = '';
 					$ssl_specialsettings = '';
 					$include_specialsettings = 0;
@@ -554,8 +555,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 				}
 				if (Settings::Get('system.use_ssl') == "1" && $sslenabled == 1 && empty($ssl_ipandports)) {
-					// enabled ssl for the domain but no ssl ip/port is selected
-					Response::standardError('nosslippportgiven', '', true);
+					// if this is a customer standard-subdomain, we simply ignore this and disable ssl-related settings (see if-statement below)
+					if (!$is_stdsubdomain) {
+						// enabled ssl for the domain but no ssl ip/port is selected
+						Response::standardError('nosslippportgiven', '', true);
+					}
 				}
 				if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 					$ssl_redirect = 0;
@@ -598,12 +602,18 @@ class Domains extends ApiCommand implements ResourceEntity
 					$ssl_redirect = 2;
 				}
 
-				if (!preg_match('/^https?\:\/\//', $documentroot)) {
-					if (strstr($documentroot, ":") !== false) {
-						Response::standardError('pathmaynotcontaincolon', '', true);
-					} else {
-						$documentroot = FileDir::makeCorrectDir($documentroot);
+				// Check if given documentroot is either a valid URL or a valid path
+				if (preg_match('/^https?\:\/\//', $documentroot)) {
+					$encoded = $idna_convert->encode($documentroot);
+					if (!Validate::validateUrl($encoded, true)) {
+						Response::standardError('invaliddocumentrooturl', '', true);
 					}
+					$documentroot = $encoded;
+				} else {
+					if (strpos($documentroot, ':') !== false) {
+						Response::standardError('pathmaynotcontaincolon', '', true);
+					}
+					$documentroot = FileDir::makeCorrectDir($documentroot);
 				}
 
 				$domain_check_stmt = Database::prepare("
@@ -1070,6 +1080,9 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *            (default yes), 3 = always, default 0 (never)
 	 * @param bool $isemaildomain
 	 *            optional, allow email usage with this domain, default 0 (false)
+	 * @param bool $emaildomainverified
+	 *            optional, when setting $isemaildomain to false, this needs to be set to true to confirm the action in case email addresses exist for this domain,
+	 *            default 0 (false)
 	 * @param bool $email_only
 	 *            optional, restrict domain to email usage, default 0 (false)
 	 * @param int $selectserveralias
@@ -1092,7 +1105,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param string $zonefile
 	 *            optional, custom dns zone filename (only of nameserver is activated), default empty (auto-generated)
 	 * @param bool $dkim
-	 *            optional, currently not in use, default 0 (false)
+	 *            optional, whether this domain should use dkim if antispam is activated, default 0 (false)
 	 * @param string $specialsettings
 	 *            optional, custom webserver vhost-content which is added to the generated vhost, default empty
 	 * @param string $ssl_specialsettings
@@ -1200,6 +1213,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
+			$emaildomainverified = $this->getBoolParam('emaildomainverified', true, 0);
 			$email_only = $this->getBoolParam('email_only', true, $result['email_only']);
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, -1);
 			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
@@ -1284,7 +1298,7 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// count where we are used in email-accounts
 			$domain_emails_result_stmt = Database::prepare("
-				SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders`
+				SELECT `email`, `email_full`, `destination`, `popaccountid`
 				FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid` = :customerid AND `domainid` = :id
 			");
 			Database::pexecute($domain_emails_result_stmt, [
@@ -1305,6 +1319,10 @@ class Domains extends ApiCommand implements ResourceEntity
 						$email_accounts++;
 					}
 				}
+			}
+
+			if ($emails > 0 && (int)$isemaildomain == 0 && (int)$result['isemaildomain'] == 1 && (int)$emaildomainverified == 0) {
+				Response::standardError('emaildomainstillhasaddresses', '', true);
 			}
 
 			// handle change of customer (move domain from customer to customer)
@@ -1415,10 +1433,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			if (!preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
-				Response::standardError('pathmaynotcontaincolon', '', true);
-			}
-
 			if ($this->getUserDetail('change_serversettings') == '1') {
 				if (Settings::Get('system.bind_enable') == '1') {
 					$zonefile = Validate::validate($zonefile, 'zonefile', '', '', [], true);
@@ -1463,7 +1477,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			} else {
 				$isbinddomain = $result['isbinddomain'];
 				$zonefile = $result['zonefile'];
-				$dkim = $result['dkim'];
 				$specialsettings = $result['specialsettings'];
 				$ssl_specialsettings = $result['ssl_specialsettings'];
 				$include_specialsettings = $result['include_specialsettings'];
@@ -1583,14 +1596,24 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
-			if (($result['letsencrypt'] != $letsencrypt || $result['ssl_redirect'] != $ssl_redirect) && $ssl_redirect > 0 && $letsencrypt == 1) {
+			if ($result['letsencrypt'] != $letsencrypt && $ssl_redirect > 0 && $letsencrypt == 1) {
 				$ssl_redirect = 2;
 			}
 
-			if (!preg_match('/^https?\:\/\//', $documentroot)) {
-				if ($documentroot != $result['documentroot']) {
+			$idna_convert = new IdnaWrapper();
+			if ($documentroot != $result['documentroot']) {
+				if (preg_match('/^https?\:\/\//', $documentroot)) {
+					$encoded = $idna_convert->encode($documentroot);
+					if (!Validate::validateUrl($encoded, true)) {
+						Response::standardError('invaliddocumentrooturl', '', true);
+					}
+					$documentroot = $encoded;
+				} else {
 					if (substr($documentroot, 0, 1) != "/") {
 						$documentroot = $customer['documentroot'] . '/' . $documentroot;
+					}
+					if (strpos($documentroot, ':') !== false) {
+						Response::standardError('pathmaynotcontaincolon', '', true);
 					}
 					$documentroot = FileDir::makeCorrectDir($documentroot);
 				}
@@ -2105,7 +2128,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			}
 
-			$idna_convert = new IdnaWrapper();
 			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $idna_convert->decode($result['domain']) . "'");
 			$result = $this->apiCall('Domains.get', [
 				'domainname' => $result['domain']

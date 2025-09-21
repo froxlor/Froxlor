@@ -52,10 +52,10 @@ try {
 
 if (Froxlor::isFroxlor()) {
 
-	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.10.inc.php'));
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_2.0.inc.php'));
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_2.1.inc.php'));
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_2.2.inc.php'));
+	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_2.3.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
 	Update::showUpdateStep("Checking database integrity");

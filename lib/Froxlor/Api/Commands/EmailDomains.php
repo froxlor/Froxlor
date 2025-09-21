@@ -112,13 +112,14 @@ class EmailDomains extends ApiCommand implements ResourceEntity
 	public function listingCount()
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
+		$query_fields = [];
 		$result_stmt = Database::prepare("
 		SELECT COUNT(DISTINCT d.domain) as num_emaildomains
 		FROM `" . TABLE_MAIL_VIRTUAL . "` e
 		LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON d.id = e.domainid
 		WHERE e.customerid IN (" . implode(", ", $customer_ids) . ") AND d.domain IS NOT NULL
-		");
-		$result = Database::pexecute_first($result_stmt, null, true, true);
+		" . $this->getSearchWhere($query_fields, true));
+		$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 		if ($result) {
 			return $this->response($result['num_emaildomains']);
 		}
