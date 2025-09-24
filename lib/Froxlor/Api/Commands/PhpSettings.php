@@ -188,7 +188,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$result_stmt = Database::prepare("
 				SELECT COUNT(*) as num_phps
 				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
-			" . $this->getSearchWhere($query_fields));
+				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fd ON fd.id = c.fpmsettingid" .
+				$this->getSearchWhere($query_fields));
 			$result = Database::pexecute_first($result_stmt, $query_fields, true, true);
 			if ($result) {
 				return $this->response($result['num_phps']);
