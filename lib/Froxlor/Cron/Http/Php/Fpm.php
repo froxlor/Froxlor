@@ -292,7 +292,7 @@ pm.max_children = 1
 			// now check if 'sendmail_path' has not been set in the custom-php.ini
 			// if not we use our fallback-default as usual
 			if (strpos($fpm_config, 'php_admin_value[sendmail_path]') === false) {
-				$fpm_config .= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f ' . $this->domain['email'] . "\n";
+				$fpm_config .= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f postmaster@' . $this->domain['domain'] . "\n";
 			}
 
 			// check for session.save_path, whether it has been specified by the user, if not, set a default
