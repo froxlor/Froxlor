@@ -619,7 +619,7 @@ class TrafficCron extends FroxlorCron
 				$keep_params = '--persist --restore';
 			}
 
-			$format = Settings::Get('system.logfiles_type') == '2' ? 'VCOMBINED' : 'COMBINED';
+			$format = (Settings::Get('system.logfiles_type') == '2' && Settings::Get('system.webserver') == 'apache2') ? 'VCOMBINED' : 'COMBINED';
 			$monthyear = $monthyear_arr['month'] . '/' . $monthyear_arr['year'];
 			$return_value = false;
 			FileDir::safe_exec("grep '" . $monthyear . "' " . escapeshellarg($logfile) . " | goaccess " . $keep_params . " --db-path=" . escapeshellarg($outputdir) . " -o " . escapeshellarg($outputdir . '.tmp.json') . " -o " . escapeshellarg($outputdir . 'index.html') . " --html-report-title=" . escapeshellarg($caption) . " --log-format=" . $format . " --no-parsing-spinner --no-progress - ", $return_value, ['|']);
