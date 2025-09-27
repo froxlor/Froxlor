@@ -32,7 +32,7 @@ $preconfig = [
 ];
 $return = [];
 
-if (Update::versionInUpdate($current_db_version, '202508310')) {
+if (Update::versionInUpdate($current_db_version, '202509010')) {
 	if (Settings::Get('system.webserver') == 'lighttpd') {
 		$has_preconfig = true;
 		$description = 'You seem to be using "lighttpd" as webserver, froxlor 2.3 no longer supports this webserver. Please select an alternative one. Remember to configure the service after the update!';
@@ -50,7 +50,7 @@ if (Update::versionInUpdate($current_db_version, '202508310')) {
 	}
 }
 
-if (Update::versionInUpdate($current_db_version, '202509210')) {
+if (Update::versionInUpdate($current_db_version, '202509270')) {
 
 	$has_preconfig = true;
 	$description = 'It is now possible for customers to add "allowed sender" addresses for email-accounts to send from if enabled.';
