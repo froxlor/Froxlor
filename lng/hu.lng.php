@@ -56,7 +56,7 @@ return [
 		'overview' => 'Áttekintés',
 		'ressourcedetails' => 'Felhasznált erőforrások',
 		'systemdetails' => 'Rendszer részletek',
-		'froxlordetails' => 'Froxlor részletek',
+		'froxlordetails' => 'froxlor részletek',
 		'installedversion' => 'Telepített verzió',
 		'latestversion' => 'Legújabb verzió',
 		'lookfornewversion' => [
@@ -83,7 +83,7 @@ return [
 		'change_serversettings' => 'Módosíthatja a szerver beállításait?',
 		'server' => 'Rendszer',
 		'serversettings' => 'Beállítások',
-		'serversettings_desc' => 'Froxlor rendszer kezelése',
+		'serversettings_desc' => 'froxlor rendszer kezelése',
 		'rebuildconf' => 'Konfigurációs fájlok újraépítése',
 		'stdsubdomain' => 'Alapértelmezett aldomain',
 		'stdsubdomain_add' => 'Alapértelmezett aldomain létrehozása',
@@ -216,7 +216,7 @@ return [
 				'description' => 'Többnyire CA_Bundle, vagy hasonló, valószínűleg be kell állítania, ha SSL tanúsítványt vásárolt.',
 			],
 			'docroot' => [
-				'title' => 'Egyéni docroot (üres = Froxlorra mutat)',
+				'title' => 'Egyéni docroot (üres = froxlorra mutat)',
 				'description' => 'Meghatározhat egy egyéni dokumentum-gyökeret (a kérés célállomása) ehhez az IP/port kombinációhoz.<br /><strong>FIGYELEM:</strong> Kérjük, legyen óvatos azzal, amit ide beír!',
 			],
 			'ssl_paste_description' => 'Illessze be a teljes tanúsítvány tartalmát a szövegdobozba',
@@ -285,15 +285,15 @@ return [
 		'security_settings' => 'Biztonsági beállítások',
 		'know_what_youre_doing' => 'Csak akkor változtasson, ha tudja, mit csinál!',
 		'show_version_login' => [
-			'title' => 'Froxlor verzió megjelenítése bejelentkezéskor',
-			'description' => 'A Froxlor verzió megjelenítése a láblécben a bejelentkezési oldalon',
+			'title' => 'froxlor verzió megjelenítése bejelentkezéskor',
+			'description' => 'A froxlor verzió megjelenítése a láblécben a bejelentkezési oldalon',
 		],
 		'show_version_footer' => [
-			'title' => 'Froxlor verzió megjelenítése a láblécben',
-			'description' => 'A Froxlor verzió megjelenítése a láblécben az oldalak többi részén',
+			'title' => 'froxlor verzió megjelenítése a láblécben',
+			'description' => 'A froxlor verzió megjelenítése a láblécben az oldalak többi részén',
 		],
 		'froxlor_graphic' => [
-			'title' => 'Froxlor fejléc grafika',
+			'title' => 'froxlor fejléc grafika',
 			'description' => 'Milyen grafikát kell megjeleníteni a fejlécben',
 		],
 		'phpsettings' => [
@@ -350,7 +350,7 @@ return [
 		'accountdata' => 'Fiók adatok',
 		'contactdata' => 'Kapcsolati adatok',
 		'servicedata' => 'Szolgáltatási adatok',
-		'newerversionavailable' => 'Újabb Froxlor verzió érhető el.',
+		'newerversionavailable' => 'Újabb froxlor verzió érhető el.',
 		'newerversiondetails' => 'Frissítés a <b>%s</b> verzióra most?<br/>(A jelenlegi verzió: %s)',
 		'extractdownloadedzip' => 'Letöltött archívum kibontása "%s"?',
 		'cron' => [
@@ -366,8 +366,8 @@ return [
 		'webserver_group' => 'Webszerver csoportnév',
 		'perlenabled' => 'Perl engedélyezve',
 		'fcgid_settings' => 'FCGID',
-		'mod_fcgid_user' => 'Helyi felhasználó az FCGID-hez (Froxlor vHost)',
-		'mod_fcgid_group' => 'Helyi csoport az FCGID-hez (Froxlor vHost)',
+		'mod_fcgid_user' => 'Helyi felhasználó az FCGID-hez (froxlor vHost)',
+		'mod_fcgid_group' => 'Helyi csoport az FCGID-hez (froxlor vHost)',
 		'perl_settings' => 'Perl/CGI',
 		'notgiven' => '[nincs megadva]',
 		'store_defaultindex' => 'Alapértelmezett index-fájl tárolása az ügyfél dokumentumgyökerébe',
@@ -402,7 +402,7 @@ return [
 		'selectserveralias_desc' => 'Válassza ki, hogy a froxlor hozzon létre egy wildcard-bejegyzést (*.domain.tld), egy WWW-alias-t (www.domain.tld) vagy egyáltalán ne hozzon létre alias-t',
 		'show_news_feed' => [
 			'title' => 'Hírcsatorna megjelenítése az admin irányítópulton',
-			'description' => 'Engedélyezze ezt, hogy megjelenítse a hivatalos Froxlor hírcsatornát (https://inside.froxlor.org/news/) az irányítópultján, és soha ne maradjon le fontos információkról vagy kiadási bejelentésekről.',
+			'description' => 'Engedélyezze ezt, hogy megjelenítse a hivatalos froxlor hírcsatornát (https://inside.froxlor.org/news/) az irányítópultján, és soha ne maradjon le fontos információkról vagy kiadási bejelentésekről.',
 		],
 		'cronsettings' => 'Cronjob beállítások',
 		'integritycheck' => 'Adatbázis érvényesítés',
@@ -432,7 +432,7 @@ return [
 		'autoupdate' => 'Automatikus frissítés',
 		'server_php' => 'PHP',
 		'dnsenabled' => 'DNS szerkesztő engedélyezése',
-		'froxlorvhost' => 'Froxlor VirtualHost beállítások',
+		'froxlorvhost' => 'froxlor VirtualHost beállítások',
 		'hostname' => 'Hosztnév',
 		'memory' => 'Memória használat',
 		'webserversettings_ssl' => 'Webszerver SSL beállítások',
@@ -580,7 +580,7 @@ return [
 		'interval' => 'időköz',
 		'isactive' => 'engedélyezett',
 		'description' => 'leírás',
-		'changewarning' => 'Ezeknek az értékeknek a megváltoztatása negatív hatással lehet a Froxlor és az automatizált feladatok működésére.<br />Kérjük, csak akkor változtasson itt értékeket, ha biztos benne, hogy tudja, mit csinál.',
+		'changewarning' => 'Ezeknek az értékeknek a megváltoztatása negatív hatással lehet a froxlor és az automatizált feladatok működésére.<br />Kérjük, csak akkor változtasson itt értékeket, ha biztos benne, hogy tudja, mit csinál.',
 	],
 	'crondesc' => [
 		'cron_unknown_desc' => 'nincs megadott leírás',
@@ -769,7 +769,7 @@ return [
 		'hasaliasdomains' => 'Van alias domain(ek)',
 		'statstics' => 'Használati statisztikák',
 		'isassigneddomain' => 'Hozzárendelt domain',
-		'add_date' => 'Hozzáadva a Froxlorhoz',
+		'add_date' => 'Hozzáadva a froxlorhoz',
 		'registration_date' => 'Hozzáadva a nyilvántartáshoz',
 		'topleveldomain' => 'Felső szintű domain',
 		'associated_with_domain' => 'Társítva',
@@ -978,11 +978,11 @@ return [
 		'sslredirectonlypossiblewithsslipport' => 'A Let\'s Encrypt használata csak akkor lehetséges, ha a domainhez legalább egy SSL-engedélyezett IP/port kombináció van hozzárendelve.',
 		'fcgidstillenableddeadlock' => 'Az FCGID jelenleg aktív.<br />Kérjük, deaktiválja, mielőtt az Apache2 helyett másik webszerverre váltana',
 		'send_report_title' => 'Hibajelentés küldése',
-		'send_report_desc' => 'Köszönjük, hogy jelenti ezt a hibát és segít a Froxlor fejlesztésében.<br />Ez az e-mail, amely a Froxlor fejlesztői csapatának lesz elküldve:',
+		'send_report_desc' => 'Köszönjük, hogy jelenti ezt a hibát és segít a froxlor fejlesztésében.<br />Ez az e-mail, amely a froxlor fejlesztői csapatának lesz elküldve:',
 		'send_report' => 'Jelentés küldése',
 		'send_report_error' => 'Hiba történt a jelentés küldésekor: <br />%s',
 		'notallowedtouseaccounts' => 'Az Ön fiókja nem teszi lehetővé az IMAP/POP3 használatát. Nem adhat hozzá e-mail fiókokat.',
-		'cannotdeletehostnamephpconfig' => 'Ez a PHP-konfiguráció a Froxlor-vhost által használt, és nem törölhető.',
+		'cannotdeletehostnamephpconfig' => 'Ez a PHP-konfiguráció a froxlor-vhost által használt, és nem törölhető.',
 		'cannotdeletedefaultphpconfig' => 'Ez a PHP-konfiguráció alapértelmezettként van beállítva, és nem törölhető.',
 		'passwordshouldnotbeusername' => 'A jelszó nem lehet ugyanaz, mint a felhasználónév.',
 		'no_phpinfo' => 'Sajnáljuk, nem sikerült beolvasni a phpinfo() adatait',
@@ -993,7 +993,7 @@ return [
 		'no_opcacheinfo' => 'Nincs elérhető OPCache információ. Úgy tűnik, az OPCache nincs betöltve.',
 		'inactive_opcacheinfo' => 'Úgy tűnik, az OPCache telepítve van, de nincs aktiválva.',
 		'nowildcardwithletsencrypt' => 'A Let\'s Encrypt nem tud kezelni helyettesítő karakteres domaineket az ACME használatával a froxlorban (dns-kihívást igényel), sajnáljuk. Kérjük, állítsa a ServerAlias-t WWW-re, vagy teljesen tiltsa le',
-		'customized_version' => 'Úgy tűnik, hogy a Froxlor telepítése módosítva lett, sajnos nem tudunk támogatást nyújtani.',
+		'customized_version' => 'Úgy tűnik, hogy a froxlor telepítése módosítva lett, sajnos nem tudunk támogatást nyújtani.',
 		'autoupdate_0' => 'Ismeretlen hiba',
 		'autoupdate_1' => 'A PHP allow_url_fopen beállítás le van tiltva. Az automatikus frissítéshez engedélyezni kell ezt a beállítást a php.ini fájlban',
 		'autoupdate_2' => 'A PHP zip kiterjesztés nem található, kérjük, győződjön meg arról, hogy telepítve van és aktiválva van',
@@ -1150,7 +1150,7 @@ return [
 			'mailbody' => 'Tisztelt {SALUTATION},\\n\\níme a link az új jelszó beállításához. Ez a link a következő 24 órában érvényes.\\n\\n{LINK}\\n\\nKöszönjük,\\naz adminisztrátor',
 		],
 		'new_database_by_customer' => [
-			'subject' => '[Froxlor] Új adatbázis létrehozva',
+			'subject' => '[froxlor] Új adatbázis létrehozva',
 			'mailbody' => 'Tisztelt {CUST_NAME},
 
 Ön éppen most hozott létre egy új adatbázist. Íme a megadott információk:
@@ -1184,7 +1184,7 @@ Jelszó: {USR_PASS}
 		],
 		'2fa' => [
 			'mailbody' => 'Üdvözöljük,\\n\\naz Ön 2FA bejelentkezési kódja: {CODE}.\\n\\nEz egy automatikusan létrehozott\\ne-mail, kérjük, ne válaszoljon rá!\\n\\nÜdvözlettel, az adminisztrátor',
-			'subject' => 'Froxlor - 2FA Kód',
+			'subject' => 'froxlor - 2FA Kód',
 		],
 	],
 	'menue' => [
@@ -1405,11 +1405,11 @@ Jelszó: {USR_PASS}
 		'use_checkbox_to_disable' => 'A letiltáshoz aktiválja a jelölőnégyzetet a beviteli mező jobb oldalán',
 	],
 	'phpfpm' => [
-		'vhost_httpuser' => 'Helyi felhasználó a PHP-FPM-hez (Froxlor vHost)',
-		'vhost_httpgroup' => 'Helyi csoport a PHP-FPM-hez (Froxlor vHost)',
+		'vhost_httpuser' => 'Helyi felhasználó a PHP-FPM-hez (froxlor vHost)',
+		'vhost_httpgroup' => 'Helyi csoport a PHP-FPM-hez (froxlor vHost)',
 		'ownvhost' => [
-			'title' => 'PHP-FPM engedélyezése a Froxlor vHost számára',
-			'description' => 'Ha engedélyezve van, a Froxlor is egy helyi felhasználó alatt fog futni',
+			'title' => 'PHP-FPM engedélyezése a froxlor vHost számára',
+			'description' => 'Ha engedélyezve van, a froxlor is egy helyi felhasználó alatt fog futni',
 		],
 		'use_mod_proxy' => [
 			'title' => 'mod_proxy / mod_proxy_fcgi használata',
@@ -1651,7 +1651,7 @@ Jelszó: {USR_PASS}
 				'description' => 'Hány kérést engedélyezzen domainenként?',
 			],
 			'defaultini' => 'Alapértelmezett PHP konfiguráció új domainekhez',
-			'defaultini_ownvhost' => 'Alapértelmezett PHP konfiguráció Froxlor-vHosthoz',
+			'defaultini_ownvhost' => 'Alapértelmezett PHP konfiguráció froxlor-vHosthoz',
 			'idle_timeout' => [
 				'title' => 'Tétlen időkorlát',
 				'description' => 'Időkorlát beállítása Mod FastCGI-hez.',
@@ -1784,7 +1784,7 @@ Jelszó: {USR_PASS}
 		],
 		'panel_allow_domain_change_customer' => [
 			'title' => 'Engedélyezze a domainek áthelyezését az ügyfelek között',
-			'description' => 'Ha aktiválva van, megváltoztathatja egy domain ügyfelét a domain beállításoknál.<br /><b>Figyelem:</b> A Froxlor megváltoztatja a documentroot-ot az új ügyfél alapértelmezett homedir-jére (+ domain-mappa, ha aktiválva van)',
+			'description' => 'Ha aktiválva van, megváltoztathatja egy domain ügyfelét a domain beállításoknál.<br /><b>Figyelem:</b> A froxlor megváltoztatja a documentroot-ot az új ügyfél alapértelmezett homedir-jére (+ domain-mappa, ha aktiválva van)',
 		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'Ha igen, ezek az egyedi vHost-beállítások hozzáadódnak az összes aldomainhez; ha nem, az aldomain-speciális beállítások eltávolításra kerülnek.',
@@ -1835,19 +1835,19 @@ Jelszó: {USR_PASS}
 			'description' => 'Állítsa be az alapértelmezett átirányítási kódot, amelyet akkor kell használni, ha az ügyfél nem állítja be magának',
 		],
 		'mail_also_with_mxservers' => 'Hozzon létre mail-, imap-, pop3- és smtp-"A rekordot" az MX-szerverekkel együtt',
-		'froxlordirectlyviahostname' => 'Froxlor közvetlen elérése a hosztnéven keresztül',
+		'froxlordirectlyviahostname' => 'froxlor közvetlen elérése a hosztnéven keresztül',
 		'panel_password_regex' => [
 			'title' => 'Jelszavak reguláris kifejezése',
 			'description' => 'Itt beállíthat egy reguláris kifejezést a jelszavak összetettségére.<br />Üres = nincs külön követelmény',
 		],
 		'mod_fcgid_ownvhost' => [
-			'title' => 'FCGID engedélyezése a Froxlor vHosthoz',
-			'description' => 'Ha engedélyezve van, a Froxlor is egy helyi felhasználó alatt fog futni',
+			'title' => 'FCGID engedélyezése a froxlor vHosthoz',
+			'description' => 'Ha engedélyezve van, a froxlor is egy helyi felhasználó alatt fog futni',
 		],
 		'perl' => [
 			'suexecworkaround' => [
 				'title' => 'SuExec megoldás engedélyezése',
-				'description' => 'Csak akkor engedélyezze, ha az ügyfél docrootjai nincsenek az apache suexec útvonalán belül.<br />Ha engedélyezve van, a Froxlor szimbolikus linket hoz létre az ügyfél perl-engedélyezett könyvtárából + /cgi-bin/ a megadott útvonalra.<br />Vegye figyelembe, hogy a perl csak a /cgi-bin/ alkönyvtárban fog működni, és nem magában a könyvtárban (ahogy ez a javítás nélkül történik!)',
+				'description' => 'Csak akkor engedélyezze, ha az ügyfél docrootjai nincsenek az apache suexec útvonalán belül.<br />Ha engedélyezve van, a froxlor szimbolikus linket hoz létre az ügyfél perl-engedélyezett könyvtárából + /cgi-bin/ a megadott útvonalra.<br />Vegye figyelembe, hogy a perl csak a /cgi-bin/ alkönyvtárban fog működni, és nem magában a könyvtárban (ahogy ez a javítás nélkül történik!)',
 			],
 			'suexeccgipath' => [
 				'title' => 'Útvonal az ügyfél perl-engedélyezett könyvtár szimbolikus linkjeihez',
@@ -1999,11 +1999,11 @@ Jelszó: {USR_PASS}
 			'description' => 'Hol kell létrehozni az ügyfél által megadott ssl-tanúsítványokat?<br /><br /><div class="text-danger">MEGJEGYZÉS: Ennek a mappának a tartalma rendszeresen törlődik, ezért kerülje az adatok manuális tárolását benne.</div>',
 		],
 		'allow_error_report_admin' => [
-			'title' => 'Adminisztrátorok/viszonteladók számára az adatbázis-hibák jelentésének engedélyezése a Froxlor felé',
+			'title' => 'Adminisztrátorok/viszonteladók számára az adatbázis-hibák jelentésének engedélyezése a froxlor felé',
 			'description' => 'Kérjük, vegye figyelembe: Soha ne küldjön személyes (ügyfél)adatokat nekünk!',
 		],
 		'allow_error_report_customer' => [
-			'title' => 'Ügyfelek számára az adatbázis-hibák jelentésének engedélyezése a Froxlor felé',
+			'title' => 'Ügyfelek számára az adatbázis-hibák jelentésének engedélyezése a froxlor felé',
 			'description' => 'Kérjük, vegye figyelembe: Soha ne küldjön személyes (ügyfél)adatokat nekünk!',
 		],
 		'mailtraffic_enabled' => [
@@ -2316,7 +2316,7 @@ Jelszó: {USR_PASS}
 		'REBUILD_DNS' => 'Bind-konfiguráció újraépítése',
 		'CREATE_FTP' => 'Könyvtár létrehozása új ftp-felhasználónak',
 		'DELETE_CUSTOMER_FILES' => 'Ügyfél fájljainak törlése: %s',
-		'noneoutstanding' => 'Jelenleg nincsenek függőben lévő feladatok a Froxlor számára',
+		'noneoutstanding' => 'Jelenleg nincsenek függőben lévő feladatok a froxlor számára',
 		'DELETE_EMAIL_DATA' => 'Ügyfél e-mail adatainak törlése.',
 		'DELETE_FTP_DATA' => 'Ügyfél ftp-fiók adatainak törlése.',
 		'REBUILD_RSPAMD' => 'Antispam-konfiguráció újraépítése.',
@@ -2388,18 +2388,18 @@ Jelszó: {USR_PASS}
 	],
 	'translator' => '',
 	'update' => [
-		'updateinprogress_onlyadmincanlogin' => 'A Froxlor egy újabb verziója telepítve lett, de még nincs beállítva.<br />Csak az adminisztrátor jelentkezhet be és fejezheti be a frissítést.',
-		'update' => 'Froxlor frissítés',
+		'updateinprogress_onlyadmincanlogin' => 'A froxlor egy újabb verziója telepítve lett, de még nincs beállítva.<br />Csak az adminisztrátor jelentkezhet be és fejezheti be a frissítést.',
+		'update' => 'froxlor frissítés',
 		'proceed' => 'Folytatás',
 		'update_information' => [
-			'part_a' => 'A Froxlor fájlok frissítve lettek a <strong>%s</strong> verzióra. A telepített verzió <strong>%s</strong>.',
+			'part_a' => 'A froxlor fájlok frissítve lettek a <strong>%s</strong> verzióra. A telepített verzió <strong>%s</strong>.',
 			'part_b' => '<br /><br />Az ügyfelek nem tudnak bejelentkezni, amíg a frissítés be nem fejeződik.<br /><strong>Folytatja?</strong>',
 		],
-		'noupdatesavail' => 'Már a legújabb %s verziójú Froxlor van telepítve.',
-		'description' => 'Adatbázis frissítések futtatása a Froxlor telepítéséhez',
+		'noupdatesavail' => 'Már a legújabb %s verziójú froxlor van telepítve.',
+		'description' => 'Adatbázis frissítések futtatása a froxlor telepítéséhez',
 		'uc_newinfo' => 'Egy újabb %s verzió érhető el: "%s" (Az Ön jelenlegi verziója: %s)',
 		'notify_subject' => 'Új frissítés elérhető',
-		'dbupdate_required' => 'A Froxlor fájlok frissítve lettek, adatbázis frissítés szükséges',
+		'dbupdate_required' => 'A froxlor fájlok frissítve lettek, adatbázis frissítés szükséges',
 	],
 	'usersettings' => [
 		'custom_notes' => [
@@ -2409,12 +2409,12 @@ Jelszó: {USR_PASS}
 		],
 		'api_allowed' => [
 			'title' => 'API hozzáférés engedélyezése',
-			'description' => 'Ha engedélyezve van a beállításokban, ez a felhasználó létrehozhat API kulcsokat és hozzáférhet a Froxlor API-hoz',
+			'description' => 'Ha engedélyezve van a beállításokban, ez a felhasználó létrehozhat API kulcsokat és hozzáférhet a froxlor API-hoz',
 			'notice' => 'Az API hozzáférés nem engedélyezett az Ön fiókjához.',
 		],
 		'gui_access' => [
 			'title' => 'WebUI bejelentkezés engedélyezése',
-			'description' => 'Ha le van tiltva, a felhasználó nem tud bejelentkezni a Froxlor webes felületére, de minden szolgáltatás (web, ftp, e-mail, adatbázisok, api-hozzáférés, stb.) normálisan működik.',
+			'description' => 'Ha le van tiltva, a felhasználó nem tud bejelentkezni a froxlor webes felületére, de minden szolgáltatás (web, ftp, e-mail, adatbázisok, api-hozzáférés, stb.) normálisan működik.',
 		],
 	],
 	'install' => [
@@ -2437,7 +2437,7 @@ Jelszó: {USR_PASS}
 		'database' => [
 			'top' => 'Adatbázis',
 			'title' => 'Adatbázis és felhasználó létrehozása',
-			'description' => 'A Froxlor adatbázist igényel, és ezenkívül <a href="https://docs.froxlor.org/latest/general/installation/tarball.html#_3-create-privileged-database-user" target="_blank">egy kiváltságos felhasználót</a> is, hogy képes legyen felhasználókat és adatbázisokat létrehozni (GRANT opció). A megadott adatbázis és a nem kiváltságos adatbázis-felhasználó létrejön ebben a folyamatban. A kiváltságos felhasználónak léteznie kell.',
+			'description' => 'A froxlor adatbázist igényel, és ezenkívül <a href="https://docs.froxlor.org/latest/general/installation/tarball.html#_3-create-privileged-database-user" target="_blank">egy kiváltságos felhasználót</a> is, hogy képes legyen felhasználókat és adatbázisokat létrehozni (GRANT opció). A megadott adatbázis és a nem kiváltságos adatbázis-felhasználó létrejön ebben a folyamatban. A kiváltságos felhasználónak léteznie kell.',
 			'user' => 'Nem kiváltságos adatbázis-felhasználó',
 			'dbname' => 'Adatbázis neve',
 			'force_create' => 'Adatbázis biztonsági mentése és felülírása, ha létezik?',

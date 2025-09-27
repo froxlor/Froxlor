@@ -52,7 +52,7 @@ return [
 		'overview' => 'Visió general',
 		'ressourcedetails' => 'Recursos utilitzats',
 		'systemdetails' => 'Detalls del sistema',
-		'froxlordetails' => 'Detalls de Froxlor',
+		'froxlordetails' => 'Detalls de froxlor',
 		'installedversion' => 'Versió instal·lada',
 		'latestversion' => 'Última versió',
 		'lookfornewversion' => [
@@ -205,7 +205,7 @@ return [
 				'description' => 'Normalment CA_Bundle, o similar, probablement vols configurar això si has comprat un certificat SSL.'
 			],
 			'docroot' => [
-				'title' => 'Docroot personalizat (buit = apunta a Froxlor)',
+				'title' => 'Docroot personalizat (buit = apunta a froxlor)',
 				'description' => 'Aquí podeu definir un document-root personalitzat (el destí d\'una petició) per a aquesta combinació ip/port.<br/><strong>ATENCIÓ:</strong> Si us plau, vés amb compte amb el que introdueixes aquí!'
 			],
 			'ssl_paste_description' => 'Enganxi el contingut complet del vostre certificat al quadre de text',
@@ -274,15 +274,15 @@ return [
 		'security_settings' => 'Opcions de seguretat',
 		'know_what_youre_doing' => 'Canviar només si sap el que fa!',
 		'show_version_login' => [
-			'title' => 'Mostra la versió de Froxlor a l\'inici de sessió',
-			'description' => 'Mostrar la versió de Froxlor al peu de pàgina a la pàgina d\'inici de sessió'
+			'title' => 'Mostra la versió de froxlor a l\'inici de sessió',
+			'description' => 'Mostrar la versió de froxlor al peu de pàgina a la pàgina d\'inici de sessió'
 		],
 		'show_version_footer' => [
-			'title' => 'Mostrar la versió de Froxlor al peu de pàgina',
-			'description' => 'Mostrar la versió de Froxlor al peu de pàgina de la resta de pàgines'
+			'title' => 'Mostrar la versió de froxlor al peu de pàgina',
+			'description' => 'Mostrar la versió de froxlor al peu de pàgina de la resta de pàgines'
 		],
 		'froxlor_graphic' => [
-			'title' => 'Gràfic de capçalera per a Froxlor',
+			'title' => 'Gràfic de capçalera per a froxlor',
 			'description' => 'Quin gràfic s\'ha de mostrar a la capçalera'
 		],
 		'phpsettings' => [
@@ -339,7 +339,7 @@ return [
 		'accountdata' => 'Dades del compte',
 		'contactdata' => 'Dades de contacte',
 		'servicedata' => 'Dades de servei',
-		'newerversionavailable' => 'Hi ha una nova versió de Froxlor disponible.',
+		'newerversionavailable' => 'Hi ha una nova versió de froxlor disponible.',
 		'newerversiondetails' => 'Actualitzi ara a la versió <b>%s</b>?<br/>(La seva versió actual és: %s)',
 		'extractdownloadedzip' => 'Extreure el fitxer descarregat "%s"?',
 		'cron' => [
@@ -355,8 +355,8 @@ return [
 		'webserver_group' => 'Nom de grup del servidor web',
 		'perlenabled' => 'Perl activat',
 		'fcgid_settings' => 'FCGID',
-		'mod_fcgid_user' => 'Usuari local a utilitzar per a FCGID (Froxlor vHost)',
-		'mod_fcgid_group' => 'Grup local a utilitzar per a FCGID (Froxlor vHost)',
+		'mod_fcgid_user' => 'Usuari local a utilitzar per a FCGID (froxlor vHost)',
+		'mod_fcgid_group' => 'Grup local a utilitzar per a FCGID (froxlor vHost)',
 		'perl_settings' => 'Perl/CGI',
 		'notgiven' => '[No indicat]',
 		'store_defaultindex' => 'Emmagatzemar el fitxer d\'índex per defecte al docroot del client',
@@ -391,7 +391,7 @@ return [
 		'selectserveralias_desc' => 'Triï si froxlor ha de crear una entrada comodí (*.domini.tld), un àlies WWW (www.domini.tld) o cap àlies.',
 		'show_news_feed' => [
 			'title' => 'Mostrar notícies al panell d\'administració',
-			'description' => 'Activi aquesta opció per mostrar les notícies oficials de Froxlor (https://inside.froxlor.org/news/) al teu tauler de control i no perdre\'t mai informació important o anuncis de llançaments.'
+			'description' => 'Activi aquesta opció per mostrar les notícies oficials de froxlor (https://inside.froxlor.org/news/) al teu tauler de control i no perdre\'t mai informació important o anuncis de llançaments.'
 		],
 		'cronsettings' => 'Configuració de tasques de Cron',
 		'integritycheck' => 'Validació de la base de dades',
@@ -418,7 +418,7 @@ return [
 		'autoupdate' => 'Actualitza automàticament',
 		'server_php' => 'PHP',
 		'dnsenabled' => 'Habilitar editor DNS',
-		'froxlorvhost' => 'Configuració VirtualHost de Froxlor ',
+		'froxlorvhost' => 'Configuració VirtualHost de froxlor ',
 		'hostname' => 'Nom de host',
 		'memory' => 'Memòria en ús',
 		'webserversettings_ssl' => 'Configuració SSL del servidor web',
@@ -559,7 +559,7 @@ return [
 		'interval' => 'interval',
 		'isactive' => 'activat',
 		'description' => 'descripció',
-		'changewarning' => 'Canviar aquests valors pot tenir una causa negativa en el comportament de Froxlor i les tasques automatitzades.<br/>Si us plau, només canviï els valors aquí, si està segur del que està fent.'
+		'changewarning' => 'Canviar aquests valors pot tenir una causa negativa en el comportament de froxlor i les tasques automatitzades.<br/>Si us plau, només canviï els valors aquí, si està segur del que està fent.'
 	],
 	'crondesc' => [
 		'cron_unknown_desc' => 'cap descripció especificada',
@@ -686,7 +686,7 @@ return [
 		'hasaliasdomains' => 'Té domini(s) àlies',
 		'statstics' => 'Estadístiques d\'ús',
 		'isassigneddomain' => 'Domini assignat',
-		'add_date' => 'Afegit a Froxlor',
+		'add_date' => 'Afegit a froxlor',
 		'registration_date' => 'Afegit al registre',
 		'topleveldomain' => 'Domini Top-Level',
 		'associated_with_domain' => 'Associat',
@@ -893,11 +893,11 @@ return [
 		'sslredirectonlypossiblewithsslipport' => 'L\'ús de Let\'s Encrypt només és possible quan el domini té assignada almenys una combinació IP/port habilitada per a ssl.',
 		'fcgidstillenableddeadlock' => 'FCGID està actualment actiu.<br/>Si us plau, desactiveu-lo abans de canviar a un altre servidor web que no sigui Apache2',
 		'send_report_title' => 'Enviar informe d\'error',
-		'send_report_desc' => 'Gràcies per informar d\'aquest error i ajudar-nos a millorar Froxlor.<br/>Aquest és el correu electrònic que s\'enviarà a l\'equip de desenvolupadors de Froxlor:',
+		'send_report_desc' => 'Gràcies per informar d\'aquest error i ajudar-nos a millorar froxlor.<br/>Aquest és el correu electrònic que s\'enviarà a l\'equip de desenvolupadors de froxlor:',
 		'send_report' => 'Enviar informe',
 		'send_report_error' => 'Error en enviar l\'informe: <br/>%s',
 		'notallowedtouseaccounts' => 'El vostre compte no permet utilitzar IMAP/POP3. No podeu afegir comptes de correu.',
-		'cannotdeletehostnamephpconfig' => 'Aquesta configuració PHP és utilitzada pel Froxlor-vhost i no pot ser esborrada.',
+		'cannotdeletehostnamephpconfig' => 'Aquesta configuració PHP és utilitzada pel froxlor-vhost i no pot ser esborrada.',
 		'cannotdeletedefaultphpconfig' => 'Aquesta configuració PHP està establerta per defecte i no es pot esborrar.',
 		'passwordshouldnotbeusername' => 'La contrasenya no pot ser la mateixa que el nom dusuari.',
 		'no_phpinfo' => 'Ho sentim, no puc llegir phpinfo()',
@@ -907,7 +907,7 @@ return [
 		'no_apcuinfo' => 'No hi ha informació de memòria cau disponible. APCu no sembla que s\'està executant.',
 		'no_opcacheinfo' => 'No hi ha informació de memòria cau disponible. OPCache no sembla que s\'està executant.',
 		'nowildcardwithletsencrypt' => 'Let\'s Encrypt no pot manejar dominis comodí usant ACME a froxlor (requereix dns-challenge), ho sento. Si us plau, establiu el ServerAlias a WWW o desactiveu-lo completament.',
-		'customized_version' => 'Sembla que la teva instal·lació de Froxlor ha estat modificada, no hi ha suport, ho sentim.',
+		'customized_version' => 'Sembla que la teva instal·lació de froxlor ha estat modificada, no hi ha suport, ho sentim.',
 		'autoupdate_0' => 'Error desconegut',
 		'autoupdate_1' => 'El paràmetre de PHP allow_url_fopen està desactivat. Autoupdate necessita que aquest paràmetre estigui habilitat a php.ini',
 		'autoupdate_2' => 'Extensió PHP zip no trobada, si us plau assegureu-vos que està instal·lada i activada',
@@ -1001,7 +1001,7 @@ return [
 		'databaseCharset' => 'Joc de caràcters de la base de dades (ha de ser UTF-8)',
 		'domainIpTable' => 'Referències IP <-> domini',
 		'subdomainSslRedirect' => 'Bandera falsa SSL-redirect per a dominis no SSL',
-		'froxlorLocalGroupMemberForFcgidPhpFpm' => 'Usuari Froxlor als grups de clients (per a FCGID/php-fpm)',
+		'froxlorLocalGroupMemberForFcgidPhpFpm' => 'Usuari froxlor als grups de clients (per a FCGID/php-fpm)',
 		'webserverGroupMemberForFcgidPhpFpm' => 'Usuari Webserver als grups de clients (per a FCGID/php-fpm)',
 		'subdomainLetsencrypt' => 'Els dominis principals sense port SSL assignat no tenen subdominis amb redirecció SSL activa'
 	],
@@ -1054,7 +1054,7 @@ return [
 			'mailbody' => 'Hola {SALUTATION}, aquí està el vostre enllaç per establir una nova contrasenya. Aquest enllaç és vàlid durant les següents 24 hores. {LINK}, el vostre administrador.'
 		],
 		'new_database_by_customer' => [
-			'subject' => '[Froxlor] Nova base de dades creada',
+			'subject' => '[froxlor] Nova base de dades creada',
 			'mailbody' => 'Hola {CUST_NAME},
 
 acabes d\'afegir una nova base de dades. Aquí hi ha la informació introduïda:
@@ -1088,7 +1088,7 @@ Atentament, el vostre administrador'
 		],
 		'2fa' => [
 			'mailbody' => 'Hola, el vostre codi d\'accés 2FA és..: {CODE}. Aquest és un correu creat automàticament, si us plau no el respongui. Atentament, el vostre administrador.',
-			'subject' => 'Froxlor - Codi 2FA'
+			'subject' => 'froxlor - Codi 2FA'
 		]
 	],
 	'menue' => [
@@ -1299,11 +1299,11 @@ Atentament, el vostre administrador'
 		'upload_import' => 'Carregar e importar'
 	],
 	'phpfpm' => [
-		'vhost_httpuser' => 'Usuari local a utilitzar per PHP-FPM (Froxlor vHost)',
-		'vhost_httpgroup' => 'Grup local a utilitzar per PHP-FPM (Froxlor vHost)',
+		'vhost_httpuser' => 'Usuari local a utilitzar per PHP-FPM (froxlor vHost)',
+		'vhost_httpgroup' => 'Grup local a utilitzar per PHP-FPM (froxlor vHost)',
 		'ownvhost' => [
-			'title' => 'Habilitar PHP-FPM per al vHost de Froxlor',
-			'description' => 'Si està habilitat, Froxlor també s\'executarà sota un usuari local'
+			'title' => 'Habilitar PHP-FPM per al vHost de froxlor',
+			'description' => 'Si està habilitat, froxlor també s\'executarà sota un usuari local'
 		],
 		'use_mod_proxy' => [
 			'title' => 'Utilitzar mod_proxy / mod_proxy_fcgi',
@@ -1544,7 +1544,7 @@ Atentament, el vostre administrador'
 				'description' => 'Quantes peticions cal permetre per domini?'
 			],
 			'defaultini' => 'Configuració PHP per defecte per a nous dominis',
-			'defaultini_ownvhost' => 'Configuració PHP per defecte per a Froxlor-vHost',
+			'defaultini_ownvhost' => 'Configuració PHP per defecte per a froxlor-vHost',
 			'idle_timeout' => [
 				'title' => 'Temps d\'espera',
 				'description' => 'Configuració de temps d\'espera per a FastCGI Mod.'
@@ -1681,7 +1681,7 @@ Atentament, el vostre administrador'
 		],
 		'panel_allow_domain_change_customer' => [
 			'title' => 'Permetre moure dominis entre clients',
-			'description' => 'Si està activat pots canviar el client d\'un domini a domainsettings.<br/><b>Atenció:</b> Froxlor canvia el documentroot al homedir per defecte del nou client (+ carpeta de domini si està activat)'
+			'description' => 'Si està activat pots canviar el client d\'un domini a domainsettings.<br/><b>Atenció:</b> froxlor canvia el documentroot al homedir per defecte del nou client (+ carpeta de domini si està activat)'
 		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'En cas afirmatiu, aquests paràmetres personalitzats de vHost s\'afegiran a tots els subdominis; en cas negatiu, s\'eliminaran els ajustaments especials de subdomini.'
@@ -1732,19 +1732,19 @@ Atentament, el vostre administrador'
 			'description' => 'Estableix el codi de redirecció per defecte que s\'utilitzarà si el client no ho estableix per si mateix'
 		],
 		'mail_also_with_mxservers' => 'Crear mail-, imap-, pop3- y smtp-"A record" també amb MX-Servers set',
-		'froxlordirectlyviahostname' => 'Accedir a Froxlor directament a través del nom de host',
+		'froxlordirectlyviahostname' => 'Accedir a froxlor directament a través del nom de host',
 		'panel_password_regex' => [
 			'title' => 'Expressió regular per a contrasenyes',
 			'description' => 'Aquí pot establir una expressió regular per a la complexitat de les contrasenyes.<br/>Buit = cap requeriment'
 		],
 		'mod_fcgid_ownvhost' => [
-			'title' => 'Habilita FCGID per al vHost de Froxlor',
-			'description' => 'Si està habilitat, Froxlor també s\'executarà sota un usuari local'
+			'title' => 'Habilita FCGID per al vHost de froxlor',
+			'description' => 'Si està habilitat, froxlor també s\'executarà sota un usuari local'
 		],
 		'perl' => [
 			'suexecworkaround' => [
 				'title' => 'Habilitar solució SuExec',
-				'description' => 'Habilitar només si els directoris del client no estan dins de la ruta apache suexec.<br/>Si està habilitat, Froxlor generarà un enllaç simbòlic des del directori del client habilitat per a perl + /cgi-bin/ a la ruta donada.<br />Tingueu en compte que perl només funcionarà al subdirectori de carpetes /cgi-bin/ i no a la carpeta en si (com ho fa sense aquesta solució!)'
+				'description' => 'Habilitar només si els directoris del client no estan dins de la ruta apache suexec.<br/>Si està habilitat, froxlor generarà un enllaç simbòlic des del directori del client habilitat per a perl + /cgi-bin/ a la ruta donada.<br />Tingueu en compte que perl només funcionarà al subdirectori de carpetes /cgi-bin/ i no a la carpeta en si (com ho fa sense aquesta solució!)'
 			],
 			'suexeccgipath' => [
 				'title' => 'Ruta per als enllaços simbòlics de directori habilitats per a perl del client',
@@ -1895,11 +1895,11 @@ Atentament, el vostre administrador'
 			'description' => 'On s\'han de crear els certificats ssl especificats pel client?<br/><br/><div class="text-danger">NOTA: El contingut d\'aquesta carpeta s\'esborra amb regularitat, així que eviteu emmagatzemar dades allà manualment. </div>'
 		],
 		'allow_error_report_admin' => [
-			'title' => 'Permetre als administradors/revenedors informar d\'errors a la base de dades a Froxlor',
+			'title' => 'Permetre als administradors/revenedors informar d\'errors a la base de dades a froxlor',
 			'description' => 'Nota: Mai ens enviïs dades personals (de clients)!'
 		],
 		'allow_error_report_customer' => [
-			'title' => 'Permetre als clients informar d\'errors a la base de dades a Froxlor',
+			'title' => 'Permetre als clients informar d\'errors a la base de dades a froxlor',
 			'description' => 'Nota: Mai ens enviïs dades personals (de clients)!'
 		],
 		'mailtraffic_enabled' => [
@@ -2184,7 +2184,7 @@ Atentament, el vostre administrador'
 		'REBUILD_DNS' => 'Reconstrucció de la configuració bind',
 		'CREATE_FTP' => 'Crear directori per a un nou usuari ftp',
 		'DELETE_CUSTOMER_FILES' => 'Esborrar fitxers de client %s',
-		'noneoutstanding' => 'Actualment no hi ha tasques pendents per a Froxlor',
+		'noneoutstanding' => 'Actualment no hi ha tasques pendents per a froxlor',
 		'CREATE_QUOTA' => 'Establir quota al sistema de fitxers',
 		'DELETE_EMAIL_DATA' => 'Esborrar dades de correu electrònic del client.',
 		'DELETE_FTP_DATA' => 'Esborrar les dades del compte ftp del client.',
@@ -2254,14 +2254,14 @@ Atentament, el vostre administrador'
 	],
 	'translator' => '',
 	'update' => [
-		'updateinprogress_onlyadmincanlogin' => 'S\'ha instal·lat una versió més recent del Froxlor però encara no s\'ha configurat.<br/>Només l\'administrador pot iniciar sessió i finalitzar l\'actualització.',
-		'update' => 'Actualització de Froxlor',
+		'updateinprogress_onlyadmincanlogin' => 'S\'ha instal·lat una versió més recent del froxlor però encara no s\'ha configurat.<br/>Només l\'administrador pot iniciar sessió i finalitzar l\'actualització.',
+		'update' => 'Actualització de froxlor',
 		'proceed' => 'Procedir',
 		'update_information' => [
-			'part_a' => 'Els fitxers Froxlor han estat actualitzats a la versió <strong>%s</strong>. La versió instal·lada és <strong>%s</strong>.',
+			'part_a' => 'Els fitxers froxlor han estat actualitzats a la versió <strong>%s</strong>. La versió instal·lada és <strong>%s</strong>.',
 			'part_b' => '<br/><br/>Els clients no es poden connectar fins que l\'actualització hagi finalitzat.<br/><strong>Procedir?</strong>'
 		],
-		'noupdatesavail' => 'Ja té instal·lada la darrera %sversion de Froxlor.',
+		'noupdatesavail' => 'Ja té instal·lada la darrera %sversion de froxlor.',
 		'description' => 'Executant actualitzacions de la base de dades per a la instal·lació de froxlor',
 		'uc_newinfo' => 'Hi ha una versió més recent disponible: "%s" (La vostra versió actual és: %s)',
 		'notify_subject' => 'Nova actualització disponible'
@@ -2297,7 +2297,7 @@ Atentament, el vostre administrador'
 		'database' => [
 			'top' => 'Base de dades',
 			'title' => 'Crear base de dades i usuari',
-			'description' => 'Froxlor requereix una base de dades i addicionalment un usuari privilegiat per poder crear usuaris i bases de dades (opció GRANT). La base de dades i l\'usuari no privilegiat es crearan en aquest procés. L\'usuari privilegiat ha d\'existir.',
+			'description' => 'froxlor requereix una base de dades i addicionalment un usuari privilegiat per poder crear usuaris i bases de dades (opció GRANT). La base de dades i l\'usuari no privilegiat es crearan en aquest procés. L\'usuari privilegiat ha d\'existir.',
 			'user' => 'Usuari no privilegiat de la base de dades',
 			'dbname' => 'Nom de la base de dades',
 			'force_create' => 'Fer còpia de seguretat i sobreescriure la base de dades si existeix?'

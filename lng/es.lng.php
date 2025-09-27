@@ -51,7 +51,7 @@ return [
 		'overview' => 'Visión general',
 		'ressourcedetails' => 'Recursos usados',
 		'systemdetails' => 'Detalles del sistema',
-		'froxlordetails' => 'Detalles de Froxlor',
+		'froxlordetails' => 'Detalles de froxlor',
 		'installedversion' => 'Versión instalada',
 		'latestversion' => 'Última versión',
 		'lookfornewversion' => [
@@ -204,7 +204,7 @@ return [
 				'description' => 'Mayormente CA_Bundle, o similar, probablemente quieras configurar esto si has comprado un certificado SSL.'
 			],
 			'docroot' => [
-				'title' => 'Docroot personalizado (vacío = apunta a Froxlor)',
+				'title' => 'Docroot personalizado (vacío = apunta a froxlor)',
 				'description' => 'Aquí puedes definir un document-root personalizado (el destino de una petición) para esta combinación ip/puerto.<br/><strong>ATENCIÓN:</strong> ¡Por favor, ten cuidado con lo que introduces aquí!'
 			],
 			'ssl_paste_description' => 'Pegue el contenido completo de su certificado en el cuadro de texto',
@@ -273,15 +273,15 @@ return [
 		'security_settings' => 'Opciones de seguridad',
 		'know_what_youre_doing' => 'Cambiar sólo, ¡si sabes lo que haces!',
 		'show_version_login' => [
-			'title' => 'Mostrar la versión de Froxlor en el login',
-			'description' => 'Mostrar la versión de Froxlor en el pie de página en la página de inicio de sesión'
+			'title' => 'Mostrar la versión de froxlor en el login',
+			'description' => 'Mostrar la versión de froxlor en el pie de página en la página de inicio de sesión'
 		],
 		'show_version_footer' => [
-			'title' => 'Mostrar la versión de Froxlor en el pie de página',
-			'description' => 'Mostrar la versión de Froxlor en el pie de página del resto de páginas'
+			'title' => 'Mostrar la versión de froxlor en el pie de página',
+			'description' => 'Mostrar la versión de froxlor en el pie de página del resto de páginas'
 		],
 		'froxlor_graphic' => [
-			'title' => 'Gráfico de cabecera para Froxlor',
+			'title' => 'Gráfico de cabecera para froxlor',
 			'description' => 'Qué gráfico debe mostrarse en la cabecera'
 		],
 		'phpsettings' => [
@@ -338,7 +338,7 @@ return [
 		'accountdata' => 'Datos de la cuenta',
 		'contactdata' => 'Datos de contacto',
 		'servicedata' => 'Datos de servicio',
-		'newerversionavailable' => 'Hay una nueva versión de Froxlor disponible.',
+		'newerversionavailable' => 'Hay una nueva versión de froxlor disponible.',
 		'newerversiondetails' => '¿Actualice ahora a la versión <b>%s</b>?<br/>(Su versión actual es: %s)',
 		'extractdownloadedzip' => '¿Extraer el archivo descargado "%s"?',
 		'cron' => [
@@ -354,8 +354,8 @@ return [
 		'webserver_group' => 'Nombre de grupo del servidor web',
 		'perlenabled' => 'Perl activado',
 		'fcgid_settings' => 'FCGID',
-		'mod_fcgid_user' => 'Usuario local a utilizar para FCGID (Froxlor vHost)',
-		'mod_fcgid_group' => 'Grupo local a utilizar para FCGID (Froxlor vHost)',
+		'mod_fcgid_user' => 'Usuario local a utilizar para FCGID (froxlor vHost)',
+		'mod_fcgid_group' => 'Grupo local a utilizar para FCGID (froxlor vHost)',
 		'perl_settings' => 'Perl/CGI',
 		'notgiven' => '[No indicado]',
 		'store_defaultindex' => 'Almacenar el archivo de índice por defecto en el docroot del cliente',
@@ -390,7 +390,7 @@ return [
 		'selectserveralias_desc' => 'Elija si froxlor debe crear una entrada comodín (*.dominio.tld), un alias WWW (www.domain.tld) o ningún alias.',
 		'show_news_feed' => [
 			'title' => 'Mostrar noticias en el panel de administración',
-			'description' => 'Activa esta opción para mostrar las noticias oficiales de Froxlor (https://inside.froxlor.org/news/) en tu panel de control y no perderte nunca información importante o anuncios de lanzamientos.'
+			'description' => 'Activa esta opción para mostrar las noticias oficiales de froxlor (https://inside.froxlor.org/news/) en tu panel de control y no perderte nunca información importante o anuncios de lanzamientos.'
 		],
 		'cronsettings' => 'Configuración de Cronjob',
 		'integritycheck' => 'Validación de la base de datos',
@@ -417,7 +417,7 @@ return [
 		'autoupdate' => 'Actualizar automáticamente',
 		'server_php' => 'PHP',
 		'dnsenabled' => 'Habilitar editor DNS',
-		'froxlorvhost' => 'Configuración de Froxlor VirtualHost',
+		'froxlorvhost' => 'Configuración de froxlor VirtualHost',
 		'hostname' => 'Nombre de host',
 		'memory' => 'Uso de memoria',
 		'webserversettings_ssl' => 'Configuración SSL del servidor web',
@@ -558,7 +558,7 @@ return [
 		'interval' => 'intervalo',
 		'isactive' => 'activado',
 		'description' => 'descripción',
-		'changewarning' => 'Cambiar estos valores puede tener una causa negativa en el comportamiento de Froxlor y sus tareas automatizadas.<br/>Por favor, sólo cambie los valores aquí, si está seguro de lo que está haciendo.'
+		'changewarning' => 'Cambiar estos valores puede tener una causa negativa en el comportamiento de froxlor y sus tareas automatizadas.<br/>Por favor, sólo cambie los valores aquí, si está seguro de lo que está haciendo.'
 	],
 	'crondesc' => [
 		'cron_unknown_desc' => 'no description given',
@@ -685,7 +685,7 @@ return [
 		'hasaliasdomains' => 'Tiene dominio(s) alias',
 		'statstics' => 'Estadísticas de uso',
 		'isassigneddomain' => 'Dominio asignado',
-		'add_date' => 'Añadido a Froxlor',
+		'add_date' => 'Añadido a froxlor',
 		'registration_date' => 'Añadido al registro',
 		'topleveldomain' => 'Top-Level-Dominio',
 		'associated_with_domain' => 'Asociado',
@@ -888,11 +888,11 @@ return [
 		'sslredirectonlypossiblewithsslipport' => 'El uso de Let\'s Encrypt sólo es posible cuando el dominio tiene asignada al menos una combinación IP/puerto habilitada para ssl.',
 		'fcgidstillenableddeadlock' => 'FCGID está actualmente activo.<br/>Por favor, desactívelo antes de cambiar a otro servidor web que no sea Apache2',
 		'send_report_title' => 'Enviar informe de error',
-		'send_report_desc' => 'Gracias por informar de este error y ayudarnos a mejorar Froxlor.<br/>Este es el correo electrónico que se enviará al equipo de desarrolladores de Froxlor:',
+		'send_report_desc' => 'Gracias por informar de este error y ayudarnos a mejorar froxlor.<br/>Este es el correo electrónico que se enviará al equipo de desarrolladores de froxlor:',
 		'send_report' => 'Enviar informe',
 		'send_report_error' => 'Error al enviar el informe: <br/>%s',
 		'notallowedtouseaccounts' => 'Tu cuenta no permite usar IMAP/POP3. No puedes añadir cuentas de correo.',
-		'cannotdeletehostnamephpconfig' => 'Esta configuración PHP es usada por el Froxlor-vhost y no puede ser borrada.',
+		'cannotdeletehostnamephpconfig' => 'Esta configuración PHP es usada por el froxlor-vhost y no puede ser borrada.',
 		'cannotdeletedefaultphpconfig' => 'Esta configuración PHP está establecida por defecto y no puede ser borrada.',
 		'passwordshouldnotbeusername' => 'La contraseña no debe ser la misma que el nombre de usuario.',
 		'no_phpinfo' => 'Lo sentimos, no puedo leer phpinfo()',
@@ -902,7 +902,7 @@ return [
 		'no_apcuinfo' => 'No hay información de caché disponible. APCu no parece estar ejecutándose.',
 		'no_opcacheinfo' => 'No hay información de caché disponible. OPCache no parece estar ejecutándose.',
 		'nowildcardwithletsencrypt' => 'Let\'s Encrypt no puede manejar dominios comodín usando ACME en froxlor (requiere dns-challenge), lo siento. Por favor, establezca el ServerAlias a WWW o desactívelo completamente.',
-		'customized_version' => 'Parece que tu instalación de Froxlor ha sido modificada, no hay soporte, lo sentimos.',
+		'customized_version' => 'Parece que tu instalación de froxlor ha sido modificada, no hay soporte, lo sentimos.',
 		'autoupdate_0' => 'Error desconocido',
 		'autoupdate_1' => 'El ajuste de PHP allow_url_fopen está desactivado. Autoupdate necesita que este ajuste esté habilitado en php.ini',
 		'autoupdate_2' => 'Extensión PHP zip no encontrada, por favor asegúrese de que está instalada y activada',
@@ -1077,7 +1077,7 @@ Atentamente, su administrador'
 		],
 		'2fa' => [
 			'mailbody' => 'Hola, su código de acceso 2FA es..: {CODE}. Este es un correo creado automáticamente, por favor no responda. Atentamente, su administrador.',
-			'subject' => 'Froxlor - Código 2FA'
+			'subject' => 'froxlor - Código 2FA'
 		]
 	],
 	'menue' => [
@@ -1288,11 +1288,11 @@ Atentamente, su administrador'
 		'upload_import' => 'Cargar e importar'
 	],
 	'phpfpm' => [
-		'vhost_httpuser' => 'Usuario local a usar para PHP-FPM (Froxlor vHost)',
-		'vhost_httpgroup' => 'Grupo local a usar para PHP-FPM (Froxlor vHost)',
+		'vhost_httpuser' => 'Usuario local a usar para PHP-FPM (froxlor vHost)',
+		'vhost_httpgroup' => 'Grupo local a usar para PHP-FPM (froxlor vHost)',
 		'ownvhost' => [
-			'title' => 'Habilitar PHP-FPM para el vHost de Froxlor',
-			'description' => 'Si está habilitado, Froxlor también se ejecutará bajo un usuario local'
+			'title' => 'Habilitar PHP-FPM para el vHost de froxlor',
+			'description' => 'Si está habilitado, froxlor también se ejecutará bajo un usuario local'
 		],
 		'use_mod_proxy' => [
 			'title' => 'Usar mod_proxy / mod_proxy_fcgi',
@@ -1531,7 +1531,7 @@ Atentamente, su administrador'
 				'description' => '¿Cuántas peticiones deben permitirse por dominio?'
 			],
 			'defaultini' => 'Configuración PHP por defecto para nuevos dominios',
-			'defaultini_ownvhost' => 'Configuración PHP por defecto para Froxlor-vHost',
+			'defaultini_ownvhost' => 'Configuración PHP por defecto para froxlor-vHost',
 			'idle_timeout' => [
 				'title' => 'Tiempo de espera',
 				'description' => 'Configuración de tiempo de espera para Mod FastCGI.'
@@ -1668,7 +1668,7 @@ Atentamente, su administrador'
 		],
 		'panel_allow_domain_change_customer' => [
 			'title' => 'Permitir mover dominios entre clientes',
-			'description' => 'Si está activado puedes cambiar el cliente de un dominio en domainsettings.<br/><b>Atención:</b> Froxlor cambia el documentroot al homedir por defecto del nuevo cliente (+ carpeta de dominio si está activado)'
+			'description' => 'Si está activado puedes cambiar el cliente de un dominio en domainsettings.<br/><b>Atención:</b> froxlor cambia el documentroot al homedir por defecto del nuevo cliente (+ carpeta de dominio si está activado)'
 		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'En caso afirmativo, estos ajustes personalizados de vHost se añadirán a todos los subdominios; en caso negativo, se eliminarán los ajustes especiales de subdominio.'
@@ -1719,19 +1719,19 @@ Atentamente, su administrador'
 			'description' => 'Establece el código de redirección por defecto que se utilizará si el cliente no lo establece por sí mismo'
 		],
 		'mail_also_with_mxservers' => 'Crear mail-, imap-, pop3- y smtp-"A record" también con MX-Servers set',
-		'froxlordirectlyviahostname' => 'Acceder a Froxlor directamente a través del nombre de host',
+		'froxlordirectlyviahostname' => 'Acceder a froxlor directamente a través del nombre de host',
 		'panel_password_regex' => [
 			'title' => 'Expresión regular para contraseñas',
 			'description' => 'Aquí puede establecer una expresión regular para la complejidad de las contraseñas.<br/>Empty = no specific requirement'
 		],
 		'mod_fcgid_ownvhost' => [
-			'title' => 'Habilitar FCGID para el vHost de Froxlor',
-			'description' => 'Si está habilitado, Froxlor también se ejecutará bajo un usuario local'
+			'title' => 'Habilitar FCGID para el vHost de froxlor',
+			'description' => 'Si está habilitado, froxlor también se ejecutará bajo un usuario local'
 		],
 		'perl' => [
 			'suexecworkaround' => [
 				'title' => 'Habilitar solución SuExec',
-				'description' => 'Habilitar sólo si los directorios del cliente no están dentro de la ruta apache suexec.<br/>Si está habilitado, Froxlor generará un enlace simbólico desde el directorio del cliente habilitado para perl + /cgi-bin/ a la ruta dada.<br/>Tenga en cuenta que perl sólo funcionará en el subdirectorio de carpetas /cgi-bin/ y no en la carpeta en sí (¡como lo hace sin esta solución!)'
+				'description' => 'Habilitar sólo si los directorios del cliente no están dentro de la ruta apache suexec.<br/>Si está habilitado, froxlor generará un enlace simbólico desde el directorio del cliente habilitado para perl + /cgi-bin/ a la ruta dada.<br/>Tenga en cuenta que perl sólo funcionará en el subdirectorio de carpetas /cgi-bin/ y no en la carpeta en sí (¡como lo hace sin esta solución!)'
 			],
 			'suexeccgipath' => [
 				'title' => 'Ruta para los enlaces simbólicos de directorio habilitados para perl del cliente',
@@ -1882,11 +1882,11 @@ Atentamente, su administrador'
 			'description' => '¿Dónde deben crearse los certificados ssl especificados por el cliente?<br/><br/><div class="text-danger">NOTA: El contenido de esta carpeta se borra con regularidad, así que evite almacenar datos allí manualmente.</div>'
 		],
 		'allow_error_report_admin' => [
-			'title' => 'Permitir a los administradores/revendedores informar de errores en la base de datos a Froxlor',
+			'title' => 'Permitir a los administradores/revendedores informar de errores en la base de datos a froxlor',
 			'description' => 'Nota: ¡Nunca nos envíes datos personales (de clientes)!'
 		],
 		'allow_error_report_customer' => [
-			'title' => 'Permitir a los clientes informar de errores en la base de datos a Froxlor',
+			'title' => 'Permitir a los clientes informar de errores en la base de datos a froxlor',
 			'description' => 'Nota: ¡No nos envíe nunca datos personales (de clientes)!'
 		],
 		'mailtraffic_enabled' => [
@@ -2165,7 +2165,7 @@ Atentamente, su administrador'
 		'REBUILD_DNS' => 'Reconstrucción de la configuración bind',
 		'CREATE_FTP' => 'Crear directorio para nuevo usuario ftp',
 		'DELETE_CUSTOMER_FILES' => 'Borrar archivos de cliente %s',
-		'noneoutstanding' => 'Actualmente no hay tareas pendientes para Froxlor',
+		'noneoutstanding' => 'Actualmente no hay tareas pendientes para froxlor',
 		'CREATE_QUOTA' => 'Establecer cuota en el sistema de archivos',
 		'DELETE_EMAIL_DATA' => 'Borrar datos de e-mail del cliente.',
 		'DELETE_FTP_DATA' => 'Borrar los datos de la cuenta ftp del cliente.',
@@ -2234,14 +2234,14 @@ Atentamente, su administrador'
 	],
 	'translator' => '',
 	'update' => [
-		'updateinprogress_onlyadmincanlogin' => 'Se ha instalado una versión más reciente de Froxlor pero aún no se ha configurado.<br/>Sólo el administrador puede iniciar sesión y finalizar la actualización.',
-		'update' => 'Actualización de Froxlor',
+		'updateinprogress_onlyadmincanlogin' => 'Se ha instalado una versión más reciente de froxlor pero aún no se ha configurado.<br/>Sólo el administrador puede iniciar sesión y finalizar la actualización.',
+		'update' => 'Actualización de froxlor',
 		'proceed' => 'Proceder',
 		'update_information' => [
-			'part_a' => 'Los archivos Froxlor han sido actualizados a la versión <strong>%s</strong>. La versión instalada es <strong>%s</strong>.',
+			'part_a' => 'Los archivos froxlor han sido actualizados a la versión <strong>%s</strong>. La versión instalada es <strong>%s</strong>.',
 			'part_b' => '<br/><br/>Los clientes no podrán conectarse hasta que la actualización haya finalizado.<br/><strong>¿Proceder?</strong>'
 		],
-		'noupdatesavail' => 'Ya tiene instalada la última %sversion de Froxlor.',
+		'noupdatesavail' => 'Ya tiene instalada la última %sversion de froxlor.',
 		'description' => 'Ejecutando actualizaciones de la base de datos para su instalación de froxlor',
 		'uc_newinfo' => 'Hay un %sversion más reciente disponible: "%s" (Su versión actual es: %s)',
 		'notify_subject' => 'Nueva actualización disponible'
@@ -2277,7 +2277,7 @@ Atentamente, su administrador'
 		'database' => [
 			'top' => 'Base de datos',
 			'title' => 'Crear base de datos y usuario',
-			'description' => 'Froxlor requiere una base de datos y adicionalmente un usuario privilegiado para poder crear usuarios y bases de datos (opción GRANT). La base de datos y el usuario no privilegiado serán creados en este proceso. El usuario privilegiado debe existir.',
+			'description' => 'froxlor requiere una base de datos y adicionalmente un usuario privilegiado para poder crear usuarios y bases de datos (opción GRANT). La base de datos y el usuario no privilegiado serán creados en este proceso. El usuario privilegiado debe existir.',
 			'user' => 'Usuario no privilegiado de la base de datos',
 			'dbname' => 'Nombre de la base de datos',
 			'force_create' => '¿Hacer copia de seguridad y sobrescribir la base de datos si existe?'
