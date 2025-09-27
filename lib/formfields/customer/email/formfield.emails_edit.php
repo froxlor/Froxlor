@@ -146,7 +146,7 @@ return [
 						]
 					],
 					'mail_senders' => [
-						'visible' => Settings::Get('mail.enable_allow_sender') == '1',
+						'visible' => ((int)$result['popaccountid'] != 0 && Settings::Get('mail.enable_allow_sender') == '1'),
 						'label' => lng('emails.senders') . ' (' . $senders_count . ')',
 						'type' => 'itemlist',
 						'values' => $senders,

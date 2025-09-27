@@ -1063,6 +1063,7 @@ return [
 		'emaildomainstillhasaddresses' => 'Cannot deactivate mail-domain flag, as there are still email-addresses for this domain.',
 		'tls13requiredforhttp3' => 'Domain http3 flag enabled but ssl-protocols does not include TLSv1.3',
 		'senderdomainnotowned' => 'Given domain "%s" cannot be used.',
+		'emailhasnoaccount' => 'Given email address "%s" has no account, cannot add sender address.',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',
