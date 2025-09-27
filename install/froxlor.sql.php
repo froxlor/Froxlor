@@ -103,6 +103,14 @@ CREATE TABLE `mail_virtual` (
   KEY `email` (`email`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
+DROP TABLE IF EXISTS `mail_sender_aliases`;
+CREATE TABLE `mail_sender_aliases` (
+  `id` int(11) NOT NULL auto_increment,
+  `email` varchar(255) NOT NULL,
+  `allowed_sender` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `email_sender` (`email`, `allowed_sender`)
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 DROP TABLE IF EXISTS `panel_activation`;
 CREATE TABLE `panel_activation` (
@@ -694,6 +702,8 @@ opcache.validate_timestamps'),
 	('api', 'enabled', '0'),
 	('api', 'customer_default', '1'),
 	('2fa', 'enabled', '1'),
+	('mail', 'enable_allow_sender', '0'),
+	('mail', 'allow_external_domains', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'ADMIN_MAIL'),
 	('panel', 'phpmyadmin_url', ''),
@@ -736,7 +746,7 @@ opcache.validate_timestamps'),
 	('panel', 'settings_mode', '0'),
 	('panel', 'menu_collapsed', '1'),
 	('panel', 'version', '2.3.0-dev1'),
-	('panel', 'db_version', '202509210');
+	('panel', 'db_version', '202509270');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

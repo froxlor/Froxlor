@@ -144,6 +144,20 @@ return [
 								'classes' => 'btn btn-sm btn-primary'
 							]
 						]
+					],
+					'mail_senders' => [
+						'visible' => Settings::Get('mail.enable_allow_sender') == '1',
+						'label' => lng('emails.senders') . ' (' . $senders_count . ')',
+						'type' => 'itemlist',
+						'values' => $senders,
+						'next_to' => [
+							'add_link' => [
+								'type' => 'link',
+								'href' => $filename . '?page=senders&amp;domainid=' . $result['domainid'] . '&amp;action=add&amp;id=' . $result['id'],
+								'label' => lng('emails.sender_add'),
+								'classes' => 'btn btn-sm btn-primary'
+							]
+						]
 					]
 				]
 			]

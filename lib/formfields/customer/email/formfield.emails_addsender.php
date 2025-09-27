@@ -23,35 +23,41 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-$email_domainid ?: 0;
+use Froxlor\Settings;
 
 return [
-	'emails_add' => [
-		'title' => lng('emails.emails_add'),
+	'emails_addsender' => [
+		'title' => lng('emails.sender_add'),
 		'image' => 'fa-solid fa-plus',
-		'self_overview' => ['section' => 'email', 'page' => $email_domainid != 0 ? 'email_domain' : 'emails', 'domainid' => $email_domainid],
 		'sections' => [
 			'section_a' => [
-				'title' => lng('emails.emails_add'),
+				'title' => lng('emails.sender_add'),
 				'fields' => [
-					'email_part' => [
-						'label' => lng('emails.emailaddress'),
-						'type' => 'text',
-						'mandatory' => true,
-						'next_to' => [
-							'domain' => [
-								'next_to_prefix' => '@',
-								'type' => 'select',
-								'select_var' => $domains,
-								'selected' => $selected_domain
-							]
-						]
+					'emailaddr' => [
+						'label' => lng('emails.account'),
+						'type' => 'label',
+						'value' => $result['email_full']
 					],
-					'iscatchall' => [
-						'label' => lng('emails.iscatchall'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
+					'allowed_sender' => [
+						'label' => lng('emails.foreign_sender').'<span class="text-danger">*</span>',
+						'type' => 'text',
+						'string_regex' => '/^[A-Za-z0-9._+-]+$/',
+						'placeholder' => '(all)',
+						'next_to' => [
+							'allowed_domain' => (Settings::Get('mail.allow_external_domains') == '0' ?
+								[
+									'next_to_prefix' => '@',
+									'type' => 'select',
+									'select_var' => $domains,
+								]
+								:
+								[
+								'next_to_prefix' => '@',
+								'type' => 'text',
+								'placeholder' => 'domain.tld',
+								'mandatory' => true
+							])
+						]
 					]
 				]
 			]

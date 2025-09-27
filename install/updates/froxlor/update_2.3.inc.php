@@ -108,3 +108,23 @@ if (Froxlor::isDatabaseVersion('202509120')) {
 
 	Froxlor::updateToDbVersion('202509210');
 }
+
+if (Froxlor::isDatabaseVersion('202509210')) {
+	Update::showUpdateStep("Adding new table for email sender aliases");
+	Database::query("DROP TABLE IF EXISTS `mail_sender_aliases`;");
+	$sql = "CREATE TABLE `mail_sender_aliases` (
+	  `id` int(11) NOT NULL auto_increment,
+	  `email` varchar(255) NOT NULL,
+	  `allowed_sender` varchar(255) NOT NULL,
+	  PRIMARY KEY  (`id`),
+	  UNIQUE KEY `email_sender` (`email`, `allowed_sender`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+	Database::query($sql);
+	$mail_enable_allow_sender = $_POST['mail_enable_allow_sender'] ?? 0;
+	Settings::AddNew('mail.enable_allow_sender', $mail_enable_allow_sender);
+	$mail_allow_external_domains = $_POST['mail_allow_external_domains'] ?? 0;
+	Settings::AddNew('mail.allow_external_domains', $mail_allow_external_domains);
+	Update::lastStepStatus(0);
+
+	Froxlor::updateToDbVersion('202509270');
+}

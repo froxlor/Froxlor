@@ -228,7 +228,7 @@ return [
 						'desc' => lng('admin.domain_http2.description'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => false
+						'checked' => true
 					],
 					'http3' => [
 						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') == 'nginx' && Settings::Get('system.http3_support') == '1',
@@ -236,7 +236,7 @@ return [
 						'desc' => lng('admin.domain_http3.description') . lng('admin.domain_http3.nginx_version_warning'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => false
+						'checked' => true
 					],
 					'override_tls' => [
 						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',

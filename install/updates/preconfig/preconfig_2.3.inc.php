@@ -50,5 +50,28 @@ if (Update::versionInUpdate($current_db_version, '202508310')) {
 	}
 }
 
+if (Update::versionInUpdate($current_db_version, '202509210')) {
+
+	$has_preconfig = true;
+	$description = 'It is now possible for customers to add "allowed sender" addresses for email-accounts to send from if enabled.';
+	$question = '<strong>Enable "allowed sender" for customers?</strong>&nbsp;';
+	$return['mail_enable_allow_sender'] = [
+		'type' => 'checkbox',
+		'value' => 1,
+		'checked' => 0,
+		'label' => $question,
+		'prior_infotext' => $description
+	];
+	$description = 'By default, a customer cannot use domains that are not added to the account for the "allowed sender" feature. You can specify if you would like to allow adding addresses from external domains not managed by your installation.';
+	$question = '<strong>Allow external domains for "allowed sender"?</strong>&nbsp;';
+	$return['mail_allow_external_domains'] = [
+		'type' => 'checkbox',
+		'value' => 1,
+		'checked' => 0,
+		'label' => $question,
+		'prior_infotext' => $description
+	];
+}
+
 $preconfig['fields'] = $return;
 return $preconfig;
