@@ -43,7 +43,7 @@ class EmailSender extends ApiCommand implements ResourceEntity
 {
 
 	/**
-	 * add a new email account for a given email-address either by id or emailaddr
+	 * add a new sender email address for a given email-address either by id or emailaddr
 	 *
 	 * @param int $id
 	 *            optional id of email-address to add the allowed sender for (must have an account)
@@ -221,6 +221,20 @@ class EmailSender extends ApiCommand implements ResourceEntity
 	}
 
 	/**
+	 * returns the total number of allowed sender addresses for a given email address
+	 *
+	 * @param int $id
+	 * 			optional, the id of the email-address to list allowed senders from
+	 * @param string $emailaddr
+	 * 			optional, the email-address to list allowed senders from
+	 * @param int $customerid
+	 * 			optional, admin-only, the customer-id
+	 * @param string $loginname
+	 * 			optional, admin-only, the loginname
+	 *
+	 * @access admin, customer
+	 * @return string json-encoded response message
+	 * @throws Exception
 	 */
 	public function listingCount()
 	{
