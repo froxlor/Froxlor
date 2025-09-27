@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
 	<distribution name="Ubuntu" codename="Focal"
-		version="20.04" defaulteditor="/bin/nano">
+		version="20.04" defaulteditor="/bin/nano" deprecated="true">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
 			<default settinggroup="system" varname="nssextrausers" value="1"></default>

@@ -126,5 +126,10 @@ if (Froxlor::isDatabaseVersion('202509210')) {
 	Settings::AddNew('mail.allow_external_domains', $mail_allow_external_domains);
 	Update::lastStepStatus(0);
 
+	$to_clean = [
+		'lib/configfiles/gentoo.xml',
+	];
+	Update::cleanOldFiles($to_clean);
+
 	Froxlor::updateToDbVersion('202509270');
 }
