@@ -774,22 +774,22 @@ class DomainZonesTest extends TestCase
 
 		$data = [
 			'domainname' => 'test2.local',
-			'record' => 'db',
+			'record' => 'db2',
 			'type' => 'CNAME',
-			'content' => 'db2'
+			'content' => 'db3'
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('db2.test2.local.') * - 1) == 'db2.test2.local.') {
+			if (substr($entry, strlen('db3.test2.local.') * - 1) == 'db3.test2.local.') {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('db	18000	IN	CNAME	db2.test2.local.', $entry);
+		$this->assertEquals('db2	18000	IN	CNAME	db3.test2.local.', $entry);
 	}
 
 	/**
