@@ -168,7 +168,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				WHERE `domain` = :domain
 				AND `customerid` = :customerid
 				AND `email_only` = '0'
-				AND `caneditdomain` = '1'
 			");
 			$completedomain_check = Database::pexecute_first($completedomain_stmt, [
 				"domain" => $completedomain,
@@ -221,7 +220,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				AND `customerid` = :customerid
 				AND `parentdomainid` = '0'
 				AND `email_only` = '0'
-				AND `caneditdomain` = '1'
 			");
 			$domain_check = Database::pexecute_first($domain_stmt, [
 				"domain" => $domain,
