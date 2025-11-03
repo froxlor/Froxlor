@@ -157,6 +157,8 @@ final class MasterCron extends CliCommand
 		//so users in the database don't conflict with system users
 		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 		Cronjob::checkLastGuid();
+		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s OS');
+		Cronjob::checkCurrentDistro();
 
 		// check for cron.d-generation task and create it if necessary
 		CronConfig::checkCrondConfigurationFile();

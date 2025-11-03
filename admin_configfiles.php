@@ -68,6 +68,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		// update setting if different
 		if ($distribution != Settings::Get('system.distribution')) {
 			Settings::Set('system.distribution', $distribution);
+			Settings::Set('system.distro_mismatch', '0');
 		}
 
 		// create configparser object
