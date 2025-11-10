@@ -141,7 +141,7 @@ class Cronjob
 			$distro = strtolower($os_dist['VERSION_CODENAME'] ?? ($os_dist['ID'] ?? $distro));
 		}
 
-		if (!$is_install && $distro != Settings::Get('system.distribution')) {
+		if (!$is_install && $distro != Settings::Get('system.distribution') && Settings::Get('system.distro_mismatch') != '2') {
 			Settings::Set('system.distro_mismatch', '1');
 		}
 

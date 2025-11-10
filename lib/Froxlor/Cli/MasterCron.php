@@ -157,7 +157,7 @@ final class MasterCron extends CliCommand
 		//so users in the database don't conflict with system users
 		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 		Cronjob::checkLastGuid();
-		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s OS');
+		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s OS version');
 		Cronjob::checkCurrentDistro();
 
 		// check for cron.d-generation task and create it if necessary
@@ -244,8 +244,7 @@ final class MasterCron extends CliCommand
 			'startts' => time(),
 			'pid' => getmypid()
 		];
-		file_put_contents($this->lockFile, json_encode($jobinfo));
-		return true;
+		return file_put_contents($this->lockFile, json_encode($jobinfo)) !== false;
 	}
 
 	private function unlockJob(): bool

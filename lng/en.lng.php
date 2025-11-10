@@ -1429,6 +1429,7 @@ Yours sincerely, your administrator',
 		'use_checkbox_to_disable' => 'To disable, activate the checkbox on the right of the input field',
 		'distro_mismatch' => 'It seems that you have upgraded to a new distribution. Please remember to reconfigure services accordingly.',
 		'set_new_distro' => 'Set distribution',
+		'dismiss' => 'Dismiss',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (froxlor vHost)',

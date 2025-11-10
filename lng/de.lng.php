@@ -1315,6 +1315,7 @@ Vielen Dank, Ihr Administrator',
 		'use_checkbox_to_disable' => 'Zum Deaktivieren, klicke die Checkbox auf der rechten Seite des Eingabefeldes',
 		'distro_mismatch' => 'Anscheinend wurde auf eine neue Distribution aktualisiert. Bitte die Dienste entsprechend neu konfigurieren.',
 		'set_new_distro' => 'Distribution setzen',
+		'dismiss' => 'Ignorieren'
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (froxlor-Vhost)',

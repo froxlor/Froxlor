@@ -230,11 +230,15 @@ if (Froxlor::isDatabaseVersion('202411200')) {
 			// get DbManager
 			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
 			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-				if ($dbm->getManager()->userExistsOnHost($customer['loginname'], $mysql_access_host)) {
-					// deactivate temporarily
-					$dbm->getManager()->disableUser($customer['loginname'], $mysql_access_host);
-					// re-enable
-					$dbm->getManager()->enableUser($customer['loginname'], $mysql_access_host, true);
+				try {
+					if ($dbm->getManager()->userExistsOnHost($customer['loginname'], $mysql_access_host)) {
+						// deactivate temporarily
+						$dbm->getManager()->disableUser($customer['loginname'], $mysql_access_host);
+						// re-enable
+						$dbm->getManager()->enableUser($customer['loginname'], $mysql_access_host, true);
+					}
+				} catch (Exception $e) {
+					// continue
 				}
 			}
 			$dbm->getManager()->flushPrivileges();

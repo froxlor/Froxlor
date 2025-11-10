@@ -49,6 +49,10 @@ if ($userinfo['change_serversettings'] == '1') {
 	if (empty($distribution)) {
 		$distribution = Settings::Get('system.distribution') ?? "";
 	}
+	if ($reselect == 2) {
+		Settings::Set('system.distro_mismatch', '2');
+		$reselect = 1;
+	}
 	if ($reselect == 1) {
 		$distribution = '';
 	}
