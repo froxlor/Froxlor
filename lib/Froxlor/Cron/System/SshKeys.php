@@ -92,7 +92,7 @@ class SshKeys
 					}
 
 					// add key
-					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Addin ssh-key for user ' . $usr['username']);
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Adding ssh-key for user ' . $usr['username']);
 					file_put_contents($authkeysfile, trim($sshkey['ssh_pubkey']) . " froxlor:id=" . $sshkey['id'] . "\n", FILE_APPEND | LOCK_EX);
 				}
 			}

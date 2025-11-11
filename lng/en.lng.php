@@ -2154,7 +2154,7 @@ Yours sincerely, your administrator',
 		],
 		'available_shells' => [
 			'title' => 'List of available shells',
-			'description' => 'Comma separated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case',
+			'description' => 'Comma separated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case.',
 		],
 		'le_froxlor_enabled' => [
 			'title' => 'Enable Let\'s Encrypt for the froxlor vhost',

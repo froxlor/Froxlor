@@ -2033,7 +2033,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'available_shells' => [
 			'title' => 'Liste der verfügbaren Shells',
-			'description' => 'Komma-getrennte Liste von Shells, die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten',
+			'description' => 'Komma-getrennte Liste von Shells, die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten.',
 		],
 		'le_froxlor_enabled' => [
 			'title' => 'Let\'s Encrypt für den froxlor Vhost verwenden',
