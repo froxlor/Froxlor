@@ -26,6 +26,8 @@
 namespace Froxlor\Cli;
 
 use Exception;
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Install\AutoUpdate;
 use Froxlor\Install\Preconfig;
@@ -185,6 +187,22 @@ final class UpdateCommand extends CliCommand
 							if ($auex == 0) {
 								$output->writeln("<info>Froxlor files updated successfully.</>");
 								$result = self::SUCCESS;
+
+								// restart fpm if used to clear opcache
+								if ((int)Settings::Get('phpfpm.enabled') == 1 && Settings::Get('phpfpm.enabled_ownvhost') == '1') {
+									// get fpm restart cmd
+									$startstop_sel = Database::prepare("
+										SELECT f.reload_cmd, f.config_dir
+										FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
+										LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+										WHERE p.id = :phpconfigid
+									");
+									$restart_cmd = Database::pexecute_first($startstop_sel, [
+										'phpconfigid' => Settings::Get('phpfpm.vhost_defaultini')
+									]);
+									// restart php-fpm instance
+									FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+								}
 
 								$this->askUpdateOptions($input, $output, $helper, $yestoall);
 

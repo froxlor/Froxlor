@@ -143,6 +143,9 @@ elseif ($page == 'extract') {
 				'errno' => $result
 			]);
 		}
+		if (function_exists('opcache_reset')) {
+			@opcache_reset();
+		}
 		// redirect to update-page
 		Response::redirectTo('admin_updates.php');
 	} else {
