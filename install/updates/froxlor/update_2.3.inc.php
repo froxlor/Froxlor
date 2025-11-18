@@ -139,3 +139,8 @@ if (Froxlor::isDatabaseVersion('202509270')) {
 	Settings::AddNew('system.distro_mismatch', '0');
 	Froxlor::updateToDbVersion('202511020');
 }
+
+if (Froxlor::isFroxlorVersion('2.3.0-dev1')) {
+	Update::showUpdateStep("Updating from 2.3.0-dev1 to 2.3.0-rc1", false);
+	Froxlor::updateToVersion('2.3.0-rc1');
+}
