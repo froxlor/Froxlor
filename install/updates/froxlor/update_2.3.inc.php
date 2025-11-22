@@ -92,7 +92,9 @@ if (Froxlor::isDatabaseVersion('202509060')) {
 	Update::lastStepStatus(0);
 
 	// clear templates cache
-	FileDir::safe_exec('rm -rf ' . FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/cache/*'));
+	Update::cleanOldFiles([
+		'cache/*'
+	]);
 
 	Froxlor::updateToDbVersion('202509120');
 }
