@@ -169,7 +169,7 @@ return [
 					'varname' => 'enable_allow_sender',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSetting'
+					'save_method' => 'storeSettingField'
 				],
 				'mail_allow_external_domains' => [
 					'label' => lng('serversettings.mail_allow_external_domains'),
@@ -177,7 +177,7 @@ return [
 					'varname' => 'allow_external_domains',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSetting'
+					'save_method' => 'storeSettingField'
 				],
 			]
 		]
