@@ -146,3 +146,8 @@ if (Froxlor::isFroxlorVersion('2.3.0-dev1')) {
 	Update::showUpdateStep("Updating from 2.3.0-dev1 to 2.3.0-rc1", false);
 	Froxlor::updateToVersion('2.3.0-rc1');
 }
+
+if (Froxlor::isFroxlorVersion('2.3.0-rc1')) {
+	Update::showUpdateStep("Updating from 2.3.0-rc1 to 2.3.0", false);
+	Froxlor::updateToVersion('2.3.0');
+}
