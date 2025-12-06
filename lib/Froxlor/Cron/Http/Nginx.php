@@ -284,8 +284,10 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tset \$path_info \$fastcgi_path_info;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$path_info;\n";
+
 
 					if ($row_ipsandports['ssl'] == '1') {
 						$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param HTTPS on;\n";
@@ -1184,7 +1186,8 @@ class Nginx extends HttpConfigBase
 			$phpopts .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 			$phpopts .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
-			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
+			$phpopts .= "\t\tset \$path_info \$fastcgi_path_info;\n";
+			$phpopts .= "\t\tfastcgi_param PATH_INFO \$path_info;\n";
 			$phpopts .= "\t\tfastcgi_pass " . Settings::Get('system.nginx_php_backend') . ";\n";
 			$phpopts .= "\t\tfastcgi_index index.php;\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
