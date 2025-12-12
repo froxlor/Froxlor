@@ -79,6 +79,13 @@ final class PhpSessionclean extends CliCommand
 				$pattern = preg_quote('session.save_path', '/');
 				$pattern = "/" . $pattern . ".+?\=(.*)/";
 				if (preg_match_all($pattern, $contents, $matches)) {
+					$session_path = trim($matches[1][0]);
+					// Skip non-file-based session storage (Redis, Memcached, etc.)
+					// These typically contain protocol indicators like :// or are not valid directories
+					if (strpos($session_path, '://') !== false) {
+						// Skip paths with protocol indicators (tcp://, redis://, memcached://, etc.)
+						continue;
+					}
 					$paths_to_clean[] = FileDir::makeCorrectDir(trim($matches[1][0]));
 				}
 			}
