@@ -45,7 +45,7 @@ class DomainSSL
 	 * @return null
 	 * @throws \Exception
 	 */
-	public function setDomainSSLFilesArray(array &$domain = null)
+	public function setDomainSSLFilesArray(?array &$domain = null)
 	{
 		// check if the domain itself has a certificate defined
 		$dom_certs_stmt = Database::prepare("
