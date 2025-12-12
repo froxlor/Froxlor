@@ -47,7 +47,7 @@ class Directory
 	 *
 	 * @param string $dir
 	 */
-	public function __construct(string $dir = null)
+	public function __construct(?string $dir = null)
 	{
 		$this->dir = $dir;
 	}
