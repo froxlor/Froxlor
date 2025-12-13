@@ -225,6 +225,9 @@ fastcgi_param  SERVER_NAME        $server_name;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS    200;
+
+# Fix for HTTP/3 ($http_host is not populated automatically)
+fastcgi_param  HTTP_HOST          $host;
 ]]>
 						</content>
 					</file>
