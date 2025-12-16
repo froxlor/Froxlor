@@ -160,7 +160,6 @@ class Domain
 			&& $attributes['fields']['caneditdomain'] == '1'
 			&& Settings::Get('system.bind_enable') == '1'
 			&& Settings::Get('system.dnsenabled') == '1'
-			&& !$attributes['fields']['email_only']
 			&& !$attributes['fields']['deactivated'];
 	}
 

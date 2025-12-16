@@ -353,7 +353,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				`ssl_protocols` = :ssl_protocols,
 				`ssl_cipher_list` = :ssl_cipher_list,
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
-				`ssl_enabled` = :sslenabled
+				`ssl_enabled` = :sslenabled,
+				`dkim` = :dkim
 			");
 			$params = [
 				"customerid" => $customer['customerid'],
@@ -386,7 +387,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"ssl_protocols" => $domain_check['ssl_protocols'],
 				"ssl_cipher_list" => $domain_check['ssl_cipher_list'],
 				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list'],
-				"sslenabled" => $sslenabled
+				"sslenabled" => $sslenabled,
+				"dkim" => $domain_check['dkim'],
 			];
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
