@@ -121,7 +121,7 @@ class Cronjob
 	public static function checkCurrentDistro(bool $is_install = false): string
 	{
 		// set default os.
-		$distro = 'bookworm';
+		$distro = Settings::Get('system.distribution');
 
 		// read os-release
 		if (@file_exists('/etc/os-release') && is_readable('/etc/os-release')) {
@@ -133,7 +133,7 @@ class Cronjob
 					$osrfline = explode("=", $line);
 					if ($osrfline[0] == 'VERSION_CODENAME') {
 						$os_dist['VERSION_CODENAME'] = $osrfline[1];
-					} else if ($osrfline[0] == 'ID') {
+					} elseif ($osrfline[0] == 'ID') {
 						$os_dist['ID'] = $osrfline[1];
 					}
 				}

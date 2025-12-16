@@ -129,6 +129,8 @@ class Fcgid
 
 		if (!is_dir($configdir) && $createifnotexists) {
 			FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			FileDir::safe_exec('chmod 0750 ' . escapeshellarg(dirname($configdir)));
+			FileDir::safe_exec('chmod 0750 ' . escapeshellarg($configdir));
 			FileDir::safe_exec('chown ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
 
