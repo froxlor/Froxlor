@@ -728,6 +728,10 @@ return [
 		'txtrecords' => 'Define TXT records',
 		'txtexample' => 'Example (SPF-entry):<br />v=spf1 ip4:xxx.xxx.xx.0/23 -all',
 		'howitworks' => 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are preferred, only missing entries will be automatically generated.',
+		'nis2note' => [
+			'title' => 'NIS2 info',
+			'content' => 'DNS hosting/authoritative DNS services may be considered a digital service with increased security and reporting obligations under <strong>EU-NIS2</strong>. Please check whether your setup is affected by NIS2 and what measures are required.'
+		],
 	],
 	'dnseditor' => [
 		'edit' => 'edit DNS',

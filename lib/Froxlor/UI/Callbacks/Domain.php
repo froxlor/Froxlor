@@ -109,6 +109,7 @@ class Domain
 		if ((int)UI::getCurrentUser()['adminsession'] == 0
 			&& $attributes['fields']['parentdomainid'] == 0
 			&& $attributes['fields']['deactivated'] == 0
+			&& !$attributes['fields']['email_only']
 			&& preg_match('/^https?:\/\/(.*)/i', $attributes['fields']['documentroot']) == false
 		) {
 			$statsapp = Settings::Get('system.traffictool');

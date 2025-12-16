@@ -108,7 +108,15 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			UI::view('settings/index.html.twig', ['fields' => $fields]);
 		} else {
 			$em = Request::any('em', '');
-			UI::view('settings/detailpart.html.twig', ['fields' => $fields, 'em' => $em]);
+			UI::view('settings/detailpart.html.twig', [
+				'fields' => $fields,
+				'em' => $em,
+				'part' => $_part,
+				// alert-box
+				'type' => 'warning',
+				'heading' => lng('dns.nis2note.title'),
+				'alert_msg' => lng('dns.nis2note.content')
+			]);
 		}
 	}
 } elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
