@@ -332,6 +332,12 @@ class Settings
 		}
 	}
 
+	public static function refreshState(): void
+	{
+		self::$data = null;
+		self::init();
+	}
+
 	public static function getAll(): array
 	{
 		self::init();

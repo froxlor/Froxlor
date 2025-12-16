@@ -149,6 +149,9 @@ final class MasterCron extends CliCommand
 			}
 		}
 
+		// possible long-running jobs disconnect from the database
+		Settings::refreshState();
+
 		// regenerate nss-extrausers files / invalidate nscd cache (if used)
 		$this->refreshUsers((int)$tasks_cnt['jobcnt']);
 
