@@ -1864,7 +1864,7 @@ protocol imap {
   }
 }
 
-pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+pop3_logout_format = "in=%{input} out=%{output} top=%{top_count}/%{top_bytes}, retr=%{retr_count}/%{retr_bytes}, del=%{deleted_count}/%{deleted_bytes}, size=%{message_bytes}"
 
 protocol lda {
 	mail_plugins {
