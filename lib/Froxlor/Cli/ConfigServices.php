@@ -153,7 +153,6 @@ final class ConfigServices extends CliCommand
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		// get curl response
 		curl_exec($ch);
-		curl_close($ch);
 		fclose($fp);
 	}
 
