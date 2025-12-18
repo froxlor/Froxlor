@@ -358,7 +358,6 @@ final class InstallCommand extends Command
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		// get curl response
 		curl_exec($ch);
-		curl_close($ch);
 		fclose($fp);
 	}
 

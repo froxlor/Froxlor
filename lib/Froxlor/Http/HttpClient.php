@@ -53,10 +53,8 @@ class HttpClient
 		$output = curl_exec($ch);
 		if ($output === false) {
 			$e = curl_error($ch);
-			curl_close($ch);
 			throw new Exception("Curl error: " . $e);
 		}
-		curl_close($ch);
 		return $output;
 	}
 
@@ -83,10 +81,8 @@ class HttpClient
 		$output = curl_exec($ch);
 		if ($output === false) {
 			$e = curl_error($ch);
-			curl_close($ch);
 			throw new Exception("Curl error: " . $e);
 		}
-		curl_close($ch);
 		return $output;
 	}
 }
