@@ -1799,7 +1799,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					</installs>
 					<files index="1">
 						<file name="/etc/dovecot/conf.d/99-froxlor.conf" chown="root:0"
-							chmod="0644" backup="true">
+							chmod="0640" backup="true">
 							<content><![CDATA[
 auth_allow_cleartext = yes
 auth_mechanisms = plain login

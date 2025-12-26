@@ -1977,6 +1977,10 @@ Yours sincerely, your administrator',
 				'title' => 'Warning-level in percent for traffic',
 				'description' => 'Valid values are 0 up to 150. Setting this value to 0 disables this report.',
 			],
+			'report_web_bccadmin' => [
+				'title' => 'BCC email for web-usage notification to admin',
+				'description' => 'If enabled, the warning about disk-space usage sent to the customer is also being sent to the corresponding admin/reseller (BCC)'
+			],
 		],
 		'dropdown' => 'Dropdown',
 		'manual' => 'Manual',

@@ -151,3 +151,9 @@ if (Froxlor::isFroxlorVersion('2.3.0-rc1')) {
 	Update::showUpdateStep("Updating from 2.3.0-rc1 to 2.3.0", false);
 	Froxlor::updateToVersion('2.3.0');
 }
+
+if (Froxlor::isDatabaseVersion('202511020')) {
+
+	Settings::AddNew('system.report_web_bccadmin', '0');
+	Froxlor::updateToDbVersion('202512090');
+}

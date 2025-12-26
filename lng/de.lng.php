@@ -1856,6 +1856,10 @@ Vielen Dank, Ihr Administrator',
 				'title' => 'Warn-Level in Prozent für Traffic',
 				'description' => 'Gültige Werte sind von 0 bis 150. Der Wert 0 deaktiviert diesen Report.',
 			],
+			'report_web_bccadmin' => [
+				'title' => 'BCC-E-Mail für Benachrichtigungen zur Webnutzung an den Administrator',
+				'description' => 'Wenn diese Option aktiviert ist, wird die an den Kunden gesendete Warnung bezüglich der Speicherplatznutzung auch an den entsprechenden Administrator/Reseller (BCC) gesendet.'
+			],
 		],
 		'dropdown' => 'Auswahlliste',
 		'manual' => 'Manuelle Eingabe',

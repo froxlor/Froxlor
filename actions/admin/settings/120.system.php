@@ -209,6 +209,14 @@ return [
 					'default' => 90,
 					'save_method' => 'storeSettingField'
 				],
+				'system_report_web_bccadmin' => [
+					'label' => lng('serversettings.report.report_web_bccadmin'),
+					'settinggroup' => 'system',
+					'varname' => 'report_web_bccadmin',
+					'type' => 'checkbox',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				],
 				'system_mail_use_smtp' => [
 					'label' => lng('serversettings.mail_use_smtp'),
 					'settinggroup' => 'system',

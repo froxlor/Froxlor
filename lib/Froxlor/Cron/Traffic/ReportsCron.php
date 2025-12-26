@@ -414,6 +414,9 @@ class ReportsCron extends FroxlorCron
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(nl2br($mail_body));
 						$mail->AddAddress($row['email'], $row['name']);
+						if (Settings::Get('system.report_web_bccadmin')) {
+							$mail->addBCC(Settings::Get('panel.adminmail'), $row['adminname']);
+						}
 						$mail->Send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
 						$mailerr_msg = $e->errorMessage();
