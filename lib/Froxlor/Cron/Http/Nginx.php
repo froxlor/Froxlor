@@ -181,7 +181,6 @@ class Nginx extends HttpConfigBase
 				if ($http3) {
 					$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server quic reuseport;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'http3 on;' . "\n";
-					$this->nginx_data[$vhost_filename] .= "\t" . 'http3_hq on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_gso on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_retry on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '"; ma=86400\';' . "\n";
@@ -570,7 +569,6 @@ class Nginx extends HttpConfigBase
 		if ($http3) {
 			$vhost_content .= "\t" . 'add_header Alt-Svc \'h3=":' . $domain['port'] . '"; ma=86400\';' . "\n";
 			$vhost_content .= "\t" . 'http3 on;' . "\n";
-			$vhost_content .= "\t" . 'http3_hq on;' . "\n";
 			$vhost_content .= "\t" . 'quic_gso on;' . "\n";
 			$vhost_content .= "\t" . 'quic_retry on;' . "\n";
 		}
