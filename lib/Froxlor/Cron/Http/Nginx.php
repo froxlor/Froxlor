@@ -184,7 +184,7 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . 'http3_hq on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_gso on;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'quic_retry on;' . "\n";
-					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '"; ma=86400\';' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'add_header Alt-Svc \'h3=":' . $port . '"; ma=86400\' always;' . "\n";
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 
@@ -443,7 +443,7 @@ class Nginx extends HttpConfigBase
 					if ($domain_or_ip['hsts_preload'] == 1) {
 						$sslsettings .= '; preload';
 					}
-					$sslsettings .= '";' . "\n";
+					$sslsettings .= '"; always' . "\n";
 				}
 
 				if ((isset($domain_or_ip['ocsp_stapling']) && $domain_or_ip['ocsp_stapling'] == "1")) {
@@ -568,7 +568,7 @@ class Nginx extends HttpConfigBase
 		}
 
 		if ($http3) {
-			$vhost_content .= "\t" . 'add_header Alt-Svc \'h3=":' . $domain['port'] . '"; ma=86400\';' . "\n";
+			$vhost_content .= "\t" . 'add_header Alt-Svc \'h3=":' . $domain['port'] . '"; ma=86400\' always;' . "\n";
 			$vhost_content .= "\t" . 'http3 on;' . "\n";
 			$vhost_content .= "\t" . 'http3_hq on;' . "\n";
 			$vhost_content .= "\t" . 'quic_gso on;' . "\n";
