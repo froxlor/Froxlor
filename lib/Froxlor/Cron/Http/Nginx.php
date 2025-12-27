@@ -443,7 +443,7 @@ class Nginx extends HttpConfigBase
 					if ($domain_or_ip['hsts_preload'] == 1) {
 						$sslsettings .= '; preload';
 					}
-					$sslsettings .= '"; always' . "\n";
+					$sslsettings .= '"always;' . "\n";
 				}
 
 				if ((isset($domain_or_ip['ocsp_stapling']) && $domain_or_ip['ocsp_stapling'] == "1")) {
