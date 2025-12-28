@@ -24,7 +24,6 @@
  */
 
 use Froxlor\Database\Database;
-use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\Install\Update;
 use Froxlor\Settings;
@@ -156,4 +155,17 @@ if (Froxlor::isDatabaseVersion('202511020')) {
 
 	Settings::AddNew('system.report_web_bccadmin', '0');
 	Froxlor::updateToDbVersion('202512090');
+}
+
+if (Froxlor::isDatabaseVersion('202512090')) {
+
+	$to_clean = [
+		'install/updates/froxlor/update_0.10.inc.php',
+		'install/updates/preconfig/preconfig_0.10.inc.php',
+		'lib/Froxlor/Cron/Http/Lighttpd.php',
+		'lib/Froxlor/Cron/Http/LighttpdFcgi.php',
+	];
+	Update::cleanOldFiles($to_clean);
+
+	Froxlor::updateToDbVersion('202512280');
 }

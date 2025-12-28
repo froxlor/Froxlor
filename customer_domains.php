@@ -380,8 +380,6 @@ if ($page == 'overview' || $page == 'domains') {
 				]);
 				$alias_check = $alias_check['count'];
 
-				$result = PhpHelper::htmlentitiesArray($result);
-
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 
 				UI::view('user/form.html.twig', [
