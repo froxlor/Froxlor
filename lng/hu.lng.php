@@ -457,6 +457,11 @@ return [
 			'title' => 'HTTP2 támogatás',
 			'description' => 'Lásd <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/2">Wikipedia</a> a HTTP2 részletes magyarázatáért',
 		],
+		'domain_http3' => [
+			'title' => 'HTTP3 támogatás',
+			'description' => 'Lásd <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/3">Wikipedia</a> a HTTP3 részletes magyarázatáért',
+			'nginx_version_warning' => '<br /><strong class="text-danger">FIGYELEM:</strong> Nginx 1.25.0 vagy újabb verzió és ssl-protocol TLSv1.3 szükséges a HTTP/3-hoz. Ha a verziója régebbi, a webszerver NEM fog megfelelően elindulni, amíg a HTTP/3 engedélyezve van!',
+		],
 		'testmail' => 'SMTP teszt',
 		'phpsettingsforsubdomains' => 'PHP-konfiguráció alkalmazása minden aldomainre:',
 		'plans' => [
@@ -723,6 +728,10 @@ return [
 		'txtrecords' => 'TXT rekordok meghatározása',
 		'txtexample' => 'Példa (SPF-bejegyzés):<br />v=spf1 ip4:xxx.xxx.xx.0/23 -all',
 		'howitworks' => 'Itt kezelheti a domain DNS bejegyzéseit. Vegye figyelembe, hogy a froxlor automatikusan generálja az NS/MX/A/AAAA rekordokat. Az egyéni bejegyzések elsőbbséget élveznek, csak a hiányzó bejegyzések lesznek automatikusan generálva.',
+		'nis2note' => [
+			'title' => 'NIS2 információ',
+			'content' => 'A DNS hosting/autoritatív DNS szolgáltatások digitális szolgáltatásnak minősülhetnek, fokozott biztonsági és jelentési kötelezettségekkel az <strong>EU-NIS2</strong> alatt. Kérjük, ellenőrizze, hogy a beállítása érintett-e a NIS2 által, és milyen intézkedések szükségesek.'
+		],
 	],
 	'dnseditor' => [
 		'edit' => 'DNS szerkesztése',
@@ -834,6 +843,10 @@ return [
 		'back_to_overview' => 'Vissza a domain áttekintéshez',
 		'accounts' => 'Fiókok',
 		'emails' => 'Címek',
+		'senders' => 'Engedélyezett feladók',
+		'sender_add' => 'Engedélyezett feladó hozzáadása',
+		'foreign_sender' => 'Engedélyezett (külső) feladó',
+		'allowed_sender_info' => 'Egy <strong>engedélyezett feladóval</strong> lehetővé teszi egy létező e-mail fiók számára, hogy más feladó címmel küldjön e-maileket.<br><strong>Fontos:</strong> Az itt megadott cím/wildcard-domain nem lesz automatikusan postafiók – csak további, engedélyezett feladó azonosítóként szolgál.',
 	],
 	'error' => [
 		'error' => 'Hiba',
@@ -1049,6 +1062,12 @@ return [
 		'invalid_validtime' => 'Az érvényességi idő másodpercben csak 10 és 120 között lehet',
 		'customerphpenabledbutnoconfig' => 'A vásárlónál a PHP aktiválva van, de nincs kiválasztva PHP-konfiguráció.',
 		'emaildomainstillhasaddresses' => 'Nem lehet deaktiválni a levelezési domain jelzőt, mert még vannak e-mail címek ehhez a domainhez.',
+		'invaliddocumentrooturl' => 'A megadott documentroot URL érvénytelen. Kérjük, adjon meg helyes URL-t vagy elérési utat.',
+		'local_user_invalid' => 'A megadott felhasználónév érvénytelen vagy nem létezik',
+		'local_user_isfroxloruser' => 'A megadott felhasználónév egy froxlor által kezelt felhasználónév, és ebben az összefüggésben nem használható',
+		'tls13requiredforhttp3' => 'A domain http3 jelzője be van kapcsolva, de az ssl-protocols nem tartalmazza a TLSv1.3-at',
+		'senderdomainnotowned' => 'A megadott "%s" domain nem használható.',
+		'emailhasnoaccount' => 'A megadott "%s" e-mail címnek nincs fiókja, nem lehet hozzáadni a feladó címet.',
 	],
 	'extras' => [
 		'description' => 'Itt hozzáadhat néhány extrát, például könyvtárvédelmet.<br />A rendszernek időre van szüksége az új beállítások alkalmazásához minden változtatás után.',
@@ -1080,6 +1099,8 @@ return [
 		'account_add' => 'Fiók létrehozása',
 		'account_edit' => 'FTP-fiók szerkesztése',
 		'editpassdescription' => 'Állítson be új jelszót, vagy hagyja üresen, ha nem kívánja megváltoztatni.',
+		'sshkey_add' => 'SSH kulcs hozzáadása',
+		'sshkey_edit' => 'SSH kulcs szerkesztése',
 	],
 	'gender' => [
 		'title' => 'Megszólítás',
@@ -1216,6 +1237,7 @@ Jelszó: {USR_PASS}
 			'ftp' => 'FTP',
 			'accounts' => 'Fiókok',
 			'webftp' => 'WebFTP',
+			'sshkeys' => 'SSH kulcsok',
 		],
 		'extras' => [
 			'extras' => 'Extrák',
@@ -1403,6 +1425,15 @@ Jelszó: {USR_PASS}
 		'profile' => 'Profilom',
 		'use_checkbox_for_unlimited' => 'A "0" érték deaktiválja ezt az erőforrást. A jobb oldali jelölőnégyzet lehetővé teszi a "korlátlan" használatot.',
 		'use_checkbox_to_disable' => 'A letiltáshoz aktiválja a jelölőnégyzetet a beviteli mező jobb oldalán',
+		'sshkeydesc' => 'SSH kulcs leírás',
+		'ftpuser' => 'FTP felhasználó',
+		'sshpubkey' => 'SSH nyilvános kulcs',
+		'sshpubkeyph' => 'Illessze be az SSH nyilvános kulcsát itt',
+		'sshfingerprint' => 'Ujjlenyomat',
+		'start_setup' => 'Beállítások indítása',
+		'distro_mismatch' => 'Úgy tűnik, hogy új disztribúcióra frissített. Kérjük, ne felejtse el újrakonfigurálni a szolgáltatásokat.',
+		'set_new_distro' => 'Disztribúció beállítása',
+		'dismiss' => 'Elutasítás',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Helyi felhasználó a PHP-FPM-hez (froxlor vHost)',
@@ -1467,6 +1498,10 @@ Jelszó: {USR_PASS}
 		'cache_reallydelete' => 'Valóban törölni szeretné a gyorsítótárat?',
 		'please_enter_otp' => 'Kérjük, adja meg a 2FA kódot',
 		'admin_mysqlserver_reallydelete' => 'Valóban törölni szeretné ezt a MySQL-szervert?',
+		'customer_sshkey_reallydelete' => 'Valóban törölni szeretné ezt az SSH kulcsot?',
+		'admin_sshkey_reallydelete' => 'Valóban törölni szeretné ezt az SSH kulcsot?',
+		'email_reallydelete_sender' => 'Valóban törölni szeretné a(z) %s engedélyezett feladót?',
+		'sshkey_reallydelete' => 'Valóban törölni szeretné a(z) %s ssh kulcsot?',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'alapértelmezett',
@@ -1936,6 +1971,10 @@ Jelszó: {USR_PASS}
 				'title' => 'Figyelmeztetési szint százalékban a forgalomhoz',
 				'description' => 'Érvényes értékek 0-tól 150-ig. Ha 0-ra állítja, ez a jelentés kikapcsolódik.',
 			],
+			'report_web_bccadmin' => [
+				'title' => 'Jelentés másolat az adminisztrátornak (BCC)',
+				'description' => 'Ha aktiválva van, a használati jelentések másolata BCC-ben kerül elküldésre az adminisztrátornak',
+			],
 		],
 		'dropdown' => 'Legördülő lista',
 		'manual' => 'Kézi',
@@ -2140,9 +2179,21 @@ Jelszó: {USR_PASS}
 		'mail_smtp_port' => 'Csatlakozáshoz használt TCP port',
 		'mail_smtp_user' => 'SMTP felhasználónév',
 		'mail_smtp_passwd' => 'SMTP jelszó',
+		'mail_enable_allow_sender' => [
+			'title' => 'Engedélyezett feladók funkció engedélyezése',
+			'description' => 'Ha aktiválva van, lehetővé teszi a postafiók tulajdonosok számára, hogy más feladó címeket adjanak hozzá ehhez a postafiókhoz. Ezzel lehetővé válik más feladó címekkel történő levélküldés.',
+		],
+		'mail_allow_external_domains' => [
+			'title' => 'Külső domainek engedélyezése mint engedélyezett feladók',
+			'description' => 'Ha aktiválva van, a postafiók tulajdonosok külső domain-címeket is használhatnak engedélyezett feladóként (tehát olyan domaineket, amelyek nem tartoznak a Froxlor-hoz)',
+		],
 		'http2_support' => [
 			'title' => 'HTTP2 támogatás',
 			'description' => 'HTTP2 támogatás engedélyezése ssl-hez.<br><em class="text-danger">CSAK AKKOR ENGEDÉLYEZZE, HA A WEBSZERVERE TÁMOGATJA EZT A FUNKCIÓT (nginx verzió 1.9.5+, apache2 verzió 2.4.17+)</em>',
+		],
+		'http3_support' => [
+			'title' => 'HTTP3 támogatás',
+			'description' => 'HTTP3 támogatás engedélyezése ssl-hez.<br><em class="text-danger">CSAK AKKOR ENGEDÉLYEZZE, HA A WEBSZERVERE TÁMOGATJA EZT A FUNKCIÓT (nginx verzió 1.25.0+)</em>',
 		],
 		'nssextrausers' => [
 			'title' => 'libnss-extrausers használata libnss-mysql helyett',
@@ -2415,6 +2466,10 @@ Jelszó: {USR_PASS}
 		'gui_access' => [
 			'title' => 'WebUI bejelentkezés engedélyezése',
 			'description' => 'Ha le van tiltva, a felhasználó nem tud bejelentkezni a froxlor webes felületére, de minden szolgáltatás (web, ftp, e-mail, adatbázisok, api-hozzáférés, stb.) normálisan működik.',
+		],
+		'shell_allowed' => [
+			'title' => 'Shell hozzáférés engedélyezése',
+			'description' => 'Ha aktiválva van, a felhasználó shell hozzáférést kap a rendszerhez SSH-n keresztül.',
 		],
 	],
 	'install' => [
