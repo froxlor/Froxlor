@@ -122,7 +122,7 @@ class Cronjob
 	{
 		// set default os.
 		if ($is_install) {
-			$distro = "bookworm";
+			$distro = "trixie";
 		} else {
 			$distro = Settings::Get('system.distribution');
 		}
