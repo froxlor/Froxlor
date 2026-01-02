@@ -1745,6 +1745,8 @@ class Domains extends ApiCommand implements ResourceEntity
 				|| $hsts_preload != $result['hsts_preload']
 				|| $ocsp_stapling != $result['ocsp_stapling']
 				|| $sslenabled != $result['ssl_enabled']
+				|| $override_tls != $result['override_tls']
+				|| implode(",", $ssl_protocols) != $result['ssl_protocols']
 			) {
 				Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			}
