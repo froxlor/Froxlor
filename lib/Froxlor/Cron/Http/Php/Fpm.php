@@ -197,10 +197,10 @@ pm.max_children = 1
 			}
 
 			$fpm_config .= 'pm.max_requests = ' . $fpm_requests . "\n";
+			$fpm_config .= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
 
 			// possible slowlog configs
 			if ($phpconfig['fpm_slowlog'] == '1') {
-				$fpm_config .= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
 				$fpm_config .= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
 				$slowlog = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->domain['loginname'] . '-php-slow.log');
 				$fpm_config .= 'slowlog = ' . $slowlog . "\n";
