@@ -1516,6 +1516,7 @@ root:               <ADMIN_MAIL>
 
 # FQDN from Froxlor
 mydomain = <SERVERNAME>
+myhostname = $mydomain
 inet_interfaces = all
 
 # See http://www.postfix.org/COMPATIBILITY_README.html

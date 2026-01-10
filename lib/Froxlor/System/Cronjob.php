@@ -121,7 +121,11 @@ class Cronjob
 	public static function checkCurrentDistro(bool $is_install = false): string
 	{
 		// set default os.
-		$distro = Settings::Get('system.distribution');
+		if ($is_install) {
+			$distro = "trixie";
+		} else {
+			$distro = Settings::Get('system.distribution');
+		}
 
 		// read os-release
 		if (@file_exists('/etc/os-release') && is_readable('/etc/os-release')) {
