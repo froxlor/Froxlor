@@ -179,3 +179,8 @@ if (Froxlor::isFroxlorVersion('2.3.1')) {
 	Update::showUpdateStep("Updating from 2.3.1 to 2.3.2", false);
 	Froxlor::updateToVersion('2.3.2');
 }
+
+if (Froxlor::isFroxlorVersion('2.3.2')) {
+	Update::showUpdateStep("Updating from 2.3.2 to 2.3.3", false);
+	Froxlor::updateToVersion('2.3.3');
+}
