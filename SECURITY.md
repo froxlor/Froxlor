@@ -10,12 +10,8 @@ With that, good luck hacking us ;)
 
 ## Supported versions
 
-- ️✅ **2.3.x**  (`main` git-branch)
-- ️✅ **2.3.x**  (`v2.3` git-branch)
-- ❌ 2.2.x (`2.2.x`-tags)
-- ❌ 2.1.x (`2.1.x`-tags)
-- ❌ 2.0.x (`2.0.x`-tags)
-- ❌ 0.10.x (`0.10.x`-tags)
+- ️✅ **2.3.x**  (`main` and `v2.3` git-branch)
+- ️❌ <=2.2.x
 - ❌ other git-branches
 
 ## Qualifying Vulnerabilities
