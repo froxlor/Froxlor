@@ -30,6 +30,7 @@ use Froxlor\Domain\Domain;
 use Froxlor\FileDir;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use InvalidArgumentException;
 
 class Fpm
 {
@@ -201,6 +202,7 @@ pm.max_children = 1
 
 			// possible slowlog configs
 			if ($phpconfig['fpm_slowlog'] == '1') {
+				$this->durationCompare($phpconfig['fpm_reqterm'], $phpconfig['fpm_reqslow']);
 				$fpm_config .= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
 				$slowlog = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->domain['loginname'] . '-php-slow.log');
 				$fpm_config .= 'slowlog = ' . $slowlog . "\n";
@@ -239,8 +241,8 @@ pm.max_children = 1
 
 					if ($this->domain['openbasedir_path'] == '0' && strstr($this->domain['documentroot'], ":") === false) {
 						$openbasedir = Domain::appendOpenBasedirPath($this->domain['documentroot'], true);
-					} else if ($this->domain['openbasedir_path'] == '2' && strpos(dirname($this->domain['documentroot']).'/', $this->domain['customerroot']) !== false) {
-						$openbasedir = Domain::appendOpenBasedirPath(dirname($this->domain['documentroot']).'/', true);
+					} else if ($this->domain['openbasedir_path'] == '2' && strpos(dirname($this->domain['documentroot']) . '/', $this->domain['customerroot']) !== false) {
+						$openbasedir = Domain::appendOpenBasedirPath(dirname($this->domain['documentroot']) . '/', true);
 					} else {
 						$openbasedir = Domain::appendOpenBasedirPath($this->domain['customerroot'], true);
 					}
@@ -438,5 +440,41 @@ pm.max_children = 1
 		}
 
 		return $configdir;
+	}
+
+	/**
+	 * 'request_slowlog_timeout' can't be greater than 'request_terminate_timeout'
+	 *
+	 * @param $request_terminate_timeout
+	 * @param $request_slowlog_timeout
+	 * @return void
+	 */
+	private function durationCompare(&$request_terminate_timeout, &$request_slowlog_timeout)
+	{
+		$to_seconds = function ($str) {
+			if (!preg_match('/^([0-9]+)([smhd])?$/', $str, $matches)) {
+				throw new InvalidArgumentException("Invalid format: $str");
+			}
+			$value = (int)$matches[1];
+			$unit = $matches[2] ?? 's';
+
+			switch ($unit) {
+				case 'm':
+					return $value * 60;
+				case 'h':
+					return $value * 3600;
+				case 'd':
+					return $value * 86400;
+				default:
+					return $value;
+			}
+		};
+
+		$aSec = $to_seconds($request_terminate_timeout);
+		$bSec = $to_seconds($request_slowlog_timeout);
+
+		if ($bSec > $aSec) {
+			$request_slowlog_timeout = $request_terminate_timeout;
+		}
 	}
 }
