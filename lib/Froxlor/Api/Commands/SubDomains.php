@@ -490,7 +490,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				throw new Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
-				SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
+				SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain, pd.`domain` as parentdomain
 				FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
 				WHERE d.`customerid`= :customerid AND " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . "
 				AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
