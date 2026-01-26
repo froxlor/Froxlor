@@ -1799,7 +1799,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 						<install><![CDATA[apt-get install dovecot-imapd dovecot-pop3d dovecot-mysql dovecot-managesieved dovecot-sieve]]></install>
 					</installs>
 					<files index="1">
-						<file name="/etc/dovecot/conf.d/99-froxlor.conf" chown="root:0"
+						<file name="/etc/dovecot/conf.d/99-froxlor.conf" chown="root:vmail"
 							chmod="0640" backup="true">
 							<content><![CDATA[
 auth_allow_cleartext = yes
