@@ -157,6 +157,7 @@ abstract class DnsBase
 				'domain' => Settings::Get('system.hostname'),
 				'isbinddomain' => '1',
 				'isemaildomain' => Settings::Get('system.dns_createmailentry'),
+				'email_only' => '0',
 				'customerid' => 'none',
 				'loginname' => 'froxlor.panel',
 				'bindserial' => date('Ymd') . '00',
