@@ -26,6 +26,7 @@
 namespace Froxlor\Cron\Http;
 
 use Froxlor\Cron\Http\Php\PhpInterface;
+use Froxlor\Cron\TaskId;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
@@ -35,6 +36,7 @@ use Froxlor\FroxlorLogger;
 use Froxlor\Http\Directory;
 use Froxlor\Http\Statistics;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
 use Froxlor\Validate\Validate;
 use Froxlor\System\Crypt;
 use PDO;
@@ -216,10 +218,11 @@ class Nginx extends HttpConfigBase
 				if ($row_ipsandports['ssl'] == '0' && Settings::Get('system.le_froxlor_redirect') == '1') {
 					$is_redirect = true;
 					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
-					// or a renew is ongoing - disable redirect
-					if (Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
+					// or a renewal is ongoing - disable redirect
+					if (Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
 						$this->nginx_data[$vhost_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
 						$is_redirect = false;
+						Cronjob::inserttask(TaskId::REBUILD_VHOST);
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
 						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport;

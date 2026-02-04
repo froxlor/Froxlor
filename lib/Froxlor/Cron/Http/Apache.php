@@ -132,7 +132,7 @@ class Apache extends HttpConfigBase
 					$is_redirect = true;
 					// check whether froxlor uses Let's Encrypt and not cert is being generated yet
 					// or a renewal is ongoing - disable redirect
-					if (Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
+					if (Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') && ($this->froxlorVhostHasLetsEncryptCert() == false || $this->froxlorVhostLetsEncryptNeedsRenew())) {
 						$this->virtualhosts_data[$vhosts_filename] .= '# temp. disabled ssl-redirect due to Let\'s Encrypt certificate generation.' . PHP_EOL;
 						$is_redirect = false;
 						Cronjob::inserttask(TaskId::REBUILD_VHOST);
@@ -147,7 +147,7 @@ class Apache extends HttpConfigBase
 						$this->virtualhosts_data[$vhosts_filename] .= '  <IfModule mod_rewrite.c>' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteEngine On' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteCond %{HTTPS} off' . "\n";
-						if (Settings::Get('system.le_froxlor_enabled') == '1') {
+						if (Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {
 							$this->virtualhosts_data[$vhosts_filename] .= '    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge' . "\n";
 						}
 						$this->virtualhosts_data[$vhosts_filename] .= '    RewriteRule ^/(.*) ' . $mypath . '$1' . $modrew_red . "\n";
