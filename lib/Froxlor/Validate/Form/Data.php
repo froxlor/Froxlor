@@ -166,13 +166,13 @@ class Data
 
 	public static function validateFormFieldEmail($fieldname, $fielddata, $newfieldvalue)
 	{
-		$fielddata['string_type'] == 'mail';
+		$fielddata['string_type'] = 'mail';
 		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
 	}
 
 	public static function validateFormFieldUrl($fieldname, $fielddata, $newfieldvalue)
 	{
-		$fielddata['string_type'] == 'url';
+		$fielddata['string_type'] = 'url';
 		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
 	}
 

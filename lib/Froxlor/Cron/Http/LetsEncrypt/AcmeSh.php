@@ -425,7 +425,7 @@ EOC;
 			if (!file_exists(self::getAcmeSh())) {
 				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Could not find acme.sh - installing it to /root/.acme.sh/");
 				$return = false;
-				FileDir::safe_exec("wget -O - https://get.acme.sh | sh -s email=" . Settings::Get('panel.adminmail'), $return, [
+				FileDir::safe_exec("wget -O - https://get.acme.sh | sh -s email=" . escapeshellarg(Settings::Get('panel.adminmail')), $return, [
 					'|'
 				]);
 				$set_path = self::getAcmeSh();
