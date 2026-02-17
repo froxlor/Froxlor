@@ -30,7 +30,7 @@ jobs:
           sudo ufw allow in 3306/tcp
 
       - name: Setup MySQL
-        uses: shogo82148/actions-setup-mysql@v1
+        uses: shogo82148/actions-setup-mysql@v1.47.0
         with:
           mysql-version: ${{ matrix.mysql-version }}
           root-password: 'fr0xl0r.TravisCI'
@@ -43,7 +43,6 @@ jobs:
       - name: Setup database
         run: |
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE DATABASE froxlor010;"
-          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
           php -r "echo include('install/froxlor.sql.php');" > /tmp/froxlor.sql
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < /tmp/froxlor.sql
 
