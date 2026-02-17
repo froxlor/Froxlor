@@ -318,7 +318,7 @@ class MysqlsTest extends TestCase
 		$dbm = new \Froxlor\Database\DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 		foreach ($users as $user => $data) {
-			if (strtolower($user) == 'mariadb.sys') {
+			if (strtolower($user) == 'mariadb.sys' || strtolower($user) == 'public') {
 				// some systems seem to have a user for mariadb on version 10.4
 				// we do not want to test that one
 				continue;

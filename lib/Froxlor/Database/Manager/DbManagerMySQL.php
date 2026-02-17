@@ -174,7 +174,7 @@ class DbManagerMySQL
 				'host' => $host['Host']
 			], false);
 
-			if (!empty($global_user) && $this->userExistsOnHost($global_user, $host['Host'])) {
+			if (!empty($global_user)) {
 				Database::pexecute($rev_stmt, [
 					'guser' => $global_user,
 					'host' => $host['Host']
