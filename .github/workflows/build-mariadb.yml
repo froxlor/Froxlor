@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [ '7.4', '8.3' ]
-        mariadb-version: [ 10.11, 10.5 ]
+        php-versions: [ '7.4', '8.4' ]
+        mariadb-version: [ 10.11, 11.7 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,17 +30,18 @@ jobs:
           sudo ufw allow in 3306/tcp
 
       - name: Setup MariaDB
-        uses: getong/mariadb-action@v1.11
+        uses: shogo82148/actions-setup-mysql@v1
         with:
-          mariadb version: ${{ matrix.mariadb-version }}
-          mysql database: 'froxlor010'
-          mysql root password: 'fr0xl0r.TravisCI'
+          distribution: "mariadb"
+          mysql-version: ${{ matrix.mariadb-version }}
+          root-password: 'fr0xl0r.TravisCI'
 
       - name: Wait for database
         run: sleep 15
 
       - name: Setup databases
         run: |
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE DATABASE froxlor010;"
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
           php -r "echo include('install/froxlor.sql.php');" > /tmp/froxlor.sql
