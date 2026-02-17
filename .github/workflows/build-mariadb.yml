@@ -30,7 +30,7 @@ jobs:
           sudo ufw allow in 3306/tcp
 
       - name: Setup MariaDB
-        uses: getong/mariadb-action@v1.1
+        uses: getong/mariadb-action@v1.11
         with:
           mariadb version: ${{ matrix.mariadb-version }}
           mysql database: 'froxlor010'
